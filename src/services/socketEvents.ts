@@ -1,3 +1,4 @@
+import { accountStore } from "../store/accountStore";
 import { serverMemberStore } from "../store/serverMemberStore";
 import { serverStore } from "../store/serverStore";
 
@@ -19,7 +20,8 @@ const onAuthenticated = (payload: any) => {
   serverStore.setServers(payload.servers);
   serverMemberStore.setServerMembers(payload.serverMembers);
   // serverRolesStore.setServerRoles(payload.serverRoles);
-  // userPresenceStore.setPresences(payload.presences);s
+  // userPresenceStore.setPresences(payload.presences);
+  accountStore.setAuthenticated(true);
 };
 
 const onServerChannelUpdated = (payload: any) => {

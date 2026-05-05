@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "jsx": "react",
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "target": "es2023",
     "module": "esnext",
     "lib": ["ES2023", "DOM"],
@@ -20,5 +23,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "vite.config.ts"]
 }

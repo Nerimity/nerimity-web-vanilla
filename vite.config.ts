@@ -1,6 +1,12 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  oxc: {
+    jsx: {
+      pragma: "h",
+      pragmaFrag: "Fragment",
+    },
+  },
   build: {
     sourcemap: true,
   },

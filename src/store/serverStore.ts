@@ -2,14 +2,16 @@ import type { RawServer } from "../Types";
 
 export const serverStore = createServerStore();
 
-class Server {
+export class Server {
   id: string;
   name: string;
   hexColor: string;
+  avatar?: string;
   constructor(data: RawServer) {
     this.id = data.id;
     this.name = data.name;
     this.hexColor = data.hexColor;
+    this.avatar = data.avatar;
   }
 }
 

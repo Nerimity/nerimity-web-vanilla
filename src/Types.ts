@@ -44,6 +44,7 @@ export interface RawServer {
   defaultChannelId: string;
   defaultRoleId: string;
   createdById: string;
+  avatar?: string;
 }
 export interface User {
   id: string;
