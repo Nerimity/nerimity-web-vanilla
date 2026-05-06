@@ -4,22 +4,42 @@ import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
 import { createAvatar } from "./avatar";
 import { reconcile } from "../utils/html";
+import { Link } from "./link";
+import { Item } from "./item";
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
-    <a
+    <Link
       data-server-id={server.id}
       title={server.name}
-      class={style.serverItem}
-      data-route
+      class={style.serverItemLink}
       href={`/app/servers/${server.id}/${server.defaultChannelId}`}
     >
-      {createAvatar({ size: 40, server })}
-    </a>
+      <Item.Base
+        class={style.serverItem}
+        selected={serverStore.currentServerId === server.id}
+      >
+        {createAvatar({ size: 42, server })}
+      </Item.Base>
+    </Link>
   );
+
+  const updateSelected = (container: HTMLElement, serverId: string) => {
+    const selected = container.querySelector(`.item[data-selected="true"]`);
+
+    if (selected) {
+      selected.setAttribute("data-selected", "false");
+    }
+
+    const item = container.querySelector(
+      `[data-server-id="${serverId}"] .item`,
+    );
+    item?.setAttribute("data-selected", "true");
+  };
 
   return {
     create,
+    updateSelected,
   };
 };
 
@@ -44,6 +64,9 @@ export const createSidebar = () => {
   const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
     renderList();
   });
+  const serveridUnsub = storeEmitter.on("navigate:serverId", () => {
+    serverItem.updateSelected(containerEl!, serverStore.currentServerId!);
+  });
 
   const render = () => {
     containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
@@ -54,6 +77,7 @@ export const createSidebar = () => {
   const destroy = () => {
     serverUpdateUnsub();
     authenticatedUnsub();
+    serveridUnsub();
     containerEl?.remove();
     containerEl = null;
   };

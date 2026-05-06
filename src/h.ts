@@ -1,12 +1,15 @@
 type Props = {
   class?: string | string[];
   style?: string | Partial<CSSStyleDeclaration>;
+  children?: Child | Child[];
   [key: string]:
     | string
     | string[]
     | Partial<CSSStyleDeclaration>
     | EventListener
     | boolean
+    | Child
+    | Child[]
     | null
     | undefined;
 };
@@ -30,9 +33,12 @@ export function h(
   ...children: Child[]
 ): Node {
   if (typeof tag === "function") {
-    return tag(props, ...children);
+    const componentProps = {
+      ...props,
+      children: children.length === 1 ? children[0] : children,
+    };
+    return tag(componentProps, ...children);
   }
-
   const el = document.createElement(tag);
 
   if (props) {
@@ -42,9 +48,13 @@ export function h(
       if (value == null || value === false) continue;
 
       if (key === "class") {
-        el.className = Array.isArray(value)
-          ? value.join(" ")
+        const classValue = Array.isArray(value)
+          ? value.filter(Boolean).join(" ")
           : (value as string);
+
+        if (classValue) {
+          el.className = classValue;
+        }
       } else if (key === "style" && typeof value === "object") {
         for (const [prop, val] of Object.entries(value)) {
           if (val == null) continue;
@@ -55,7 +65,11 @@ export function h(
           }
         }
       } else if (typeof value === "boolean") {
-        if (value) el.setAttribute(key, "");
+        if (key.startsWith("data-")) {
+          el.setAttribute(key, String(value));
+        } else if (value) {
+          el.setAttribute(key, "");
+        }
       } else if (typeof value !== "object") {
         el.setAttribute(key, value as string);
       }

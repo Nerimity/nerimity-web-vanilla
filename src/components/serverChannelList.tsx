@@ -1,23 +1,42 @@
 import style from "./serverChannelList.module.css";
-import { storeEmitter } from "../utils/EventEmitter";
 import { h } from "../h";
 import { serverStore } from "../store/serverStore";
 import { channelStore, type Channel } from "../store/channelStore";
 import { reconcile } from "../utils/html";
+import { Item } from "./item";
+import { Link } from "./link";
+import { storeEmitter } from "../utils/EventEmitter";
 
 const createChannelItemHelper = () => {
   const create = (channel: Channel) => (
-    <a
+    <Link
       data-channel-id={channel.id}
       title={channel.name}
       data-route
       href={`/app/servers/${channel.serverId}/${channel.id}`}
     >
-      {channel.name}
-    </a>
+      <Item.Base selected={channelStore.currentChannelId === channel.id}>
+        <Item.Label>{channel.name}</Item.Label>
+      </Item.Base>
+    </Link>
   );
 
+  const updateSelected = (container: HTMLElement, channelId: string) => {
+    const selected = container.querySelector(`.item[data-selected="true"]`);
+
+    if (selected) {
+      selected.setAttribute("data-selected", "false");
+    }
+
+    const item = container.querySelector(
+      `[data-channel-id="${channelId}"] .item`,
+    );
+
+    item?.setAttribute("data-selected", "true");
+  };
+
   return {
+    updateSelected,
     create,
   };
 };
@@ -47,6 +66,10 @@ export const createServerChannelList = () => {
 
   const channelListUnsub = serverStore.currentChannels.onUpdate(renderList);
 
+  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
+    channelItem.updateSelected(containerEl!, channelStore.currentChannelId!);
+  });
+
   const render = () => {
     containerEl = (
       <div class={style.serverChannelList}></div>
@@ -57,6 +80,7 @@ export const createServerChannelList = () => {
 
   const destroy = () => {
     channelListUnsub();
+    channelIdUnsub();
     containerEl?.remove();
     containerEl = null;
   };

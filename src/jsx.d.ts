@@ -2,9 +2,12 @@ export {};
 
 declare global {
   namespace JSX {
-    type Element = HTMLElement | DocumentFragment;
+    type Element = Node;
     interface IntrinsicElements {
-      [tag: string]: Props & { children?: Child | Child[] };
+      [tag: string]: Props;
+    }
+    interface ElementChildrenAttribute {
+      children: {};
     }
   }
 }

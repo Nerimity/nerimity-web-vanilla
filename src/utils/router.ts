@@ -84,8 +84,8 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
         ?.attributes.getNamedItem("href")?.value;
       if (href) {
         navigate(href as NoParamPath);
-        e.preventDefault();
       }
+      e.preventDefault();
     }
   });
 

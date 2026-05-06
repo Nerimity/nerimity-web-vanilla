@@ -6,7 +6,7 @@ interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string };
   server?: { avatar?: string; name: string; hexColor: string };
 
-  size: 16 | 24 | 32 | 40 | 48 | 64;
+  size: 16 | 24 | 32 | 40 | 42 | 48 | 64;
 }
 const url = (props: AvatarProps) => {
   const avatar = props.user?.avatar || props.server?.avatar;

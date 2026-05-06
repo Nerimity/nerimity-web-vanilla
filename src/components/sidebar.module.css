@@ -5,16 +5,19 @@
   align-items: center;
   flex-direction: column;
   flex-shrink: 0;
-  width: 50px;
+  width: 76px;
   height: 100vh;
-  gap: 10px;
+  gap: 2px;
   &::-webkit-scrollbar {
     display: none;
   }
 }
 
-.serverItem {
+.serverItemLink {
   overflow: hidden;
   flex-shrink: 0;
   border-radius: 50%;
+}
+body .serverItem {
+  padding: 6px 14px;
 }
