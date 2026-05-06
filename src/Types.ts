@@ -20,8 +20,8 @@ export const ChannelType = {
   CATEGORY: 2,
 } as const;
 
-type ChannelType = (typeof ChannelType)[keyof typeof ChannelType];
-export interface Channel {
+export type ChannelType = (typeof ChannelType)[keyof typeof ChannelType];
+export interface RawChannel {
   id: string;
   serverId?: string;
   name?: string;

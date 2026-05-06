@@ -1,7 +1,7 @@
-import type { RawServer } from "../Types";
+import { ChannelType, type RawServer } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
-import { channelStore } from "./channelStore";
+import { Channel, channelStore } from "./channelStore";
 
 export const serverStore = createServerStore();
 
@@ -42,11 +42,32 @@ function createServerStore() {
 
   const currentChannelsSorted = new ManualMemo(() => {
     if (!currentServerId) return null;
-    return [...channelStore.channels.values()]
-      .filter((channel) => {
-        return channel.serverId === currentServerId;
-      })
+
+    const currentChannels = [...channelStore.channels.values()]
+      .filter((channel) => channel.serverId === currentServerId)
       .sort((a, b) => a.order! - b.order!);
+
+    const byCategory = new Map<string, Channel[]>();
+
+    for (const channel of currentChannels) {
+      if (channel.categoryId) {
+        const group = byCategory.get(channel.categoryId);
+        if (group) group.push(channel);
+        else byCategory.set(channel.categoryId, [channel]);
+      }
+    }
+
+    const results: Channel[] = [];
+    for (const channel of currentChannels) {
+      if (channel.categoryId) continue;
+      results.push(channel);
+      if (channel.type === ChannelType.CATEGORY) {
+        const children = byCategory.get(channel.id);
+        if (children) results.push(...children);
+      }
+    }
+
+    return results;
   });
 
   return {
