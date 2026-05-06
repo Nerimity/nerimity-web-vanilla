@@ -25,12 +25,14 @@ const createServerItemHelper = () => {
     </Link>
   );
 
-  const updateSelected = (container: HTMLElement, serverId: string) => {
+  const updateSelected = (container: HTMLElement, serverId?: string | null) => {
     const selected = container.querySelector(`.item[data-selected="true"]`);
 
     if (selected) {
       selected.setAttribute("data-selected", "false");
     }
+
+    if (!serverId) return;
 
     const item = container.querySelector(
       `[data-server-id="${serverId}"] .item`,
@@ -48,28 +50,25 @@ const serverItem = createServerItemHelper();
 
 export const createSidebar = () => {
   let containerEl: HTMLElement | null = null;
+  let hoverAnimator: HoverAnimator | null = null;
 
   const renderList = () => {
+    if (!containerEl) return;
     const servers = [...serverStore.servers.values()];
     reconcile({
-      container: containerEl!,
+      container: containerEl,
       dataAttr: "server-id",
       values: servers,
       create: serverItem.create,
     });
   };
 
-  const serverUpdateUnsub = storeEmitter.on("server:update", () => {
-    renderList();
-  });
-  const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
-    renderList();
-  });
+  const serverUpdateUnsub = storeEmitter.on("server:update", renderList);
+  const authenticatedUnsub = storeEmitter.on("user:authenticated", renderList);
   const serveridUnsub = storeEmitter.on("navigate:serverId", () => {
-    serverItem.updateSelected(containerEl!, serverStore.currentServerId!);
+    if (!containerEl) return;
+    serverItem.updateSelected(containerEl, serverStore.currentServerId);
   });
-
-  let hoverAnimator: HoverAnimator | null = null;
 
   const render = () => {
     containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
