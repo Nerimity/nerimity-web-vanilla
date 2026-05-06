@@ -7,3 +7,7 @@ body {
   color: white;
   background-color: black;
 }
+
+#app {
+  display: flex;
+}

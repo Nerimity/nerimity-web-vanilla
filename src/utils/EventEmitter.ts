@@ -5,6 +5,8 @@ type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 type StoreEvents = {
   "server:update": WithId<RawServer>;
   "user:authenticated": void;
+  "navigate:channelId": string | null;
+  "navigate:serverId": string | null;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

@@ -45,6 +45,7 @@ export interface RawServer {
   defaultRoleId: string;
   createdById: string;
   avatar?: string;
+  serverId: string;
 }
 export interface User {
   id: string;

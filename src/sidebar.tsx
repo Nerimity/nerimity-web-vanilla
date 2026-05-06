@@ -6,20 +6,22 @@ import { createAvatar } from "./avatar";
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
-    <div
+    <a
       data-server-id={server.id}
       title={server.name}
       class={style.serverItem}
+      data-route
+      href={`/app/servers/${server.id}/${server.defaultChannelId}`}
     >
       {createAvatar({ size: 40, server })}
-    </div>
+    </a>
   );
 
   const update = (containerEl: JSX.Element, id: string) => {
     const server = serverStore.servers.get(id)!;
     containerEl
       .querySelector(`[data-server-id="${id}"]`)!
-      .replaceWith(serverItem.create(server));
+      .replaceWith(create(server));
   };
 
   return {
@@ -30,24 +32,32 @@ const createServerItemHelper = () => {
 
 const serverItem = createServerItemHelper();
 
-const createSidebar = () => {
-  let containerEl: JSX.Element;
+export const createSidebar = () => {
+  let containerEl: HTMLElement | null = null;
+
+  const renderList = () => {
+    const servers = [...serverStore.servers.values()].map(serverItem.create);
+    containerEl!.replaceChildren(...servers);
+  };
+
   const serverUpdateUnsub = storeEmitter.on("server:update", (update) => {
-    serverItem.update(containerEl, update.id);
+    serverItem.update(containerEl!, update.id);
   });
   const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
-    const servers = [...serverStore.servers.values()].map(serverItem.create);
-    containerEl.replaceChildren(...servers);
+    renderList();
   });
 
   const render = () => {
-    containerEl = <div class={style.sidebar}></div>;
+    containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
+    renderList();
     return containerEl;
   };
 
   const destroy = () => {
     serverUpdateUnsub();
     authenticatedUnsub();
+    containerEl?.remove();
+    containerEl = null;
   };
 
   return {
@@ -55,5 +65,3 @@ const createSidebar = () => {
     render,
   };
 };
-
-export const serverSidebar = createSidebar();

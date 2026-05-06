@@ -4,6 +4,7 @@
   overflow: auto;
   align-items: center;
   flex-direction: column;
+  flex-shrink: 0;
   width: 50px;
   height: 100vh;
   gap: 10px;

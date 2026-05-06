@@ -1,0 +1,6 @@
+.serverChannelList {
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  height: 100vh;
+}
