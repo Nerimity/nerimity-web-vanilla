@@ -7,10 +7,12 @@ export class Channel {
   id: string;
   name: string;
   serverId?: string;
+  order?: number;
   constructor(data: RawServer) {
     this.id = data.id;
     this.name = data.name;
     this.serverId = data.serverId;
+    this.order = data.order;
   }
 }
 

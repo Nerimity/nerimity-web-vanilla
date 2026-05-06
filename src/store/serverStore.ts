@@ -36,15 +36,17 @@ function createServerStore() {
     let newId = id ?? null;
     if (newId === currentServerId) return;
     currentServerId = newId;
-    currentChannels.rerun();
+    currentChannelsSorted.rerun();
     storeEmitter.emit("navigate:serverId", newId);
   };
 
-  const currentChannels = new ManualMemo(() => {
+  const currentChannelsSorted = new ManualMemo(() => {
     if (!currentServerId) return null;
-    return [...channelStore.channels.values()].filter((channel) => {
-      return channel.serverId === currentServerId;
-    });
+    return [...channelStore.channels.values()]
+      .filter((channel) => {
+        return channel.serverId === currentServerId;
+      })
+      .sort((a, b) => a.order! - b.order!);
   });
 
   return {
@@ -54,6 +56,6 @@ function createServerStore() {
       return currentServerId;
     },
     setCurrentServerId,
-    currentChannels,
+    currentChannelsSorted,
   };
 }

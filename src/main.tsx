@@ -17,7 +17,7 @@ const App = () => {
     null;
 
   storeEmitter.on("user:authenticated", () => {
-    serverStore.currentChannels.rerun();
+    serverStore.currentChannelsSorted.rerun();
   });
 
   router.match(

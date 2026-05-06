@@ -2,5 +2,6 @@
   display: flex;
   overflow: auto;
   flex-direction: column;
+  width: 240px;
   height: 100vh;
 }

@@ -47,7 +47,7 @@ export const createServerChannelList = () => {
   let containerEl: HTMLElement | null = null;
 
   const renderList = () => {
-    const serverChannels = serverStore.currentChannels.value() || [];
+    const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
     if (!containerEl) return;
 
@@ -64,7 +64,8 @@ export const createServerChannelList = () => {
     });
   };
 
-  const channelListUnsub = serverStore.currentChannels.onUpdate(renderList);
+  const channelListUnsub =
+    serverStore.currentChannelsSorted.onUpdate(renderList);
 
   const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
     channelItem.updateSelected(containerEl!, channelStore.currentChannelId!);

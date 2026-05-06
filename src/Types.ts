@@ -46,6 +46,7 @@ export interface RawServer {
   createdById: string;
   avatar?: string;
   serverId: string;
+  order?: number;
 }
 export interface User {
   id: string;
