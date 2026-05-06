@@ -69,23 +69,25 @@ export const createSidebar = () => {
     serverItem.updateSelected(containerEl!, serverStore.currentServerId!);
   });
 
-  const hoverAnimator = new HoverAnimator(document.body, [
-    { trigger: `.${style.serverItemLink}`, avatar: "img.avatar" },
-  ]);
+  let hoverAnimator: HoverAnimator | null = null;
 
   const render = () => {
     containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
+    hoverAnimator = new HoverAnimator(containerEl, [
+      { trigger: `.${style.serverItemLink}`, avatar: "img.avatar" },
+    ]);
     renderList();
     return containerEl;
   };
 
   const destroy = () => {
-    hoverAnimator.destroy();
+    hoverAnimator?.destroy();
     serverUpdateUnsub();
     authenticatedUnsub();
     serveridUnsub();
     containerEl?.remove();
     containerEl = null;
+    hoverAnimator = null;
   };
 
   return {
