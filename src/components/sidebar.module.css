@@ -16,7 +16,6 @@
 .serverItemLink {
   overflow: hidden;
   flex-shrink: 0;
-  border-radius: 50%;
 }
 body .serverItem {
   padding: 6px 14px;

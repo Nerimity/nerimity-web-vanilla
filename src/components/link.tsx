@@ -13,7 +13,7 @@ export const Link = (props: LinkProps) => {
   return (
     <a
       {...rest}
-      class={[style.link, props.decoration && style.decoration]}
+      class={[style.link, props.decoration && style.decoration, props.class]}
       data-route
     >
       {children}

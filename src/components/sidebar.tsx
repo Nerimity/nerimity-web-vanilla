@@ -2,10 +2,11 @@ import style from "./sidebar.module.css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
-import { createAvatar } from "./avatar";
+import { Avatar } from "./avatar";
 import { reconcile } from "../utils/html";
 import { Link } from "./link";
 import { Item } from "./item";
+import { HoverAnimator } from "../utils/HoverAnimator";
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
@@ -19,7 +20,7 @@ const createServerItemHelper = () => {
         class={style.serverItem}
         selected={serverStore.currentServerId === server.id}
       >
-        {createAvatar({ size: 42, server })}
+        <Avatar size={42} server={server} imgClass="avatar" />
       </Item.Base>
     </Link>
   );
@@ -68,6 +69,10 @@ export const createSidebar = () => {
     serverItem.updateSelected(containerEl!, serverStore.currentServerId!);
   });
 
+  const hoverAnimator = new HoverAnimator(document.body, [
+    { trigger: `.${style.serverItemLink}`, avatar: "img.avatar" },
+  ]);
+
   const render = () => {
     containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
     renderList();
@@ -75,6 +80,7 @@ export const createSidebar = () => {
   };
 
   const destroy = () => {
+    hoverAnimator.destroy();
     serverUpdateUnsub();
     authenticatedUnsub();
     serveridUnsub();
