@@ -14,14 +14,25 @@ export const storeEmitter = createEventEmitter<StoreEvents>();
 function createEventEmitter<T extends Record<string, unknown>>() {
   const listeners = new Map<keyof T, Set<(data: any) => void>>();
 
-  return {
-    on<K extends keyof T>(event: K, listener: (data: T[K]) => void) {
-      if (!listeners.has(event)) listeners.set(event, new Set());
-      listeners.get(event)!.add(listener);
-      return () => listeners.get(event)?.delete(listener);
-    },
-    emit<K extends keyof T>(event: K, data?: T[K]) {
-      listeners.get(event)?.forEach((l) => l(data));
-    },
+  const on = <K extends keyof T>(
+    event: K | ReadonlyArray<K>,
+    listener: (data: T[K]) => void,
+  ) => {
+    const events = Array.isArray(event) ? event : [event];
+    for (const e of events) {
+      if (!listeners.has(e)) listeners.set(e, new Set());
+      listeners.get(e)!.add(listener);
+    }
+    return () => {
+      for (const e of events) {
+        listeners.get(e)?.delete(listener);
+      }
+    };
   };
+
+  const emit = <K extends keyof T>(event: K, data?: T[K]) => {
+    listeners.get(event)?.forEach((l) => l(data));
+  };
+
+  return { on, emit };
 }

@@ -1,6 +1,6 @@
 import style from "./avatar.module.css";
-import { h } from "./h";
-import { buildImageUrl } from "./utils/image";
+import { h } from "../h";
+import { buildImageUrl } from "../utils/image";
 
 interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string };

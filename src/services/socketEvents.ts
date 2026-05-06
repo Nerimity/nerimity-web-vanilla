@@ -7,12 +7,12 @@ export const socketEventHandler = (event: string, payload: any) => {
   if (event === "user:authenticated") {
     onAuthenticated(payload);
   }
-  if (event === "server:channel_updated") {
-    onServerChannelUpdated(payload);
-  }
-  if (event === "user:presence_update") {
-    onUserPresenceUpdate(payload);
-  }
+  // if (event === "server:channel_updated") {
+  //   onServerChannelUpdated(payload);
+  // }
+  // if (event === "user:presence_update") {
+  //   onUserPresenceUpdate(payload);
+  // }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -25,10 +25,10 @@ const onAuthenticated = (payload: any) => {
   accountStore.setAuthenticated(true);
 };
 
-const onServerChannelUpdated = (payload: any) => {
-  // channelStore.updateChannel(payload.channelId, payload);
-};
+// const onServerChannelUpdated = (payload: any) => {
+//   // channelStore.updateChannel(payload.channelId, payload);
+// };
 
-const onUserPresenceUpdate = (payload: any) => {
-  // userPresenceStore.updatePresence(payload.userId, payload);
-};
+// const onUserPresenceUpdate = (payload: any) => {
+//   // userPresenceStore.updatePresence(payload.userId, payload);
+// };

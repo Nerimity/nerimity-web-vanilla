@@ -2,10 +2,11 @@ import { h } from "./h";
 import "./style.css";
 import { socket } from "./services/socket";
 import { router } from "./utils/router";
-import { createSidebar } from "./sidebar";
+import { createSidebar } from "./components/sidebar";
 import { serverStore } from "./store/serverStore";
 import { channelStore } from "./store/channelStore";
-import { createServerChannelList } from "./serverChannelList";
+import { createServerChannelList } from "./components/serverChannelList";
+import { storeEmitter } from "./utils/EventEmitter";
 
 socket.connect();
 
@@ -14,6 +15,10 @@ const App = () => {
   let serverSidebar: ReturnType<typeof createSidebar> | null = null;
   let serverChannelList: ReturnType<typeof createServerChannelList> | null =
     null;
+
+  storeEmitter.on("user:authenticated", () => {
+    serverStore.currentChannels.rerun();
+  });
 
   router.match(
     ["/app/servers/:serverId/:channelId"],

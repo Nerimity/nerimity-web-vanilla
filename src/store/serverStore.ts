@@ -1,5 +1,7 @@
 import type { RawServer } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { ManualMemo } from "../utils/memo";
+import { channelStore } from "./channelStore";
 
 export const serverStore = createServerStore();
 
@@ -34,8 +36,16 @@ function createServerStore() {
     let newId = id ?? null;
     if (newId === currentServerId) return;
     currentServerId = newId;
+    currentChannels.rerun();
     storeEmitter.emit("navigate:serverId", newId);
   };
+
+  const currentChannels = new ManualMemo(() => {
+    if (!currentServerId) return null;
+    return [...channelStore.channels.values()].filter((channel) => {
+      return channel.serverId === currentServerId;
+    });
+  });
 
   return {
     servers,
@@ -44,5 +54,6 @@ function createServerStore() {
       return currentServerId;
     },
     setCurrentServerId,
+    currentChannels,
   };
 }
