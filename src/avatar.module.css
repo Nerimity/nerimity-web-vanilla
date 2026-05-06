@@ -1,0 +1,19 @@
+.avatar {
+  width: var(--size);
+  height: var(--size);
+}
+.avatarInner {
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+}
+.image {
+  object-fit: cover;
+}
+.avatarLetter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color);
+  font-weight: bold;
+}

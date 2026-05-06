@@ -46,7 +46,14 @@ export function h(
           ? value.join(" ")
           : (value as string);
       } else if (key === "style" && typeof value === "object") {
-        Object.assign(el.style, value);
+        for (const [prop, val] of Object.entries(value)) {
+          if (val == null) continue;
+          if (prop.startsWith("--")) {
+            el.style.setProperty(prop, val as string);
+          } else {
+            (el.style as any)[prop] = val;
+          }
+        }
       } else if (typeof value === "boolean") {
         if (value) el.setAttribute(key, "");
       } else if (typeof value !== "object") {

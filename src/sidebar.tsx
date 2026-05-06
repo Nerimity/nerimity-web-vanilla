@@ -1,7 +1,8 @@
 import style from "./sidebar.module.css";
-import { storeEmitter } from "./EventEmitter";
+import { storeEmitter } from "./utils/EventEmitter";
 import { h } from "./h";
 import { Server, serverStore } from "./store/serverStore";
+import { createAvatar } from "./avatar";
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
@@ -10,11 +11,7 @@ const createServerItemHelper = () => {
       title={server.name}
       class={style.serverItem}
     >
-      <img
-        loading="lazy"
-        src={`https://cdn.nerimity.com/${server.avatar}?size=40`}
-        alt={server.name}
-      />
+      {createAvatar({ size: 40, server })}
     </div>
   );
 
@@ -44,7 +41,7 @@ const createSidebar = () => {
   });
 
   const render = () => {
-    containerEl = <div>serverList</div>;
+    containerEl = <div class={style.sidebar}></div>;
     return containerEl;
   };
 

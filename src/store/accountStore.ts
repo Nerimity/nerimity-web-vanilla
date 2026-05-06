@@ -1,4 +1,4 @@
-import { storeEmitter } from "../EventEmitter";
+import { storeEmitter } from "../utils/EventEmitter";
 
 export const accountStore = createAccountStore();
 

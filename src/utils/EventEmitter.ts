@@ -1,4 +1,4 @@
-import type { RawServer } from "./Types";
+import type { RawServer } from "../Types";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 
