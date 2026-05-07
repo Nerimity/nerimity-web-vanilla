@@ -1,12 +1,13 @@
 .channelIcon {
   display: flex;
+  width: var(--size);
+  height: var(--size);
+  box-sizing: content-box;
   padding: 4px;
   border-radius: var(--radius-4);
   background-color: var(--slate-800);
   img {
     width: 100%;
-    width: var(--size);
-    height: var(--size);
     height: 100%;
   }
 }
