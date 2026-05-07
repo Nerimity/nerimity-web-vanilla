@@ -4,6 +4,7 @@ export interface RawServerMember {
   serverId: string;
   roleIds: string[];
   user: RawUser;
+  nickname?: string;
 }
 
 export interface RawServerRole {

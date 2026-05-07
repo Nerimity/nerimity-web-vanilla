@@ -104,11 +104,17 @@ export const createServerMemberList = () => {
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
 
   const categorizedMembersMemoized = new ManualMemo(() => {
+    const userIdToRoleId: Record<string, string | null> = {};
+
     const members = [
       ...(serverMemberStore.serverMembers
         .get(serverStore.currentServerId!)
         ?.values() || []),
-    ];
+    ].sort((a, b) => {
+      const au = a.nickname || userStore.users.get(a.userId)!.username;
+      const bu = b.nickname || userStore.users.get(b.userId)!.username;
+      return au.localeCompare(bu);
+    });
     const server = serverStore.servers.get(serverStore.currentServerId!);
     const creatorId = server?.createdById;
 
@@ -154,12 +160,14 @@ export const createServerMemberList = () => {
       if (!canViewChannel) continue;
 
       if (!presences.has(member.userId)) {
+        userIdToRoleId[member.userId] = "offline";
         offlineMembers.push(member);
         continue;
       }
 
       const targetRoleId = topRoleId ?? defaultRole?.id;
       if (targetRoleId) {
+        userIdToRoleId[member.userId] = targetRoleId;
         buckets[targetRoleId]!.push(member);
       }
     }
@@ -191,7 +199,7 @@ export const createServerMemberList = () => {
       }
     }
 
-    return result;
+    return { result, userIdToRoleId };
   });
 
   let vt: ReturnType<typeof createVirtualList> | null = null;
@@ -202,7 +210,7 @@ export const createServerMemberList = () => {
       return;
     }
     vt = createVirtualList({
-      items: () => categorizedMembersMemoized.value(),
+      items: () => categorizedMembersMemoized.value().result,
       type: { r: { height: 22 }, m: { height: 44 } },
       parentEl: containerEl,
       renderItem: memberItem,
@@ -228,9 +236,15 @@ export const createServerMemberList = () => {
     renderList();
   });
 
-  const presenceUnsub = storeEmitter.on("user:presence_update", () => {
+  const presenceUnsub = storeEmitter.on("user:presence_update", (event) => {
+    const oldRoleId =
+      categorizedMembersMemoized.value().userIdToRoleId[event.userId];
     categorizedMembersMemoized.rerun();
     renderList();
+    const newRoleId =
+      categorizedMembersMemoized.value().userIdToRoleId[event.userId];
+    if (oldRoleId) vt?.rerenderItem(oldRoleId);
+    if (newRoleId && newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
   });
 
   const render = () => {
@@ -262,16 +276,16 @@ const memberItem = (cat: Categorized) => {
   if (cat.type === "m") {
     const user = userStore.users.get(cat.member.userId);
     return (
-      <div class={style.memberItem} data-role-user-id={cat.id}>
+      <div class={style.memberItem} data-user-id={cat.id}>
         <Avatar size={32} user={user!} />
-        <span>{user?.username}</span>
+        <span>{cat.member.nickname || user?.username}</span>
       </div>
     );
   } else {
     const role = cat.role;
 
     return (
-      <div class={style.roleItem} data-role-user-id={cat.id}>
+      <div class={style.roleItem} data-role-id={cat.id}>
         <span>
           {role?.name} - {cat.count}
         </span>

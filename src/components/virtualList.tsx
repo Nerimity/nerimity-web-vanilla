@@ -1,5 +1,4 @@
 import { h } from "../h";
-import { reconcile } from "../utils/html";
 
 type Item<T, V> = T & { type: V; id: string };
 
@@ -114,7 +113,16 @@ export function createVirtualList<T, V extends string>(
     window.removeEventListener("resize", onResize);
   };
 
+  const rerenderItem = (id: string) => {
+    console.log(id);
+    const el = elMap.get(id);
+    if (!el) return;
+    const item = cacheItems.find((i) => i.id === id);
+    if (!item) return;
+    el.replaceChildren(props.renderItem(item));
+  };
   return {
+    rerenderItem,
     updateItems,
     render,
     destroy,

@@ -8,11 +8,13 @@ export class ServerMember {
   userId: string;
   roleIds: string[];
   serverId: string;
+  nickname?: string;
   constructor(data: RawServerMember) {
     this.id = data.id;
     this.roleIds = data.roleIds;
     this.serverId = data.serverId;
     this.userId = data.userId;
+    this.nickname = data.nickname;
   }
 }
 
