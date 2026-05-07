@@ -4,4 +4,16 @@
   flex-direction: column;
   width: 240px;
   height: 100vh;
+  gap: 2px;
+}
+.channelItem {
+  padding: 6px 6px;
+}
+.categoryLabel {
+  color: var(--text-color);
+}
+
+.categoryLink {
+  margin-top: 16px;
+  margin-bottom: 2px;
 }

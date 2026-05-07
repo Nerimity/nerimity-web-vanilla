@@ -24,7 +24,21 @@ export const Item = {
   Icon() {
     return <div>Icon</div>;
   },
-  Label(props: { children: string }) {
-    return <div class={style.label}>{props.children}</div>;
+  Label(props: {
+    children: any;
+    size?: number;
+    class?: string | (string | boolean | undefined)[];
+  }) {
+    return (
+      <div
+        class={[
+          style.label,
+          ...(Array.isArray(props.class) ? props.class : [props.class]),
+        ]}
+        style={{ "--size": props.size && props.size + "px" }}
+      >
+        {props.children}
+      </div>
+    );
   },
 };

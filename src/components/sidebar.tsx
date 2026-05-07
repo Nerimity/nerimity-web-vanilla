@@ -73,7 +73,7 @@ export const createSidebar = () => {
   const render = () => {
     containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
-      { trigger: `.${style.serverItemLink}`, avatar: "img.avatar" },
+      { trigger: `.${style.serverItemLink}`, image: "img.avatar" },
     ]);
     renderList();
     return containerEl;

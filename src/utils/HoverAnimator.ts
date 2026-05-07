@@ -1,11 +1,11 @@
 export class HoverAnimator {
-  private targets: Array<{ trigger?: string; avatar: string }>;
+  private targets: Array<{ trigger?: string; image: string }>;
   private controller: AbortController;
   private hoveredRoots = new WeakSet<Element>();
 
   constructor(
     container: HTMLElement,
-    targets: Array<{ trigger?: string; avatar: string }>,
+    targets: Array<{ trigger?: string; image: string }>,
   ) {
     this.targets = targets;
     this.controller = new AbortController();
@@ -38,8 +38,8 @@ export class HoverAnimator {
     hovered: boolean,
     relatedTarget: HTMLElement | null,
   ) {
-    for (const { trigger, avatar } of this.targets) {
-      const root = trigger ? target.closest(trigger) : target.closest(avatar);
+    for (const { trigger, image } of this.targets) {
+      const root = trigger ? target.closest(trigger) : target.closest(image);
       if (!root) continue;
       if (!hovered && relatedTarget && root.contains(relatedTarget)) continue;
       if (hovered === this.hoveredRoots.has(root)) continue;
@@ -48,7 +48,7 @@ export class HoverAnimator {
       else this.hoveredRoots.delete(root);
 
       const img = trigger
-        ? root.querySelector<HTMLImageElement>(avatar)
+        ? root.querySelector<HTMLImageElement>(image)
         : (root as HTMLImageElement);
       if (img?.dataset.imgAnim === undefined) continue;
 

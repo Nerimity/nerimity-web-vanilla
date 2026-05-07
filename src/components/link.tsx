@@ -5,6 +5,7 @@ type LinkProps = Partial<Omit<HTMLAnchorElement, keyof HTMLElement>> & {
   children?: JSX.Element;
   [key: string]: any;
   decoration?: boolean;
+  class?: string | (string | boolean | undefined)[];
 };
 
 export const Link = (props: LinkProps) => {
@@ -13,7 +14,11 @@ export const Link = (props: LinkProps) => {
   return (
     <a
       {...rest}
-      class={[style.link, props.decoration && style.decoration, props.class]}
+      class={[
+        style.link,
+        props.decoration && style.decoration,
+        ...(Array.isArray(props.class) ? props.class : [props.class]),
+      ]}
       data-route
     >
       {children}

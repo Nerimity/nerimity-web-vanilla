@@ -41,8 +41,9 @@
       color: var(--text-color);
     }
   }
-  .label {
-    color: var(--text-muted);
-    transition: 0.2s;
-  }
+}
+.label {
+  color: var(--text-muted);
+  transition: 0.2s;
+  font-size: var(--size);
 }

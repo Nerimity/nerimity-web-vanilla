@@ -10,6 +10,7 @@ export class Channel {
   order?: number;
   type: number;
   categoryId?: string;
+  icon?: string;
   constructor(data: RawChannel) {
     this.id = data.id;
     this.name = data.name;
@@ -17,6 +18,7 @@ export class Channel {
     this.order = data.order;
     this.type = data.type;
     this.categoryId = data.categoryId;
+    this.icon = data.icon;
   }
 }
 

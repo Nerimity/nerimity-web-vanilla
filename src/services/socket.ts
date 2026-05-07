@@ -11,8 +11,8 @@ function createSocket() {
       ws.close();
     }
     ws = new WebSocket(
-      "wss://nerimity.com/socket.io/?EIO=4&transport=websocket",
-      // "ws://localhost:8000/socket.io/?EIO=4&transport=websocket",
+      // "wss://nerimity.com/socket.io/?EIO=4&transport=websocket",
+      "ws://localhost:8000/socket.io/?EIO=4&transport=websocket",
     );
     ws.onmessage = (event) => {
       const raw = event.data as string;
