@@ -59,6 +59,7 @@ export const createSidebar = () => {
       container: containerEl,
       dataAttr: "server-id",
       values: servers,
+      valueId: "id",
       create: serverItem.create,
     });
   };

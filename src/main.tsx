@@ -7,6 +7,7 @@ import { serverStore } from "./store/serverStore";
 import { channelStore } from "./store/channelStore";
 import { createServerChannelList } from "./components/serverChannelList";
 import { storeEmitter } from "./utils/EventEmitter";
+import { createServerMemberList } from "./components/serverMemberList";
 
 socket.connect();
 
@@ -15,6 +16,7 @@ const App = () => {
   let serverSidebar: ReturnType<typeof createSidebar> | null = null;
   let serverChannelList: ReturnType<typeof createServerChannelList> | null =
     null;
+  let serverMemberList: ReturnType<typeof createServerMemberList> | null = null;
 
   storeEmitter.on("user:authenticated", () => {
     serverStore.currentChannelsSorted.rerun();
@@ -34,13 +36,21 @@ const App = () => {
     if (pathname.startsWith("/app")) {
       serverSidebar ??= createSidebar();
       serverChannelList ??= createServerChannelList();
-      app.replaceChildren(serverSidebar.render(), serverChannelList.render());
+      serverMemberList ??= createServerMemberList();
+      app.replaceChildren(
+        serverSidebar.render(),
+        serverChannelList.render(),
+        serverMemberList.render(),
+      );
       return;
     }
+
     serverSidebar?.destroy();
     serverSidebar = null;
     serverChannelList?.destroy();
     serverChannelList = null;
+    serverMemberList?.destroy();
+    serverMemberList = null;
     app.replaceChildren(
       <a data-route href="/app">
         App

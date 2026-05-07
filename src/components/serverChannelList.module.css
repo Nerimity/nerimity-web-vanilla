@@ -2,6 +2,7 @@
   display: flex;
   overflow: auto;
   flex-direction: column;
+  flex-shrink: 0;
   width: 240px;
   height: 100vh;
   gap: 2px;

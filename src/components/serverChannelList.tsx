@@ -83,6 +83,7 @@ export const createServerChannelList = () => {
       container: containerEl,
       dataAttr: "channel-id",
       values: serverChannels,
+      valueId: "id",
       create: channelItem.create,
     });
   };

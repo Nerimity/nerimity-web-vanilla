@@ -1,8 +1,9 @@
 import type { RawServerMember } from "../Types";
+import { userStore } from "./userStore";
 
 export const serverMemberStore = createServerMemberStore();
 
-class ServerMember {
+export class ServerMember {
   id: string;
   userId: string;
   roleIds: string[];
@@ -18,15 +19,16 @@ class ServerMember {
 function createServerMemberStore() {
   const serverMembers = new Map<string, Map<string, ServerMember>>();
 
-  const setServerMembers = (newServers: RawServerMember[]) => {
+  const setServerMembers = (newMembers: RawServerMember[]) => {
     serverMembers.clear();
-    for (let i = 0; i < newServers.length; i++) {
-      const server = newServers[i]!;
+    for (let i = 0; i < newMembers.length; i++) {
+      const member = newMembers[i]!;
       const members =
-        serverMembers.get(server.serverId) ||
+        serverMembers.get(member.serverId) ||
         new Map<string, RawServerMember>();
-      members.set(server.id, new ServerMember(server));
-      serverMembers.set(server.serverId, members);
+      userStore.addUser(member.user);
+      members.set(member.id, new ServerMember(member));
+      serverMembers.set(member.serverId, members);
     }
   };
 

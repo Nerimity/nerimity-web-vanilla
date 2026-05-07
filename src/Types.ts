@@ -3,6 +3,7 @@ export interface RawServerMember {
   userId: string;
   serverId: string;
   roleIds: string[];
+  user: RawUser;
 }
 
 export interface ServerRole {
@@ -48,11 +49,12 @@ export interface RawServer {
   serverId: string;
   order?: number;
 }
-export interface User {
+export interface RawUser {
   id: string;
   username: string;
   hexColor: string;
   avatar?: string;
+  tag: string;
 }
 
 export interface UserPresence {
