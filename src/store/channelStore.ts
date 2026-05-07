@@ -1,4 +1,4 @@
-import type { RawChannel } from "../Types";
+import type { ChannelPermissions, RawChannel } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 
 export const channelStore = createChannelStore();
@@ -11,6 +11,7 @@ export class Channel {
   type: number;
   categoryId?: string;
   icon?: string;
+  permissions?: ChannelPermissions[];
   constructor(data: RawChannel) {
     this.id = data.id;
     this.name = data.name;
@@ -19,6 +20,7 @@ export class Channel {
     this.type = data.type;
     this.categoryId = data.categoryId;
     this.icon = data.icon;
+    this.permissions = data.permissions;
   }
 }
 

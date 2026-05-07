@@ -1,3 +1,4 @@
+import type { UserPresence } from "../store/userPresenceStore";
 import type { RawServer } from "../Types";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
@@ -7,6 +8,7 @@ type StoreEvents = {
   "user:authenticated": void;
   "navigate:channelId": string | null;
   "navigate:serverId": string | null;
+  "user:presence_update": { userId: string; presence?: UserPresence };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

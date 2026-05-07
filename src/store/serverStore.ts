@@ -11,12 +11,16 @@ export class Server {
   hexColor: string;
   avatar?: string;
   defaultChannelId: string;
+  defaultRoleId: string;
+  createdById: string;
   constructor(data: RawServer) {
     this.id = data.id;
     this.name = data.name;
     this.hexColor = data.hexColor;
     this.avatar = data.avatar;
     this.defaultChannelId = data.defaultChannelId;
+    this.defaultRoleId = data.defaultRoleId;
+    this.createdById = data.createdById;
   }
 }
 

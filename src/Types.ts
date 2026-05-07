@@ -6,7 +6,7 @@ export interface RawServerMember {
   user: RawUser;
 }
 
-export interface ServerRole {
+export interface RawServerRole {
   id: string;
   serverId: string;
   permissions: number;
@@ -57,7 +57,7 @@ export interface RawUser {
   tag: string;
 }
 
-export interface UserPresence {
+export interface RawUserPresence {
   status: number;
   userId: string;
 }
