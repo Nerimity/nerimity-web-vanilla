@@ -4,7 +4,6 @@ import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { storeEmitter } from "../utils/EventEmitter";
-import { reconcile } from "../utils/html";
 import { Avatar } from "./avatar";
 import { ServerRole, serverRoleStore } from "../store/serverRoleStore";
 import { channelStore } from "../store/channelStore";
@@ -81,10 +80,8 @@ const visibleRoleIds = () => {
     )
       set.add(roleId);
   }
-  for (const roleId in serverRoles) {
-    if (
-      hasBit(serverRoles.get(roleId)?.permissions, RolePermissionFlag.admin.bit)
-    )
+  for (const [roleId, role] of serverRoles) {
+    if (hasBit(role?.permissions, RolePermissionFlag.admin.bit))
       set.add(roleId);
   }
   return set;
@@ -160,6 +157,7 @@ export const createServerMemberList = () => {
       if (!canViewChannel) continue;
 
       if (!presences.has(member.userId)) {
+        if (!canViewChannel) continue;
         userIdToRoleId[member.userId] = "offline";
         offlineMembers.push(member);
         continue;
