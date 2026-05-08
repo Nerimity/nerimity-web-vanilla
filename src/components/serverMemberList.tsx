@@ -1,4 +1,3 @@
-import style from "./serverMemberList.module.css";
 import { h } from "../h";
 import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
 import { serverStore } from "../store/serverStore";
@@ -13,6 +12,9 @@ import { hasBit } from "../utils/bitwise";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { ManualMemo } from "../utils/memo";
 import { createVirtualList } from "./virtualList";
+import { convertShorthandToLinearGradient } from "../utils/color";
+import { GradientText } from "./gradientText";
+import { css } from "@linaria/core";
 
 type Categorized =
   | { type: "r"; role: ServerRole; count: number; id: string }
@@ -26,14 +28,6 @@ const offlineRole: ServerRole = new ServerRole({
   order: 0,
   serverId: "",
 });
-
-const currentServerSortedRoles = () => {
-  const serverRoles =
-    serverRoleStore.roles.get(serverStore.currentServerId!) ||
-    new Map<string, ServerRole>();
-
-  return [...serverRoles.values()].sort((a, b) => b.order - a.order);
-};
 
 const currentServerDefaultRole = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
@@ -88,12 +82,22 @@ const visibleRoleIds = () => {
 };
 
 const roleOrder = () => {
-  const sorted = currentServerSortedRoles().filter((r) => !r.hideRole);
+  const sorted = serverStore.currentServerSortedRoles
+    .value()
+    .filter((r) => !r.hideRole);
   const order: Record<string, number> = {};
   for (let i = 0; i < sorted.length; i++) order[sorted[i]!.id] = i;
   return { sorted, order };
 };
 
+const memberListContainer = css`
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 240px;
+  height: 100vh;
+`;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;
   const roleOrderMemoized = new ManualMemo(roleOrder);
@@ -166,7 +170,7 @@ export const createServerMemberList = () => {
       const targetRoleId = topRoleId ?? defaultRole?.id;
       if (targetRoleId) {
         userIdToRoleId[member.userId] = targetRoleId;
-        buckets[targetRoleId]!.push(member);
+        buckets[targetRoleId]?.push(member);
       }
     }
 
@@ -247,7 +251,7 @@ export const createServerMemberList = () => {
 
   const render = () => {
     containerEl = (
-      <div class={style.serverMemberList}></div>
+      <div class={memberListContainer}></div>
     ) as unknown as HTMLDivElement;
 
     renderList();
@@ -270,20 +274,43 @@ export const createServerMemberList = () => {
   };
 };
 
+const memberItemContainer = css`
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  flex-shrink: 0;
+  height: 44px;
+  padding: 6px 6px;
+  gap: 8px;
+  .memberName {
+    font-weight: 400;
+  }
+`;
+
+const roleItemContainer = css`
+  height: 21px;
+`;
 const memberItem = (cat: Categorized) => {
   if (cat.type === "m") {
     const user = userStore.users.get(cat.member.userId);
+    const topRoleColor = serverStore.memberTopColor(cat.member);
+
+    const color =
+      convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+
     return (
-      <div class={style.memberItem} data-user-id={cat.id}>
+      <div class={memberItemContainer} data-user-id={cat.id}>
         <Avatar size={32} user={user!} />
-        <span>{cat.member.nickname || user?.username}</span>
+        <GradientText color={color} class="memberName">
+          {cat.member.nickname || user?.username}
+        </GradientText>
       </div>
     );
   } else {
     const role = cat.role;
 
     return (
-      <div class={style.roleItem} data-role-id={cat.id}>
+      <div class={roleItemContainer} data-role-id={cat.id}>
         <span>
           {role?.name} - {cat.count}
         </span>

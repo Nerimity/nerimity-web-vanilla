@@ -9,6 +9,7 @@ export class ServerRole {
   order: number;
   name: string;
   hideRole: boolean;
+  hexColor?: string;
   constructor(data: RawServerRole) {
     this.id = data.id;
     this.serverId = data.serverId;
@@ -16,6 +17,7 @@ export class ServerRole {
     this.order = data.order;
     this.name = data.name;
     this.hideRole = data.hideRole;
+    this.hexColor = data.hexColor;
   }
 }
 

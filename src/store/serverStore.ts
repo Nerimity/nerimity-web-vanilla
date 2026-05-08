@@ -2,6 +2,8 @@ import { ChannelType, type RawServer } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
 import { Channel, channelStore } from "./channelStore";
+import type { ServerMember } from "./serverMemberStore";
+import { ServerRole, serverRoleStore } from "./serverRoleStore";
 
 export const serverStore = createServerStore();
 
@@ -40,6 +42,7 @@ function createServerStore() {
     let newId = id ?? null;
     if (newId === currentServerId) return;
     currentServerId = newId;
+    serverStore.currentServerSortedRoles.rerun();
     currentChannelsSorted.rerun();
     storeEmitter.emit("navigate:serverId", newId);
   };
@@ -74,13 +77,31 @@ function createServerStore() {
     return results;
   });
 
+  const currentServerSortedRoles = new ManualMemo(() => {
+    const serverRoles =
+      serverRoleStore.roles.get(currentServerId!) ||
+      new Map<string, ServerRole>();
+
+    return [...serverRoles.values()].sort((a, b) => b.order - a.order);
+  });
+
+  const memberTopColor = (member?: ServerMember) => {
+    if (!member) return;
+    const role = currentServerSortedRoles
+      .value()
+      .find((r) => member.roleIds.includes(r.id) && r.hexColor);
+    return role?.hexColor;
+  };
+
   return {
     servers,
     setServers,
     get currentServerId() {
       return currentServerId;
     },
+    memberTopColor,
     setCurrentServerId,
     currentChannelsSorted,
+    currentServerSortedRoles,
   };
 }

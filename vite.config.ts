@@ -1,6 +1,13 @@
 import { defineConfig } from "vite";
+import wyw from "@wyw-in-js/vite";
 
 export default defineConfig({
+  plugins: [
+    wyw({
+      classNameSlug: "[title]_[hash]",
+    }),
+  ],
+
   oxc: {
     jsx: {
       pragma: "h",

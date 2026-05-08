@@ -19,6 +19,7 @@ const App = () => {
   let serverMemberList: ReturnType<typeof createServerMemberList> | null = null;
 
   storeEmitter.on("user:authenticated", () => {
+    serverStore.currentServerSortedRoles.rerun();
     serverStore.currentChannelsSorted.rerun();
   });
 
