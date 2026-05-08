@@ -1,4 +1,3 @@
-import style from "./sidebar.module.css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
@@ -7,17 +6,26 @@ import { reconcile } from "../utils/html";
 import { Link } from "./link";
 import { Item } from "./item";
 import { HoverAnimator } from "../utils/HoverAnimator";
+import { css } from "@linaria/core";
+
+const serverItemLink = css`
+  overflow: hidden;
+  flex-shrink: 0;
+  .serverItem {
+    padding: 6px 14px;
+  }
+`;
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
     <Link
       data-server-id={server.id}
       title={server.name}
-      class={style.serverItemLink}
+      class={serverItemLink}
       href={`/app/servers/${server.id}/${server.defaultChannelId}`}
     >
       <Item.Base
-        class={style.serverItem}
+        class="serverItem"
         selected={serverStore.currentServerId === server.id}
       >
         <Avatar size={42} server={server} imgClass="avatar" />
@@ -48,6 +56,21 @@ const createServerItemHelper = () => {
 
 const serverItem = createServerItemHelper();
 
+const sidebar = css`
+  display: flex;
+
+  overflow: auto;
+  align-items: center;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 76px;
+  height: 100vh;
+  gap: 2px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export const createSidebar = () => {
   let containerEl: HTMLElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
@@ -72,9 +95,9 @@ export const createSidebar = () => {
   });
 
   const render = () => {
-    containerEl = (<div class={style.sidebar}></div>) as unknown as HTMLElement;
+    containerEl = (<div class={sidebar}></div>) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
-      { trigger: `.${style.serverItemLink}`, image: "img.avatar" },
+      { trigger: `.${serverItemLink}`, image: "img.avatar" },
     ]);
     renderList();
     return containerEl;

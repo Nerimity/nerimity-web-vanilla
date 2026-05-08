@@ -1,4 +1,3 @@
-import style from "./serverChannelList.module.css";
 import { h, Fragment } from "../h";
 import { serverStore } from "../store/serverStore";
 import { channelStore, type Channel } from "../store/channelStore";
@@ -9,6 +8,17 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { ChannelIcon } from "./channelIcon";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { ChannelType } from "../Types";
+import { css } from "@linaria/core";
+
+const serverChannelList = css`
+  display: flex;
+  overflow: auto;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 240px;
+  height: 100vh;
+  gap: 2px;
+`;
 
 export const createServerChannelList = () => {
   let containerEl: HTMLElement | null = null;
@@ -29,7 +39,7 @@ export const createServerChannelList = () => {
       dataAttr: "channel-id",
       values: serverChannels,
       valueId: "id",
-      create: channelItem.create,
+      create: channelItemHelper.create,
     });
   };
 
@@ -37,12 +47,15 @@ export const createServerChannelList = () => {
     serverStore.currentChannelsSorted.onUpdate(renderList);
 
   const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
-    channelItem.updateSelected(containerEl!, channelStore.currentChannelId!);
+    channelItemHelper.updateSelected(
+      containerEl!,
+      channelStore.currentChannelId!,
+    );
   });
 
   const render = () => {
     containerEl = (
-      <div class={style.serverChannelList}></div>
+      <div class={serverChannelList}></div>
     ) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
       { trigger: `.channelItemLink`, image: ".channelIcon img" },
@@ -66,6 +79,20 @@ export const createServerChannelList = () => {
   };
 };
 
+const channelItemLink = css`
+  .channelItem {
+    padding: 6px 6px;
+  }
+
+  .categoryLabel {
+    color: var(--text-color);
+  }
+
+  &.categoryLink {
+    margin-bottom: 2px;
+    margin-top: 16px;
+  }
+`;
 const createChannelItemHelper = () => {
   const create = (channel: Channel) => {
     const isCategory = channel.type === ChannelType.CATEGORY;
@@ -74,11 +101,15 @@ const createChannelItemHelper = () => {
         data-channel-id={channel.id}
         title={channel.name}
         data-route
-        class={["channelItemLink", isCategory && style.categoryLink]}
+        class={[
+          "channelItemLink",
+          channelItemLink,
+          isCategory && "categoryLink",
+        ]}
         href={`/app/servers/${channel.serverId}/${channel.id}`}
       >
         <Item.Base
-          class={style.channelItem}
+          class="channelItem"
           selected={channelStore.currentChannelId === channel.id}
         >
           <>
@@ -88,7 +119,7 @@ const createChannelItemHelper = () => {
               channel={channel}
             />
             <Item.Label
-              class={[isCategory && style.categoryLabel]}
+              class={[isCategory && "categoryLabel"]}
               size={isCategory ? 12 : 16}
             >
               {channel.name}
@@ -119,4 +150,4 @@ const createChannelItemHelper = () => {
   };
 };
 
-const channelItem = createChannelItemHelper();
+const channelItemHelper = createChannelItemHelper();

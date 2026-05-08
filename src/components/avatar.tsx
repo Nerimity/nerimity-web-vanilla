@@ -1,6 +1,27 @@
-import style from "./avatar.module.css";
+import { css } from "@linaria/core";
 import { h } from "../h";
 import { buildImageUrl } from "../utils/image";
+
+const avatar = css`
+  width: var(--size);
+  height: var(--size);
+  .avatarInner {
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+  }
+
+  .image {
+    object-fit: cover;
+  }
+  .avatarLetter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color);
+    font-weight: bold;
+  }
+`;
 
 interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string };
@@ -29,18 +50,18 @@ export const Avatar = (props: AvatarProps) => {
   const _hexColor = hexColor(props);
   const _firstLetter = firstLetter(props);
   return (
-    <div class={style.avatar} style={{ "--size": props.size + "px" }}>
+    <div class={avatar} style={{ "--size": props.size + "px" }}>
       {url ? (
         <img
           loading="lazy"
-          class={[style.avatarInner, style.image, props.imgClass]}
+          class={["avatarInner", "image", props.imgClass]}
           src={url}
           alt=""
           {...(animated && { "data-img-anim": "" })}
         />
       ) : (
         <div
-          class={[style.avatarInner, style.avatarLetter]}
+          class={["avatarInner", "avatarLetter"]}
           style={{ "--color": _hexColor }}
         >
           {_firstLetter}

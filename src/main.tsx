@@ -8,6 +8,7 @@ import { channelStore } from "./store/channelStore";
 import { createServerChannelList } from "./components/serverChannelList";
 import { storeEmitter } from "./utils/EventEmitter";
 import { createServerMemberList } from "./components/serverMemberList";
+import { Link } from "./components/link";
 
 socket.connect();
 
@@ -53,9 +54,9 @@ const App = () => {
     serverMemberList?.destroy();
     serverMemberList = null;
     app.replaceChildren(
-      <a data-route href="/app">
+      <Link decoration href="/app">
         App
-      </a>,
+      </Link>,
     );
   });
 };
