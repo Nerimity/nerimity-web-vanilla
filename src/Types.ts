@@ -15,6 +15,7 @@ export interface RawServerRole {
   name: string;
   hideRole: boolean;
   hexColor?: string;
+  icon?: string;
 }
 
 export const ChannelType = {

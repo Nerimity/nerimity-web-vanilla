@@ -1,10 +1,9 @@
 import { h } from "../h";
-import type { Channel } from "../store/channelStore";
 import { unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
 import { css } from "@linaria/core";
 
-const channelIcon = css`
+const cdnIcon = css`
   display: flex;
   width: var(--size);
   height: var(--size);
@@ -18,14 +17,15 @@ const channelIcon = css`
   }
 `;
 
-interface ChannelIconProps {
-  channel: Channel;
+interface CdnIconProps {
+  channel?: { icon?: string };
+  role?: { icon?: string };
   class?: string;
   size: number;
 }
 
-const buildUrl = (props: ChannelIconProps) => {
-  const icon = props.channel.icon;
+const buildUrl = (props: CdnIconProps) => {
+  const icon = props.channel?.icon || props.role?.icon;
   if (!icon) return [null, false] as const;
 
   if (icon!.includes(".")) {
@@ -36,14 +36,11 @@ const buildUrl = (props: ChannelIconProps) => {
   return [unicodeToTwemojiUrl(icon!), false] as const;
 };
 
-export const ChannelIcon = (props: ChannelIconProps) => {
+export const CdnIcon = (props: CdnIconProps) => {
   const [url, animated] = buildUrl(props);
 
   return (
-    <div
-      class={[channelIcon, props.class]}
-      style={{ "--size": props.size + "px" }}
-    >
+    <div class={[cdnIcon, props.class]} style={{ "--size": props.size + "px" }}>
       {url ? (
         <img
           loading="lazy"

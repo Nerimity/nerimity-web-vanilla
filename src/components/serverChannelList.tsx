@@ -5,7 +5,7 @@ import { reconcile } from "../utils/html";
 import { Item } from "./item";
 import { Link } from "./link";
 import { storeEmitter } from "../utils/EventEmitter";
-import { ChannelIcon } from "./channelIcon";
+import { CdnIcon } from "./cdnIcon";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { ChannelType } from "../Types";
 import { css } from "@linaria/core";
@@ -58,7 +58,16 @@ export const createServerChannelList = () => {
       <div class={serverChannelList}></div>
     ) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
-      { trigger: `.${channelItemLink}`, image: ".channelIcon img" },
+      {
+        trigger: `.${channelItemLink}:not(.categoryLink)`,
+        image: ".channelIcon img",
+        crossAnimate: {
+          attr: "data-category-id",
+          targetAttr: "data-channel-id",
+          target: "img",
+        },
+      },
+      { trigger: `.categoryLink`, image: ".channelIcon img" },
     ]);
     renderList();
 
@@ -103,13 +112,14 @@ const createChannelItemHelper = () => {
         data-route
         class={[channelItemLink, isCategory && "categoryLink"]}
         href={`/app/servers/${channel.serverId}/${channel.id}`}
+        {...(channel.categoryId && { "data-category-id": channel.categoryId })}
       >
         <Item.Base
           class="channelItem"
           selected={channelStore.currentChannelId === channel.id}
         >
           <>
-            <ChannelIcon
+            <CdnIcon
               class="channelIcon"
               size={isCategory ? 10 : 18}
               channel={channel}

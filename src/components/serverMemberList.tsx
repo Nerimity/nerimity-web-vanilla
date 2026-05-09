@@ -15,10 +15,12 @@ import { createVirtualList } from "./virtualList";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { GradientText } from "./gradientText";
 import { css } from "@linaria/core";
+import { HoverAnimator } from "../utils/HoverAnimator";
+import { CdnIcon } from "./cdnIcon";
 
 type Categorized =
   | { type: "r"; role: ServerRole; count: number; id: string }
-  | { type: "m"; member: ServerMember; id: string };
+  | { type: "m"; member: ServerMember; id: string; role: ServerRole };
 
 const offlineRole: ServerRole = new ServerRole({
   name: "Offline",
@@ -100,6 +102,7 @@ const memberListContainer = css`
 `;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;
+  let hoverAnimator: HoverAnimator | null = null;
   const roleOrderMemoized = new ManualMemo(roleOrder);
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
@@ -182,7 +185,12 @@ export const createServerMemberList = () => {
       if (bucket?.length) {
         result.push({ type: "r", role, count: bucket.length, id: role.id });
         for (let j = 0; j < bucket.length; j++)
-          result.push({ type: "m", member: bucket[j]!, id: bucket[j]!.id });
+          result.push({
+            type: "m",
+            member: bucket[j]!,
+            id: bucket[j]!.id,
+            role,
+          });
       }
     }
     if (offlineMembers.length && offlineRole) {
@@ -197,6 +205,7 @@ export const createServerMemberList = () => {
           type: "m",
           member: offlineMembers[i]!,
           id: offlineMembers[i]!.id,
+          role: offlineRole,
         });
       }
     }
@@ -213,7 +222,7 @@ export const createServerMemberList = () => {
     }
     vt = createVirtualList({
       items: () => categorizedMembersMemoized.value().result,
-      type: { r: { height: 22 }, m: { height: 44 } },
+      type: { r: { height: 40 }, m: { height: 44 } },
       parentEl: containerEl,
       renderItem: memberItem,
     });
@@ -254,6 +263,19 @@ export const createServerMemberList = () => {
       <div class={memberListContainer}></div>
     ) as unknown as HTMLDivElement;
 
+    hoverAnimator = new HoverAnimator(containerEl, [
+      {
+        trigger: `.${memberItemContainer}`,
+        image: "img.avatar",
+        crossAnimate: {
+          attr: "data-role-id",
+          targetRoot: `.${roleItemContainer}`,
+          target: "img",
+        },
+      },
+      { trigger: `.${roleItemContainer}`, image: "img" },
+    ]);
+
     renderList();
 
     return containerEl;
@@ -288,7 +310,14 @@ const memberItemContainer = css`
 `;
 
 const roleItemContainer = css`
-  height: 21px;
+  display: flex;
+  gap: 8px;
+  height: 40px;
+  align-items: center;
+  .roleName {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
 `;
 const memberItem = (cat: Categorized) => {
   if (cat.type === "m") {
@@ -299,8 +328,12 @@ const memberItem = (cat: Categorized) => {
       convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
 
     return (
-      <div class={memberItemContainer} data-user-id={cat.id}>
-        <Avatar size={32} user={user!} />
+      <div
+        class={memberItemContainer}
+        data-user-id={cat.id}
+        data-role-id={cat.role.id}
+      >
+        <Avatar size={32} user={user!} imgClass="avatar" />
         <GradientText color={color} class="memberName">
           {cat.member.nickname || user?.username}
         </GradientText>
@@ -311,7 +344,8 @@ const memberItem = (cat: Categorized) => {
 
     return (
       <div class={roleItemContainer} data-role-id={cat.id}>
-        <span>
+        {role.icon ? <CdnIcon role={role} size={14} /> : null}
+        <span class="roleName">
           {role?.name} - {cat.count}
         </span>
       </div>
