@@ -285,6 +285,7 @@ export const createServerMemberList = () => {
 
   const destroy = () => {
     vt?.destroy();
+    hoverAnimator?.destroy();
     authenticatedUnsub();
     channelIdUnsub();
     presenceUnsub();
