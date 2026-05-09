@@ -13,6 +13,8 @@ export function createVirtualList<T, V extends string>(
 ) {
   let cacheItems: Item<T, V>[] = props.items();
   const elMap = new Map<string, HTMLElement>();
+  let cachedScrollTop = 0;
+  let cachedClientHeight = 0;
 
   const containerEl = (
     <div style={{ "flex-shrink": 0, position: "relative" }}></div>
@@ -27,19 +29,20 @@ export function createVirtualList<T, V extends string>(
   };
 
   const onResize = () => {
+    cachedClientHeight = props.parentEl.clientHeight;
     updateChunks();
   };
 
   const onScroll = () => {
+    cachedScrollTop = props.parentEl.scrollTop; // read immediately on scroll
+    cachedClientHeight = props.parentEl.clientHeight;
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(updateChunks);
   };
 
   const updateChunks = () => {
-    const parentEl = props.parentEl;
-    const top = parentEl.scrollTop;
-    const containerHeight = parentEl.clientHeight;
-    const bottom = top + containerHeight;
+    const top = cachedScrollTop;
+    const bottom = top + cachedClientHeight;
 
     const items: Item<T, V>[] = [];
     const pos: number[] = [];
@@ -91,14 +94,20 @@ export function createVirtualList<T, V extends string>(
   };
 
   const render = () => {
-    updateItems();
-    return containerEl;
+    const el = containerEl;
+    requestAnimationFrame(() => {
+      cachedScrollTop = props.parentEl.scrollTop;
+      cachedClientHeight = props.parentEl.clientHeight;
+      updateItems();
+    });
+    return el;
   };
 
   const updateItems = () => {
     cacheItems = props.items();
     containerEl.style.height = `${totalHeight()}px`;
-    updateChunks();
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(updateChunks);
   };
 
   window.addEventListener("resize", onResize);
