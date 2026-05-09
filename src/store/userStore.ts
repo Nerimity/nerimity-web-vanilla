@@ -1,4 +1,4 @@
-import type { RawUser } from "../Types";
+import type { ServerClan, Profile, RawUser } from "../Types";
 
 export const userStore = createUserStore();
 
@@ -8,19 +8,32 @@ class User {
   avatar?: string;
   hexColor: string;
   tag: string;
+  profile?: Profile;
   constructor(data: RawUser) {
     this.id = data.id;
     this.username = data.username;
     this.avatar = data.avatar;
     this.hexColor = data.hexColor;
     this.tag = data.tag;
+    this.profile = data.profile;
   }
 }
 
 function createUserStore() {
   const users = new Map<string, User>();
+  const clanCache = new Map<string, ServerClan>();
 
-  const addUser = (user: RawUser) => users.set(user.id, new User(user));
+  const addUser = (user: RawUser) => {
+    if (user.profile?.clan) {
+      const serverId = user.profile.clan.serverId;
+      if (!clanCache.has(serverId)) {
+        clanCache.set(serverId, user.profile.clan);
+      } else {
+        user.profile.clan = clanCache.get(serverId)!;
+      }
+    }
+    users.set(user.id, new User(user));
+  };
 
   return { users, addUser };
 }

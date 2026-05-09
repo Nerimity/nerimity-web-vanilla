@@ -57,6 +57,7 @@ export interface RawUser {
   hexColor: string;
   avatar?: string;
   tag: string;
+  profile?: Profile;
 }
 
 export interface RawUserPresence {
@@ -67,3 +68,13 @@ export interface RawUserPresence {
 // interface CustomEmoji {
 //   id: string;
 // }
+
+export interface Profile {
+  clan?: ServerClan;
+}
+
+export interface ServerClan {
+  icon: string;
+  serverId: string;
+  tag: string;
+}
