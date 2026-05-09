@@ -58,7 +58,7 @@ export const createServerChannelList = () => {
       <div class={serverChannelList}></div>
     ) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
-      { trigger: `.channelItemLink`, image: ".channelIcon img" },
+      { trigger: `.${channelItemLink}`, image: ".channelIcon img" },
     ]);
     renderList();
 
@@ -101,11 +101,7 @@ const createChannelItemHelper = () => {
         data-channel-id={channel.id}
         title={channel.name}
         data-route
-        class={[
-          "channelItemLink",
-          channelItemLink,
-          isCategory && "categoryLink",
-        ]}
+        class={[channelItemLink, isCategory && "categoryLink"]}
         href={`/app/servers/${channel.serverId}/${channel.id}`}
       >
         <Item.Base

@@ -46,7 +46,6 @@ export const ChannelIcon = (props: ChannelIconProps) => {
     >
       {url ? (
         <img
-          data-img-anim
           loading="lazy"
           src={url}
           alt=""
