@@ -6,6 +6,7 @@ interface ReconcileOpts<T> {
   create: (item: T, index: number) => JSX.Element;
   chunkSize?: number;
   onDone?: () => void;
+  shouldRecreate?: (node: HTMLElement, item: T, index: number) => boolean;
 }
 
 const toCamelCase = (str: string) =>
@@ -50,12 +51,22 @@ export function reconcile<T extends { id: string }>(opts: ReconcileOpts<T>) {
       const item = values[i]!;
       const id = String(item[opts.valueId]);
       const existing = existingMap.get(id);
-      const node = (existing ?? create(item, i)) as unknown as HTMLElement;
+      let node: HTMLElement;
+
+      if (existing && opts.shouldRecreate?.(existing, item, i)) {
+        const fresh = create(item, i) as unknown as HTMLElement;
+        existing.replaceWith(fresh);
+        existingMap.set(id, fresh);
+        node = fresh;
+        children[i] = fresh;
+      } else {
+        node = (existing ?? create(item, i)) as unknown as HTMLElement;
+        if (existing === undefined) existingMap.set(id, node);
+      }
 
       if (children[i] !== node) {
         container.insertBefore(node, children[i] ?? null);
         children.splice(i, 0, node);
-        if (existing === undefined) existingMap.set(id, node);
       }
 
       if (chunkSize && i - start + 1 >= chunkSize && i < values.length - 1) {

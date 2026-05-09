@@ -11,6 +11,8 @@ type StoreEvents = {
   "navigate:serverId": string | null;
   "user:presence_update": { userId: string; presence?: UserPresence };
   "message:created": Message;
+  "message:deleted": { id: string; channelId: string };
+  "message:updated": { message: Message; index: number };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

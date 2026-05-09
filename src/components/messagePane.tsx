@@ -12,6 +12,14 @@ import { convertShorthandToLinearGradient } from "../utils/color";
 import { ServerClanItem } from "./serverClanItem";
 import { accountStore } from "../store/accountStore";
 
+const shouldGroup = (message: Message, prev?: Message): boolean => {
+  if (!prev) return false;
+  if (message.createdBy.id !== prev.createdBy.id) return false;
+  const diff = message.createdAt - prev.createdAt;
+  if (diff > 5 * 60 * 1000) return false;
+  return true;
+};
+
 const messageItem = css`
   display: flex;
   gap: 10px;
@@ -38,11 +46,13 @@ const messageItem = css`
   }
   .content {
     white-space: pre-wrap;
+    word-break: break-word;
   }
 `;
 const MessageItem = (props: { message: Message; prevMessage?: Message }) => {
   const creator = props.message.createdBy;
-  const sameCreator = creator.id === props.prevMessage?.createdBy.id;
+  const group =
+    props.prevMessage && shouldGroup(props.message, props.prevMessage);
 
   const member = serverMemberStore.serverMembers
     .get(serverStore.currentServerId!)
@@ -56,16 +66,17 @@ const MessageItem = (props: { message: Message; prevMessage?: Message }) => {
 
   return (
     <div
-      class={[messageItem, !sameCreator && "withDetails"]}
+      class={[messageItem, !group && "withDetails"]}
       data-message-id={props.message.id}
+      data-grouped={group}
     >
-      {sameCreator ? (
+      {group ? (
         <div class="avatarPlaceholder"></div>
       ) : (
         <Avatar user={creator} size={40} />
       )}
       <div>
-        {!sameCreator && (
+        {!group && (
           <span class="details">
             <GradientText class="username" color={color}>
               {name}
@@ -92,6 +103,17 @@ const messagePane = css`
 export const createMessagePane = () => {
   const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
 
+  const updateMessage = (message: Message, index: number) => {
+    const messages = messageStore.messages.get(channelStore.currentChannelId!);
+    const messageEl = el.querySelector(
+      `[data-message-id="${message.id}"]`,
+    ) as HTMLDivElement | null;
+    if (!messageEl) return;
+    messageEl.replaceWith(
+      <MessageItem message={message} prevMessage={messages?.[index - 1]} />,
+    );
+  };
+
   const rerender = async (loadFromCache?: boolean) => {
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
@@ -109,6 +131,11 @@ export const createMessagePane = () => {
       create: (m, i) => (
         <MessageItem message={m} prevMessage={messages[i - 1]} />
       ),
+      shouldRecreate: (node, m, i) => {
+        const prevGrouped = node.dataset.grouped === "true";
+        const nextGrouped = shouldGroup(m, messages[i - 1]);
+        return prevGrouped !== nextGrouped;
+      },
     });
   };
 
@@ -120,11 +147,23 @@ export const createMessagePane = () => {
     if (message.channelId !== channelStore.currentChannelId) return;
     rerender(true);
   });
+  const messageDeletedUnsub = storeEmitter.on("message:deleted", (event) => {
+    if (event.channelId !== channelStore.currentChannelId) return;
+    rerender(true);
+  });
   const authUnsub = storeEmitter.on("user:authenticated", () => {
     messageStore
       .loadMessages(channelStore.currentChannelId!)
       .then(() => rerender());
   });
+
+  const messageUpdatedUnsub = storeEmitter.on(
+    "message:updated",
+    ({ message, index }) => {
+      if (message.channelId !== channelStore.currentChannelId) return;
+      updateMessage(message, index);
+    },
+  );
 
   const render = () => {
     if (!accountStore.authenticated) {
@@ -139,6 +178,8 @@ export const createMessagePane = () => {
     authUnsub();
     channelIdUnsub();
     messageCreatedUnsub();
+    messageDeletedUnsub();
+    messageUpdatedUnsub();
     el.remove();
   };
 

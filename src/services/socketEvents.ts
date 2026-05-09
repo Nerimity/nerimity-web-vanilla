@@ -21,6 +21,12 @@ export const socketEventHandler = (event: string, payload: any) => {
   if (event === "message:created") {
     onMessageCreated(payload);
   }
+  if (event === "message:deleted") {
+    onMessageDeleted(payload);
+  }
+  if (event === "message:updated") {
+    onMessageUpdated(payload);
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -46,4 +52,16 @@ const onUserPresenceUpdate = (payload: any) => {
 
 const onMessageCreated = (payload: any) => {
   messageStore.pushMessage(payload.message.channelId, payload.message);
+};
+
+const onMessageDeleted = (payload: any) => {
+  messageStore.deleteMessage(payload.channelId, payload.messageId);
+};
+
+const onMessageUpdated = (payload: any) => {
+  messageStore.updateMessage(
+    payload.channelId,
+    payload.messageId,
+    payload.updated,
+  );
 };

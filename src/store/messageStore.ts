@@ -8,11 +8,13 @@ export class Message {
   content: string;
   createdBy: RawUser;
   channelId: string;
+  createdAt: number;
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
     this.createdBy = data.createdBy;
     this.channelId = data.channelId;
+    this.createdAt = data.createdAt;
   }
 }
 
@@ -49,6 +51,38 @@ function createMessageStore() {
     messages.set(channelId, updated);
     storeEmitter.emit("message:created", message);
   };
+  const deleteMessage = (channelId: string, messageId: string) => {
+    const existing = messages.get(channelId);
+    if (!existing) return;
+    const index = existing.findLastIndex((m) => m.id === messageId);
+    if (index === -1) return;
+    existing.splice(index, 1);
+    messages.set(channelId, existing);
+    storeEmitter.emit("message:deleted", { id: messageId, channelId });
+  };
 
-  return { messages, loadMessages, pushMessage };
+  const updateMessage = (
+    channelId: string,
+    messageId: string,
+    rawMessage: Partial<RawMessage>,
+  ) => {
+    const channelMessages = messages.get(channelId);
+    if (!channelMessages) return;
+    const messageIndex = channelMessages.findIndex((m) => m.id === messageId);
+    if (messageIndex === -1) return;
+    const existing = channelMessages[messageIndex]!;
+    const message = new Message({
+      id: existing.id,
+      channelId: existing.channelId,
+      content: rawMessage.content ?? existing.content,
+      createdBy: existing.createdBy,
+      createdAt: existing.createdAt,
+      ...rawMessage,
+    });
+    channelMessages[messageIndex] = message;
+    messages.set(channelId, channelMessages);
+    storeEmitter.emit("message:updated", { message, index: messageIndex });
+  };
+
+  return { messages, loadMessages, pushMessage, deleteMessage, updateMessage };
 }
