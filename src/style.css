@@ -42,3 +42,8 @@ body {
 #app {
   display: flex;
 }
+
+.contentPane {
+  display: flex;
+  flex: 1;
+}
