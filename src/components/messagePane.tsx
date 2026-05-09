@@ -166,7 +166,7 @@ export const createMessagePane = () => {
   );
 
   const render = () => {
-    if (!accountStore.authenticated) {
+    if (accountStore.authenticated) {
       messageStore
         .loadMessages(channelStore.currentChannelId!)
         .then(() => rerender());
