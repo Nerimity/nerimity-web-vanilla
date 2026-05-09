@@ -20,12 +20,13 @@ const cdnIcon = css`
 interface CdnIconProps {
   channel?: { icon?: string };
   role?: { icon?: string };
+  clan?: { icon?: string };
   class?: string;
   size: number;
 }
 
 const buildUrl = (props: CdnIconProps) => {
-  const icon = props.channel?.icon || props.role?.icon;
+  const icon = props.channel?.icon || props.role?.icon || props.clan?.icon;
   if (!icon) return [null, false] as const;
 
   if (icon!.includes(".")) {

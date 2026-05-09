@@ -10,7 +10,7 @@ export class HoverAnimator {
     };
   }>;
   private controller: AbortController;
-  private hoveredRoots = new WeakSet<Element>();
+  private hoveredStates = new Map<number, WeakSet<Element>>();
   private container: HTMLElement;
   private leaveTimeouts = new WeakMap<
     HTMLImageElement,
@@ -93,22 +93,30 @@ export class HoverAnimator {
     hovered: boolean,
     relatedTarget: HTMLElement | null,
   ) {
-    for (const { trigger, image, crossAnimate } of this.targets) {
+    for (let i = 0; i < this.targets.length; i++) {
+      const { trigger, image, crossAnimate } = this.targets[i]!;
       const root = trigger ? target.closest(trigger) : target.closest(image);
       if (!root) continue;
       if (!hovered && relatedTarget && root.contains(relatedTarget)) continue;
-      if (hovered === this.hoveredRoots.has(root)) continue;
 
-      if (hovered) this.hoveredRoots.add(root);
-      else this.hoveredRoots.delete(root);
-
-      const img = trigger
-        ? root.querySelector<HTMLImageElement>(image)
-        : (root as HTMLImageElement);
-
-      if (img) {
-        this.updateImageState(img, hovered);
+      let ruleState = this.hoveredStates.get(i);
+      if (!ruleState) {
+        ruleState = new WeakSet<Element>();
+        this.hoveredStates.set(i, ruleState);
       }
+
+      if (hovered === ruleState.has(root)) continue;
+
+      if (hovered) ruleState.add(root);
+      else ruleState.delete(root);
+
+      const imgs = trigger
+        ? root.querySelectorAll<HTMLImageElement>(image)
+        : [root as HTMLImageElement];
+
+      imgs.forEach((img) => {
+        this.updateImageState(img, hovered);
+      });
 
       if (crossAnimate) {
         const attrValue = (root as HTMLElement).getAttribute(crossAnimate.attr);
@@ -119,16 +127,17 @@ export class HoverAnimator {
               continue;
           }
 
-          const crossRoot = this.container.querySelector(
+          // Use querySelectorAll to find ALL cross-animate targets (headers, etc)
+          const crossRoots = this.container.querySelectorAll(
             `[${crossAnimate.targetAttr ?? crossAnimate.attr}="${attrValue}"]`,
           );
-          const crossEl = crossRoot?.querySelector<HTMLImageElement>(
-            crossAnimate.target,
-          );
 
-          if (crossEl) {
-            this.updateImageState(crossEl, hovered);
-          }
+          crossRoots.forEach((cRoot) => {
+            const crossImgs = cRoot.querySelectorAll<HTMLImageElement>(
+              crossAnimate.target,
+            );
+            crossImgs.forEach((cImg) => this.updateImageState(cImg, hovered));
+          });
         }
       }
     }

@@ -17,6 +17,7 @@ import { GradientText } from "./gradientText";
 import { css } from "@linaria/core";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { CdnIcon } from "./cdnIcon";
+import { ServerClanItem } from "./serverClanItem";
 
 type Categorized =
   | { type: "r"; role: ServerRole; count: number; id: string }
@@ -264,6 +265,7 @@ export const createServerMemberList = () => {
     ) as unknown as HTMLDivElement;
 
     hoverAnimator = new HoverAnimator(containerEl, [
+      { trigger: `.${memberItemContainer}`, image: ".clanIcon img" },
       {
         trigger: `.${memberItemContainer}`,
         image: "img.avatar",
@@ -304,8 +306,21 @@ const memberItemContainer = css`
   height: 44px;
   padding: 6px 6px;
   gap: 8px;
+
+  .memberInfo {
+    display: inline-flex;
+    gap: 4px;
+    overflow: hidden;
+    flex: 1;
+    align-items: center;
+  }
+
   .memberName {
     font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
   }
 `;
 
@@ -334,9 +349,12 @@ const memberItem = (cat: Categorized) => {
         data-role-id={cat.role.id}
       >
         <Avatar size={32} user={user!} imgClass="avatar" />
-        <GradientText color={color} class="memberName">
-          {cat.member.nickname || user?.username}
-        </GradientText>
+        <span class="memberInfo">
+          <GradientText color={color} class="memberName">
+            {cat.member.nickname || user?.username}
+          </GradientText>
+          {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
+        </span>
       </div>
     );
   } else {
