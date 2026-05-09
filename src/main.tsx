@@ -29,7 +29,6 @@ const App = () => {
     (params) => {
       serverStore.setCurrentServerId(params.serverId);
       channelStore.setCurrentChannelId(params.channelId);
-      console.log(params);
     },
     { trackParams: true },
   );

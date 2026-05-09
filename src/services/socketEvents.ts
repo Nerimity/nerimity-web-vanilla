@@ -4,6 +4,7 @@ import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
+import { decompressObject } from "../utils/zstd";
 
 export const socketEventHandler = (event: string, payload: any) => {
   if (event === "user:authenticated") {
@@ -18,6 +19,9 @@ export const socketEventHandler = (event: string, payload: any) => {
 };
 
 const onAuthenticated = (payload: any) => {
+  if (payload instanceof ArrayBuffer) {
+    payload = decompressObject(new Uint8Array(payload));
+  }
   // accountStore.setAuthenticated(true);
   channelStore.setChannels(payload.channels);
   serverStore.setServers(payload.servers);

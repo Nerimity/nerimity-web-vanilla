@@ -14,6 +14,7 @@
     "vite": "^8.0.10"
   },
   "dependencies": {
-    "@linaria/core": "^7.0.0"
+    "@linaria/core": "^7.0.0",
+    "fzstd": "^0.1.1"
   }
 }

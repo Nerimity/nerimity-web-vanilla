@@ -114,7 +114,6 @@ export function createVirtualList<T, V extends string>(
   };
 
   const rerenderItem = (id: string) => {
-    console.log(id);
     const el = elMap.get(id);
     if (!el) return;
     const item = cacheItems.find((i) => i.id === id);
