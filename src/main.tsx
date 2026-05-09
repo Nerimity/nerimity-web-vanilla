@@ -9,15 +9,30 @@ import { createServerChannelList } from "./components/serverChannelList";
 import { storeEmitter } from "./utils/EventEmitter";
 import { createServerMemberList } from "./components/serverMemberList";
 import { Link } from "./components/link";
+import { createMessagePane } from "./components/messagePane";
 
 socket.connect();
 
 const createAppPage = () => {
   const app = document.getElementById("app")!;
+  let messagePane: ReturnType<typeof createMessagePane> | null = null;
 
   const contentPane = (
     <div class="contentPane"></div>
   ) as unknown as HTMLDivElement;
+
+  const serverChannelMatchUnsub = router.match(
+    ["/app/servers/:serverId/:channelId"],
+    (params) => {
+      if (!params.serverId || !params.channelId) {
+        messagePane?.destroy();
+        return;
+      }
+
+      messagePane = createMessagePane();
+      contentPane.replaceChildren(messagePane.render());
+    },
+  );
 
   let serverSidebar: ReturnType<typeof createSidebar> | null = null;
   let serverChannelList: ReturnType<typeof createServerChannelList> | null =
@@ -25,6 +40,7 @@ const createAppPage = () => {
   let serverMemberList: ReturnType<typeof createServerMemberList> | null = null;
 
   const destroy = () => {
+    messagePane?.destroy();
     serverSidebar?.destroy();
     serverChannelList?.destroy();
     serverMemberList?.destroy();
@@ -32,6 +48,7 @@ const createAppPage = () => {
     serverChannelList = null;
     serverMemberList = null;
     contentPane.remove();
+    serverChannelMatchUnsub();
   };
 
   const render = () => {

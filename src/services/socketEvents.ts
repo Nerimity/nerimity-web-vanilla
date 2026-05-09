@@ -1,9 +1,11 @@
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
+import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
+import type { RawMessage } from "../Types";
 import { decompressObject } from "../utils/zstd";
 
 export const socketEventHandler = (event: string, payload: any) => {
@@ -15,6 +17,9 @@ export const socketEventHandler = (event: string, payload: any) => {
   // }
   if (event === "user:presence_update") {
     onUserPresenceUpdate(payload);
+  }
+  if (event === "message:created") {
+    onMessageCreated(payload);
   }
 };
 
@@ -37,4 +42,8 @@ const onAuthenticated = (payload: any) => {
 
 const onUserPresenceUpdate = (payload: any) => {
   userPresenceStore.updatePresence(payload.userId, payload);
+};
+
+const onMessageCreated = (payload: any) => {
+  messageStore.pushMessage(payload.message.channelId, payload.message);
 };

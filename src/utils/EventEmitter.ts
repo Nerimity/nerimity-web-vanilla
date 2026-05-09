@@ -1,3 +1,4 @@
+import type { Message } from "../store/messageStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { RawServer } from "../Types";
 
@@ -9,6 +10,7 @@ type StoreEvents = {
   "navigate:channelId": string | null;
   "navigate:serverId": string | null;
   "user:presence_update": { userId: string; presence?: UserPresence };
+  "message:created": Message;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

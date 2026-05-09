@@ -3,7 +3,7 @@ interface ReconcileOpts<T> {
   dataAttr: string;
   values: T[];
   valueId: keyof T;
-  create: (item: T) => JSX.Element;
+  create: (item: T, index: number) => JSX.Element;
   chunkSize?: number;
   onDone?: () => void;
 }
@@ -50,7 +50,7 @@ export function reconcile<T extends { id: string }>(opts: ReconcileOpts<T>) {
       const item = values[i]!;
       const id = String(item[opts.valueId]);
       const existing = existingMap.get(id);
-      const node = (existing ?? create(item)) as unknown as HTMLElement;
+      const node = (existing ?? create(item, i)) as unknown as HTMLElement;
 
       if (children[i] !== node) {
         container.insertBefore(node, children[i] ?? null);

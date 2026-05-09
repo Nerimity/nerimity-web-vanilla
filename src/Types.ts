@@ -79,3 +79,10 @@ export interface ServerClan {
   serverId: string;
   tag: string;
 }
+
+export interface RawMessage {
+  id: string;
+  content: string;
+  channelId: string;
+  createdBy: RawUser;
+}

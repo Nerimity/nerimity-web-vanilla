@@ -29,7 +29,7 @@ function createServerMemberStore() {
         serverMembers.get(member.serverId) ||
         new Map<string, RawServerMember>();
       userStore.addUser(member.user);
-      members.set(member.id, new ServerMember(member));
+      members.set(member.userId, new ServerMember(member));
       serverMembers.set(member.serverId, members);
     }
   };
