@@ -269,7 +269,7 @@ export const createServerMemberList = () => {
         image: "img.avatar",
         crossAnimate: {
           attr: "data-role-id",
-          targetRoot: `.${roleItemContainer}`,
+          targetAttr: "data-role-header-id",
           target: "img",
         },
       },
@@ -343,7 +343,7 @@ const memberItem = (cat: Categorized) => {
     const role = cat.role;
 
     return (
-      <div class={roleItemContainer} data-role-id={cat.id}>
+      <div class={roleItemContainer} data-role-header-id={cat.id}>
         {role.icon ? <CdnIcon role={role} size={14} /> : null}
         <span class="roleName">
           {role?.name} - {cat.count}
