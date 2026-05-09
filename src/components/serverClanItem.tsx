@@ -6,7 +6,7 @@ import { CdnIcon } from "./cdnIcon";
 const clanItem = css`
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 2px;
   background-color: var(--slate-700);
   border-radius: var(--radius-5);
   padding-right: 4px;
