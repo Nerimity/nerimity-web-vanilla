@@ -10,6 +10,7 @@ import { serverStore } from "../store/serverStore";
 import { GradientText } from "./gradientText";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { ServerClanItem } from "./serverClanItem";
+import { accountStore } from "../store/accountStore";
 
 const messageItem = css`
   display: flex;
@@ -126,6 +127,11 @@ export const createMessagePane = () => {
   });
 
   const render = () => {
+    if (!accountStore.authenticated) {
+      messageStore
+        .loadMessages(channelStore.currentChannelId!)
+        .then(() => rerender());
+    }
     return el;
   };
 
