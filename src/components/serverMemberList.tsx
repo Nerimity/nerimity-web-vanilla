@@ -283,7 +283,7 @@ const memberItemContainer = css`
   padding: 6px 6px;
   gap: 8px;
   .memberName {
-    font-weight: 400;
+    font-weight: 500;
   }
 `;
 
