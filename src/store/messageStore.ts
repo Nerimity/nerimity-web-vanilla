@@ -9,12 +9,14 @@ export class Message {
   createdBy: RawUser;
   channelId: string;
   createdAt: number;
+  mentions: RawUser[];
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
     this.createdBy = data.createdBy;
     this.channelId = data.channelId;
     this.createdAt = data.createdAt;
+    this.mentions = data.mentions || [];
   }
 }
 

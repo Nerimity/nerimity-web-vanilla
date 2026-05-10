@@ -8,6 +8,8 @@ import {
   type Span,
 } from "@nerimity/nevula";
 import type { Message } from "../../store/messageStore";
+import { userStore } from "../../store/userStore";
+import { Mention } from "./Mention";
 
 const markup = css`
   line-height: 1.3;
@@ -94,7 +96,20 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
       break;
     }
     case "@": {
-      return <span>#user-mention</span>;
+      const message = ctx.props().message;
+      const user =
+        message?.mentions?.find((u) => u.id === expr) ||
+        userStore.users.get(expr);
+      const everyoneOrSomeone = ["e", "s"].includes(expr);
+      if (user) {
+        ctx.textCount += expr.length;
+        return <Mention user={user} />;
+      }
+      if (everyoneOrSomeone) {
+        ctx.textCount += expr.length;
+        return <Mention label={expr} />;
+      }
+
       break;
     }
     case "q": {

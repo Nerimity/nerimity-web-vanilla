@@ -5,6 +5,9 @@
   --primary-color: #3b82f6;
   --item-bg: var(--slate-800);
 
+  --markup-mention-background-color: var(--slate-800);
+  --markup-mention-background-color-hover: var(--slate-700);
+
   --slate-50: hsl(220, 15%, 95%);
   --slate-100: hsl(220, 15%, 90%);
   --slate-200: hsl(220, 15%, 80%);

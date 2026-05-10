@@ -86,4 +86,5 @@ export interface RawMessage {
   channelId: string;
   createdBy: RawUser;
   createdAt: number;
+  mentions?: RawUser[];
 }
