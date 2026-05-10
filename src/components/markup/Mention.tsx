@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 import { h } from "../../h";
 import { Avatar } from "../avatar";
+import { Link } from "../link";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
@@ -31,9 +32,9 @@ const mention = css`
 
 export const Mention = (props: MentionProps) => {
   return (
-    <span class={mention}>
-      {props.user && <Avatar user={props.user} size={12} />}
+    <Link href={`/app/profile/${props.user?.id}`} class={mention}>
+      {props.user && <Avatar user={props.user} size={16} />}
       <span class="text">{props.user?.username || props.label}</span>
-    </span>
+    </Link>
   );
 };
