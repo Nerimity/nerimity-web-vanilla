@@ -10,6 +10,7 @@ import {
 import type { Message } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { Mention } from "./Mention";
+import { channelStore } from "../../store/channelStore";
 
 const markup = css`
   line-height: 1.3;
@@ -87,7 +88,11 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
   const expr = sliceText(ctx, entity.innerSpan, { countText: false });
   switch (type) {
     case "#": {
-      return <span>#channel-mention</span>;
+      const channel = channelStore.channels.get(expr);
+      if (channel && channel.serverId) {
+        ctx.textCount += expr.length;
+        return <Mention channel={channel} icon="tag" />;
+      }
       break;
     }
     // Role mentions
@@ -98,8 +103,8 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     case "@": {
       const message = ctx.props().message;
       const user =
-        message?.mentions?.find((u) => u.id === expr) ||
-        userStore.users.get(expr);
+        userStore.users.get(expr) ||
+        message?.mentions?.find((u) => u.id === expr);
       const everyoneOrSomeone = ["e", "s"].includes(expr);
       if (user) {
         ctx.textCount += expr.length;

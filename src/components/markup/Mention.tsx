@@ -2,10 +2,13 @@ import { css } from "@linaria/core";
 import { h } from "../../h";
 import { Avatar } from "../avatar";
 import { Link } from "../link";
+import { Icon } from "../icon";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
+  channel?: { id: string; name?: string };
   label?: string;
+  icon?: string;
 }
 
 const mention = css`
@@ -15,6 +18,7 @@ const mention = css`
   gap: 4px;
   align-items: center;
   padding: 2px 4px;
+  padding-right: 6px;
   border-radius: var(--radius-max);
   background: var(--markup-mention-background-color);
   color: var(--primary-color);
@@ -28,13 +32,20 @@ const mention = css`
   .text {
     line-height: normal;
   }
+  .icon {
+    opacity: 0.8;
+    size: 16px;
+  }
 `;
 
 export const Mention = (props: MentionProps) => {
+  const text = props.user?.username || props.channel?.name || props.label;
+
   return (
     <Link href={`/app/profile/${props.user?.id}`} class={mention}>
       {props.user && <Avatar user={props.user} size={16} />}
-      <span class="text">{props.user?.username || props.label}</span>
+      {props.icon && <Icon name={props.icon} class="icon" />}
+      <span class="text">{text}</span>
     </Link>
   );
 };

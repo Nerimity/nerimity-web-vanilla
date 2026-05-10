@@ -26,11 +26,7 @@ export const Link = (props: LinkProps) => {
   return (
     <a
       {...rest}
-      class={[
-        link,
-        decoration && "decoration",
-        ...(Array.isArray(props.class) ? props.class : [props.class]),
-      ]}
+      class={[link, decoration && "decoration", props.class]}
       data-route
     >
       {children}

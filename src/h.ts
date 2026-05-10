@@ -48,10 +48,7 @@ export function h(
       if (value == null || value === false) continue;
 
       if (key === "class") {
-        const classValue = Array.isArray(value)
-          ? value.filter(Boolean).join(" ")
-          : (value as string);
-
+        const classValue = [value].flat(Infinity).filter(Boolean).join(" ");
         if (classValue) {
           el.className = classValue;
         }

@@ -60,14 +60,7 @@ const item = css`
 export const Item = {
   Base(props: BaseProps) {
     return (
-      <div
-        class={[
-          "item",
-          item,
-          ...(Array.isArray(props.class) ? props.class : [props.class]),
-        ]}
-        data-selected={props.selected}
-      >
+      <div class={["item", item, props.class]} data-selected={props.selected}>
         {props.children}
       </div>
     );
@@ -82,10 +75,7 @@ export const Item = {
   }) {
     return (
       <div
-        class={[
-          "label",
-          ...(Array.isArray(props.class) ? props.class : [props.class]),
-        ]}
+        class={["label", props.class]}
         style={{ "--size": props.size && props.size + "px" }}
       >
         {props.children}

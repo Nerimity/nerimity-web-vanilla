@@ -21,10 +21,7 @@ export const GradientText = (props: GradientTextProps) => {
   return (
     <span
       {...rest}
-      class={[
-        container,
-        ...(Array.isArray(props.class) ? props.class : [props.class]),
-      ]}
+      class={[container, props.class]}
       style={{ "--color": color }}
     >
       {children}
