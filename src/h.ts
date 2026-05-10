@@ -77,26 +77,31 @@ export function h(
   }
 
   for (const child of children) {
-    if (child == null || child === false) continue;
-    el.append(
-      typeof child === "string" || typeof child === "number"
-        ? document.createTextNode(String(child))
-        : child,
-    );
+    appendChild(el, child);
   }
-
   return el;
 }
 
 export function Fragment(_: unknown, ...children: Child[]): DocumentFragment {
   const frag = document.createDocumentFragment();
   for (const child of children) {
-    if (child == null || child === false) continue;
-    frag.append(
-      typeof child === "string" || typeof child === "number"
-        ? document.createTextNode(String(child))
-        : child,
-    );
+    appendChild(frag, child);
   }
   return frag;
+}
+
+function appendChild(
+  parent: Element | DocumentFragment,
+  child: Child | Child[],
+) {
+  if (child == null || child === false) return;
+  if (Array.isArray(child)) {
+    child.forEach((c) => appendChild(parent, c));
+    return;
+  }
+  parent.append(
+    typeof child === "string" || typeof child === "number"
+      ? document.createTextNode(String(child))
+      : child,
+  );
 }

@@ -12,6 +12,7 @@ import { convertShorthandToLinearGradient } from "../utils/color";
 import { ServerClanItem } from "./serverClanItem";
 import { accountStore } from "../store/accountStore";
 import morphdom from "morphdom";
+import { Markup } from "./markup/markup";
 
 const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -87,7 +88,9 @@ const MessageItem = (props: { message: Message; prevMessage?: Message }) => {
             )}
           </span>
         )}
-        <div class="content">{props.message.content}</div>
+        <div class="content">
+          <Markup text={props.message.content} message={props.message} />
+        </div>
       </div>
     </div>
   );
@@ -105,7 +108,9 @@ export const createMessagePane = () => {
   const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
 
   const scrollToBottom = () => {
-    el.scrollTop = el.scrollHeight;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
   };
 
   const updateMessage = (message: Message, index: number) => {

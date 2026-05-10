@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [
     wyw({
       classNameSlug: "[title]_[hash]",
+      babelOptions: { presets: ["@babel/preset-typescript"] },
     }),
   ],
 

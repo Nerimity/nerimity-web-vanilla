@@ -9,12 +9,14 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@babel/preset-typescript": "^7.28.5",
     "@wyw-in-js/vite": "^1.1.0",
     "typescript": "~6.0.2",
     "vite": "^8.0.10"
   },
   "dependencies": {
     "@linaria/core": "^7.0.0",
+    "@nerimity/nevula": "^0.15.0",
     "fzstd": "^0.1.1",
     "morphdom": "^2.7.8"
   }
