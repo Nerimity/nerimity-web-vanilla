@@ -104,6 +104,10 @@ const messagePane = css`
 export const createMessagePane = () => {
   const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
 
+  const scrollToBottom = () => {
+    el.scrollTop = el.scrollHeight;
+  };
+
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
     const messageEl = el.querySelector(
@@ -141,6 +145,8 @@ export const createMessagePane = () => {
         return prevGrouped !== nextGrouped;
       },
     });
+
+    scrollToBottom();
   };
 
   const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
