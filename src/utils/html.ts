@@ -1,3 +1,5 @@
+import morphdom from "morphdom";
+
 interface ReconcileOpts<T> {
   container: HTMLElement;
   dataAttr: string;
@@ -55,10 +57,8 @@ export function reconcile<T extends { id: string }>(opts: ReconcileOpts<T>) {
 
       if (existing && opts.shouldRecreate?.(existing, item, i)) {
         const fresh = create(item, i) as unknown as HTMLElement;
-        existing.replaceWith(fresh);
-        existingMap.set(id, fresh);
-        node = fresh;
-        children[i] = fresh;
+        morphdom(existing, fresh);
+        node = existing;
       } else {
         node = (existing ?? create(item, i)) as unknown as HTMLElement;
         if (existing === undefined) existingMap.set(id, node);

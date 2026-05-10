@@ -11,6 +11,7 @@ import { GradientText } from "./gradientText";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { ServerClanItem } from "./serverClanItem";
 import { accountStore } from "../store/accountStore";
+import morphdom from "morphdom";
 
 const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -109,8 +110,11 @@ export const createMessagePane = () => {
       `[data-message-id="${message.id}"]`,
     ) as HTMLDivElement | null;
     if (!messageEl) return;
-    messageEl.replaceWith(
-      <MessageItem message={message} prevMessage={messages?.[index - 1]} />,
+    morphdom(
+      messageEl,
+      (
+        <MessageItem message={message} prevMessage={messages?.[index - 1]} />
+      ) as unknown as HTMLElement,
     );
   };
 
