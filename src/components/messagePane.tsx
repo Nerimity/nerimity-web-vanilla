@@ -13,6 +13,7 @@ import { ServerClanItem } from "./serverClanItem";
 import { accountStore } from "../store/accountStore";
 import morphdom from "morphdom";
 import { Markup } from "./markup/markup";
+import { friendlyTimestamp } from "../utils/date";
 
 const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -35,7 +36,12 @@ const messageItem = css`
     display: flex;
     align-items: center;
     gap: 4px;
+    .timestamp {
+      font-size: 12px;
+      color: var(--slate-400);
+    }
   }
+
   &.withDetails {
     margin-top: 10px;
   }
@@ -44,6 +50,7 @@ const messageItem = css`
   }
   .avatarPlaceholder {
     width: 40px;
+    flex-shrink: 0;
     height: 1px;
   }
   .content {
@@ -86,6 +93,9 @@ const MessageItem = (props: { message: Message; prevMessage?: Message }) => {
             {creator?.profile?.clan && (
               <ServerClanItem clan={creator.profile.clan} />
             )}
+            <span class="timestamp">
+              {friendlyTimestamp(props.message.createdAt)}
+            </span>
           </span>
         )}
         <div class="content">
@@ -108,11 +118,14 @@ export const createMessagePane = () => {
   const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
 
   const scrollToBottom = () => {
+    el.style.visibility = "hidden";
     requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
+        el.style.visibility = "";
+      });
     });
   };
-
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
     const messageEl = el.querySelector(
