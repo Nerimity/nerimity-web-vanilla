@@ -6,7 +6,6 @@ import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
-import { userStore } from "../store/userStore";
 import type { RawMessage } from "../Types";
 import { decompressObject } from "../utils/zstd";
 

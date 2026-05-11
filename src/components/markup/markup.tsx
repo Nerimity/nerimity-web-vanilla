@@ -71,7 +71,7 @@ const sliceText = (
 
 type CustomEntity = Entity & { type: "custom" };
 
-const TimeOffsetRegex = /^[+-]\d{4}$/;
+// const TimeOffsetRegex = /^[+-]\d{4}$/;
 
 const HexColorRegex = /#(?:[a-fA-F0-9]{3,4}|[a-fA-F0-9]{6}|[a-fA-F0-9]{8})/;
 const CustomColorExprRegex = new RegExp(
@@ -124,14 +124,14 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     case "wace": // animated custom emoji webp
     case "ce": {
       // custom emoji
-      const [id, name] = expr.split(":");
+      // const [id, name] = expr.split(":");
       ctx.emojiCount += 1;
-      const animated = type === "ace";
-      const webpAnimated = type === "wace";
-      const shouldAnimate =
-        (animated || webpAnimated) && ctx.props().animateEmoji === false
-          ? "?type=webp"
-          : "";
+      // const animated = type === "ace";
+      // const webpAnimated = type === "wace";
+      // const shouldAnimate =
+      //   (animated || webpAnimated) && ctx.props().animateEmoji === false
+      //     ? "?type=webp"
+      //     : "";
       return <span>emoji</span>;
     }
     case "link": {
@@ -261,7 +261,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     }
     case "named_link": {
       const name = entity.params.name;
-      const url = entity.params.url;
+      // const url = entity.params.url;
       ctx.textCount += name.length;
       return <div>link</div>;
     }
@@ -303,7 +303,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
   }
 }
 
-const commandRegex = /^(\/[^:\s]*):\d+( .*)?$/m;
+// const commandRegex = /^(\/[^:\s]*):\d+( .*)?$/m;
 export function Markup(props: Props) {
   const ctx = {
     props: () => ({

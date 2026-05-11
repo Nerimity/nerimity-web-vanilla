@@ -1,5 +1,4 @@
-import type { RawMessageMention, RawUserPresence } from "../Types";
-import { storeEmitter } from "../utils/EventEmitter";
+import type { RawMessageMention } from "../Types";
 
 export const messageMentionStore = createMessageMentionStore();
 
