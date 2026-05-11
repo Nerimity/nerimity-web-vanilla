@@ -1,14 +1,15 @@
+import morphdom from "morphdom";
 import { h } from "../h";
 
 type Item<T, V> = T & { type: V; id: string };
 
-interface VirtualListProps<T, V extends string> {
+interface VirtualListProps<T, V extends string | number> {
   items: () => Item<T, V>[];
   type: Record<V, { height: number; sticky?: boolean }>;
   renderItem: (item: Item<T, V>) => JSX.Element;
   parentEl: HTMLDivElement;
 }
-export function createVirtualList<T, V extends string>(
+export function createVirtualList<T, V extends string | number>(
   props: VirtualListProps<T, V>,
 ) {
   let cacheItems: Item<T, V>[] = props.items();
@@ -127,7 +128,9 @@ export function createVirtualList<T, V extends string>(
     if (!el) return;
     const item = cacheItems.find((i) => i.id === id);
     if (!item) return;
-    el.replaceChildren(props.renderItem(item));
+    const existing = el.firstElementChild;
+    if (!existing) return;
+    morphdom(existing, props.renderItem(item) as unknown as HTMLElement);
   };
   return {
     rerenderItem,

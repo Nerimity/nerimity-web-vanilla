@@ -19,9 +19,16 @@ import { HoverAnimator } from "../utils/HoverAnimator";
 import { CdnIcon } from "./cdnIcon";
 import { ServerClanItem } from "./serverClanItem";
 
+const CategoryType = {
+  role: 0,
+  member: 1,
+} as const;
+
+type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
+
 type Categorized =
-  | { type: "r"; role: ServerRole; count: number; id: string }
-  | { type: "m"; member: ServerMember; id: string; role: ServerRole };
+  | { type: 0; role: ServerRole; count: number; id: string }
+  | { type: 1; member: ServerMember; id: string; role: ServerRole };
 
 const offlineRole: ServerRole = new ServerRole({
   name: "Offline",
@@ -165,8 +172,6 @@ export const createServerMemberList = () => {
       if (!canViewChannel) continue;
 
       if (!presences.has(member.userId)) {
-        if (!canViewChannel) continue;
-        userIdToRoleId[member.userId] = "offline";
         offlineMembers.push(member);
         continue;
       }
@@ -184,10 +189,15 @@ export const createServerMemberList = () => {
       const role = sortedRoles[i]!;
       const bucket = buckets[role.id];
       if (bucket?.length) {
-        result.push({ type: "r", role, count: bucket.length, id: role.id });
+        result.push({
+          type: CategoryType.role,
+          role,
+          count: bucket.length,
+          id: role.id,
+        });
         for (let j = 0; j < bucket.length; j++)
           result.push({
-            type: "m",
+            type: CategoryType.member,
             member: bucket[j]!,
             id: bucket[j]!.id,
             role,
@@ -196,14 +206,14 @@ export const createServerMemberList = () => {
     }
     if (offlineMembers.length && offlineRole) {
       result.push({
-        type: "r",
+        type: CategoryType.role,
         role: offlineRole,
         count: offlineMembers.length,
         id: offlineRole.id,
       });
       for (let i = 0; i < offlineMembers.length; i++) {
         result.push({
-          type: "m",
+          type: CategoryType.member,
           member: offlineMembers[i]!,
           id: offlineMembers[i]!.id,
           role: offlineRole,
@@ -223,7 +233,10 @@ export const createServerMemberList = () => {
     }
     vt = createVirtualList({
       items: () => categorizedMembersMemoized.value().result,
-      type: { r: { height: 40 }, m: { height: 44 } },
+      type: {
+        [CategoryType.role]: { height: 40 },
+        [CategoryType.member]: { height: 44 },
+      },
       parentEl: containerEl,
       renderItem: memberItem,
     });
@@ -250,13 +263,15 @@ export const createServerMemberList = () => {
 
   const presenceUnsub = storeEmitter.on("user:presence_update", (event) => {
     const oldRoleId =
-      categorizedMembersMemoized.value().userIdToRoleId[event.userId];
+      categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+      "offline";
     categorizedMembersMemoized.rerun();
     renderList();
     const newRoleId =
-      categorizedMembersMemoized.value().userIdToRoleId[event.userId];
+      categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+      "offline";
     if (oldRoleId) vt?.rerenderItem(oldRoleId);
-    if (newRoleId && newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
+    if (newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
   });
 
   const render = () => {
@@ -336,7 +351,7 @@ const roleItemContainer = css`
   }
 `;
 const memberItem = (cat: Categorized) => {
-  if (cat.type === "m") {
+  if (cat.type === CategoryType.member) {
     const user = userStore.users.get(cat.member.userId);
     const topRoleColor = serverStore.memberTopColor(cat.member);
 
