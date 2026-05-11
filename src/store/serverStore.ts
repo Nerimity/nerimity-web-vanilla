@@ -46,6 +46,12 @@ function createServerStore() {
     }
   };
 
+  const updateLastSeenServerChannel = (channelId: string) => {
+    lastSeenChannelIds.set(channelId, Date.now() + 10);
+    channelStore.notificationsMemo.rerun();
+    serverStore.notificationsMemo.rerun();
+  };
+
   const setCurrentServerId = (id?: string) => {
     let newId = id ?? null;
     if (newId === currentServerId) return;
@@ -104,7 +110,7 @@ function createServerStore() {
   const notificationsMemo = new ManualMemo(() => {
     const result: Record<string, number> = {};
 
-    const channelNotifs = channelStore.channelNotificationsMemo.value();
+    const channelNotifs = channelStore.notificationsMemo.value();
 
     for (const [id, count] of Object.entries(channelNotifs)) {
       const channel = channelStore.channels.get(id);
@@ -135,5 +141,6 @@ function createServerStore() {
     setCurrentServerId,
     currentChannelsSorted,
     currentServerSortedRoles,
+    updateLastSeenServerChannel,
   };
 }

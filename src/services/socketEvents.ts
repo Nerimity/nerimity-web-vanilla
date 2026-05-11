@@ -6,6 +6,8 @@ import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
+import { userStore } from "../store/userStore";
+import type { RawMessage } from "../Types";
 import { decompressObject } from "../utils/zstd";
 
 export const socketEventHandler = (event: string, payload: any) => {
@@ -27,6 +29,10 @@ export const socketEventHandler = (event: string, payload: any) => {
   if (event === "message:updated") {
     onMessageUpdated(payload);
   }
+
+  if (event === "notification:dismissed") {
+    onNotificationDismissed(payload);
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -41,6 +47,7 @@ const onAuthenticated = (payload: any) => {
   serverRoleStore.setRoles(payload.serverRoles);
   userPresenceStore.setPresences(payload.presences);
   messageMentionStore.setMentions(payload.messageMentions);
+  accountStore.setCurrentUser(payload.user);
   accountStore.setAuthenticated(true);
 };
 
@@ -52,8 +59,17 @@ const onUserPresenceUpdate = (payload: any) => {
   userPresenceStore.updatePresence(payload.userId, payload);
 };
 
-const onMessageCreated = (payload: any) => {
-  messageStore.pushMessage(payload.message.channelId, payload.message);
+const onMessageCreated = (payload: { message: RawMessage }) => {
+  const message = payload.message;
+  const createdByMe = message.createdBy.id == accountStore.currentUser?.id;
+  const channel = channelStore.channels.get(message.channelId);
+  if (channel && !createdByMe) {
+    channelStore.updateLastMessagedAt(message.channelId, message.createdAt);
+    channelStore.notificationsMemo.rerun();
+    serverStore.notificationsMemo.rerun();
+  }
+
+  messageStore.pushMessage(message.channelId, message);
 };
 
 const onMessageDeleted = (payload: any) => {
@@ -66,4 +82,8 @@ const onMessageUpdated = (payload: any) => {
     payload.messageId,
     payload.updated,
   );
+};
+
+const onNotificationDismissed = (payload: { channelId: string }) => {
+  serverStore.updateLastSeenServerChannel(payload.channelId);
 };

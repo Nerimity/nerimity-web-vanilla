@@ -2,7 +2,7 @@ import type { ServerClan, Profile, RawUser } from "../Types";
 
 export const userStore = createUserStore();
 
-class User {
+export class User {
   id: string;
   username: string;
   avatar?: string;

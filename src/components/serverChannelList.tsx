@@ -40,6 +40,11 @@ export const createServerChannelList = () => {
       values: serverChannels,
       valueId: "id",
       create: channelItemHelper.create,
+      shouldRecreate(node, item) {
+        const domAlert = !!node.querySelector(`[data-alert="true"]`);
+        const alert = !!channelStore.notificationsMemo.value()[item.id];
+        return domAlert !== alert;
+      },
     });
   };
 
@@ -51,6 +56,11 @@ export const createServerChannelList = () => {
       containerEl!,
       channelStore.currentChannelId!,
     );
+  });
+
+  const notificationsUnsub = channelStore.notificationsMemo.onUpdate(() => {
+    if (!containerEl) return;
+    renderList();
   });
 
   const render = () => {
@@ -78,6 +88,7 @@ export const createServerChannelList = () => {
     hoverAnimator?.destroy();
     channelListUnsub();
     channelIdUnsub();
+    notificationsUnsub();
     containerEl?.remove();
     containerEl = null;
   };
@@ -117,7 +128,7 @@ const createChannelItemHelper = () => {
         <Item.Base
           class="channelItem"
           selected={channelStore.currentChannelId === channel.id}
-          alert={!!channelStore.channelNotificationsMemo.value()[channel.id]}
+          alert={!!channelStore.notificationsMemo.value()[channel.id]}
         >
           <>
             <CdnIcon

@@ -85,14 +85,23 @@ export const createSidebar = () => {
       values: servers,
       valueId: "id",
       create: serverItem.create,
+      shouldRecreate(node, item) {
+        const domAlert = !!node.querySelector(`[data-alert="true"]`);
+        const alert = !!serverStore.notificationsMemo.value()[item.id];
+        return domAlert !== alert;
+      },
     });
   };
 
   const serverUpdateUnsub = storeEmitter.on("server:update", renderList);
   const authenticatedUnsub = storeEmitter.on("user:authenticated", renderList);
-  const serveridUnsub = storeEmitter.on("navigate:serverId", () => {
+  const serverIdUnsub = storeEmitter.on("navigate:serverId", () => {
     if (!containerEl) return;
     serverItem.updateSelected(containerEl, serverStore.currentServerId);
+  });
+  const notificationsUnsub = serverStore.notificationsMemo.onUpdate(() => {
+    if (!containerEl) return;
+    renderList();
   });
 
   const render = () => {
@@ -108,7 +117,8 @@ export const createSidebar = () => {
     hoverAnimator?.destroy();
     serverUpdateUnsub();
     authenticatedUnsub();
-    serveridUnsub();
+    serverIdUnsub();
+    notificationsUnsub();
     containerEl?.remove();
     containerEl = null;
     hoverAnimator = null;

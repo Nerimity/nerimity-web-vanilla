@@ -48,7 +48,7 @@ function createChannelStore() {
     storeEmitter.emit("navigate:channelId", newId);
   };
 
-  const channelNotificationsMemo = new ManualMemo(() => {
+  const notificationsMemo = new ManualMemo(() => {
     const notifications: Record<string, number> = {};
 
     const mentions = messageMentionStore.mentions;
@@ -60,17 +60,26 @@ function createChannelStore() {
         notifications[channel.id] = mentionCount;
         continue;
       }
-      if (channel.serverId == null) continue;
+      if (!channel.serverId) continue;
       const lastSeenAt = lastSeen.get(channel.id);
       const hasNotSeen =
-        channel.lastMessagedAt != null &&
-        (lastSeenAt == null || channel.lastMessagedAt! > lastSeenAt);
+        channel.lastMessagedAt &&
+        (!lastSeenAt || channel.lastMessagedAt! > lastSeenAt);
       if (hasNotSeen) {
+        if (channel.id === "1756082194151030785") {
+        }
         notifications[channel.id] = -1;
       }
     }
     return notifications;
   });
+
+  const updateLastMessagedAt = (channelId: string, lastMessagedAt: number) => {
+    const channel = channels.get(channelId);
+    if (channel) {
+      channel.lastMessagedAt = lastMessagedAt;
+    }
+  };
 
   return {
     channels,
@@ -78,7 +87,8 @@ function createChannelStore() {
     get currentChannelId() {
       return currentChannelId;
     },
+    updateLastMessagedAt,
     setCurrentChannelId,
-    channelNotificationsMemo,
+    notificationsMemo,
   };
 }
