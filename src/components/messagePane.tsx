@@ -118,13 +118,7 @@ export const createMessagePane = () => {
   const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
 
   const scrollToBottom = () => {
-    el.style.visibility = "hidden";
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        el.scrollTop = el.scrollHeight;
-        el.style.visibility = "";
-      });
-    });
+    el.scrollTop = el.scrollHeight;
   };
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
