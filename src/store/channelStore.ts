@@ -1,5 +1,8 @@
 import type { ChannelPermissions, RawChannel } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { ManualMemo } from "../utils/memo";
+import { messageMentionStore } from "./messageMentionStore";
+import { serverStore } from "./serverStore";
 
 export const channelStore = createChannelStore();
 
@@ -12,6 +15,7 @@ export class Channel {
   categoryId?: string;
   icon?: string;
   permissions?: ChannelPermissions[];
+  lastMessagedAt?: number;
   constructor(data: RawChannel) {
     this.id = data.id;
     this.name = data.name;
@@ -21,6 +25,7 @@ export class Channel {
     this.categoryId = data.categoryId;
     this.icon = data.icon;
     this.permissions = data.permissions;
+    this.lastMessagedAt = data.lastMessagedAt;
   }
 }
 
@@ -43,6 +48,30 @@ function createChannelStore() {
     storeEmitter.emit("navigate:channelId", newId);
   };
 
+  const channelNotificationsMemo = new ManualMemo(() => {
+    const notifications: Record<string, number> = {};
+
+    const mentions = messageMentionStore.mentions;
+    const lastSeen = serverStore.lastSeenChannelIds;
+
+    for (const channel of channels.values()) {
+      const mentionCount = mentions.get(channel.id)?.count;
+      if (mentionCount && mentionCount > 0) {
+        notifications[channel.id] = mentionCount;
+        continue;
+      }
+      if (channel.serverId == null) continue;
+      const lastSeenAt = lastSeen.get(channel.id);
+      const hasNotSeen =
+        channel.lastMessagedAt != null &&
+        (lastSeenAt == null || channel.lastMessagedAt! > lastSeenAt);
+      if (hasNotSeen) {
+        notifications[channel.id] = -1;
+      }
+    }
+    return notifications;
+  });
+
   return {
     channels,
     setChannels,
@@ -50,5 +79,6 @@ function createChannelStore() {
       return currentChannelId;
     },
     setCurrentChannelId,
+    channelNotificationsMemo,
   };
 }

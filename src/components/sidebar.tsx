@@ -26,6 +26,7 @@ const createServerItemHelper = () => {
     >
       <Item.Base
         class="serverItem"
+        alert={!!serverStore.notificationsMemo.value()[server.id]}
         selected={serverStore.currentServerId === server.id}
       >
         <Avatar size={42} server={server} imgClass="avatar" />

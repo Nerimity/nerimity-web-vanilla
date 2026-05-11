@@ -34,6 +34,7 @@ export interface RawChannel {
   categoryId?: string;
   order?: number;
   permissions?: ChannelPermissions[];
+  lastMessagedAt?: number;
 }
 
 export interface ChannelPermissions {
@@ -87,4 +88,10 @@ export interface RawMessage {
   createdBy: RawUser;
   createdAt: number;
   mentions?: RawUser[];
+}
+
+export interface RawMessageMention {
+  channelId: string;
+  serverId: string;
+  count: number;
 }

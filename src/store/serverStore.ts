@@ -29,12 +29,20 @@ export class Server {
 function createServerStore() {
   let currentServerId: string | null = null;
   const servers = new Map<string, Server>();
+  const lastSeenChannelIds = new Map<string, number>();
 
   const setServers = (newServers: RawServer[]) => {
     servers.clear();
     for (let i = 0; i < newServers.length; i++) {
       const server = newServers[i]!;
       servers.set(server.id, new Server(server));
+    }
+  };
+
+  const setLastSeenChannelIds = (data: Record<string, number>) => {
+    lastSeenChannelIds.clear();
+    for (const [id, lastSeenAt] of Object.entries(data)) {
+      lastSeenChannelIds.set(id, lastSeenAt);
     }
   };
 
@@ -93,12 +101,36 @@ function createServerStore() {
     return role?.hexColor;
   };
 
+  const notificationsMemo = new ManualMemo(() => {
+    const result: Record<string, number> = {};
+
+    const channelNotifs = channelStore.channelNotificationsMemo.value();
+
+    for (const [id, count] of Object.entries(channelNotifs)) {
+      const channel = channelStore.channels.get(id);
+      if (!channel?.serverId) continue;
+
+      const serverId = channel!.serverId!;
+      const current = result[serverId] ?? 0;
+      if (count > 0) {
+        result[serverId] = (current < 0 ? 0 : current) + count;
+      } else if (count == -1 && current == 0) {
+        result[serverId] = -1;
+      }
+    }
+
+    return result;
+  });
+
   return {
     servers,
     setServers,
     get currentServerId() {
       return currentServerId;
     },
+    notificationsMemo,
+    setLastSeenChannelIds,
+    lastSeenChannelIds,
     memberTopColor,
     setCurrentServerId,
     currentChannelsSorted,

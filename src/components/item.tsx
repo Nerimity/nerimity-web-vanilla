@@ -3,6 +3,7 @@ import { h } from "../h";
 
 interface BaseProps {
   selected?: boolean;
+  alert?: boolean;
   children?: JSX.Element;
   class?: string | string[];
 }
@@ -39,6 +40,7 @@ const item = css`
       color: var(--text-color);
     }
   }
+
   &[data-selected="true"] {
     background-color: var(--item-bg);
     &:before {
@@ -48,6 +50,13 @@ const item = css`
     }
     .label {
       color: var(--text-color);
+    }
+  }
+  &[data-alert="true"] {
+    &:before {
+      height: 40%;
+      opacity: 1;
+      background-color: var(--alert-color);
     }
   }
   .label {
@@ -60,7 +69,11 @@ const item = css`
 export const Item = {
   Base(props: BaseProps) {
     return (
-      <div class={["item", item, props.class]} data-selected={props.selected}>
+      <div
+        class={["item", item, props.class]}
+        data-selected={props.selected}
+        data-alert={props.alert}
+      >
         {props.children}
       </div>
     );

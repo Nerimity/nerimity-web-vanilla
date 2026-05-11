@@ -3,6 +3,7 @@
   --text-color: #ffffff;
   --text-muted: hsl(220, 6%, 50%);
   --primary-color: #3b82f6;
+  --alert-color: #ef4444;
   --item-bg: var(--slate-800);
 
   --markup-mention-background-color: var(--slate-800);

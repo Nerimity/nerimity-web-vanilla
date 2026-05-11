@@ -117,6 +117,7 @@ const createChannelItemHelper = () => {
         <Item.Base
           class="channelItem"
           selected={channelStore.currentChannelId === channel.id}
+          alert={!!channelStore.channelNotificationsMemo.value()[channel.id]}
         >
           <>
             <CdnIcon
