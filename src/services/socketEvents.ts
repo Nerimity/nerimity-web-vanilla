@@ -38,7 +38,6 @@ const onAuthenticated = (payload: any) => {
   if (payload instanceof ArrayBuffer) {
     payload = decompressObject(new Uint8Array(payload));
   }
-  console.log(payload);
   channelStore.setChannels(payload.channels);
   serverStore.setServers(payload.servers);
   serverStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
