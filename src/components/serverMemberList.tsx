@@ -325,6 +325,12 @@ const memberItemContainer = css`
   height: 44px;
   padding: 6px 6px;
   gap: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
+  &:hover {
+    background-color: var(--gray-800);
+    border-radius: var(--radius-8);
+  }
 
   .memberInfo {
     display: inline-flex;
@@ -347,6 +353,8 @@ const roleItemContainer = css`
   display: flex;
   gap: 8px;
   height: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
   align-items: center;
   .roleName {
     color: var(--text-muted);

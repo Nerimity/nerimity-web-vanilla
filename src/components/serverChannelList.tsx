@@ -19,6 +19,8 @@ const serverChannelList = css`
   width: 240px;
   height: 100vh;
   gap: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
   background-color: var(--sidebar-bg);
 `;
 
