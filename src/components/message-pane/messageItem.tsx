@@ -18,7 +18,7 @@ const messageItem = css`
   padding-left: 4px;
   padding-right: 4px;
   &:hover {
-    background-color: var(--slate-800);
+    background-color: var(--gray-800);
   }
 
   .details {
@@ -27,7 +27,7 @@ const messageItem = css`
     gap: 4px;
     .timestamp {
       font-size: 12px;
-      color: var(--slate-400);
+      color: var(--gray-400);
     }
   }
 

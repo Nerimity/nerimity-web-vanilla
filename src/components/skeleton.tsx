@@ -25,7 +25,7 @@ const skeletonItem = css`
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--slate-700);
+    background: var(--gray-700);
     flex-shrink: 0;
   }
 
@@ -39,7 +39,7 @@ const skeletonItem = css`
   .line {
     height: 12px;
     border-radius: 4px;
-    background: var(--slate-700);
+    background: var(--gray-700);
   }
 `;
 

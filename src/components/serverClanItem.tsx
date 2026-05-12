@@ -8,7 +8,7 @@ const clanItem = css`
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  background-color: var(--slate-700);
+  background-color: var(--gray-700);
   border-radius: var(--radius-5);
   padding-right: 4px;
   .clanName {

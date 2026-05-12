@@ -7,6 +7,7 @@ import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
+import { createChatbar } from "./chatbar";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
 
@@ -15,18 +16,32 @@ const messagePane = css`
   flex-direction: column;
   gap: 4px;
   height: 100vh;
-  overflow: auto;
   width: 100%;
+  .logs {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    flex: 1;
+    overflow: auto;
+  }
 `;
 export const createMessagePane = () => {
-  const el = (<div class={messagePane}></div>) as unknown as HTMLDivElement;
+  const chatbar = createChatbar();
+  const logs = (<div class="logs"></div>) as unknown as HTMLElement;
+  const el = (
+    <div class={messagePane}>
+      {logs}
+      {chatbar.render()}
+    </div>
+  ) as unknown as HTMLDivElement;
 
   const scrollToBottom = () => {
-    el.scrollTop = el.scrollHeight;
+    logs.scrollTop = logs.scrollHeight;
   };
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
-    const messageEl = el.querySelector(
+    const messageEl = logs.querySelector(
       `[data-message-id="${message.id}"]`,
     ) as HTMLDivElement | null;
     if (!messageEl) return;
@@ -48,7 +63,7 @@ export const createMessagePane = () => {
     if (channelId !== channelStore.currentChannelId) return;
 
     reconcile({
-      container: el,
+      container: logs,
       dataAttr: "message-id",
       values: messages,
       valueId: "id",
@@ -106,7 +121,9 @@ export const createMessagePane = () => {
     messageCreatedUnsub();
     messageDeletedUnsub();
     messageUpdatedUnsub();
+    chatbar.destroy();
     el.remove();
+    logs.remove();
   };
 
   return { render, destroy };

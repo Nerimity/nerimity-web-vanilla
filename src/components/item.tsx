@@ -35,7 +35,7 @@ const item = css`
     &:before {
       height: 20%;
       opacity: 1;
-      background-color: var(--slate-500);
+      background-color: var(--gray-500);
     }
     .label {
       color: var(--text-color);

@@ -108,6 +108,7 @@ const memberListContainer = css`
   flex-shrink: 0;
   width: 240px;
   height: 100vh;
+  background-color: var(--sidebar-bg);
 `;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;

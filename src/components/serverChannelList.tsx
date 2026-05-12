@@ -19,6 +19,7 @@ const serverChannelList = css`
   width: 240px;
   height: 100vh;
   gap: 2px;
+  background-color: var(--sidebar-bg);
 `;
 
 export const createServerChannelList = () => {

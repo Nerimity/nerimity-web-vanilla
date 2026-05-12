@@ -81,6 +81,10 @@ function createChannelStore() {
     }
   };
 
+  const currentChannel = () => {
+    return channels.get(currentChannelId!);
+  };
+
   return {
     channels,
     setChannels,
@@ -90,5 +94,6 @@ function createChannelStore() {
     updateLastMessagedAt,
     setCurrentChannelId,
     notificationsMemo,
+    currentChannel,
   };
 }

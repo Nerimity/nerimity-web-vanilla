@@ -4,21 +4,24 @@
   --text-muted: hsl(220, 6%, 50%);
   --primary-color: #3b82f6;
   --alert-color: #ef4444;
-  --item-bg: var(--slate-800);
+  --item-bg: var(--gray-800);
 
-  --markup-mention-background-color: var(--slate-800);
-  --markup-mention-background-color-hover: var(--slate-700);
+  --input-background-color: black;
 
-  --slate-50: hsl(220, 15%, 95%);
-  --slate-100: hsl(220, 15%, 90%);
-  --slate-200: hsl(220, 15%, 80%);
-  --slate-300: hsl(220, 15%, 70%);
-  --slate-400: hsl(220, 15%, 50%);
-  --slate-500: hsl(220, 15%, 40%);
-  --slate-600: hsl(220, 15%, 30%);
-  --slate-700: hsl(220, 15%, 20%);
-  --slate-800: hsl(220, 15%, 10%);
-  --slate-900: hsl(220, 15%, 5%);
+  --markup-mention-background-color: var(--gray-800);
+  --markup-mention-background-color-hover: var(--gray-700);
+  --sidebar-bg: var(--gray-900);
+
+  --gray-50: hsl(220, 0%, 95%);
+  --gray-100: hsl(220, 0%, 90%);
+  --gray-200: hsl(220, 0%, 80%);
+  --gray-300: hsl(220, 0%, 70%);
+  --gray-400: hsl(220, 0%, 50%);
+  --gray-500: hsl(220, 0%, 40%);
+  --gray-600: hsl(220, 0%, 30%);
+  --gray-700: hsl(220, 0%, 20%);
+  --gray-800: hsl(220, 0%, 10%);
+  --gray-900: hsl(220, 0%, 5%);
 
   --radius-max: 9999px;
   --radius-4: 4px;
@@ -65,7 +68,7 @@ body {
 }
 ::-webkit-scrollbar-track {
   border-radius: var(--radius-6);
-  background: var(--slate-800);
+  background: var(--gray-800);
 }
 ::-webkit-scrollbar-thumb {
   border-radius: var(--radius-6);

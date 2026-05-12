@@ -11,7 +11,7 @@ const cdnIcon = css`
   box-sizing: content-box;
   padding: 4px;
   border-radius: var(--radius-4);
-  background-color: var(--slate-800);
+  background-color: var(--gray-800);
   img {
     width: 100%;
     height: 100%;
