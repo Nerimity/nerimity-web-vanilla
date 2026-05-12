@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
+import { messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
@@ -33,12 +34,34 @@ export const createChatbar = () => {
         class="chatInput"
         suffix={
           <>
-            <Button class="button" icon="send" hoverBorder />
+            <Button class="button send" icon="send" hoverBorder />
           </>
         }
       />
     </div>
   ) as unknown as HTMLElement;
+  const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
+  const sendButton = chatbar.querySelector(".button.send") as HTMLButtonElement;
+
+  const sendMessage = () => {
+    input.focus();
+    const value = input.value.trim();
+    if (!value) return;
+    input.value = "";
+    messageStore.sendMessage(channelStore.currentChannel()!.id, {
+      content: value,
+    });
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
+
+  input.addEventListener("keydown", handleKeyDown);
+
+  sendButton.addEventListener("click", sendMessage);
 
   const render = () => chatbar;
 
@@ -58,6 +81,8 @@ export const createChatbar = () => {
   const destroy = () => {
     channelIdUnsub();
     authenticatedUnsub();
+    input.removeEventListener("keydown", handleKeyDown);
+    sendButton.removeEventListener("click", sendMessage);
     chatbar.remove();
   };
 

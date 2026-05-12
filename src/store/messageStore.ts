@@ -1,5 +1,8 @@
+import { fetchMessages, postMessage } from "../services/messageService";
+import { socket } from "../services/socket";
 import type { RawMessage, RawUser } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { accountStore } from "./accountStore";
 
 export const messageStore = createMessageStore();
 
@@ -10,6 +13,8 @@ export class Message {
   channelId: string;
   createdAt: number;
   mentions: RawUser[];
+  state?: "sending" | "error";
+  tempId?: string;
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
@@ -26,19 +31,13 @@ function createMessageStore() {
   const loadMessages = async (channelId: string) => {
     const existing = messages.get(channelId);
     if (existing) return existing;
-    const response = await fetch(
-      `https://nerimity.com/api/channels/${channelId}/messages`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: localStorage.getItem("userToken") as string,
-        },
-      },
-    );
-    const json = (await response.json()) as RawMessage[];
 
-    const newMessages = json.map((m) => new Message(m));
+    const [rawMessages, error] = await fetchMessages(channelId);
+    if (error) {
+      return alert(error.message);
+    }
+
+    const newMessages = rawMessages.map((m) => new Message(m));
 
     messages.set(channelId, newMessages);
     return newMessages;
@@ -86,5 +85,56 @@ function createMessageStore() {
     storeEmitter.emit("message:updated", { message, index: messageIndex });
   };
 
-  return { messages, loadMessages, pushMessage, deleteMessage, updateMessage };
+  interface SendMessageOpts {
+    content: string;
+  }
+
+  const createLocalMessage = (channelId: string, opts: SendMessageOpts) => {
+    const existing = messages.get(channelId);
+    if (!existing) return;
+
+    const message = new Message({
+      id: Date.now() + "" + Math.random(),
+      content: opts.content,
+      channelId,
+      createdBy: accountStore.currentUser!,
+      createdAt: Date.now(),
+    });
+    message.state = "sending";
+    messages.set(channelId, [...existing, message]);
+    storeEmitter.emit("message:created", message);
+    return message;
+  };
+  const sendMessage = async (channelId: string, opts: SendMessageOpts) => {
+    const localMessage = createLocalMessage(channelId, opts);
+    if (!localMessage) return;
+    const [result, error] = await postMessage(channelId, {
+      content: opts.content,
+      socketId: socket.socketId,
+    });
+    const channelMessages = messages.get(channelId);
+    if (!channelMessages) return;
+    const index = channelMessages.findIndex((m) => m.id === localMessage?.id);
+    if (index === -1) return;
+    if (error) {
+      localMessage.state = "error";
+      storeEmitter.emit("message:updated", { message: localMessage, index });
+      return;
+    }
+    channelMessages[index] = new Message(result);
+    channelMessages[index].tempId = localMessage.id;
+    storeEmitter.emit("message:updated", {
+      message: channelMessages[index],
+      index,
+    });
+  };
+
+  return {
+    messages,
+    loadMessages,
+    pushMessage,
+    deleteMessage,
+    updateMessage,
+    sendMessage,
+  };
 }

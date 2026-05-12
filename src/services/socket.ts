@@ -4,6 +4,7 @@ export const socket = createSocket();
 
 function createSocket() {
   let ws: WebSocket | null = null;
+  let socketId: string = "";
 
   let binaryEventName: string | null = null;
 
@@ -34,6 +35,9 @@ function createSocket() {
         return;
       }
       if (raw[0] === "4" && raw[1] === "0") {
+        const data = JSON.parse(raw.slice(2));
+        socketId = data.sid;
+
         emit("user:authenticate", {
           token: localStorage["userToken"],
           compression: "zstd",
@@ -58,5 +62,10 @@ function createSocket() {
     ws?.send(`42${JSON.stringify([event, payload])}`);
   };
 
-  return { connect };
+  return {
+    connect,
+    get socketId() {
+      return socketId;
+    },
+  };
 }

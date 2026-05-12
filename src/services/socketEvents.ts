@@ -8,6 +8,7 @@ import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import type { RawMessage } from "../Types";
 import { decompressObject } from "../utils/zstd";
+import { socket } from "./socket";
 
 export const socketEventHandler = (event: string, payload: any) => {
   if (event === "user:authenticated") {
@@ -57,7 +58,11 @@ const onUserPresenceUpdate = (payload: any) => {
   userPresenceStore.updatePresence(payload.userId, payload);
 };
 
-const onMessageCreated = (payload: { message: RawMessage }) => {
+const onMessageCreated = (payload: {
+  message: RawMessage;
+  socketId?: string;
+}) => {
+  if (payload.socketId && payload.socketId === socket.socketId) return;
   const message = payload.message;
   const createdByMe = message.createdBy.id == accountStore.currentUser?.id;
   const channel = channelStore.channels.get(message.channelId);

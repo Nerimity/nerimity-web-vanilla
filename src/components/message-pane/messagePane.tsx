@@ -42,7 +42,7 @@ export const createMessagePane = () => {
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
     const messageEl = logs.querySelector(
-      `[data-message-id="${message.id}"]`,
+      `[data-message-id="${message.tempId || message.id}"]`,
     ) as HTMLDivElement | null;
     if (!messageEl) return;
     morphdom(

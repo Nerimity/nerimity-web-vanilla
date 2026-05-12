@@ -20,6 +20,12 @@ const messageItem = css`
   &:hover {
     background-color: var(--gray-800);
   }
+  &.sending {
+    opacity: 0.6;
+  }
+  &.error {
+    color: var(--alert-color);
+  }
 
   .details {
     display: flex;
@@ -67,7 +73,7 @@ export const MessageItem = (props: {
 
   return (
     <div
-      class={[messageItem, !group && "withDetails"]}
+      class={[messageItem, !group && "withDetails", props.message.state]}
       data-message-id={props.message.id}
       data-grouped={group}
     >
