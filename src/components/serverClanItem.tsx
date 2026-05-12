@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+
 import { h } from "../h";
 import type { ServerClan } from "../Types";
 import { CdnIcon } from "./cdnIcon";

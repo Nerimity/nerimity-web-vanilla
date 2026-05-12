@@ -1,8 +1,9 @@
 import { css } from "@linaria/core";
+
 import { h } from "../../h";
 import { Avatar } from "../avatar";
-import { Link } from "../link";
 import { Icon } from "../icon";
+import { Link } from "../link";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };

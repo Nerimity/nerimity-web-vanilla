@@ -1,5 +1,4 @@
 import { css } from "@linaria/core";
-import { h, Fragment } from "../../h";
 import {
   addTextSpans,
   parseMarkup,
@@ -7,10 +6,12 @@ import {
   type Entity,
   type Span,
 } from "@nerimity/nevula";
+
+import { h, Fragment } from "../../h";
+import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { Mention } from "./Mention";
-import { channelStore } from "../../store/channelStore";
 
 const markup = css`
   line-height: 1.3;
@@ -98,7 +99,7 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     // Role mentions
     case "r": {
       return <span>#role-mention</span>;
-      break;
+      // break;
     }
     case "@": {
       const message = ctx.props().message;

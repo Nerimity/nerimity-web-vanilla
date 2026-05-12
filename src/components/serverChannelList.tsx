@@ -1,14 +1,15 @@
+import { css } from "@linaria/core";
+
 import { h, Fragment } from "../h";
-import { serverStore } from "../store/serverStore";
 import { channelStore, type Channel } from "../store/channelStore";
+import { serverStore } from "../store/serverStore";
+import { ChannelType } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
+import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
+import { CdnIcon } from "./cdnIcon";
 import { Item } from "./item";
 import { Link } from "./link";
-import { storeEmitter } from "../utils/EventEmitter";
-import { CdnIcon } from "./cdnIcon";
-import { HoverAnimator } from "../utils/HoverAnimator";
-import { ChannelType } from "../Types";
-import { css } from "@linaria/core";
 
 const serverChannelList = css`
   display: flex;

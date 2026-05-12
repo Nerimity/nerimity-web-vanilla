@@ -1,15 +1,16 @@
-import { h } from "./h";
-import "./style.css";
-import { socket } from "./services/socket";
-import { router } from "./utils/router";
-import { createSidebar } from "./components/sidebar";
-import { serverStore } from "./store/serverStore";
-import { channelStore } from "./store/channelStore";
-import { createServerChannelList } from "./components/serverChannelList";
-import { storeEmitter } from "./utils/EventEmitter";
-import { createServerMemberList } from "./components/serverMemberList";
 import { Link } from "./components/link";
+
+import "./style.css";
 import { createMessagePane } from "./components/message-pane/messagePane";
+import { createServerChannelList } from "./components/serverChannelList";
+import { createServerMemberList } from "./components/serverMemberList";
+import { createSidebar } from "./components/sidebar";
+import { h } from "./h";
+import { socket } from "./services/socket";
+import { channelStore } from "./store/channelStore";
+import { serverStore } from "./store/serverStore";
+import { storeEmitter } from "./utils/EventEmitter";
+import { router } from "./utils/router";
 
 socket.connect();
 

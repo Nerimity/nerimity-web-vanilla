@@ -1,4 +1,5 @@
 import morphdom from "morphdom";
+
 import { h } from "../h";
 
 type Item<T, V> = T & { type: V; id: string };

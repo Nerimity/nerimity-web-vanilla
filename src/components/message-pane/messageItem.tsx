@@ -1,14 +1,15 @@
-import { h } from "../../h";
 import { css } from "@linaria/core";
+
+import { h } from "../../h";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
+import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
-import { ServerClanItem } from "../serverClanItem";
-import { friendlyTimestamp } from "../../utils/date";
 import { Markup } from "../markup/markup";
+import { ServerClanItem } from "../serverClanItem";
 import { shouldGroup } from "./utils";
 
 const messageItem = css`

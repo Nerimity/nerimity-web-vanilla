@@ -1,23 +1,24 @@
-import { h } from "../h";
-import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
-import { serverStore } from "../store/serverStore";
-import { userStore } from "../store/userStore";
-import { storeEmitter } from "../utils/EventEmitter";
-import { Avatar } from "./avatar";
-import { ServerRole, serverRoleStore } from "../store/serverRoleStore";
-import { channelStore } from "../store/channelStore";
-import { userPresenceStore } from "../store/userPresenceStore";
-import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
-import { hasBit } from "../utils/bitwise";
-import { RolePermissionFlag } from "../utils/RolePermissionFlag";
-import { ManualMemo } from "../utils/memo";
-import { createVirtualList } from "./virtualList";
-import { convertShorthandToLinearGradient } from "../utils/color";
-import { GradientText } from "./gradientText";
 import { css } from "@linaria/core";
+
+import { h } from "../h";
+import { channelStore } from "../store/channelStore";
+import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
+import { ServerRole, serverRoleStore } from "../store/serverRoleStore";
+import { serverStore } from "../store/serverStore";
+import { userPresenceStore } from "../store/userPresenceStore";
+import { userStore } from "../store/userStore";
+import { hasBit } from "../utils/bitwise";
+import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
+import { convertShorthandToLinearGradient } from "../utils/color";
+import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
+import { ManualMemo } from "../utils/memo";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
+import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
+import { GradientText } from "./gradientText";
 import { ServerClanItem } from "./serverClanItem";
+import { createVirtualList } from "./virtualList";
 
 const CategoryType = {
   role: 0,

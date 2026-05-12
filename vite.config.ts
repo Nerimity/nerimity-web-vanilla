@@ -1,5 +1,5 @@
-import { defineConfig } from "vite";
 import wyw from "@wyw-in-js/vite";
+import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [

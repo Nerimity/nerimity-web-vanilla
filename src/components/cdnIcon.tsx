@@ -1,7 +1,8 @@
+import { css } from "@linaria/core";
+
 import { h } from "../h";
 import { unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
-import { css } from "@linaria/core";
 
 const cdnIcon = css`
   display: flex;

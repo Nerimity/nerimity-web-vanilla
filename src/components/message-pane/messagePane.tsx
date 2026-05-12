@@ -1,11 +1,12 @@
 import { css } from "@linaria/core";
+import morphdom from "morphdom";
+
 import { h } from "../../h";
+import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
-import { accountStore } from "../../store/accountStore";
-import morphdom from "morphdom";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
 

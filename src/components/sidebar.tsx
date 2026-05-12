@@ -1,12 +1,13 @@
-import { storeEmitter } from "../utils/EventEmitter";
+import { css } from "@linaria/core";
+
 import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
-import { Avatar } from "./avatar";
-import { reconcile } from "../utils/html";
-import { Link } from "./link";
-import { Item } from "./item";
+import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
-import { css } from "@linaria/core";
+import { reconcile } from "../utils/html";
+import { Avatar } from "./avatar";
+import { Item } from "./item";
+import { Link } from "./link";
 
 const serverItemLink = css`
   overflow: hidden;

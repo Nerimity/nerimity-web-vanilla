@@ -1,5 +1,6 @@
-import { h } from "../h";
 import { css } from "@linaria/core";
+
+import { h } from "../h";
 
 type GradientTextProps = Partial<Omit<HTMLSpanElement, keyof HTMLElement>> & {
   children?: any;
