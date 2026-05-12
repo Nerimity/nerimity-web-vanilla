@@ -1,110 +1,13 @@
 import { css } from "@linaria/core";
-import { h } from "../h";
-import { channelStore } from "../store/channelStore";
-import { Message, messageStore } from "../store/messageStore";
-import { storeEmitter } from "../utils/EventEmitter";
-import { reconcile } from "../utils/html";
-import { Avatar } from "./avatar";
-import { serverMemberStore } from "../store/serverMemberStore";
-import { serverStore } from "../store/serverStore";
-import { GradientText } from "./gradientText";
-import { convertShorthandToLinearGradient } from "../utils/color";
-import { ServerClanItem } from "./serverClanItem";
-import { accountStore } from "../store/accountStore";
+import { h } from "../../h";
+import { channelStore } from "../../store/channelStore";
+import { Message, messageStore } from "../../store/messageStore";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { reconcile } from "../../utils/html";
+import { accountStore } from "../../store/accountStore";
 import morphdom from "morphdom";
-import { Markup } from "./markup/markup";
-import { friendlyTimestamp } from "../utils/date";
-
-const shouldGroup = (message: Message, prev?: Message): boolean => {
-  if (!prev) return false;
-  if (message.createdBy.id !== prev.createdBy.id) return false;
-  const diff = message.createdAt - prev.createdAt;
-  if (diff > 5 * 60 * 1000) return false;
-  return true;
-};
-
-const messageItem = css`
-  display: flex;
-  gap: 10px;
-  padding-left: 4px;
-  padding-right: 4px;
-  &:hover {
-    background-color: var(--slate-800);
-  }
-
-  .details {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    .timestamp {
-      font-size: 12px;
-      color: var(--slate-400);
-    }
-  }
-
-  &.withDetails {
-    margin-top: 10px;
-  }
-  .username {
-    font-weight: 500;
-  }
-  .avatarPlaceholder {
-    width: 40px;
-    flex-shrink: 0;
-    height: 1px;
-  }
-  .content {
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-`;
-const MessageItem = (props: { message: Message; prevMessage?: Message }) => {
-  const creator = props.message.createdBy;
-  const group =
-    props.prevMessage && shouldGroup(props.message, props.prevMessage);
-
-  const member = serverMemberStore.serverMembers
-    .get(serverStore.currentServerId!)
-    ?.get(creator.id);
-
-  const topRoleColor = serverStore.memberTopColor(member);
-  const color =
-    convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
-
-  const name = member?.nickname || creator.username;
-
-  return (
-    <div
-      class={[messageItem, !group && "withDetails"]}
-      data-message-id={props.message.id}
-      data-grouped={group}
-    >
-      {group ? (
-        <div class="avatarPlaceholder"></div>
-      ) : (
-        <Avatar user={creator} size={40} />
-      )}
-      <div>
-        {!group && (
-          <span class="details">
-            <GradientText class="username" color={color}>
-              {name}
-            </GradientText>
-            {creator?.profile?.clan && (
-              <ServerClanItem clan={creator.profile.clan} />
-            )}
-            <span class="timestamp">
-              {friendlyTimestamp(props.message.createdAt)}
-            </span>
-          </span>
-        )}
-        <div class="content">
-          <Markup text={props.message.content} message={props.message} />
-        </div>
-      </div>
-    </div>
-  );
-};
+import { MessageItem } from "./messageItem";
+import { shouldGroup } from "./utils";
 
 const messagePane = css`
   display: flex;

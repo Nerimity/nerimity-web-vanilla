@@ -9,7 +9,7 @@ import { createServerChannelList } from "./components/serverChannelList";
 import { storeEmitter } from "./utils/EventEmitter";
 import { createServerMemberList } from "./components/serverMemberList";
 import { Link } from "./components/link";
-import { createMessagePane } from "./components/messagePane";
+import { createMessagePane } from "./components/message-pane/messagePane";
 
 socket.connect();
 
