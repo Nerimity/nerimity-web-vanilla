@@ -1,3 +1,4 @@
+import "./i18n";
 import { Link } from "./components/link";
 
 import "./style.css";

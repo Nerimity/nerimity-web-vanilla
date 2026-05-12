@@ -1,66 +1,63 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
+import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import { storeEmitter } from "../../utils/EventEmitter";
-
-const inputContainer = css`
-  display: flex;
-  align-items: center;
-
-  background-color: var(--input-background-color);
-  border: solid 1px var(--gray-700);
-  border-radius: var(--radius-6);
-  overflow: hidden;
-  transition: 0.2s border-bottom-color;
-  &:has(input:focus) {
-    border-bottom-color: var(--primary-color);
-  }
-  input {
-    padding: 8px;
-    color: var(--text-color);
-    outline: none;
-    border: none;
-    background: transparent;
-    width: 100%;
-  }
-`;
-
-interface InputProps {
-  class?: string | string[];
-}
-const Input = (props: InputProps) => {
-  return (
-    <div class={[inputContainer, props.class]}>
-      <input type="text" />
-      <button>test</button>
-    </div>
-  );
-};
+import { Button } from "../button";
+import { Input } from "../input";
 
 const chatbarContainer = css`
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 8px;
+  padding-top: 0;
+  .chatInput {
+  }
+  .button {
+    width: 50px;
+    margin: 4px;
+    padding: 6px 0;
+    border-radius: var(--radius-4);
+    .icon {
+      font-size: 20px;
+    }
+  }
 `;
 
 export const createChatbar = () => {
   const chatbar = (
     <div class={chatbarContainer}>
-      <Input class="chatInput" />
+      <Input
+        class="chatInput"
+        suffix={
+          <>
+            <Button class="button" icon="send" hoverBorder />
+          </>
+        }
+      />
     </div>
   ) as unknown as HTMLElement;
 
   const render = () => chatbar;
 
-  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
+  const updatePlaceholder = () => {
     const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
-    input.placeholder = `#${channelStore.currentChannel()?.name}`;
+    input.placeholder = t`Message in ${channelStore.currentChannel()?.name!}`;
+  };
+
+  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
+    updatePlaceholder();
+  });
+
+  const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
+    updatePlaceholder();
   });
 
   const destroy = () => {
     channelIdUnsub();
+    authenticatedUnsub();
     chatbar.remove();
   };
 

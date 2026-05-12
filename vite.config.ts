@@ -1,8 +1,14 @@
 import wyw from "@wyw-in-js/vite";
 import { defineConfig } from "vite";
+import babel from "@rolldown/plugin-babel";
+import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 
 export default defineConfig({
   plugins: [
+    lingui(),
+    babel({
+      presets: [linguiTransformerBabelPreset()],
+    }),
     wyw({
       classNameSlug: "[title]_[hash]",
       babelOptions: {

@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
 import { channelStore } from "../store/channelStore";
@@ -32,7 +33,7 @@ type Categorized =
   | { type: 1; member: ServerMember; id: string; role: ServerRole };
 
 const offlineRole: ServerRole = new ServerRole({
-  name: "Offline",
+  name: t`Offline`,
   id: "offline",
   permissions: 0,
   hideRole: true,

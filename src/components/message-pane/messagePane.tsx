@@ -14,7 +14,6 @@ import { shouldGroup } from "./utils";
 const messagePane = css`
   display: flex;
   flex-direction: column;
-  gap: 4px;
   height: 100vh;
   width: 100%;
   .logs {
@@ -24,6 +23,7 @@ const messagePane = css`
     width: 100%;
     flex: 1;
     overflow: auto;
+    padding-bottom: 16px;
   }
 `;
 export const createMessagePane = () => {

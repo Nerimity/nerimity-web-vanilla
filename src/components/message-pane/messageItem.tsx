@@ -15,8 +15,8 @@ import { shouldGroup } from "./utils";
 const messageItem = css`
   display: flex;
   gap: 10px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 8px;
+  padding-right: 8px;
   &:hover {
     background-color: var(--gray-800);
   }
