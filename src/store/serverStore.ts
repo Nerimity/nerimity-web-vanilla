@@ -107,6 +107,25 @@ function createServerStore() {
     return role?.hexColor;
   };
 
+  const memberTopColorAndIcon = (member?: ServerMember) => {
+    if (!member) return;
+    let color: string | undefined = undefined;
+    let icon: string | undefined = undefined;
+
+    const currentRoles = currentServerSortedRoles.value();
+    for (let i = 0; i < currentRoles.length; i++) {
+      const role = currentRoles[i]!;
+      if (!member.roleIds.includes(role.id)) continue;
+
+      if (!color && role.hexColor) color = role.hexColor;
+      if (!icon && role.icon) icon = role.icon;
+
+      if (color && icon) break;
+    }
+
+    return { color, icon };
+  };
+
   const notificationsMemo = new ManualMemo(() => {
     const result: Record<string, number> = {};
 
@@ -142,5 +161,6 @@ function createServerStore() {
     currentChannelsSorted,
     currentServerSortedRoles,
     updateLastSeenServerChannel,
+    memberTopColorAndIcon,
   };
 }

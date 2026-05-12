@@ -7,6 +7,7 @@ import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
+import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
@@ -34,6 +35,9 @@ const messageItem = css`
     .timestamp {
       font-size: 12px;
       color: var(--gray-400);
+    }
+    .roleIcon {
+      background-color: transparent;
     }
   }
 
@@ -65,9 +69,9 @@ export const MessageItem = (props: {
     .get(serverStore.currentServerId!)
     ?.get(creator.id);
 
-  const topRoleColor = serverStore.memberTopColor(member);
+  const topRole = serverStore.memberTopColorAndIcon(member);
   const color =
-    convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+    convertShorthandToLinearGradient(topRole?.color) ?? topRole?.color ?? "";
 
   const name = member?.nickname || creator.username;
 
@@ -90,6 +94,13 @@ export const MessageItem = (props: {
             </GradientText>
             {creator?.profile?.clan && (
               <ServerClanItem clan={creator.profile.clan} />
+            )}
+            {topRole?.icon && (
+              <CdnIcon
+                class="roleIcon"
+                role={{ icon: topRole.icon }}
+                size={14}
+              />
             )}
             <span class="timestamp">
               {friendlyTimestamp(props.message.createdAt)}
