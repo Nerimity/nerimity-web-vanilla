@@ -1,6 +1,6 @@
 import { fetchMessages, postMessage } from "../services/messageService";
 import { socket } from "../services/socket";
-import type { RawMessage, RawUser } from "../Types";
+import type { Attachment, RawMessage, RawUser } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
 
@@ -15,6 +15,7 @@ export class Message {
   mentions: RawUser[];
   state?: "sending" | "error";
   tempId?: string;
+  attachments: Attachment[];
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
@@ -22,6 +23,7 @@ export class Message {
     this.channelId = data.channelId;
     this.createdAt = data.createdAt;
     this.mentions = data.mentions || [];
+    this.attachments = data.attachments || [];
   }
 }
 
@@ -78,6 +80,8 @@ function createMessageStore() {
       content: rawMessage.content ?? existing.content,
       createdBy: existing.createdBy,
       createdAt: existing.createdAt,
+      mentions: rawMessage.mentions ?? existing.mentions,
+      attachments: rawMessage.attachments ?? existing.attachments,
       ...rawMessage,
     });
     channelMessages[messageIndex] = message;

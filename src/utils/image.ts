@@ -25,3 +25,36 @@ export function buildImageUrl(
 
   return [uri.toString(), isAnimated] as const;
 }
+
+type Dimensions = {
+  width: string;
+  height: string;
+};
+
+interface ConstrainParams {
+  width: number;
+  height: number;
+  maxWidth: number;
+  maxHeight: number;
+}
+
+export function constrainDimensions({
+  width,
+  height,
+  maxWidth,
+  maxHeight,
+}: ConstrainParams): Dimensions {
+  const ratio = width / height;
+
+  if (width > maxWidth) {
+    width = maxWidth;
+    height = width / ratio;
+  }
+
+  if (height > maxHeight) {
+    height = maxHeight;
+    width = height * ratio;
+  }
+
+  return { width: width + "px", height: height + "px" };
+}

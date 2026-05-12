@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 
-import { h } from "../../h";
+import { h, Fragment } from "../../h";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
@@ -12,6 +12,8 @@ import { GradientText } from "../gradientText";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { shouldGroup } from "./utils";
+import { buildImageUrl, constrainDimensions } from "../../utils/image";
+import { Skeleton } from "../skeleton";
 
 const messageItem = css`
   display: flex;
@@ -60,6 +62,7 @@ const messageItem = css`
 export const MessageItem = (props: {
   message: Message;
   prevMessage?: Message;
+  container: HTMLDivElement;
 }) => {
   const creator = props.message.createdBy;
   const group =
@@ -109,8 +112,82 @@ export const MessageItem = (props: {
         )}
         <div class="content">
           <Markup text={props.message.content} message={props.message} />
+          <MessageEmbeds message={props.message} container={props.container} />
         </div>
       </div>
     </div>
   );
+};
+
+const imageContainer = css`
+  width: var(--width);
+  height: var(--height);
+  border-radius: var(--radius-8);
+  overflow: hidden;
+  .image {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    width: 100%;
+    height: 100%;
+    &.loaded {
+      opacity: 1;
+    }
+  }
+  .skeleton {
+    width: 100%;
+    height: 100%;
+  }
+`;
+export const MessageEmbeds = (props: {
+  message: Message;
+  container: HTMLDivElement;
+}) => {
+  const attachment = props.message.attachments[0];
+  const imageAttachment =
+    attachment?.width != undefined &&
+    attachment?.mime?.startsWith("image/") == true;
+
+  if (imageAttachment) {
+    const [url, _] = buildImageUrl(attachment?.path!);
+    const img = (
+      <img src={url} loading="lazy" class={"image"} />
+    ) as HTMLImageElement;
+    if (img.complete) img.classList.add("loaded");
+    const maxWidth = Math.min(
+      Math.max(props.container.clientWidth - 100, 0),
+      1920,
+    );
+    const maxHeight = Math.min(
+      Math.max(props.container.clientHeight / 2, 0),
+      600,
+    );
+    const skeleton = img.complete
+      ? null
+      : ((<Skeleton class="skeleton" />) as HTMLDivElement);
+    img.onload = !img.complete
+      ? () => {
+          skeleton?.remove();
+          img.classList.add("loaded");
+          img.onload = null;
+        }
+      : null;
+
+    const dims = constrainDimensions({
+      width: attachment.width!,
+      height: attachment.height!,
+      maxWidth,
+      maxHeight,
+    });
+
+    return (
+      <div
+        class={[imageContainer]}
+        style={{ "--width": dims.width, "--height": dims.height }}
+      >
+        {skeleton}
+        {img}
+      </div>
+    );
+  }
+  return null;
 };

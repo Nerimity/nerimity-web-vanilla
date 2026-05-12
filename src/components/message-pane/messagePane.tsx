@@ -28,7 +28,7 @@ const messagePane = css`
 `;
 export const createMessagePane = () => {
   const chatbar = createChatbar();
-  const logs = (<div class="logs"></div>) as unknown as HTMLElement;
+  const logs = (<div class="logs"></div>) as unknown as HTMLDivElement;
   const el = (
     <div class={messagePane}>
       {logs}
@@ -48,7 +48,11 @@ export const createMessagePane = () => {
     morphdom(
       messageEl,
       (
-        <MessageItem message={message} prevMessage={messages?.[index - 1]} />
+        <MessageItem
+          container={logs}
+          message={message}
+          prevMessage={messages?.[index - 1]}
+        />
       ) as unknown as HTMLElement,
     );
   };
@@ -68,7 +72,11 @@ export const createMessagePane = () => {
       values: messages,
       valueId: "id",
       create: (m, i) => (
-        <MessageItem message={m} prevMessage={messages[i - 1]} />
+        <MessageItem
+          message={m}
+          prevMessage={messages[i - 1]}
+          container={logs}
+        />
       ),
       shouldRecreate: (node, m, i) => {
         const prevGrouped = node.dataset.grouped === "true";

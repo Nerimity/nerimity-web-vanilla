@@ -41,6 +41,12 @@ const skeletonItem = css`
     border-radius: 4px;
     background: var(--gray-700);
   }
+
+  &.raw {
+    padding: 0;
+    margin-top: 0;
+    background: var(--gray-700);
+  }
 `;
 
 export const MessageSkeleton = (props: { wide?: boolean }) => (
@@ -51,4 +57,8 @@ export const MessageSkeleton = (props: { wide?: boolean }) => (
       <div class="line" style={{ width: props.wide ? "80%" : "50%" }} />
     </div>
   </div>
+);
+
+export const Skeleton = (props: { class?: string; style?: any }) => (
+  <div class={[skeletonItem, "raw", props.class]} style={props.style} />
 );

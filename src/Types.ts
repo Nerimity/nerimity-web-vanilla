@@ -88,6 +88,15 @@ export interface RawMessage {
   createdBy: RawUser;
   createdAt: number;
   mentions?: RawUser[];
+  attachments?: Attachment[];
+}
+export interface Attachment {
+  id: string;
+  path?: string;
+  mime?: string;
+
+  width?: number;
+  height?: number;
 }
 
 export interface RawMessageMention {
