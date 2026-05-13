@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 
-import { h, Fragment } from "../../h";
+import { h } from "../../h";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
