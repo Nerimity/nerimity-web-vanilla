@@ -2,12 +2,13 @@ import morphdom from "morphdom";
 
 import { h } from "../h";
 
-type Item<T, V> = T & { type: V; id: string };
+type Item<T, V> = T & { type: V };
 
 interface VirtualListProps<T, V extends string | number> {
   items: () => Item<T, V>[];
   type: Record<V, { height: number; sticky?: boolean }>;
   renderItem: (item: Item<T, V>) => JSX.Element;
+  id: (item: Item<T, V>) => string;
   parentEl: HTMLDivElement;
 }
 export function createVirtualList<T, V extends string | number>(
@@ -64,7 +65,7 @@ export function createVirtualList<T, V extends string | number>(
       height += itemHeight;
     }
 
-    const newIds = new Set(items.map((i) => i.id));
+    const newIds = new Set(items.map((i) => props.id(i)));
 
     for (const [id, el] of elMap) {
       if (!newIds.has(id)) {
@@ -75,7 +76,7 @@ export function createVirtualList<T, V extends string | number>(
 
     for (let i = 0; i < items.length; i++) {
       const item = items[i]!;
-      let el = elMap.get(item.id);
+      let el = elMap.get(props.id(item));
       if (!el) {
         el = (
           <div
@@ -89,7 +90,7 @@ export function createVirtualList<T, V extends string | number>(
           </div>
         ) as HTMLElement;
         containerEl.appendChild(el);
-        elMap.set(item.id, el);
+        elMap.set(props.id(item), el);
       }
       el.style.top = pos[i] + "px";
     }
@@ -127,7 +128,7 @@ export function createVirtualList<T, V extends string | number>(
   const rerenderItem = (id: string) => {
     const el = elMap.get(id);
     if (!el) return;
-    const item = cacheItems.find((i) => i.id === id);
+    const item = cacheItems.find((i) => props.id(i) === id);
     if (!item) return;
     const existing = el.firstElementChild;
     if (!existing) return;

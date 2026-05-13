@@ -29,8 +29,8 @@ const CategoryType = {
 type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
 
 type Categorized =
-  | { type: 0; role: ServerRole; count: number; id: string }
-  | { type: 1; member: ServerMember; id: string; role: ServerRole };
+  | { type: 0; role: ServerRole; count: number }
+  | { type: 1; member: ServerMember; role: ServerRole };
 
 const offlineRole: ServerRole = new ServerRole({
   name: t`Offline`,
@@ -196,13 +196,11 @@ export const createServerMemberList = () => {
           type: CategoryType.role,
           role,
           count: bucket.length,
-          id: role.id,
         });
         for (let j = 0; j < bucket.length; j++)
           result.push({
             type: CategoryType.member,
             member: bucket[j]!,
-            id: bucket[j]!.id,
             role,
           });
       }
@@ -212,13 +210,11 @@ export const createServerMemberList = () => {
         type: CategoryType.role,
         role: offlineRole,
         count: offlineMembers.length,
-        id: offlineRole.id,
       });
       for (let i = 0; i < offlineMembers.length; i++) {
         result.push({
           type: CategoryType.member,
           member: offlineMembers[i]!,
-          id: offlineMembers[i]!.id,
           role: offlineRole,
         });
       }
@@ -235,6 +231,7 @@ export const createServerMemberList = () => {
       return;
     }
     vt = createVirtualList({
+      id: (i) => (i.type === CategoryType.member ? i.member.userId : i.role.id),
       items: () => categorizedMembersMemoized.value().result,
       type: {
         [CategoryType.role]: { height: 40 },
@@ -372,7 +369,7 @@ const memberItem = (cat: Categorized) => {
     return (
       <div
         class={memberItemContainer}
-        data-user-id={cat.id}
+        data-user-id={user?.id}
         data-role-id={cat.role.id}
       >
         <Avatar size={32} user={user!} imgClass="avatar" />
@@ -388,7 +385,7 @@ const memberItem = (cat: Categorized) => {
     const role = cat.role;
 
     return (
-      <div class={roleItemContainer} data-role-header-id={cat.id}>
+      <div class={roleItemContainer} data-role-header-id={role.id}>
         {role.icon ? <CdnIcon role={role} size={14} /> : null}
         <span class="roleName">
           {role?.name} - {cat.count}
