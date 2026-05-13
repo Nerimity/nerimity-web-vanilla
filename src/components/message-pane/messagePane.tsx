@@ -11,6 +11,7 @@ import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
+import { FocusAnimator } from "../../utils/FocusAnimator";
 
 const messagePane = css`
   display: flex;
@@ -118,6 +119,8 @@ export const createMessagePane = () => {
     },
   );
 
+  const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
+
   const render = () => {
     if (accountStore.authenticated) {
       messageStore
@@ -129,6 +132,7 @@ export const createMessagePane = () => {
 
   const destroy = () => {
     imageEmbedResizer.destroy();
+    imageEmbedFocus.destroy();
     authUnsub();
     channelIdUnsub();
     messageCreatedUnsub();

@@ -127,7 +127,6 @@ export class HoverAnimator {
               continue;
           }
 
-          // Use querySelectorAll to find ALL cross-animate targets (headers, etc)
           const crossRoots = this.container.querySelectorAll(
             `[${crossAnimate.targetAttr ?? crossAnimate.attr}="${attrValue}"]`,
           );

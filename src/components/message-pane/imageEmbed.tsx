@@ -55,12 +55,17 @@ export const ImageEmbed = (props: {
   }
 
   const cached = item.cached;
-  const [url, _] = buildImageUrl(src, {
+  const [url, animated] = buildImageUrl(src, {
     animate: document.hasFocus(),
     forceIsAnimated: props.embed?.animated,
   });
   const img = (
-    <img src={url} loading="lazy" class={"image"} />
+    <img
+      src={url}
+      {...(animated && { "data-img-anim": "" })}
+      loading="lazy"
+      class={"image"}
+    />
   ) as HTMLImageElement;
   if (cached) img.classList.add("loaded");
   const maxWidth = clamp(props.container.clientWidth - 70, 600);
@@ -88,7 +93,7 @@ export const ImageEmbed = (props: {
 
   return (
     <div
-      class={[imageContainer]}
+      class={[imageContainer, "imageEmbed"]}
       data-width={width}
       data-height={height}
       style={{ "--width": dims.width, "--height": dims.height }}
