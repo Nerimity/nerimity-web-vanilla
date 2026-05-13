@@ -118,7 +118,8 @@ export const createServerMemberList = () => {
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
 
-  const categorizedMembersMemoized = new ManualMemo(() => {
+  const categorizedMembersMemoized = new ManualMemo((prev) => {
+    const result = ((prev as any)?.result || []) as Categorized[];
     const userIdToRoleId: Record<string, string | null> = {};
 
     const members = [
@@ -130,14 +131,13 @@ export const createServerMemberList = () => {
       const bu = b.nickname || userStore.users.get(b.userId)!.username;
       return au.localeCompare(bu);
     });
+
     const server = serverStore.servers.get(serverStore.currentServerId!);
     const creatorId = server?.createdById;
 
     const { sorted: sortedRoles, order: roleOrder } = roleOrderMemoized.value();
-
     const vRoleIds = visibleRoleIdsMemoized.value();
     const presences = userPresenceStore.presences;
-
     const defaultRole = currentServerDefaultRole();
     const isDefaultPublic = isDefaultPublicMemoized.value();
 
@@ -159,9 +159,7 @@ export const createServerMemberList = () => {
       for (let y = 0; y < roleIds.length; y++) {
         const roleId = roleIds[y]!;
 
-        if (!canViewChannel && vRoleIds.has(roleId)) {
-          canViewChannel = true;
-        }
+        if (!canViewChannel && vRoleIds.has(roleId)) canViewChannel = true;
 
         const idx = roleOrder[roleId];
         if (idx !== undefined && idx < bestIndex) {
@@ -186,39 +184,76 @@ export const createServerMemberList = () => {
       }
     }
 
-    const result: Categorized[] = [];
+    let cursor = 0;
+
+    const isSame = (a: Categorized, b: Categorized) =>
+      a.type === b.type &&
+      (a.type === CategoryType.role
+        ? a.role.id === (b as any).role?.id
+        : a.member.userId === (b as any).member?.userId &&
+          a.role.id === (b as any).role?.id);
+
+    const place = (item: Categorized) => {
+      const curr = result[cursor];
+
+      if (curr && isSame(curr, item)) {
+        if (
+          item.type === CategoryType.role &&
+          (curr as any).count !== item.count
+        )
+          (curr as any).count = item.count;
+        cursor++;
+        return;
+      }
+
+      let found = -1;
+      for (let i = cursor + 1; i < result.length; i++) {
+        if (isSame(result[i]!, item)) {
+          found = i;
+          break;
+        }
+      }
+
+      if (found !== -1) {
+        const [existing] = result.splice(found, 1);
+        result.splice(cursor, 0, existing!);
+        if (
+          item.type === CategoryType.role &&
+          (result[cursor] as any).count !== item.count
+        )
+          (result[cursor] as any).count = item.count;
+      } else {
+        result.splice(cursor, 0, item);
+      }
+
+      cursor++;
+    };
 
     for (let i = 0; i < sortedRoles.length; i++) {
       const role = sortedRoles[i]!;
       const bucket = buckets[role.id];
       if (bucket?.length) {
-        result.push({
-          type: CategoryType.role,
-          role,
-          count: bucket.length,
-        });
+        place({ type: CategoryType.role, role, count: bucket.length });
         for (let j = 0; j < bucket.length; j++)
-          result.push({
-            type: CategoryType.member,
-            member: bucket[j]!,
-            role,
-          });
+          place({ type: CategoryType.member, member: bucket[j]!, role });
       }
     }
+
     if (offlineMembers.length && offlineRole) {
-      result.push({
+      place({
         type: CategoryType.role,
         role: offlineRole,
         count: offlineMembers.length,
       });
-      for (let i = 0; i < offlineMembers.length; i++) {
-        result.push({
+      for (let i = 0; i < offlineMembers.length; i++)
+        place({
           type: CategoryType.member,
           member: offlineMembers[i]!,
           role: offlineRole,
         });
-      }
     }
+
+    if (result.length > cursor) result.splice(cursor);
 
     return { result, userIdToRoleId };
   });
