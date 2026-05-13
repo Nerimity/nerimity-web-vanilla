@@ -4,6 +4,7 @@ import type {
   Attachment,
   RawMessage,
   RawMessageEmbed,
+  RawReplyMessage,
   RawUser,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -24,6 +25,8 @@ export class Message {
   tempId?: string;
   attachments: LocalAttachment[];
   embed?: LocalEmbed;
+  replyMessages?: RawReplyMessage[];
+
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
@@ -33,6 +36,7 @@ export class Message {
     this.mentions = data.mentions || [];
     this.attachments = data.attachments || [];
     this.embed = data.embed;
+    this.replyMessages = data.replyMessages;
   }
 }
 
@@ -92,6 +96,7 @@ function createMessageStore() {
       mentions: rawMessage.mentions ?? existing.mentions,
       attachments: rawMessage.attachments ?? existing.attachments,
       embed: rawMessage.embed ?? existing.embed,
+      replyMessages: rawMessage.replyMessages,
       ...rawMessage,
     });
     channelMessages[messageIndex] = message;

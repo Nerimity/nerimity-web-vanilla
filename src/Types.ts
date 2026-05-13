@@ -90,6 +90,18 @@ export interface RawMessage {
   mentions?: RawUser[];
   attachments?: Attachment[];
   embed?: RawMessageEmbed;
+  replyMessages?: RawReplyMessage[];
+}
+
+export interface PartialMessage {
+  id: string;
+  content?: string;
+  createdAt: number;
+  createdBy: RawUser;
+  attachments?: Attachment[];
+}
+export interface RawReplyMessage {
+  replyToMessage?: PartialMessage;
 }
 
 export interface RawMessageEmbed {

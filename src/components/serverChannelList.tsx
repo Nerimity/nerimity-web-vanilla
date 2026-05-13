@@ -137,12 +137,12 @@ const createChannelItemHelper = () => {
           <>
             <CdnIcon
               class="channelIcon"
-              size={isCategory ? 10 : 18}
+              size={isCategory ? 10 : 16}
               channel={channel}
             />
             <Item.Label
               class={[isCategory && "categoryLabel"]}
-              size={isCategory ? 12 : 16}
+              size={isCategory ? 12 : 14}
             >
               {channel.name}
             </Item.Label>

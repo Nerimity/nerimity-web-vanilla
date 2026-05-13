@@ -13,10 +13,11 @@ import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { ImageEmbed } from "./imageEmbed";
 import { shouldGroup } from "./utils";
+import type { RawReplyMessage } from "../../Types";
 
 const messageItem = css`
   display: flex;
-  gap: 10px;
+  flex-direction: column;
   padding-left: 8px;
   padding-right: 8px;
   flex-shrink: 0;
@@ -30,6 +31,10 @@ const messageItem = css`
   }
   &.error {
     color: var(--alert-color);
+  }
+  .messageContainer {
+    display: flex;
+    gap: 10px;
   }
 
   .details {
@@ -97,50 +102,58 @@ export const MessageItem = (props: {
     props.message.embed?.type == "image" &&
     !props.message.content.includes(" ");
 
+  const hasMessageReplies = !!props.message.replyMessages?.length;
+
   return (
     <div
       class={[messageItem, !group && "withDetails", props.message.state]}
       data-message-id={props.message.id}
       data-grouped={group}
     >
-      {group ? (
-        <div class="avatarPlaceholder"></div>
-      ) : (
-        <Avatar user={creator} size={40} />
-      )}
-      <div class="messageBody">
-        {!group && (
-          <span class="details">
-            <GradientText class="username" color={color}>
-              {name}
-            </GradientText>
-            {creator?.profile?.clan && (
-              <ServerClanItem clan={creator.profile.clan} />
-            )}
-            {topRole?.icon && (
-              <CdnIcon
-                class="roleIcon"
-                role={{ icon: topRole.icon }}
-                size={14}
-              />
-            )}
-            <span class="timestamp">
-              {friendlyTimestamp(props.message.createdAt)}
-            </span>
-          </span>
+      {hasMessageReplies && <MessageReplies message={props.message} />}
+      <div class="messageContainer">
+        {group ? (
+          <div class="avatarPlaceholder"></div>
+        ) : (
+          <Avatar user={creator} size={40} />
         )}
-        <div class="content">
-          {!isImageEmbedOnly && (
-            <Markup text={props.message.content} message={props.message} />
+        <div class="messageBody">
+          {!group && (
+            <span class="details">
+              <GradientText class="username" color={color}>
+                {name}
+              </GradientText>
+              {creator?.profile?.clan && (
+                <ServerClanItem clan={creator.profile.clan} />
+              )}
+              {topRole?.icon && (
+                <CdnIcon
+                  class="roleIcon"
+                  role={{ icon: topRole.icon }}
+                  size={14}
+                />
+              )}
+              <span class="timestamp">
+                {friendlyTimestamp(props.message.createdAt)}
+              </span>
+            </span>
           )}
-          <MessageEmbeds message={props.message} container={props.container} />
+          <div class="content">
+            {!isImageEmbedOnly && (
+              <Markup text={props.message.content} message={props.message} />
+            )}
+            <MessageEmbeds
+              message={props.message}
+              container={props.container}
+            />
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export const MessageEmbeds = (props: {
+const MessageEmbeds = (props: {
   message: Message;
   container: HTMLDivElement;
 }) => {
@@ -163,4 +176,72 @@ export const MessageEmbeds = (props: {
     );
   }
   return null;
+};
+
+const messageReplies = css`
+  display: flex;
+  .empty {
+    width: 50px;
+    flex-shrink: 0;
+  }
+  .replies {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    overflow: hidden;
+    flex: 1;
+  }
+`;
+
+const MessageReplies = (props: { message: Message }) => {
+  const replies = props.message.replyMessages!;
+  return (
+    <div class={messageReplies}>
+      <div class="empty"></div>
+      <div class="replies">
+        {replies.map((reply) => (
+          <ReplyMessage message={reply} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const replyMessage = css`
+  display: flex;
+  gap: 4px;
+  min-width: 0;
+  overflow: hidden;
+  .username {
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .content {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const ReplyMessage = (props: { message: RawReplyMessage }) => {
+  const creator = props.message.replyToMessage?.createdBy!;
+  const member = serverMemberStore.serverMembers
+    .get(serverStore.currentServerId!)
+    ?.get(creator.id);
+  const topRoleColor = serverStore.memberTopColor(member);
+
+  const color =
+    convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+
+  return (
+    <div class={replyMessage}>
+      <GradientText class="username" color={color}>
+        {creator.username}
+      </GradientText>
+      <span class="content">{props.message.replyToMessage?.content}</span>
+    </div>
+  );
 };
