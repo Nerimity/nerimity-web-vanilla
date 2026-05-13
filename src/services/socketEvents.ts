@@ -39,6 +39,7 @@ const onAuthenticated = (payload: any) => {
   if (payload instanceof ArrayBuffer) {
     payload = decompressObject(new Uint8Array(payload));
   }
+  accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
   serverStore.setServers(payload.servers);
   serverStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);

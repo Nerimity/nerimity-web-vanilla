@@ -104,3 +104,19 @@ export interface RawMessageMention {
   serverId: string;
   count: number;
 }
+
+export const NotificationMode = {
+  ALL: 0,
+  MENTIONS_ONLY: 1,
+  MUTE: 2,
+} as const;
+
+export type NotificationMode =
+  (typeof NotificationMode)[keyof typeof NotificationMode];
+
+export interface RawUserNotificationSettings {
+  notificationSoundMode: NotificationMode;
+  notificationPingMode: NotificationMode;
+  serverId?: string;
+  channelId?: string;
+}

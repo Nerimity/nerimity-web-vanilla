@@ -1,6 +1,7 @@
-import { ChannelType, type RawServer } from "../Types";
+import { ChannelType, NotificationMode, type RawServer } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
+import { accountStore } from "./accountStore";
 import { Channel, channelStore } from "./channelStore";
 import type { ServerMember } from "./serverMemberStore";
 import { ServerRole, serverRoleStore } from "./serverRoleStore";
@@ -134,6 +135,20 @@ function createServerStore() {
     for (const [id, count] of Object.entries(channelNotifs)) {
       const channel = channelStore.channels.get(id);
       if (!channel?.serverId) continue;
+
+      const isMention = count > 0;
+
+      const notification = accountStore.getCombinedNotification(
+        channel.serverId,
+        id,
+      );
+      const mentionsOnly =
+        notification?.notificationPingMode === NotificationMode.MENTIONS_ONLY;
+      const muted =
+        notification?.notificationPingMode === NotificationMode.MUTE;
+
+      if (muted) continue;
+      if (!isMention && mentionsOnly) continue;
 
       const serverId = channel!.serverId!;
       const current = result[serverId] ?? 0;

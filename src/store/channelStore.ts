@@ -1,6 +1,11 @@
-import type { ChannelPermissions, RawChannel } from "../Types";
+import {
+  NotificationMode,
+  type ChannelPermissions,
+  type RawChannel,
+} from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
+import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
 import { serverStore } from "./serverStore";
 
@@ -55,11 +60,20 @@ function createChannelStore() {
     const lastSeen = serverStore.lastSeenChannelIds;
 
     for (const channel of channels.values()) {
+      const notifySettings = accountStore.notificationSettings.get(channel.id);
+
+      const muted =
+        notifySettings?.notificationPingMode === NotificationMode.MUTE;
+      const mentionsOnly =
+        notifySettings?.notificationPingMode === NotificationMode.MENTIONS_ONLY;
+      if (muted) continue;
+
       const mentionCount = mentions.get(channel.id)?.count;
       if (mentionCount && mentionCount > 0) {
         notifications[channel.id] = mentionCount;
         continue;
       }
+      if (mentionsOnly) continue;
       if (!channel.serverId) continue;
       const lastSeenAt = lastSeen.get(channel.id);
       const hasNotSeen =
