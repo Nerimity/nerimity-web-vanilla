@@ -7,7 +7,7 @@ import { Link } from "../link";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
-  channel?: { id: string; name?: string };
+  channel?: { id: string; name?: string; serverId?: string };
   label?: string;
   icon?: string;
 }
@@ -42,8 +42,16 @@ const mention = css`
 export const Mention = (props: MentionProps) => {
   const text = props.user?.username || props.channel?.name || props.label;
 
+  let url = "";
+  if (props.user) {
+    url = `/app/profile/${props.user.id}`;
+  }
+  if (props.channel) {
+    url = `/app/servers/${props.channel.serverId!}/${props.channel.id}`;
+  }
+
   return (
-    <Link href={`/app/profile/${props.user?.id}`} class={mention}>
+    <Link href={url} class={mention}>
       {props.user && <Avatar user={props.user} size={16} />}
       {props.icon && <Icon name={props.icon} class="icon" />}
       <span class="text">{text}</span>
