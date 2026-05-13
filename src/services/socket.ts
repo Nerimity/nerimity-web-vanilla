@@ -27,14 +27,15 @@ function createSocket() {
       }
 
       const raw = event.data as string;
-      if (raw[0] === "2") {
+      if (raw === "2") {
         ws?.send("3");
+        return;
       }
       if (raw[0] === "0") {
         ws?.send("40");
         return;
       }
-      if (raw[0] === "4" && raw[1] === "0") {
+      if (raw.startsWith("40")) {
         const data = JSON.parse(raw.slice(2));
         socketId = data.sid;
 
@@ -44,7 +45,7 @@ function createSocket() {
         });
         return;
       }
-      if (raw[0] === "4" && raw[1] === "2") {
+      if (raw.startsWith("42")) {
         const [event, data] = JSON.parse(raw.slice(2));
         socketEventHandler(event, data);
         return;
