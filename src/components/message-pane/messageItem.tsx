@@ -6,14 +6,14 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
+import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
-import { shouldGroup } from "./utils";
-import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { Skeleton } from "../skeleton";
+import { shouldGroup } from "./utils";
 
 const messageItem = css`
   display: flex;
@@ -148,11 +148,12 @@ export const MessageEmbeds = (props: {
     attachment?.mime?.startsWith("image/") == true;
 
   if (imageAttachment) {
+    const cached = attachment.cached;
     const [url, _] = buildImageUrl(attachment?.path!);
     const img = (
       <img src={url} loading="lazy" class={"image"} />
     ) as HTMLImageElement;
-    if (img.complete) img.classList.add("loaded");
+    if (cached) img.classList.add("loaded");
     const maxWidth = Math.min(
       Math.max(props.container.clientWidth - 100, 0),
       1920,
@@ -161,11 +162,12 @@ export const MessageEmbeds = (props: {
       Math.max(props.container.clientHeight / 2, 0),
       600,
     );
-    const skeleton = img.complete
+    const skeleton = cached
       ? null
       : ((<Skeleton class="skeleton" />) as HTMLDivElement);
-    img.onload = !img.complete
+    img.onload = !cached
       ? () => {
+          attachment.cached = true;
           skeleton?.remove();
           img.classList.add("loaded");
           img.onload = null;

@@ -6,6 +6,7 @@ import { accountStore } from "./accountStore";
 
 export const messageStore = createMessageStore();
 
+export type LocalAttachment = Attachment & { cached?: boolean };
 export class Message {
   id: string;
   content: string;
@@ -15,7 +16,7 @@ export class Message {
   mentions: RawUser[];
   state?: "sending" | "error";
   tempId?: string;
-  attachments: Attachment[];
+  attachments: LocalAttachment[];
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
