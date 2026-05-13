@@ -7,6 +7,7 @@ import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
 import { buildImageUrl, constrainDimensions } from "../../utils/image";
+import { throttle } from "../../utils/throttle";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
@@ -20,6 +21,9 @@ const messageItem = css`
   gap: 10px;
   padding-left: 8px;
   padding-right: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+
   &:hover {
     background-color: var(--gray-800);
   }
@@ -34,9 +38,12 @@ const messageItem = css`
     display: flex;
     align-items: center;
     gap: 4px;
+    overflow: hidden;
     .timestamp {
       font-size: 12px;
       color: var(--gray-400);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .roleIcon {
       background-color: transparent;
@@ -48,6 +55,11 @@ const messageItem = css`
   }
   .username {
     font-weight: 500;
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-shrink: 1;
   }
   .avatarPlaceholder {
     width: 40px;
@@ -57,6 +69,11 @@ const messageItem = css`
   .content {
     white-space: pre-wrap;
     word-break: break-word;
+  }
+
+  .messageBody {
+    min-width: 0;
+    overflow: hidden;
   }
 `;
 export const MessageItem = (props: {
@@ -89,7 +106,7 @@ export const MessageItem = (props: {
       ) : (
         <Avatar user={creator} size={40} />
       )}
-      <div>
+      <div class="messageBody">
         {!group && (
           <span class="details">
             <GradientText class="username" color={color}>
@@ -124,11 +141,14 @@ const imageContainer = css`
   height: var(--height);
   border-radius: var(--radius-8);
   overflow: hidden;
+  position: relative;
   .image {
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     width: 100%;
     height: 100%;
+    object-fit: contain;
+    display: block;
     &.loaded {
       opacity: 1;
     }
@@ -136,6 +156,8 @@ const imageContainer = css`
   .skeleton {
     width: 100%;
     height: 100%;
+    position: absolute;
+    inset: 0;
   }
 `;
 export const MessageEmbeds = (props: {
@@ -154,14 +176,10 @@ export const MessageEmbeds = (props: {
       <img src={url} loading="lazy" class={"image"} />
     ) as HTMLImageElement;
     if (cached) img.classList.add("loaded");
-    const maxWidth = Math.min(
-      Math.max(props.container.clientWidth - 100, 0),
-      1920,
-    );
-    const maxHeight = Math.min(
-      Math.max(props.container.clientHeight / 2, 0),
-      600,
-    );
+    const maxWidth = clamp(props.container.clientWidth - 70, 600);
+
+    const maxHeight = props.container.clientHeight / 2;
+
     const skeleton = cached
       ? null
       : ((<Skeleton class="skeleton" />) as HTMLDivElement);
@@ -184,6 +202,8 @@ export const MessageEmbeds = (props: {
     return (
       <div
         class={[imageContainer]}
+        data-width={attachment.width}
+        data-height={attachment.height}
         style={{ "--width": dims.width, "--height": dims.height }}
       >
         {skeleton}
@@ -193,3 +213,41 @@ export const MessageEmbeds = (props: {
   }
   return null;
 };
+
+export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
+  const onResize = throttle(() => {
+    const imageEmbeds = logElement.querySelectorAll(`.${imageContainer}`);
+    const maxWidth = clamp(logElement.clientWidth - 70, 600);
+    const maxHeight = logElement.clientHeight / 2;
+
+    for (let i = 0; i < imageEmbeds.length; i++) {
+      const embedEl = imageEmbeds[i] as HTMLDivElement;
+
+      const imgWidth = parseInt(embedEl.dataset.width!);
+      const imgHeight = parseInt(embedEl.dataset.height!);
+
+      const dims = constrainDimensions({
+        width: imgWidth,
+        height: imgHeight,
+        maxWidth,
+        maxHeight,
+      });
+
+      embedEl.style.setProperty("--width", dims.width);
+      embedEl.style.setProperty("--height", dims.height);
+    }
+  }, 20);
+
+  window.addEventListener("resize", onResize);
+  const destroy = () => {
+    window.removeEventListener("resize", onResize);
+  };
+
+  return {
+    destroy,
+  };
+};
+
+function clamp(num: number, max: number) {
+  return num >= max ? max : num;
+}

@@ -8,7 +8,7 @@ import { Message, messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
 import { createChatbar } from "./chatbar";
-import { MessageItem } from "./messageItem";
+import { createImageEmbedResizer, MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
 
 const messagePane = css`
@@ -88,7 +88,10 @@ export const createMessagePane = () => {
     scrollToBottom();
   };
 
+  const imageEmbedResizer = createImageEmbedResizer(logs);
+
   const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
+    logs.replaceChildren();
     rerender();
   });
 
@@ -124,6 +127,7 @@ export const createMessagePane = () => {
   };
 
   const destroy = () => {
+    imageEmbedResizer.destroy();
     authUnsub();
     channelIdUnsub();
     messageCreatedUnsub();

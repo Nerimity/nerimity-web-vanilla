@@ -52,6 +52,7 @@ body {
 
 .contentPane {
   display: flex;
+  overflow: hidden;
   flex: 1;
 }
 
