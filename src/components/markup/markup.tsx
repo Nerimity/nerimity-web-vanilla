@@ -219,7 +219,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     }
     case "link": {
       const url = sliceText(ctx, entity.innerSpan);
-      return <span {...{ url }} />;
+      return <a href={url}>{transformEntities(entity, ctx)}</a>;
     }
     case "code": {
       return <code class={entity.type}>{transformEntities(entity, ctx)}</code>;

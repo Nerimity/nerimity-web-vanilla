@@ -6,14 +6,12 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
-import { buildImageUrl, constrainDimensions } from "../../utils/image";
-import { throttle } from "../../utils/throttle";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
-import { Skeleton } from "../skeleton";
+import { ImageEmbed } from "./imageEmbed";
 import { shouldGroup } from "./utils";
 
 const messageItem = css`
@@ -95,6 +93,10 @@ export const MessageItem = (props: {
 
   const name = member?.nickname || creator.username;
 
+  const isImageEmbedOnly =
+    props.message.embed?.type == "image" &&
+    !props.message.content.includes(" ");
+
   return (
     <div
       class={[messageItem, !group && "withDetails", props.message.state]}
@@ -128,7 +130,9 @@ export const MessageItem = (props: {
           </span>
         )}
         <div class="content">
-          <Markup text={props.message.content} message={props.message} />
+          {!isImageEmbedOnly && (
+            <Markup text={props.message.content} message={props.message} />
+          )}
           <MessageEmbeds message={props.message} container={props.container} />
         </div>
       </div>
@@ -136,30 +140,6 @@ export const MessageItem = (props: {
   );
 };
 
-const imageContainer = css`
-  width: var(--width);
-  height: var(--height);
-  border-radius: var(--radius-8);
-  overflow: hidden;
-  position: relative;
-  .image {
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    &.loaded {
-      opacity: 1;
-    }
-  }
-  .skeleton {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-  }
-`;
 export const MessageEmbeds = (props: {
   message: Message;
   container: HTMLDivElement;
@@ -169,85 +149,18 @@ export const MessageEmbeds = (props: {
     attachment?.width != undefined &&
     attachment?.mime?.startsWith("image/") == true;
 
-  if (imageAttachment) {
-    const cached = attachment.cached;
-    const [url, _] = buildImageUrl(attachment?.path!);
-    const img = (
-      <img src={url} loading="lazy" class={"image"} />
-    ) as HTMLImageElement;
-    if (cached) img.classList.add("loaded");
-    const maxWidth = clamp(props.container.clientWidth - 70, 600);
+  const imageEmbed =
+    props.message.embed?.type == "image" &&
+    props.message.embed?.imageHeight != null;
 
-    const maxHeight = props.container.clientHeight / 2;
-
-    const skeleton = cached
-      ? null
-      : ((<Skeleton class="skeleton" />) as HTMLDivElement);
-    img.onload = !cached
-      ? () => {
-          attachment.cached = true;
-          skeleton?.remove();
-          img.classList.add("loaded");
-          img.onload = null;
-        }
-      : null;
-
-    const dims = constrainDimensions({
-      width: attachment.width!,
-      height: attachment.height!,
-      maxWidth,
-      maxHeight,
-    });
-
+  if (imageAttachment || imageEmbed) {
     return (
-      <div
-        class={[imageContainer]}
-        data-width={attachment.width}
-        data-height={attachment.height}
-        style={{ "--width": dims.width, "--height": dims.height }}
-      >
-        {skeleton}
-        {img}
-      </div>
+      <ImageEmbed
+        attachment={attachment}
+        embed={props.message.embed}
+        container={props.container}
+      />
     );
   }
   return null;
 };
-
-export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
-  const onResize = throttle(() => {
-    const imageEmbeds = logElement.querySelectorAll(`.${imageContainer}`);
-    const maxWidth = clamp(logElement.clientWidth - 70, 600);
-    const maxHeight = logElement.clientHeight / 2;
-
-    for (let i = 0; i < imageEmbeds.length; i++) {
-      const embedEl = imageEmbeds[i] as HTMLDivElement;
-
-      const imgWidth = parseInt(embedEl.dataset.width!);
-      const imgHeight = parseInt(embedEl.dataset.height!);
-
-      const dims = constrainDimensions({
-        width: imgWidth,
-        height: imgHeight,
-        maxWidth,
-        maxHeight,
-      });
-
-      embedEl.style.setProperty("--width", dims.width);
-      embedEl.style.setProperty("--height", dims.height);
-    }
-  }, 20);
-
-  window.addEventListener("resize", onResize);
-  const destroy = () => {
-    window.removeEventListener("resize", onResize);
-  };
-
-  return {
-    destroy,
-  };
-};
-
-function clamp(num: number, max: number) {
-  return num >= max ? max : num;
-}

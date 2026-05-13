@@ -89,7 +89,19 @@ export interface RawMessage {
   createdAt: number;
   mentions?: RawUser[];
   attachments?: Attachment[];
+  embed?: RawMessageEmbed;
 }
+
+export interface RawMessageEmbed {
+  type?: "image";
+  animated?: boolean;
+  imageMime?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageUrl?: string;
+  domain?: string;
+}
+
 export interface Attachment {
   id: string;
   path?: string;

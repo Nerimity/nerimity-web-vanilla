@@ -8,7 +8,8 @@ import { Message, messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
 import { createChatbar } from "./chatbar";
-import { createImageEmbedResizer, MessageItem } from "./messageItem";
+import { createImageEmbedResizer } from "./imageEmbed";
+import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
 
 const messagePane = css`

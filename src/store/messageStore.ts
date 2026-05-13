@@ -1,12 +1,18 @@
 import { fetchMessages, postMessage } from "../services/messageService";
 import { socket } from "../services/socket";
-import type { Attachment, RawMessage, RawUser } from "../Types";
+import type {
+  Attachment,
+  RawMessage,
+  RawMessageEmbed,
+  RawUser,
+} from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
 
 export const messageStore = createMessageStore();
 
 export type LocalAttachment = Attachment & { cached?: boolean };
+export type LocalEmbed = RawMessageEmbed & { cached?: boolean };
 export class Message {
   id: string;
   content: string;
@@ -17,6 +23,7 @@ export class Message {
   state?: "sending" | "error";
   tempId?: string;
   attachments: LocalAttachment[];
+  embed?: LocalEmbed;
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;
@@ -25,6 +32,7 @@ export class Message {
     this.createdAt = data.createdAt;
     this.mentions = data.mentions || [];
     this.attachments = data.attachments || [];
+    this.embed = data.embed;
   }
 }
 
@@ -83,6 +91,7 @@ function createMessageStore() {
       createdAt: existing.createdAt,
       mentions: rawMessage.mentions ?? existing.mentions,
       attachments: rawMessage.attachments ?? existing.attachments,
+      embed: rawMessage.embed ?? existing.embed,
       ...rawMessage,
     });
     channelMessages[messageIndex] = message;
