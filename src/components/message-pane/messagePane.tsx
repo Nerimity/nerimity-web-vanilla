@@ -129,7 +129,6 @@ export const createMessagePane = () => {
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
 
   const render = () => {
-    console.trace("render");
     if (accountStore.authenticated) {
       messageStore
         .loadMessages(channelStore.currentChannelId!)

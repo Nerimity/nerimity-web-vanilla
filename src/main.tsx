@@ -78,7 +78,6 @@ const App = () => {
         const { createAppPage } = await AppPage();
         if (cancelled) return;
         currentPage = createAppPage();
-        console.log("rerender current page");
         currentPage.render();
         return;
       }
