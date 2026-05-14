@@ -63,6 +63,7 @@ export const createMessagePane = () => {
   const rerender = async (loadFromCache?: boolean) => {
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
+    if (!accountStore.authenticated) return;
     const messages = loadFromCache
       ? messageStore.messages.get(channelId)
       : await messageStore.loadMessages(channelStore.currentChannelId!);
@@ -128,6 +129,7 @@ export const createMessagePane = () => {
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
 
   const render = () => {
+    console.trace("render");
     if (accountStore.authenticated) {
       messageStore
         .loadMessages(channelStore.currentChannelId!)

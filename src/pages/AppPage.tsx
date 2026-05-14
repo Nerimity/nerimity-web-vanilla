@@ -23,10 +23,13 @@ export const createAppPage = () => {
     (params) => {
       if (!params.serverId || !params.channelId) {
         messagePane?.destroy();
+        messagePane = null;
         return;
       }
       serverStore.setCurrentServerId(params.serverId);
       channelStore.setCurrentChannelId(params.channelId);
+
+      if (messagePane) return;
 
       messagePane = createMessagePane();
       contentPane.replaceChildren(messagePane.render());

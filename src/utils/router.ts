@@ -175,7 +175,10 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
 
     const resolved = params ? resolveParams(pathname, params) : pathname;
     for (const entry of entries) {
-      entry.lastKey = "__uninitialized__";
+      const matches = entry.routes.some((r) =>
+        r.pattern.exec({ pathname: resolved }),
+      );
+      if (matches) entry.lastKey = "__uninitialized__";
     }
     if (opts?.replace) {
       history.replaceState(null, "", resolved);
@@ -187,7 +190,10 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
 
   window.addEventListener("popstate", () => {
     for (const entry of entries) {
-      entry.lastKey = "__uninitialized__";
+      const matches = entry.routes.some((r) =>
+        r.pattern.exec({ pathname: location.pathname }),
+      );
+      if (matches) entry.lastKey = "__uninitialized__";
     }
     dispatch(location.pathname);
   });
@@ -196,6 +202,7 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
 };
 
 export const router = createRouter([
+  { path: "/" },
   { path: "/login" },
   {
     path: "/app",
