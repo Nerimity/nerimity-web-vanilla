@@ -51,15 +51,22 @@ const loginPage = css`
 
 export const createLoginPage = () => {
   const app = document.getElementById("app")!;
+  const form = (
+    <form class="inputs">
+      <Input class="emailInput" label={t`Email`} />
+      <Input class="passwordInput" label={t`Password`} type="password" />
+    </form>
+  ) as unknown as HTMLFormElement;
+
+  form.onsubmit = (event) => {
+    event.preventDefault();
+  };
 
   const contentPane = (
     <div class={loginPage}>
       <div class="container">
         <div class="title">{t`Login to continue`}</div>
-        <div class="inputs">
-          <Input class="emailInput" label={t`Email`} />
-          <Input class="passwordInput" label={t`Password`} type="password" />
-        </div>
+        {form}
         <div class="error"></div>
         <Button class="loginButton" icon="login" label={t`Login`} primary />
       </div>
