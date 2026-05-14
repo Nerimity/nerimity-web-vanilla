@@ -6,12 +6,13 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { FocusAnimator } from "../../utils/FocusAnimator";
+import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
 import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
-import { FocusAnimator } from "../../utils/FocusAnimator";
 
 const messagePane = css`
   display: flex;
@@ -119,6 +120,11 @@ export const createMessagePane = () => {
     },
   );
 
+  const hoverAnimator = new HoverAnimator(logs, [
+    { trigger: `.messageItem`, image: ".clanIcon img" },
+    { trigger: `.messageItem`, image: ".avatar img" },
+  ]);
+
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
 
   const render = () => {
@@ -133,6 +139,7 @@ export const createMessagePane = () => {
   const destroy = () => {
     imageEmbedResizer.destroy();
     imageEmbedFocus.destroy();
+    hoverAnimator.destroy();
     authUnsub();
     channelIdUnsub();
     messageCreatedUnsub();

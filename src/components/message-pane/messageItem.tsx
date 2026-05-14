@@ -4,6 +4,7 @@ import { h } from "../../h";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
+import type { RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
@@ -13,7 +14,6 @@ import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { ImageEmbed } from "./imageEmbed";
 import { shouldGroup } from "./utils";
-import type { RawReplyMessage } from "../../Types";
 
 const messageItem = css`
   display: flex;
@@ -106,7 +106,12 @@ export const MessageItem = (props: {
 
   return (
     <div
-      class={[messageItem, !group && "withDetails", props.message.state]}
+      class={[
+        "messageItem",
+        messageItem,
+        !group && "withDetails",
+        props.message.state,
+      ]}
       data-message-id={props.message.id}
       data-grouped={group}
     >

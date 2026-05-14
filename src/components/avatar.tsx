@@ -51,7 +51,7 @@ export const Avatar = (props: AvatarProps) => {
   const _hexColor = hexColor(props);
   const _firstLetter = firstLetter(props);
   return (
-    <div class={avatar} style={{ "--size": props.size + "px" }}>
+    <div class={["avatar", avatar]} style={{ "--size": props.size + "px" }}>
       {url ? (
         <img
           loading="lazy"
