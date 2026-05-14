@@ -1,5 +1,6 @@
 import { apiUrl } from "../config";
 import { safeParseJson } from "../utils/json";
+import { getLocalItem } from "../utils/localStorage";
 
 interface RequestOpts {
   useToken?: boolean;
@@ -17,7 +18,7 @@ export async function request<T>(url: string, opts?: RequestOpts) {
     headers: {
       "Content-Type": "application/json",
       ...(opts?.useToken && {
-        Authorization: localStorage.getItem("userToken") as string,
+        Authorization: getLocalItem("userToken") as string,
       }),
     },
   }).catch(() => {

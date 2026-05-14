@@ -1,3 +1,4 @@
+import { getLocalItem } from "../utils/localStorage";
 import { socketEventHandler } from "./socketEvents";
 
 export const socket = createSocket();
@@ -40,7 +41,7 @@ function createSocket() {
         socketId = data.sid;
 
         emit("user:authenticate", {
-          token: localStorage["userToken"],
+          token: getLocalItem("userToken"),
           compression: "zstd",
         });
         return;
@@ -63,7 +64,12 @@ function createSocket() {
     ws?.send(`42${JSON.stringify([event, payload])}`);
   };
 
+  const disconnect = () => {
+    ws?.close();
+  };
+
   return {
+    disconnect,
     connect,
     get socketId() {
       return socketId;

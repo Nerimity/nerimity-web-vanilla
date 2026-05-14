@@ -13,11 +13,32 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/pages/LoginPage.tsx:60
+msgid "Email"
+msgstr "Email"
+
+#: src/pages/LoginPage.tsx:101
+msgid "Logging in..."
+msgstr "Logging in..."
+
+#: src/pages/LoginPage.tsx:64
+#: src/pages/LoginPage.tsx:91
+msgid "Login"
+msgstr "Login"
+
+#: src/pages/LoginPage.tsx:58
+msgid "Login to continue"
+msgstr "Login to continue"
+
 #. placeholder {0}: channelStore.currentChannel()?.name!
-#: src/components/message-pane/chatbar.tsx:47
+#: src/components/message-pane/chatbar.tsx:70
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #: src/components/serverMemberList.tsx:36
 msgid "Offline"
 msgstr "Offline"
+
+#: src/pages/LoginPage.tsx:61
+msgid "Password"
+msgstr "Password"

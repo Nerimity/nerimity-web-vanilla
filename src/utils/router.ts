@@ -148,23 +148,55 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
     };
   };
 
-  function navigate(pathname: NoParamPath): void;
+  interface NavigateOptions {
+    replace?: boolean;
+  }
+
+  function navigate(pathname: NoParamPath, options?: NavigateOptions): void;
   function navigate<P extends WithParamPath>(
     pathname: P,
     params: ParamsFor<P>,
+    options?: NavigateOptions,
   ): void;
-  function navigate(pathname: string, params?: Record<string, string>): void {
+  function navigate(
+    pathname: string,
+    paramsOrOptions?: Record<string, string> | NavigateOptions,
+    options?: NavigateOptions,
+  ): void {
+    const params =
+      paramsOrOptions && "replace" in paramsOrOptions
+        ? undefined
+        : (paramsOrOptions as Record<string, string> | undefined);
+    const opts = (
+      paramsOrOptions && "replace" in paramsOrOptions
+        ? paramsOrOptions
+        : options
+    ) as NavigateOptions | undefined;
+
     const resolved = params ? resolveParams(pathname, params) : pathname;
-    history.pushState(null, "", resolved);
+    for (const entry of entries) {
+      entry.lastKey = "__uninitialized__";
+    }
+    if (opts?.replace) {
+      history.replaceState(null, "", resolved);
+    } else {
+      history.pushState(null, "", resolved);
+    }
     dispatch(resolved);
   }
 
-  window.addEventListener("popstate", () => dispatch(location.pathname));
+  window.addEventListener("popstate", () => {
+    for (const entry of entries) {
+      entry.lastKey = "__uninitialized__";
+    }
+    dispatch(location.pathname);
+  });
 
   return { match, navigate };
 };
 
 export const router = createRouter([
+  { path: "/login" },
   {
     path: "/app",
     children: [

@@ -1,1 +1,1 @@
-/*eslint-disable*/export const messages=JSON.parse("{\"6Aih4U\":[\"Offline\"],\"J62kO7\":[\"Message in \",[\"0\"]]}");
+/*eslint-disable*/export const messages=JSON.parse("{\"6Aih4U\":[\"Offline\"],\"8ZsakT\":[\"Password\"],\"J62kO7\":[\"Message in \",[\"0\"]],\"LY9YnB\":[\"Logging in...\"],\"O3oNi5\":[\"Email\"],\"mc23tJ\":[\"Login to continue\"],\"z0t9bb\":[\"Login\"]}");
