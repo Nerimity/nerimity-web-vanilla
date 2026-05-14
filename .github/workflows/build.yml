@@ -1,0 +1,55 @@
+name: Build Web
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: build-web-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Zip The Build
+        uses: vimtor/action-zip@v1
+        with:
+          files: dist/
+          dest: vanilla-web.zip
+
+      - name: Deploy to Server
+        uses: marcodallasanta/ssh-scp-deploy@v1.2.0
+        with:
+          local: "vanilla-web.zip"
+          remote: "/var/www/vanilla-web.zip"
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          password: ${{ secrets.PASS }}
+
+      - name: Unzip built
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASS }}
+          port: ${{ secrets.PORT }}
+          script: |
+            unzip -o -DD /var/www/vanilla-web.zip -d /var/www/vanilla.nerimity.com
+            rm -rf /var/www/vanilla-web.zip
