@@ -58,10 +58,6 @@ export const createLoginPage = () => {
     </form>
   ) as unknown as HTMLFormElement;
 
-  form.onsubmit = (event) => {
-    event.preventDefault();
-  };
-
   const contentPane = (
     <div class={loginPage}>
       <div class="container">
@@ -99,6 +95,10 @@ export const createLoginPage = () => {
     loggingIn = false;
   };
 
+  form.addEventListener("submit", (e) => e.preventDefault(), {
+    signal: abortController.signal,
+  });
+
   loginButton.addEventListener(
     "click",
     async () => {
@@ -124,7 +124,6 @@ export const createLoginPage = () => {
   const destroy = () => {
     abortController.abort();
     contentPane.remove();
-    form.remove();
   };
 
   const render = () => {
