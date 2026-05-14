@@ -123,6 +123,8 @@ export const createLoginPage = () => {
 
   const destroy = () => {
     abortController.abort();
+    contentPane.remove();
+    form.remove();
   };
 
   const render = () => {
