@@ -185,9 +185,22 @@ const MessageEmbeds = (props: {
 
 const messageReplies = css`
   display: flex;
-  .empty {
+  margin-bottom: 8px;
+  .arc {
     width: 50px;
     flex-shrink: 0;
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      left: 20px;
+      width: 20px;
+      height: calc(100% - 8px);
+      border-left: 2.5px solid var(--gray-600);
+      border-top: 2.5px solid var(--gray-600);
+      border-top-left-radius: 6px;
+    }
   }
   .replies {
     display: flex;
@@ -203,7 +216,7 @@ const MessageReplies = (props: { message: Message }) => {
   const replies = props.message.replyMessages!;
   return (
     <div class={messageReplies}>
-      <div class="empty"></div>
+      <div class="arc"></div>
       <div class="replies">
         {replies.map((reply) => (
           <ReplyMessage message={reply} />
@@ -220,6 +233,7 @@ const replyMessage = css`
   overflow: hidden;
   .username {
     font-weight: 500;
+    opacity: 0.8;
     flex-shrink: 0;
   }
   .content {
