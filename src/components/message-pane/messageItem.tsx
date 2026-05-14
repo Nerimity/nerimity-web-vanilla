@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
+import { h, Fragment } from "../../h";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
@@ -236,6 +237,9 @@ const replyMessage = css`
     opacity: 0.8;
     flex-shrink: 0;
   }
+  .deleted {
+    opacity: 0.4;
+  }
   .content {
     flex: 1;
     min-width: 0;
@@ -246,10 +250,11 @@ const replyMessage = css`
 `;
 
 const ReplyMessage = (props: { message: RawReplyMessage }) => {
-  const creator = props.message.replyToMessage?.createdBy!;
+  const message = props.message.replyToMessage;
+  const creator = message?.createdBy!;
   const member = serverMemberStore.serverMembers
     .get(serverStore.currentServerId!)
-    ?.get(creator.id);
+    ?.get(creator?.id);
   const topRoleColor = serverStore.memberTopColor(member);
 
   const color =
@@ -257,10 +262,16 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
 
   return (
     <div class={replyMessage}>
-      <GradientText class="username" color={color}>
-        {creator.username}
-      </GradientText>
-      <span class="content">{props.message.replyToMessage?.content}</span>
+      {message ? (
+        <>
+          <GradientText class="username" color={color}>
+            {creator.username}
+          </GradientText>
+          <span class="content">{message?.content}</span>
+        </>
+      ) : (
+        <span class="content deleted">{t`Message was deleted.`}</span>
+      )}
     </div>
   );
 };
