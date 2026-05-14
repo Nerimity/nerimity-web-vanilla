@@ -35,6 +35,10 @@ msgstr "Login to continue"
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
+#: src/components/message-pane/messageItem.tsx:273
+msgid "Message was deleted."
+msgstr "Message was deleted."
+
 #: src/components/serverMemberList.tsx:36
 msgid "Offline"
 msgstr "Offline"
