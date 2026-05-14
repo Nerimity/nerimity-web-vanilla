@@ -63,7 +63,10 @@ export const createChatbar = () => {
 
   sendButton.addEventListener("click", sendMessage);
 
-  const render = () => chatbar;
+  const render = () => {
+    updatePlaceholder();
+    return chatbar;
+  };
 
   const updatePlaceholder = () => {
     const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
