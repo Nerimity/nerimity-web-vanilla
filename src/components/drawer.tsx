@@ -30,11 +30,19 @@ const drawerContainer = css`
   &[data-mode="desktop"] > .rightDrawer {
     width: 260px;
   }
+
+  &[data-mode="mobile"] > .leftDrawer {
+    right: 50px;
+    left: 0;
+  }
+  &[data-mode="mobile"] > .rightDrawer {
+    left: 50px;
+    right: 0;
+  }
+
   &[data-mode="mobile"] > .leftDrawer,
   &[data-mode="mobile"] > .rightDrawer {
     position: absolute;
-    left: 0;
-    right: 0;
     top: 0;
     bottom: 0;
     z-index: 1;
@@ -47,6 +55,7 @@ const drawerContainer = css`
 `;
 
 const MOBILE_WIDTH = 800;
+const PEEK_WIDTH = 50;
 
 function createDrawer() {
   let currentPage = 1;
@@ -73,6 +82,7 @@ function createDrawer() {
         currentMode = newMode;
         onModeChange();
       }
+      updatePage();
     },
     { signal: abortController.signal },
   );
@@ -92,10 +102,27 @@ function createDrawer() {
     currentX = touch.clientX;
     currentOffset = offsetAtDragStart + (touch.clientX - startX);
 
+    if (window.innerWidth - currentOffset <= PEEK_WIDTH) return;
+    if (currentOffset + window.innerWidth <= PEEK_WIDTH) return;
+
     if (rafPending) return;
     rafPending = true;
     requestAnimationFrame(() => {
       content.style.transform = `translate(${currentOffset}px, 0)`;
+
+      const isLeft = currentOffset > 0;
+      const isRight = currentOffset + window.innerWidth < window.innerWidth;
+
+      if (isLeft) {
+        leftDrawer.style.zIndex = "1";
+        rightDrawer.style.zIndex = "-1";
+      }
+
+      if (isRight) {
+        rightDrawer.style.zIndex = "1";
+        leftDrawer.style.zIndex = "-1";
+      }
+
       rafPending = false;
     });
   };
@@ -104,36 +131,51 @@ function createDrawer() {
     leftDrawer.style.zIndex = "-1";
     rightDrawer.style.zIndex = "-1";
     const contentWidth = content.clientWidth;
-    console.log("update page");
+    console.log("update page", currentPage);
 
     if (currentPage === 0) {
       leftDrawer.style.zIndex = "1";
-      content.style.transform = `translate(${contentWidth + 50}px, 0)`;
+      currentOffset = contentWidth - PEEK_WIDTH;
     }
 
     if (currentPage === 2) {
       rightDrawer.style.zIndex = "1";
-      content.style.transform = `translate(-${contentWidth + 50}px, 0)`;
+      currentOffset = -(contentWidth - PEEK_WIDTH);
     }
 
     if (currentPage === 1) {
-      content.style.transform = `translate(0, 0)`;
+      currentOffset = 0;
     }
+    offsetAtDragStart = currentOffset;
+    content.style.transform = `translate(${currentOffset}px, 0)`;
   };
 
   const handleTouchUp = () => {
+    const isLeft = currentOffset > window.innerWidth / 2;
+    const isRight = currentOffset + window.innerWidth < window.innerWidth / 2;
+    const isContent = !isLeft && !isRight;
+
+    const beforePage = currentPage;
+
+    if (isLeft) currentPage = 0;
+    if (isContent) currentPage = 1;
+    if (isRight) currentPage = 2;
+
     const distance = startX - currentX;
     const time = Date.now() - startTime;
     const velocity = Math.abs(distance / time);
+
     if (time <= 150 && velocity >= 0.5) {
       const isSwipingLeft = distance <= 0;
       const isSwipingRight = distance >= 1;
-      if (isSwipingRight && currentPage <= 2) {
-        currentPage = currentPage + 1;
-      } else if (isSwipingLeft && currentPage >= 0) {
-        currentPage = currentPage - 1;
+
+      if (isSwipingRight && beforePage <= 2) {
+        currentPage = beforePage + 1;
+      } else if (isSwipingLeft && beforePage >= 0) {
+        currentPage = beforePage - 1;
       }
     }
+
     updatePage();
   };
 
@@ -146,6 +188,7 @@ function createDrawer() {
     const touch = event.touches[0];
     if (!touch) return;
     startX = touch.clientX;
+    currentX = startX;
     offsetAtDragStart = currentOffset;
     startTime = Date.now();
   };
