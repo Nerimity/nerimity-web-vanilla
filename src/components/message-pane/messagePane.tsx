@@ -19,7 +19,7 @@ const messagePane = css`
   flex-direction: column;
   height: 100vh;
   width: 100%;
-  .logs {
+  > .logs {
     display: flex;
     flex-direction: column;
     gap: 4px;

@@ -16,12 +16,11 @@ const serverChannelList = css`
   overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
-  width: 240px;
   height: 100vh;
   gap: 2px;
   padding-left: 4px;
   padding-right: 4px;
-  background-color: var(--sidebar-bg);
+  flex: 1;
 `;
 
 export const createServerChannelList = () => {

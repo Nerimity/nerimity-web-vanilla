@@ -68,6 +68,7 @@ const sidebar = css`
   width: 76px;
   height: 100vh;
   gap: 2px;
+  background-color: var(--sidebar-bg);
   &::-webkit-scrollbar {
     display: none;
   }

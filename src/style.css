@@ -10,7 +10,8 @@
 
   --markup-mention-background-color: var(--gray-800);
   --markup-mention-background-color-hover: var(--gray-700);
-  --sidebar-bg: var(--gray-900);
+  --drawer-bg: var(--gray-900);
+  --sidebar-bg: var(--background);
 
   --gray-50: hsl(220, 0%, 95%);
   --gray-100: hsl(220, 0%, 90%);
@@ -42,6 +43,7 @@ body {
   padding: 0;
   margin: 0;
   font-size: 14px;
+  overscroll-behavior-x: none;
 }
 body {
   color: var(--text-color);

@@ -1,3 +1,4 @@
+import { Drawer } from "../components/drawer";
 import { createMessagePane } from "../components/message-pane/messagePane";
 import { createServerChannelList } from "../components/serverChannelList";
 import { createServerMemberList } from "../components/serverMemberList";
@@ -14,9 +15,7 @@ export const createAppPage = () => {
   const app = document.getElementById("app")!;
   let messagePane: ReturnType<typeof createMessagePane> | null = null;
 
-  const contentPane = (
-    <div class="contentPane"></div>
-  ) as unknown as HTMLDivElement;
+  app.replaceChildren(Drawer().render());
 
   const serverChannelMatchUnsub = router.match(
     ["/app/servers/:serverId/:channelId"],
@@ -32,7 +31,7 @@ export const createAppPage = () => {
       if (messagePane) return;
 
       messagePane = createMessagePane();
-      contentPane.replaceChildren(messagePane.render());
+      Drawer().content.replaceChildren(messagePane.render());
     },
   );
 
@@ -64,22 +63,25 @@ export const createAppPage = () => {
     serverSidebar = null;
     serverChannelList = null;
     serverMemberList = null;
-    contentPane.remove();
     authenticatedUnsub();
     routeMatchUnsub();
     serverChannelMatchUnsub();
+    Drawer().destroy();
   };
 
   const render = () => {
     serverSidebar ??= createSidebar();
     serverChannelList ??= createServerChannelList();
     serverMemberList ??= createServerMemberList();
-    app.replaceChildren(
+    const drawer = Drawer();
+
+    drawer.leftDrawer.replaceChildren(
       serverSidebar.render(),
       serverChannelList.render(),
-      contentPane,
-      serverMemberList.render(),
     );
+    drawer.content.replaceChildren(messagePane?.render()!);
+
+    drawer.rightDrawer.replaceChildren(serverMemberList.render());
   };
 
   return { render, destroy };

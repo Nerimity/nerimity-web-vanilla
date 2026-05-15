@@ -108,9 +108,8 @@ const memberListContainer = css`
   overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
-  width: 240px;
   height: 100vh;
-  background-color: var(--sidebar-bg);
+  width: 100%;
 `;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;

@@ -54,7 +54,6 @@ function createPresenceStore() {
     presences.clear();
     for (let i = 0; i < newPresences.length; i++) {
       const presence = newPresences[i]!;
-      console.log(presence);
       presences.set(presence.userId, new UserPresence(presence));
     }
   };
