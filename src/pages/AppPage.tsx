@@ -3,7 +3,6 @@ import { createMessagePane } from "../components/message-pane/messagePane";
 import { createServerChannelList } from "../components/serverChannelList";
 import { createServerMemberList } from "../components/serverMemberList";
 import { createSidebar } from "../components/sidebar";
-import { h } from "../h";
 import { socket } from "../services/socket";
 import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
