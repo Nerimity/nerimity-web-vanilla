@@ -2,9 +2,11 @@ import wyw from "@wyw-in-js/vite";
 import { defineConfig } from "vite";
 import babel from "@rolldown/plugin-babel";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
+import { googleFontsLocal } from "./vite-plugin-google-fonts-local";
 
 export default defineConfig({
   plugins: [
+    googleFontsLocal(),
     lingui(),
     babel({
       presets: [linguiTransformerBabelPreset()],
