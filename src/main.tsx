@@ -11,6 +11,18 @@ import { userAgent } from "./utils/userAgent";
 const AppPage = () => import("./pages/AppPage");
 const LoginPage = () => import("./pages/LoginPage");
 
+const HomePage = () => (
+  <div>
+    <Link decoration href="/app">
+      App
+    </Link>
+    <br />
+    <Link decoration href="/login">
+      Login
+    </Link>
+  </div>
+);
+
 const App = () => {
   const app = document.getElementById("app")!;
   if (userAgent.mobile) {
@@ -30,17 +42,7 @@ const App = () => {
     currentPage?.destroy();
     currentPage = null;
     currentRoute = null;
-    app.replaceChildren(
-      <div>
-        <Link decoration href="/app">
-          App
-        </Link>
-        <br />
-        <Link decoration href="/login">
-          Login
-        </Link>
-      </div>,
-    );
+    app.replaceChildren(HomePage());
   });
 
   router.match(
@@ -50,17 +52,7 @@ const App = () => {
         currentPage?.destroy();
         currentPage = null;
         currentRoute = null;
-        app.replaceChildren(
-          <div>
-            <Link decoration href="/app">
-              App
-            </Link>
-            <br />
-            <Link decoration href="/login">
-              Login
-            </Link>
-          </div>,
-        );
+        app.replaceChildren(HomePage());
         return;
       }
 

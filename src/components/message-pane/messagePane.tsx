@@ -17,7 +17,6 @@ import { shouldGroup } from "./utils";
 const messagePane = css`
   display: flex;
   flex-direction: column;
-  height: 100vh;
   width: 100%;
   > .logs {
     display: flex;

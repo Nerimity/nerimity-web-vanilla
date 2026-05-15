@@ -66,7 +66,7 @@ const sidebar = css`
   flex-direction: column;
   flex-shrink: 0;
   width: 76px;
-  height: 100vh;
+  height: 100%;
   gap: 2px;
   background-color: var(--sidebar-bg);
   &::-webkit-scrollbar {

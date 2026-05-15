@@ -44,6 +44,8 @@ body {
   margin: 0;
   font-size: 14px;
   overscroll-behavior-x: none;
+  height: 100%;
+  overflow: hidden;
 }
 body {
   color: var(--text-color);
@@ -57,7 +59,7 @@ body {
 
 #app {
   display: flex;
-  height: 100vh;
+  height: 100%;
 }
 
 .contentPane {

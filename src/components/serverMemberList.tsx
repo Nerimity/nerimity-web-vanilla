@@ -108,7 +108,7 @@ const memberListContainer = css`
   overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
-  height: 100vh;
+  height: 100%;
   width: 100%;
 `;
 export const createServerMemberList = () => {

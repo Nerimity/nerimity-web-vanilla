@@ -130,11 +130,9 @@ function createDrawer() {
 
   let animationTimeout: NodeJS.Timeout | null = null;
 
-  const updatePage = (opts?: { animate: boolean }) => {
-    leftDrawer.style.zIndex = "-1";
-    rightDrawer.style.zIndex = "-1";
+  const updatePage = (opts?: { animate?: boolean; page?: number }) => {
+    if (opts?.page !== undefined) currentPage = opts.page;
     const contentWidth = content.clientWidth;
-    console.log("update page", currentPage);
 
     if (animationTimeout) clearTimeout(animationTimeout);
     if (opts?.animate != false) {
@@ -146,11 +144,13 @@ function createDrawer() {
 
     if (currentPage === 0) {
       leftDrawer.style.zIndex = "1";
+      rightDrawer.style.zIndex = "-1";
       currentOffset = contentWidth - PEEK_WIDTH;
     }
 
     if (currentPage === 2) {
       rightDrawer.style.zIndex = "1";
+      leftDrawer.style.zIndex = "-1";
       currentOffset = -(contentWidth - PEEK_WIDTH);
     }
 
@@ -180,10 +180,12 @@ function createDrawer() {
       const isSwipingLeft = distance <= 0;
       const isSwipingRight = distance >= 1;
 
-      if (isSwipingRight && beforePage <= 2 && beforePage < currentPage) {
+      if (isSwipingRight && beforePage <= 2) {
         currentPage = beforePage + 1;
-      } else if (isSwipingLeft && beforePage >= 0 && beforePage > currentPage) {
+        if (currentPage > 2) currentPage = 2;
+      } else if (isSwipingLeft && beforePage >= 0) {
         currentPage = beforePage - 1;
+        if (currentPage < 0) currentPage = 0;
       }
     }
 
@@ -256,5 +258,5 @@ function createDrawer() {
     drawer = null;
   };
 
-  return { render, destroy, leftDrawer, content, rightDrawer };
+  return { render, destroy, leftDrawer, content, rightDrawer, updatePage };
 }

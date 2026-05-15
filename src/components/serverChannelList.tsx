@@ -10,13 +10,14 @@ import { reconcile } from "../utils/html";
 import { CdnIcon } from "./cdnIcon";
 import { Item } from "./item";
 import { Link } from "./link";
+import { Drawer } from "./drawer";
 
 const serverChannelList = css`
   display: flex;
   overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
-  height: 100vh;
+  height: 100%;
   gap: 2px;
   padding-left: 4px;
   padding-right: 4px;
@@ -59,6 +60,7 @@ export const createServerChannelList = () => {
       containerEl!,
       channelStore.currentChannelId!,
     );
+    Drawer().updatePage({ page: 1 });
   });
 
   const notificationsUnsub = channelStore.notificationsMemo.onUpdate(() => {
