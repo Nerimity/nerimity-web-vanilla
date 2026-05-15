@@ -27,7 +27,7 @@ const serverChannelList = css`
 export const createServerChannelList = () => {
   let containerEl: HTMLElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
-
+  const abortController = new AbortController();
   const renderList = () => {
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
@@ -84,6 +84,18 @@ export const createServerChannelList = () => {
       },
       { trigger: `.categoryLink`, image: ".channelIcon img" },
     ]);
+
+    containerEl.addEventListener(
+      "click",
+      (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest(`.${channelItemLink}`)) {
+          Drawer().updatePage({ page: 1 });
+        }
+      },
+      { signal: abortController.signal },
+    );
+
     renderList();
 
     return containerEl;

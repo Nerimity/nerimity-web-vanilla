@@ -60,7 +60,8 @@ const PEEK_WIDTH = 50;
 
 function createDrawer() {
   let currentPage = 1;
-  let currentMode = window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
+  let currentMode: "mobile" | "desktop" =
+    window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
   const leftDrawer = (<div class="leftDrawer"></div>) as unknown as HTMLElement;
   const content = (<div class="content"></div>) as unknown as HTMLElement;
   const rightDrawer = (
@@ -131,6 +132,11 @@ function createDrawer() {
   let animationTimeout: NodeJS.Timeout | null = null;
 
   const updatePage = (opts?: { animate?: boolean; page?: number }) => {
+    if (currentMode === "desktop") {
+      currentPage = 1;
+      leftDrawer.style.zIndex = "1";
+      rightDrawer.style.zIndex = "1";
+    }
     if (opts?.page !== undefined) currentPage = opts.page;
     const contentWidth = content.clientWidth;
 
@@ -202,7 +208,7 @@ function createDrawer() {
   };
 
   const handleTouchStart = (event: TouchEvent) => {
-    pauseTouches = false;
+    pauseTouches = currentMode === "desktop" ? true : false;
     const touch = event.touches[0];
     if (!touch) return;
     content.style.transition = "";
@@ -238,7 +244,6 @@ function createDrawer() {
   });
 
   const onModeChange = () => {
-    console.log(currentMode);
     drawerEl.dataset.mode = currentMode;
   };
 
