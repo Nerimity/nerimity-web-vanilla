@@ -2,11 +2,11 @@ import fs from "node:fs/promises";
 import type { Plugin } from "vite";
 
 const FONTS_DIR = "public/fonts";
-const FONT_CSS_PATH = `${FONTS_DIR}/material-symbols.css`;
 const LOCK_FILE = `${FONTS_DIR}/material-symbols.lock`;
-const LOCAL_CSS_PATH = "/fonts/material-symbols.css";
 
 export function googleFontsLocal(): Plugin {
+  let inlinedCss = "";
+
   return {
     name: "google-fonts-local",
 
@@ -33,10 +33,17 @@ export function googleFontsLocal(): Plugin {
         const cachedUrl = await fs
           .readFile(LOCK_FILE, "utf-8")
           .catch(() => null);
-        if (cachedUrl === googleFontsUrl) {
+
+        const fontExists = await fs
+          .access(`${FONTS_DIR}/material-symbols-rounded.woff2`)
+          .then(() => true)
+          .catch(() => false);
+
+        if (cachedUrl === googleFontsUrl && fontExists) {
           console.log(
             "[google-fonts-local] Font already cached, skipping download",
           );
+          inlinedCss = buildInlineCss();
           continue;
         }
 
@@ -48,15 +55,14 @@ export function googleFontsLocal(): Plugin {
               "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
           },
         });
-        let css = await cssRes.text();
+        const css = await cssRes.text();
 
         const urlRegex = /url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g;
         const downloads: Promise<void>[] = [];
 
-        css = css.replace(urlRegex, (_, fontUrl: string) => {
+        css.replace(urlRegex, (_, fontUrl: string) => {
           const filename = "material-symbols-rounded.woff2";
           const localPath = `${FONTS_DIR}/${filename}`;
-          const publicPath = `/fonts/${filename}`;
 
           downloads.push(
             fetch(fontUrl)
@@ -67,13 +73,14 @@ export function googleFontsLocal(): Plugin {
               ),
           );
 
-          return `url(${publicPath})`;
+          return "";
         });
 
         await Promise.all(downloads);
-        await fs.writeFile(FONT_CSS_PATH, css);
         await fs.writeFile(LOCK_FILE, googleFontsUrl);
-        console.log(`[google-fonts-local] Wrote ${FONT_CSS_PATH}`);
+        console.log(`[google-fonts-local] Downloaded and cached font`);
+
+        inlinedCss = buildInlineCss();
       }
     },
 
@@ -85,8 +92,33 @@ export function googleFontsLocal(): Plugin {
 
       return cleaned.replace(
         "</head>",
-        `  <link rel="stylesheet" href="${LOCAL_CSS_PATH}" />\n  </head>`,
+        `  <style>\n${inlinedCss}  </style>\n  </head>`,
       );
     },
   };
+}
+
+function buildInlineCss(): string {
+  return `    @font-face {
+      font-family: 'Material Symbols Rounded';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/material-symbols-rounded.woff2') format('woff2');
+    }
+    .material-symbols-rounded {
+      font-family: 'Material Symbols Rounded';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }\n`;
 }
