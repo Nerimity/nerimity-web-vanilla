@@ -60,7 +60,6 @@ export const createServerChannelList = () => {
       containerEl!,
       channelStore.currentChannelId!,
     );
-    Drawer().updatePage({ page: 1 });
   });
 
   const notificationsUnsub = channelStore.notificationsMemo.onUpdate(() => {
