@@ -6,12 +6,16 @@ import { h } from "./h";
 import type { createAppPage } from "./pages/AppPage";
 import { getLocalItem } from "./utils/localStorage";
 import { router } from "./utils/router";
+import { userAgent } from "./utils/userAgent";
 
 const AppPage = () => import("./pages/AppPage");
 const LoginPage = () => import("./pages/LoginPage");
 
 const App = () => {
   const app = document.getElementById("app")!;
+  if (userAgent.mobile) {
+    app.classList.add("mobileAgent");
+  }
   let currentPage: ReturnType<typeof createAppPage> | null = null;
   let cancelCurrent: (() => void) | null = null;
   let currentRoute: "app" | "login" | null = null;

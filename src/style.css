@@ -73,18 +73,22 @@ body {
   font-variation-settings: "FILL" 1;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+
+#app:not(.mobileAgent)  {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    border-radius: var(--radius-6);
+    background: var(--gray-800);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: var(--radius-6);
+    background-color: var(--primary-color);
+  }
 }
-::-webkit-scrollbar-track {
-  border-radius: var(--radius-6);
-  background: var(--gray-800);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: var(--radius-6);
-  background-color: var(--primary-color);
-}
+
 
 a {
   color: var(--primary-color);

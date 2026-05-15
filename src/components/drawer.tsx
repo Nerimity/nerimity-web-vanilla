@@ -127,11 +127,21 @@ function createDrawer() {
     });
   };
 
-  const updatePage = () => {
+  let animationTimeout: NodeJS.Timeout | null = null;
+
+  const updatePage = (opts?: { animate: boolean }) => {
     leftDrawer.style.zIndex = "-1";
     rightDrawer.style.zIndex = "-1";
     const contentWidth = content.clientWidth;
     console.log("update page", currentPage);
+
+    if (animationTimeout) clearTimeout(animationTimeout);
+    if (opts?.animate != false) {
+      content.style.transition = "transform 0.2s";
+      animationTimeout = setTimeout(() => {
+        content.style.transition = "";
+      }, 200);
+    }
 
     if (currentPage === 0) {
       leftDrawer.style.zIndex = "1";
@@ -169,9 +179,9 @@ function createDrawer() {
       const isSwipingLeft = distance <= 0;
       const isSwipingRight = distance >= 1;
 
-      if (isSwipingRight && beforePage <= 2) {
+      if (isSwipingRight && beforePage <= 2 && beforePage < currentPage) {
         currentPage = beforePage + 1;
-      } else if (isSwipingLeft && beforePage >= 0) {
+      } else if (isSwipingLeft && beforePage >= 0 && beforePage > currentPage) {
         currentPage = beforePage - 1;
       }
     }
@@ -181,12 +191,14 @@ function createDrawer() {
 
   const handleScroll = () => {
     pauseTouches = true;
+    updatePage({ animate: false });
   };
 
   const handleTouchStart = (event: TouchEvent) => {
     pauseTouches = false;
     const touch = event.touches[0];
     if (!touch) return;
+    content.style.transition = "";
     startX = touch.clientX;
     currentX = startX;
     offsetAtDragStart = currentOffset;
@@ -228,6 +240,9 @@ function createDrawer() {
   };
 
   const destroy = () => {
+    if (animationTimeout) {
+      clearTimeout(animationTimeout);
+    }
     leftDrawer.remove();
     content.remove();
     rightDrawer.remove();
