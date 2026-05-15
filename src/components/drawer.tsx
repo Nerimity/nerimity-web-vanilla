@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 
 import { h } from "../h";
 import { userAgent } from "../utils/userAgent";
+import { storeEmitter } from "../utils/EventEmitter";
 
 let drawer: ReturnType<typeof createDrawer> | null = null;
 
@@ -60,6 +61,7 @@ const PEEK_WIDTH = 50;
 
 function createDrawer() {
   let currentPage = 1;
+  let visiblePage = 1;
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
   const leftDrawer = (<div class="leftDrawer"></div>) as unknown as HTMLElement;
@@ -118,11 +120,13 @@ function createDrawer() {
       if (isLeft) {
         leftDrawer.style.zIndex = "1";
         rightDrawer.style.zIndex = "-1";
+        updateVisible(0);
       }
 
       if (isRight) {
         rightDrawer.style.zIndex = "1";
         leftDrawer.style.zIndex = "-1";
+        updateVisible(2);
       }
 
       rafPending = false;
@@ -165,6 +169,7 @@ function createDrawer() {
     }
     offsetAtDragStart = currentOffset;
     content.style.transform = `translate(${currentOffset}px, 0)`;
+    updateVisible(currentPage);
   };
 
   const handleTouchUp = () => {
@@ -245,10 +250,18 @@ function createDrawer() {
 
   const onModeChange = () => {
     drawerEl.dataset.mode = currentMode;
+    storeEmitter.emit("drawer:modeChange", currentMode);
   };
 
   const render = () => {
     return drawerEl;
+  };
+  const updateVisible = (page: number) => {
+    const oldVis = visiblePage;
+    visiblePage = page;
+    if (oldVis !== visiblePage) {
+      storeEmitter.emit("drawer:pageVisible", visiblePage);
+    }
   };
 
   const destroy = () => {
@@ -263,5 +276,21 @@ function createDrawer() {
     drawer = null;
   };
 
-  return { render, destroy, leftDrawer, content, rightDrawer, updatePage };
+  return {
+    render,
+    destroy,
+    leftDrawer,
+    content,
+    rightDrawer,
+    updatePage,
+    get currentPage() {
+      return currentPage;
+    },
+    get currentMode() {
+      return currentMode;
+    },
+    get visiblePage() {
+      return visiblePage;
+    },
+  };
 }

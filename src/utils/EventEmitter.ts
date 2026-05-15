@@ -13,6 +13,8 @@ type StoreEvents = {
   "message:created": Message;
   "message:deleted": { id: string; channelId: string };
   "message:updated": { message: Message; index: number };
+  "drawer:pageVisible": number;
+  "drawer:modeChange": "mobile" | "desktop";
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

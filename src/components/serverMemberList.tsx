@@ -21,6 +21,7 @@ import { GradientText } from "./gradientText";
 import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
+import { Drawer } from "./drawer";
 
 const CategoryType = {
   role: 0,
@@ -117,8 +118,11 @@ export const createServerMemberList = () => {
   const roleOrderMemoized = new ManualMemo(roleOrder);
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
-
+  let dontRender = () =>
+    Drawer().currentMode === "mobile" && Drawer().visiblePage !== 2;
+  let cachedDontRender = dontRender();
   const categorizedMembersMemoized = new ManualMemo((prev) => {
+    if (cachedDontRender) return { result: [], userIdToRoleId: {} };
     const result = ((prev as any)?.result || []) as Categorized[];
     const userIdToRoleId: Record<string, string | null> = {};
 
@@ -280,6 +284,7 @@ export const createServerMemberList = () => {
   };
 
   const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
+    cachedDontRender = dontRender();
     roleOrderMemoized.rerun();
     visibleRoleIdsMemoized.rerun();
     isDefaultPublicMemoized.rerun();
@@ -287,6 +292,23 @@ export const createServerMemberList = () => {
 
     renderList();
   });
+
+  const updateVisibility = () => {
+    if (cachedDontRender) {
+      cachedDontRender = dontRender();
+      categorizedMembersMemoized.rerun();
+      renderList();
+    }
+  };
+
+  const drawerVisibleUnsub = storeEmitter.on(
+    "drawer:pageVisible",
+    updateVisibility,
+  );
+  const drawerModeUnsub = storeEmitter.on(
+    "drawer:modeChange",
+    updateVisibility,
+  );
 
   const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
     roleOrderMemoized.rerun();
@@ -340,6 +362,8 @@ export const createServerMemberList = () => {
     authenticatedUnsub();
     channelIdUnsub();
     presenceUnsub();
+    drawerVisibleUnsub();
+    drawerModeUnsub();
     containerEl?.remove();
     containerEl = null;
   };
