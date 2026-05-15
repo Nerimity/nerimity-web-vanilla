@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
+import { userAgent } from "../utils/userAgent";
 
 let drawer: ReturnType<typeof createDrawer> | null = null;
 
@@ -189,7 +190,11 @@ function createDrawer() {
     updatePage();
   };
 
+  const { safari, firefox } = userAgent;
+
   const handleScroll = () => {
+    if (safari || firefox) return;
+
     pauseTouches = true;
     updatePage({ animate: false });
   };
