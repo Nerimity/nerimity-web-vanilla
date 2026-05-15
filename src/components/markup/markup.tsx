@@ -37,6 +37,12 @@ const markup = css`
   .underline {
     text-decoration: underline;
   }
+
+  .gradient {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 `;
 
 export interface Props {
@@ -187,8 +193,9 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
           style={{
             "background-image": `linear-gradient(0.25turn, ${colors.replaceAll("-", ",")})`,
           }}
-          textContent={text}
-        />
+        >
+          {text}
+        </span>
       );
     }
     case "vertical": {

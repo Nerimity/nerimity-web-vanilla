@@ -19,6 +19,7 @@ import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
 import { GradientText } from "./gradientText";
 import { ServerClanItem } from "./serverClanItem";
+import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
 
 const CategoryType = {
@@ -305,6 +306,7 @@ export const createServerMemberList = () => {
     const newRoleId =
       categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
       "offline";
+    vt?.rerenderItem(event.userId);
     if (oldRoleId) vt?.rerenderItem(oldRoleId);
     if (newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
   });
@@ -379,6 +381,12 @@ const memberItemContainer = css`
     white-space: nowrap;
     flex-shrink: 1;
   }
+  .info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
 `;
 
 const roleItemContainer = css`
@@ -408,12 +416,15 @@ const memberItem = (cat: Categorized) => {
         data-role-id={cat.role.id}
       >
         <Avatar size={32} user={user!} imgClass="avatar" />
-        <span class="memberInfo">
-          <GradientText color={color} class="memberName">
-            {cat.member.nickname || user?.username}
-          </GradientText>
-          {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
-        </span>
+        <div class="info">
+          <span class="memberInfo">
+            <GradientText color={color} class="memberName">
+              {cat.member.nickname || user?.username}
+            </GradientText>
+            {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
+          </span>
+          <UserPresence userId={cat.member.userId} />
+        </div>
       </div>
     );
   } else {

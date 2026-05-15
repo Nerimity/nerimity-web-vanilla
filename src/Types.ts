@@ -65,6 +65,7 @@ export interface RawUser {
 export interface RawUserPresence {
   status: number;
   userId: string;
+  custom?: string;
 }
 
 // interface CustomEmoji {

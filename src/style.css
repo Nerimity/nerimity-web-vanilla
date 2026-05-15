@@ -29,6 +29,12 @@
   --radius-6: 6px;
   --radius-8: 8px;
   --radius-10: 10px;
+
+  --status-offline: #adadad;
+  --status-online: #78e380;
+  --status-looking-to-play: #3b82f6;
+  --status-away-from-keyboard: #ff8f2c;
+  --status-do-not-distrub: #eb6e6e;
 }
 
 html,
@@ -75,4 +81,14 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: var(--radius-6);
   background-color: var(--primary-color);
+}
+
+a {
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: 0.2s;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 }

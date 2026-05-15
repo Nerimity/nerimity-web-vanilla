@@ -6,8 +6,12 @@ const link = css`
   color: inherit;
   cursor: pointer;
   text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
 
   &.decoration {
+    color: var(--primary-color);
     &:hover {
       text-decoration: underline;
     }

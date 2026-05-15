@@ -82,9 +82,9 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
       const href = e.target
         .closest("[data-route]")
         ?.attributes.getNamedItem("href")?.value;
-      e.preventDefault();
 
       if (href) {
+        e.preventDefault();
         navigate(href as NoParamPath);
       }
     }
