@@ -13,25 +13,37 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/LoginPage.tsx:60
+#: src/store/userPresenceStore.ts:28
+msgid "Away from keyboard"
+msgstr "Away from keyboard"
+
+#: src/store/userPresenceStore.ts:32
+msgid "Do not distrub"
+msgstr "Do not distrub"
+
+#: src/pages/LoginPage.tsx:56
 msgid "Email"
 msgstr "Email"
 
-#: src/pages/LoginPage.tsx:101
+#: src/pages/LoginPage.tsx:108
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/LoginPage.tsx:64
-#: src/pages/LoginPage.tsx:91
+#: src/pages/LoginPage.tsx:67
+#: src/pages/LoginPage.tsx:94
 msgid "Login"
 msgstr "Login"
 
-#: src/pages/LoginPage.tsx:58
+#: src/pages/LoginPage.tsx:64
 msgid "Login to continue"
 msgstr "Login to continue"
 
+#: src/store/userPresenceStore.ts:24
+msgid "Looking to play"
+msgstr "Looking to play"
+
 #. placeholder {0}: channelStore.currentChannel()?.name!
-#: src/components/message-pane/chatbar.tsx:70
+#: src/components/message-pane/chatbar.tsx:73
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
@@ -39,10 +51,15 @@ msgstr "Message in {0}"
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/serverMemberList.tsx:36
+#: src/components/serverMemberList.tsx:37
+#: src/store/userPresenceStore.ts:16
 msgid "Offline"
 msgstr "Offline"
 
-#: src/pages/LoginPage.tsx:61
+#: src/store/userPresenceStore.ts:20
+msgid "Online"
+msgstr "Online"
+
+#: src/pages/LoginPage.tsx:57
 msgid "Password"
 msgstr "Password"
