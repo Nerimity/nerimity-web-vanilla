@@ -11,6 +11,7 @@ import { CdnIcon } from "./cdnIcon";
 import { Drawer } from "./drawer";
 import { Item } from "./item";
 import { Link } from "./link";
+import { Dynamic } from "../dynamic";
 
 const serverChannelList = css`
   display: flex;
@@ -135,7 +136,8 @@ const createChannelItemHelper = () => {
   const create = (channel: Channel) => {
     const isCategory = channel.type === ChannelType.CATEGORY;
     return (
-      <Link
+      <Dynamic
+        component={channel.type === ChannelType.CATEGORY ? "div" : Link}
         data-channel-id={channel.id}
         title={channel.name}
         data-route
@@ -144,6 +146,7 @@ const createChannelItemHelper = () => {
         {...(channel.categoryId && { "data-category-id": channel.categoryId })}
       >
         <Item.Base
+          disabled={channel.type === ChannelType.CATEGORY}
           class="channelItem"
           selected={channelStore.currentChannelId === channel.id}
           alert={!!channelStore.notificationsMemo.value()[channel.id]}
@@ -162,7 +165,7 @@ const createChannelItemHelper = () => {
             </Item.Label>
           </>
         </Item.Base>
-      </Link>
+      </Dynamic>
     );
   };
 

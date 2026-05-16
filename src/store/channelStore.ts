@@ -1,4 +1,5 @@
 import {
+  ChannelType,
   NotificationMode,
   type ChannelPermissions,
   type RawChannel,
@@ -16,7 +17,7 @@ export class Channel {
   name?: string;
   serverId?: string;
   order?: number;
-  type: number;
+  type: ChannelType;
   categoryId?: string;
   icon?: string;
   permissions?: ChannelPermissions[];

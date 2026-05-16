@@ -7,6 +7,7 @@ interface BaseProps {
   alert?: boolean;
   children?: JSX.Element;
   class?: string | string[];
+  disabled?: boolean;
 }
 
 const item = css`
@@ -15,7 +16,9 @@ const item = css`
   align-items: center;
   padding: 10px 20px;
   border-radius: var(--radius-10);
-  cursor: pointer;
+  &:not([data-disabled="true"]) {
+    cursor: pointer;
+  }
   transition: 0.2s;
   gap: 10px;
 
@@ -30,7 +33,7 @@ const item = css`
     content: "";
     transition: 0.2s;
   }
-  &:hover {
+  &:hover:not([data-disabled="true"]) {
     background-color: var(--item-bg);
     &:before {
       height: 20%;
@@ -73,6 +76,7 @@ export const Item = {
       <div
         class={["item", item, props.class]}
         data-selected={props.selected}
+        data-disabled={props.disabled}
         data-alert={props.alert}
       >
         {props.children}

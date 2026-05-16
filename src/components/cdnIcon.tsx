@@ -3,6 +3,8 @@ import { css } from "@linaria/core";
 import { h } from "../h";
 import { unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
+import { Icon } from "./icon";
+import { ChannelType } from "../Types";
 
 const cdnIcon = css`
   display: flex;
@@ -16,10 +18,13 @@ const cdnIcon = css`
     width: 100%;
     height: 100%;
   }
+  .icon {
+    font-size: var(--size);
+  }
 `;
 
 interface CdnIconProps {
-  channel?: { icon?: string };
+  channel?: { icon?: string; type: ChannelType };
   role?: { icon?: string };
   clan?: { icon?: string };
   class?: string;
@@ -50,10 +55,14 @@ export const CdnIcon = (props: CdnIconProps) => {
           alt=""
           {...(animated && { "data-img-anim": "" })}
         />
-      ) : (
-        // <Icon name="segment" color="rgba(255,255,255,0.6)" size={18} />
-        <div>icon</div>
-      )}
+      ) : props.channel ? (
+        <Icon
+          class="icon"
+          name={
+            props.channel?.type === ChannelType.CATEGORY ? "segment" : "tag"
+          }
+        />
+      ) : null}
     </div>
   );
 };

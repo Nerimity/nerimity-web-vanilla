@@ -81,7 +81,7 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
   document.addEventListener("click", (e) => {
     if (e.target instanceof HTMLElement) {
       const href = e.target
-        .closest("[data-route]")
+        .closest("a[data-route]")
         ?.attributes.getNamedItem("href")?.value;
 
       if (href) {
