@@ -39,6 +39,7 @@ type RouteCallback = (params: Record<string, string>, pathname: string) => void;
 
 interface MatchOptions {
   trackParams?: boolean;
+  signal?: AbortSignal;
 }
 
 interface CompiledRoute {
@@ -142,10 +143,12 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
     };
     entries.push(entry);
     dispatch(location.pathname);
-    return () => {
+    const unsub = () => {
       const i = entries.indexOf(entry);
       if (i !== -1) entries.splice(i, 1);
     };
+    options.signal?.addEventListener("abort", unsub, { once: true });
+    return unsub;
   };
 
   interface NavigateOptions {

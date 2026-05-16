@@ -77,6 +77,8 @@ const sidebar = css`
 export const createSidebar = () => {
   let containerEl: HTMLElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
+  const abortController = new AbortController();
+  const { signal } = abortController;
 
   const renderList = () => {
     if (!containerEl) return;
@@ -95,16 +97,20 @@ export const createSidebar = () => {
     });
   };
 
-  const serverUpdateUnsub = storeEmitter.on("server:update", renderList);
-  const authenticatedUnsub = storeEmitter.on("user:authenticated", renderList);
-  const serverIdUnsub = storeEmitter.on("navigate:serverId", () => {
-    if (!containerEl) return;
-    serverItem.updateSelected(containerEl, serverStore.currentServerId);
-  });
-  const notificationsUnsub = serverStore.notificationsMemo.onUpdate(() => {
+  storeEmitter.on("server:update", renderList, signal);
+  storeEmitter.on("user:authenticated", renderList, signal);
+  storeEmitter.on(
+    "navigate:serverId",
+    () => {
+      if (!containerEl) return;
+      serverItem.updateSelected(containerEl, serverStore.currentServerId);
+    },
+    signal,
+  );
+  serverStore.notificationsMemo.onUpdate(() => {
     if (!containerEl) return;
     renderList();
-  });
+  }, signal);
 
   const render = () => {
     containerEl = (<div class={sidebar}></div>) as unknown as HTMLElement;
@@ -116,11 +122,9 @@ export const createSidebar = () => {
   };
 
   const destroy = () => {
+    abortController.abort();
     hoverAnimator?.destroy();
-    serverUpdateUnsub();
-    authenticatedUnsub();
-    serverIdUnsub();
-    notificationsUnsub();
+
     containerEl?.remove();
     containerEl = null;
     hoverAnimator = null;

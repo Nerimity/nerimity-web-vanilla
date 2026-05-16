@@ -28,6 +28,8 @@ const chatbarContainer = css`
 `;
 
 export const createChatbar = () => {
+  const abortController = new AbortController();
+  const { signal } = abortController;
   const chatbar = (
     <div class={chatbarContainer}>
       <Input
@@ -59,9 +61,9 @@ export const createChatbar = () => {
     }
   };
 
-  input.addEventListener("keydown", handleKeyDown);
+  input.addEventListener("keydown", handleKeyDown, { signal });
 
-  sendButton.addEventListener("click", sendMessage);
+  sendButton.addEventListener("click", sendMessage, { signal });
 
   const render = () => {
     updatePlaceholder();
@@ -73,20 +75,25 @@ export const createChatbar = () => {
     input.placeholder = t`Message in ${channelStore.currentChannel()?.name!}`;
   };
 
-  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
-    updatePlaceholder();
-  });
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      updatePlaceholder();
+    },
+    signal,
+  );
 
-  const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
-    updatePlaceholder();
-  });
+  storeEmitter.on(
+    "user:authenticated",
+    () => {
+      updatePlaceholder();
+    },
+    signal,
+  );
 
   const destroy = () => {
-    channelIdUnsub();
-    authenticatedUnsub();
-    input.removeEventListener("keydown", handleKeyDown);
-    sendButton.removeEventListener("click", sendMessage);
     chatbar.remove();
+    abortController.abort();
   };
 
   return { render, destroy };

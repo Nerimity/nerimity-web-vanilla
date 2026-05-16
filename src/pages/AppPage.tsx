@@ -10,13 +10,15 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
 
 export const createAppPage = () => {
+  const abortController = new AbortController();
+  const { signal } = abortController;
   socket.connect();
   const app = document.getElementById("app")!;
   let messagePane: ReturnType<typeof createMessagePane> | null = null;
 
   app.replaceChildren(Drawer().render());
 
-  const serverChannelMatchUnsub = router.match(
+  router.match(
     ["/app/servers/:serverId/:channelId"],
     (params) => {
       if (!params.serverId || !params.channelId) {
@@ -32,20 +34,25 @@ export const createAppPage = () => {
       messagePane = createMessagePane();
       Drawer().content.replaceChildren(messagePane.render());
     },
+    { signal },
   );
 
-  const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
-    serverStore.currentServerSortedRoles.rerun();
-    serverStore.currentChannelsSorted.rerun();
-  });
+  storeEmitter.on(
+    "user:authenticated",
+    () => {
+      serverStore.currentServerSortedRoles.rerun();
+      serverStore.currentChannelsSorted.rerun();
+    },
+    signal,
+  );
 
-  const routeMatchUnsub = router.match(
+  router.match(
     ["/app/servers/:serverId/:channelId"],
     (params) => {
       serverStore.setCurrentServerId(params.serverId);
       channelStore.setCurrentChannelId(params.channelId);
     },
-    { trackParams: true },
+    { trackParams: true, signal },
   );
 
   let serverSidebar: ReturnType<typeof createSidebar> | null = null;
@@ -54,6 +61,7 @@ export const createAppPage = () => {
   let serverMemberList: ReturnType<typeof createServerMemberList> | null = null;
 
   const destroy = () => {
+    abortController.abort();
     socket.disconnect();
     messagePane?.destroy();
     serverSidebar?.destroy();
@@ -62,9 +70,6 @@ export const createAppPage = () => {
     serverSidebar = null;
     serverChannelList = null;
     serverMemberList = null;
-    authenticatedUnsub();
-    routeMatchUnsub();
-    serverChannelMatchUnsub();
     Drawer().destroy();
   };
 

@@ -25,17 +25,20 @@ function createEventEmitter<T extends Record<string, unknown>>() {
   const on = <K extends keyof T>(
     event: K | ReadonlyArray<K>,
     listener: (data: T[K]) => void,
+    signal?: AbortSignal,
   ) => {
     const events = Array.isArray(event) ? event : [event];
     for (const e of events) {
       if (!listeners.has(e)) listeners.set(e, new Set());
       listeners.get(e)!.add(listener);
     }
-    return () => {
+    const unsub = () => {
       for (const e of events) {
         listeners.get(e)?.delete(listener);
       }
     };
+    signal?.addEventListener("abort", unsub, { once: true });
+    return unsub;
   };
 
   const emit = <K extends keyof T>(event: K, data?: T[K]) => {

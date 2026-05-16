@@ -29,6 +29,8 @@ const messagePane = css`
   }
 `;
 export const createMessagePane = () => {
+  const abortController = new AbortController();
+  const { signal } = abortController;
   const chatbar = createChatbar();
   const logs = (<div class="logs"></div>) as unknown as HTMLDivElement;
   const el = (
@@ -93,31 +95,48 @@ export const createMessagePane = () => {
 
   const imageEmbedResizer = createImageEmbedResizer(logs);
 
-  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
-    logs.replaceChildren();
-    rerender();
-  });
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      logs.replaceChildren();
+      rerender();
+    },
+    signal,
+  );
 
-  const messageCreatedUnsub = storeEmitter.on("message:created", (message) => {
-    if (message.channelId !== channelStore.currentChannelId) return;
-    rerender(true);
-  });
-  const messageDeletedUnsub = storeEmitter.on("message:deleted", (event) => {
-    if (event.channelId !== channelStore.currentChannelId) return;
-    rerender(true);
-  });
-  const authUnsub = storeEmitter.on("user:authenticated", () => {
-    messageStore
-      .loadMessages(channelStore.currentChannelId!)
-      .then(() => rerender());
-  });
+  storeEmitter.on(
+    "message:created",
+    (message) => {
+      if (message.channelId !== channelStore.currentChannelId) return;
+      rerender(true);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message:deleted",
+    (event) => {
+      if (event.channelId !== channelStore.currentChannelId) return;
+      rerender(true);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "user:authenticated",
+    () => {
+      messageStore
+        .loadMessages(channelStore.currentChannelId!)
+        .then(() => rerender());
+    },
+    signal,
+  );
 
-  const messageUpdatedUnsub = storeEmitter.on(
+  storeEmitter.on(
     "message:updated",
     ({ message, index }) => {
       if (message.channelId !== channelStore.currentChannelId) return;
       updateMessage(message, index);
     },
+    signal,
   );
 
   const hoverAnimator = new HoverAnimator(logs, [
@@ -137,14 +156,11 @@ export const createMessagePane = () => {
   };
 
   const destroy = () => {
+    abortController.abort();
     imageEmbedResizer.destroy();
     imageEmbedFocus.destroy();
     hoverAnimator.destroy();
-    authUnsub();
-    channelIdUnsub();
-    messageCreatedUnsub();
-    messageDeletedUnsub();
-    messageUpdatedUnsub();
+
     chatbar.destroy();
     el.remove();
     logs.remove();

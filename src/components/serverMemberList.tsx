@@ -17,11 +17,11 @@ import { ManualMemo } from "../utils/memo";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
+import { Drawer } from "./drawer";
 import { GradientText } from "./gradientText";
 import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
-import { Drawer } from "./drawer";
 
 const CategoryType = {
   role: 0,
@@ -115,6 +115,9 @@ const memberListContainer = css`
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
+  const ac = new AbortController();
+  const { signal } = ac;
+
   const roleOrderMemoized = new ManualMemo(roleOrder);
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
@@ -283,15 +286,19 @@ export const createServerMemberList = () => {
     containerEl.replaceChildren(vt.render());
   };
 
-  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
-    cachedDontRender = dontRender();
-    roleOrderMemoized.rerun();
-    visibleRoleIdsMemoized.rerun();
-    isDefaultPublicMemoized.rerun();
-    categorizedMembersMemoized.rerun();
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      cachedDontRender = dontRender();
+      roleOrderMemoized.rerun();
+      visibleRoleIdsMemoized.rerun();
+      isDefaultPublicMemoized.rerun();
+      categorizedMembersMemoized.rerun();
 
-    renderList();
-  });
+      renderList();
+    },
+    signal,
+  );
 
   const updateVisibility = () => {
     if (cachedDontRender) {
@@ -301,36 +308,38 @@ export const createServerMemberList = () => {
     }
   };
 
-  const drawerVisibleUnsub = storeEmitter.on(
-    "drawer:pageVisible",
-    updateVisibility,
-  );
-  const drawerModeUnsub = storeEmitter.on(
-    "drawer:modeChange",
-    updateVisibility,
+  storeEmitter.on("drawer:pageVisible", updateVisibility, signal);
+  storeEmitter.on("drawer:modeChange", updateVisibility, signal);
+
+  storeEmitter.on(
+    "user:authenticated",
+    () => {
+      roleOrderMemoized.rerun();
+      visibleRoleIdsMemoized.rerun();
+      isDefaultPublicMemoized.rerun();
+      categorizedMembersMemoized.rerun();
+      renderList();
+    },
+    signal,
   );
 
-  const authenticatedUnsub = storeEmitter.on("user:authenticated", () => {
-    roleOrderMemoized.rerun();
-    visibleRoleIdsMemoized.rerun();
-    isDefaultPublicMemoized.rerun();
-    categorizedMembersMemoized.rerun();
-    renderList();
-  });
-
-  const presenceUnsub = storeEmitter.on("user:presence_update", (event) => {
-    const oldRoleId =
-      categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
-      "offline";
-    categorizedMembersMemoized.rerun();
-    renderList();
-    const newRoleId =
-      categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
-      "offline";
-    vt?.rerenderItem(event.userId);
-    if (oldRoleId) vt?.rerenderItem(oldRoleId);
-    if (newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
-  });
+  storeEmitter.on(
+    "user:presence_update",
+    (event) => {
+      const oldRoleId =
+        categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+        "offline";
+      categorizedMembersMemoized.rerun();
+      renderList();
+      const newRoleId =
+        categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+        "offline";
+      vt?.rerenderItem(event.userId);
+      if (oldRoleId) vt?.rerenderItem(oldRoleId);
+      if (newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
+    },
+    signal,
+  );
 
   const render = () => {
     containerEl = (
@@ -357,13 +366,10 @@ export const createServerMemberList = () => {
   };
 
   const destroy = () => {
+    ac.abort();
     vt?.destroy();
     hoverAnimator?.destroy();
-    authenticatedUnsub();
-    channelIdUnsub();
-    presenceUnsub();
-    drawerVisibleUnsub();
-    drawerModeUnsub();
+
     containerEl?.remove();
     containerEl = null;
   };

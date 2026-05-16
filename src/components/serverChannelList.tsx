@@ -8,9 +8,9 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
 import { CdnIcon } from "./cdnIcon";
+import { Drawer } from "./drawer";
 import { Item } from "./item";
 import { Link } from "./link";
-import { Drawer } from "./drawer";
 
 const serverChannelList = css`
   display: flex;
@@ -28,6 +28,7 @@ export const createServerChannelList = () => {
   let containerEl: HTMLElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
+  const { signal } = abortController;
   const renderList = () => {
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
@@ -52,20 +53,23 @@ export const createServerChannelList = () => {
     });
   };
 
-  const channelListUnsub =
-    serverStore.currentChannelsSorted.onUpdate(renderList);
+  serverStore.currentChannelsSorted.onUpdate(renderList, signal);
 
-  const channelIdUnsub = storeEmitter.on("navigate:channelId", () => {
-    channelItemHelper.updateSelected(
-      containerEl!,
-      channelStore.currentChannelId!,
-    );
-  });
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      channelItemHelper.updateSelected(
+        containerEl!,
+        channelStore.currentChannelId!,
+      );
+    },
+    signal,
+  );
 
-  const notificationsUnsub = channelStore.notificationsMemo.onUpdate(() => {
+  channelStore.notificationsMemo.onUpdate(() => {
     if (!containerEl) return;
     renderList();
-  });
+  }, signal);
 
   const render = () => {
     containerEl = (
@@ -92,7 +96,7 @@ export const createServerChannelList = () => {
           Drawer().updatePage({ page: 1 });
         }
       },
-      { signal: abortController.signal },
+      { signal },
     );
 
     renderList();
@@ -101,10 +105,8 @@ export const createServerChannelList = () => {
   };
 
   const destroy = () => {
+    abortController.abort();
     hoverAnimator?.destroy();
-    channelListUnsub();
-    channelIdUnsub();
-    notificationsUnsub();
     containerEl?.remove();
     containerEl = null;
   };

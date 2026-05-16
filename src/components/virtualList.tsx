@@ -14,6 +14,8 @@ interface VirtualListProps<T, V extends string | number> {
 export function createVirtualList<T, V extends string | number>(
   props: VirtualListProps<T, V>,
 ) {
+  const abortController = new AbortController();
+  const { signal } = abortController;
   let cacheItems: Item<T, V>[] = props.items();
   const elMap = new Map<string, HTMLElement>();
   let cachedScrollTop = 0;
@@ -113,16 +115,15 @@ export function createVirtualList<T, V extends string | number>(
     rafId = requestAnimationFrame(updateChunks);
   };
 
-  window.addEventListener("resize", onResize);
+  window.addEventListener("resize", onResize, { signal });
+  props.parentEl.addEventListener("scroll", onScroll, { signal });
 
-  props.parentEl.addEventListener("scroll", onScroll);
   const destroy = () => {
+    abortController.abort();
     cacheItems = [];
     elMap.clear();
 
     cancelAnimationFrame(rafId);
-    props.parentEl.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onResize);
   };
 
   const rerenderItem = (id: string) => {
