@@ -19,6 +19,7 @@
     "@lingui/core": "^6.0.1",
     "@nerimity/nevula": "^0.15.0",
     "fzstd": "^0.1.1",
+    "idb": "^8.0.3",
     "morphdom": "^2.7.8"
   },
   "devDependencies": {

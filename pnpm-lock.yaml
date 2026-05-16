@@ -20,6 +20,9 @@ importers:
       fzstd:
         specifier: ^0.1.1
         version: 0.1.1
+      idb:
+        specifier: ^8.0.3
+        version: 8.0.3
       morphdom:
         specifier: ^2.7.8
         version: 2.7.8
@@ -1040,6 +1043,9 @@ packages:
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
+
+  idb@8.0.3:
+    resolution: {integrity: sha512-LtwtVyVYO5BqRvcsKuB2iUMnHwPVByPCXFXOpuU96IZPPoPN6xjOGxZQ74pgSVVLQWtUOYgyeL4GE98BY5D3wg==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -2311,6 +2317,8 @@ snapshots:
       - utf-8-validate
 
   has-flag@4.0.0: {}
+
+  idb@8.0.3: {}
 
   import-fresh@3.3.1:
     dependencies:

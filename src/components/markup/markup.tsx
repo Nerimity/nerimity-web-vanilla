@@ -13,6 +13,7 @@ import type { Message } from "../../store/messageStore";
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
 import { Emoji } from "./Emoji";
 import { Mention } from "./Mention";
 
@@ -45,6 +46,12 @@ const markup = css`
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  .emojiPlace {
+    width: 1.572em;
+    height: 1.572em;
+    cursor: pointer;
+    vertical-align: -0.4em;
   }
 `;
 
@@ -293,12 +300,26 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       return <span class={entity.type}>{transformEntities(entity, ctx)}</span>;
     }
     case "emoji_name": {
-      return <div>emoji</div>;
+      const name = sliceText(ctx, entity.innerSpan, { countText: false });
+
+      const unicode = shortcodeToUnicode[name];
+      if (unicode) {
+        ctx.emojiCount += 1;
+        return <Emoji icon={unicode} title={name} />;
+      }
+
+      return <span>:{name}:</span>;
     }
     case "emoji": {
-      const emoji = sliceText(ctx, entity.innerSpan, { countText: false });
-      ctx.emojiCount += 1;
-      return <Emoji icon={emoji} />;
+      const unicode = sliceText(ctx, entity.innerSpan, { countText: false });
+
+      const title = unicodeToShortcode[unicode];
+      if (title) {
+        ctx.emojiCount += 1;
+        return <Emoji icon={unicode} title={title} />;
+      }
+
+      return <span>{unicode}</span>;
     }
     case "heading": {
       const level = entity.params.level;
