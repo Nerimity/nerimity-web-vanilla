@@ -15,6 +15,7 @@ const emoji = css`
 interface CdnIconProps {
   icon: string;
   class?: string;
+  title?: string;
 }
 
 const buildUrl = (props: CdnIconProps) => {
@@ -32,6 +33,7 @@ export const Emoji = (props: CdnIconProps) => {
   return (
     <img
       loading="lazy"
+      title={props.title}
       src={url}
       class={[emoji, "emoji"]}
       alt=""

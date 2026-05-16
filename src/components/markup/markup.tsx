@@ -150,7 +150,7 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
       //   (animated || webpAnimated) && ctx.props().animateEmoji === false
       //     ? "?type=webp"
       //     : "";
-      return <Emoji icon={url} />;
+      return <Emoji icon={url} title={name} />;
     }
     case "link": {
       const [url, text] = expr.split("->").map((s) => s.trim());
@@ -298,7 +298,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     case "emoji": {
       const emoji = sliceText(ctx, entity.innerSpan, { countText: false });
       ctx.emojiCount += 1;
-      return <Emoji icon={emoji} size={18} />;
+      return <Emoji icon={emoji} />;
     }
     case "heading": {
       const level = entity.params.level;
