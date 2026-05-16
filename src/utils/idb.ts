@@ -14,7 +14,6 @@ interface Database extends DBSchema {
 let _idb: Awaited<ReturnType<typeof openDB<Database>>> | undefined;
 
 export async function getIdb() {
-  if (typeof indexedDB === "undefined") return null;
   if (_idb) return _idb;
   _idb = await openDB<Database>("nerimity", 1, {
     upgrade(db) {

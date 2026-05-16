@@ -6,10 +6,12 @@ import { createSidebar } from "../components/sidebar";
 import { socket } from "../services/socket";
 import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
+import { lazyLoadEmojis } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
 
 export const createAppPage = () => {
+  lazyLoadEmojis();
   const abortController = new AbortController();
   const { signal } = abortController;
   socket.connect();

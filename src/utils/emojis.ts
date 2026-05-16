@@ -50,7 +50,7 @@ export interface EmojiData {
 export const shortcodeToUnicode: Record<string, string> = {};
 export const unicodeToShortcode: Record<string, string> = {};
 
-async function lazyLoadEmojis() {
+export async function lazyLoadEmojis() {
   const idb = await getIdb();
   if (!idb) return;
   const count = await idb.count("emojis");
@@ -68,7 +68,7 @@ async function lazyLoadEmojis() {
   buildEmojiMaps();
 }
 
-export async function buildEmojiMaps() {
+async function buildEmojiMaps() {
   const db = await getIdb();
   if (!db) return null;
 
@@ -83,8 +83,4 @@ export async function buildEmojiMaps() {
       shortcodeToUnicode[name] = emoji.emoji;
     }
   }
-}
-
-if (typeof window !== "undefined") {
-  lazyLoadEmojis();
 }
