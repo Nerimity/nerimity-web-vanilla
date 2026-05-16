@@ -1,13 +1,16 @@
 import { css } from "@linaria/core";
 
-import { h } from "../../h";
+import { h, Fragment } from "../../h";
+import { convertShorthandToLinearGradient } from "../../utils/color";
 import { Avatar } from "../avatar";
+import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Link } from "../link";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
   channel?: { id: string; name?: string; serverId?: string };
+  role?: { id: string; name?: string; hexColor?: string };
   label?: string;
   icon?: string;
 }
@@ -24,23 +27,37 @@ const mention = css`
   background: var(--markup-mention-background-color);
   color: var(--primary-color);
   text-decoration: none;
-  cursor: pointer;
   line-height: 0;
+  &a {
+    cursor: pointer;
+  }
 
   &:hover {
     background: var(--markup-mention-background-color-hover);
   }
-  .text {
-    line-height: normal;
+
+  .roleText {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    font-weight: 500;
   }
   .icon {
     opacity: 0.8;
-    size: 16px;
+    font-size: 16px;
+    color: var(--text-color);
+    &.role {
+      opacity: 1;
+    }
   }
 `;
 
 export const Mention = (props: MentionProps) => {
-  const text = props.user?.username || props.channel?.name || props.label;
+  const text =
+    props.user?.username ||
+    props.channel?.name ||
+    props.role?.name ||
+    props.label;
 
   let url = "";
   if (props.user) {
@@ -50,11 +67,22 @@ export const Mention = (props: MentionProps) => {
     url = `/app/servers/${props.channel.serverId!}/${props.channel.id}`;
   }
 
-  return (
-    <Link href={url} class={mention}>
+  const color = convertShorthandToLinearGradient(props.role?.hexColor);
+
+  return h(
+    url ? Link : "span",
+    { class: mention, href: url },
+    <>
       {props.user && <Avatar user={props.user} size={16} />}
       {props.icon && <Icon name={props.icon} class="icon" />}
-      <span class="text">{text}</span>
-    </Link>
+      {color ? (
+        <GradientText color={color} class="text roleText">
+          <Icon name="alternate_email" class="icon role" />
+          {text}
+        </GradientText>
+      ) : (
+        <span class="text">{text}</span>
+      )}
+    </>,
   );
 };

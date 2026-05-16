@@ -21,10 +21,12 @@ export function h(
   ...children: Child[]
 ): HTMLElement;
 export function h(
-  tag: (props: any, ...children: Child[]) => DocumentFragment,
+  tag:
+    | keyof HTMLElementTagNameMap
+    | ((props: any, ...children: Child[]) => Node),
   props?: Props | null,
   ...children: Child[]
-): DocumentFragment;
+): Node;
 export function h(
   tag:
     | keyof HTMLElementTagNameMap

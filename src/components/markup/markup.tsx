@@ -10,7 +10,10 @@ import {
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
+import { serverRoleStore } from "../../store/serverRoleStore";
+import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import { Emoji } from "./Emoji";
 import { Mention } from "./Mention";
 
 const markup = css`
@@ -104,8 +107,14 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     }
     // Role mentions
     case "r": {
-      return <span>#role-mention</span>;
-      // break;
+      const role = serverRoleStore.roles
+        .get(serverStore.currentServerId!)
+        ?.get(expr);
+      if (role) {
+        ctx.textCount += expr.length;
+        return <Mention role={role} />;
+      }
+      break;
     }
     case "@": {
       const message = ctx.props().message;
@@ -131,15 +140,17 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     case "wace": // animated custom emoji webp
     case "ce": {
       // custom emoji
-      // const [id, name] = expr.split(":");
+      const [id, name] = expr.split(":");
       ctx.emojiCount += 1;
-      // const animated = type === "ace";
-      // const webpAnimated = type === "wace";
+      const animated = type === "ace";
+      const webpAnimated = type === "wace";
+      const url = `${id}${animated && !webpAnimated ? ".gif" : ".webp"}`;
+
       // const shouldAnimate =
       //   (animated || webpAnimated) && ctx.props().animateEmoji === false
       //     ? "?type=webp"
       //     : "";
-      return <span>emoji</span>;
+      return <Emoji icon={url} />;
     }
     case "link": {
       const [url, text] = expr.split("->").map((s) => s.trim());
@@ -287,11 +298,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     case "emoji": {
       const emoji = sliceText(ctx, entity.innerSpan, { countText: false });
       ctx.emojiCount += 1;
-      return (
-        <span class="emoji" textContent={emoji}>
-          {emoji}
-        </span>
-      );
+      return <Emoji icon={emoji} size={18} />;
     }
     case "heading": {
       const level = entity.params.level;

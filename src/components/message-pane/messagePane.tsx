@@ -142,6 +142,7 @@ export const createMessagePane = () => {
   const hoverAnimator = new HoverAnimator(logs, [
     { trigger: `.messageItem`, image: ".clanIcon img" },
     { trigger: `.messageItem`, image: ".avatar img" },
+    { trigger: `.messageItem`, image: ".emoji" },
   ]);
 
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
