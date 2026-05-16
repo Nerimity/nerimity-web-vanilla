@@ -2,10 +2,12 @@ import wyw from "@wyw-in-js/vite";
 import { defineConfig } from "vite";
 import babel from "@rolldown/plugin-babel";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
-import { googleFontsLocal } from "./vite-plugin-google-fonts-local";
+import { googleFontsLocal } from "./vitePluginGoogleFontsLocal";
+import { devRerenderHighlighter } from "./vitePluginRerenderhighlighter";
 
 export default defineConfig({
   plugins: [
+    devRerenderHighlighter(),
     googleFontsLocal(),
     lingui(),
     babel({
@@ -33,6 +35,9 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: ["local.nerimity.com"],
+    watch: {
+      ignored: ["**/vitePluginRerenderhighlighter.ts"],
+    },
   },
   preview: {
     port: 3000,
