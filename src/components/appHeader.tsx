@@ -87,7 +87,6 @@ const header = css`
   left: 0;
   right: 0;
   z-index: 1111;
-  overflow: hidden;
   > .button {
     flex-shrink: 0;
     > .icon {
