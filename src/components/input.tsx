@@ -35,6 +35,7 @@ interface InputProps {
   suffix?: any;
   label?: any;
   type?: "text" | "password";
+  autocomplete?: "current-password" | "email";
 }
 export const Input = (props: InputProps) => {
   return (
@@ -42,7 +43,7 @@ export const Input = (props: InputProps) => {
       {props.label && <div class="label">{props.label}</div>}
       <div class="inputInnerContainer">
         {props.prefix}
-        <input type={props.type || "text"} />
+        <input type={props.type || "text"} autocomplete={props.autocomplete} />
         {props.suffix}
       </div>
     </div>

@@ -49,12 +49,17 @@ const loginPage = css`
   }
 `;
 
-export const createLoginPage = () => {
+const createLoginPage = () => {
   const app = document.getElementById("app")!;
   const form = (
     <form class="inputs">
-      <Input class="emailInput" label={t`Email`} />
-      <Input class="passwordInput" label={t`Password`} type="password" />
+      <Input class="emailInput" label={t`Email`} autocomplete="email" />
+      <Input
+        class="passwordInput"
+        label={t`Password`}
+        type="password"
+        autocomplete="current-password"
+      />
       <div class="error"></div>
       <Button class="loginButton" icon="login" label={t`Login`} primary />
     </form>
@@ -135,3 +140,5 @@ export const createLoginPage = () => {
 
   return { render, destroy };
 };
+
+export default createLoginPage;

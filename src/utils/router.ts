@@ -1,83 +1,8 @@
-type ExtractParams<Path extends string> =
-  Path extends `${infer _Before}:${infer Param}/${infer Rest}`
-    ? Param | ExtractParams<`/${Rest}`>
-    : Path extends `${infer _Before}:${infer Param}`
-      ? Param
-      : never;
-
-type ParamsFor<Path extends string> =
-  ExtractParams<Path> extends never
-    ? Record<string, never>
-    : { [K in ExtractParams<Path>]: string };
-
-interface RouteDefinition {
-  readonly path: string;
-  readonly children?: readonly RouteDefinition[];
+export interface MatchResult<P = {}> {
+  params: P;
 }
 
-type FlattenPaths<T> = T extends readonly any[]
-  ? {
-      [K in keyof T]: T[K] extends {
-        readonly path: infer P extends string;
-        readonly children: infer C;
-      }
-        ? P | `${P}${FlattenPaths<C>}`
-        : T[K] extends { readonly path: infer P extends string }
-          ? P
-          : never;
-    }[number]
-  : T extends {
-        readonly path: infer P extends string;
-        readonly children: infer C;
-      }
-    ? P | `${P}${FlattenPaths<C>}`
-    : T extends { readonly path: infer P extends string }
-      ? P
-      : never;
-
-type RouteCallback = (params: Record<string, string>, pathname: string) => void;
-
-interface MatchOptions {
-  trackParams?: boolean;
-  signal?: AbortSignal;
-}
-
-interface CompiledRoute {
-  pattern: URLPattern;
-  fullPath: string;
-}
-
-interface MatchEntry {
-  routes: CompiledRoute[];
-  callback: RouteCallback;
-  lastKey: string | null;
-  trackParams: boolean;
-}
-
-const flattenRoutes = (
-  routes: readonly RouteDefinition[],
-  prefix = "",
-): CompiledRoute[] => {
-  const result: CompiledRoute[] = [];
-  for (const route of routes) {
-    const fullPath = prefix + route.path;
-    result.push({
-      pattern: new URLPattern({ pathname: fullPath }),
-      fullPath,
-    });
-    if (route.children) {
-      result.push(...flattenRoutes(route.children, fullPath));
-    }
-  }
-  return result;
-};
-
-const resolveParams = (pathname: string, params: Record<string, string>) =>
-  pathname.replace(/:([^/]+)/g, (_, key: string) => params[key]!);
-
-const createRouter = <const Routes extends readonly RouteDefinition[]>(
-  routes: Routes,
-) => {
+const createRouter = () => {
   document.addEventListener("click", (e) => {
     if (e.target instanceof HTMLElement) {
       const href = e.target
@@ -86,142 +11,77 @@ const createRouter = <const Routes extends readonly RouteDefinition[]>(
 
       if (href) {
         e.preventDefault();
-        navigate(href as NoParamPath);
+        navigate(href);
       }
     }
   });
 
-  type KnownPath = FlattenPaths<Routes>;
-  type NoParamPath = {
-    [P in KnownPath]: ExtractParams<P> extends never ? P : never;
-  }[KnownPath];
-  type WithParamPath = Exclude<KnownPath, NoParamPath>;
-
-  const compiled = flattenRoutes(routes);
-  const entries: MatchEntry[] = [];
-
-  const dispatch = (pathname: string) => {
-    for (const entry of entries) {
-      let matched: CompiledRoute | undefined;
-      let params: Record<string, string> = {};
-
-      for (const route of entry.routes) {
-        const result = route.pattern.exec({ pathname });
-        if (result) {
-          matched = route;
-          params = (result.pathname.groups ?? {}) as Record<string, string>;
-          break;
-        }
-      }
-
-      const key = matched
-        ? entry.trackParams
-          ? "matched" + JSON.stringify(params)
-          : "matched"
-        : null;
-
-      if (key !== entry.lastKey) {
-        entry.lastKey = key;
-        entry.callback(matched ? params : {}, pathname);
-      }
-    }
-  };
-
-  const match = (
-    paths: KnownPath[],
-    callback: RouteCallback,
-    options: MatchOptions = {},
-  ) => {
-    const matchedRoutes = compiled.filter((c) =>
-      (paths as string[]).some((p) => c.fullPath === p),
-    );
-    const entry: MatchEntry = {
-      routes: matchedRoutes,
-      callback,
-      lastKey: "__uninitialized__",
-      trackParams: options.trackParams ?? false,
-    };
-    entries.push(entry);
-    dispatch(location.pathname);
-    const unsub = () => {
-      const i = entries.indexOf(entry);
-      if (i !== -1) entries.splice(i, 1);
-    };
-    options.signal?.addEventListener("abort", unsub, { once: true });
-    return unsub;
-  };
-
-  interface NavigateOptions {
-    replace?: boolean;
-  }
-
-  function navigate(pathname: NoParamPath, options?: NavigateOptions): void;
-  function navigate<P extends WithParamPath>(
-    pathname: P,
-    params: ParamsFor<P>,
-    options?: NavigateOptions,
-  ): void;
-  function navigate(
-    pathname: string,
-    paramsOrOptions?: Record<string, string> | NavigateOptions,
-    options?: NavigateOptions,
-  ): void {
-    const params =
-      paramsOrOptions && "replace" in paramsOrOptions
-        ? undefined
-        : (paramsOrOptions as Record<string, string> | undefined);
-    const opts = (
-      paramsOrOptions && "replace" in paramsOrOptions
-        ? paramsOrOptions
-        : options
-    ) as NavigateOptions | undefined;
-
-    const resolved = params ? resolveParams(pathname, params) : pathname;
-    for (const entry of entries) {
-      const matches = entry.routes.some((r) =>
-        r.pattern.exec({ pathname: resolved }),
-      );
-      if (matches) entry.lastKey = "__uninitialized__";
-    }
-    if (opts?.replace) {
-      history.replaceState(null, "", resolved);
+  const navigate = (pathname: string, options?: { replace?: boolean }) => {
+    if (options?.replace) {
+      history.replaceState(null, "", pathname);
     } else {
-      history.pushState(null, "", resolved);
+      history.pushState(null, "", pathname);
     }
-    dispatch(resolved);
-  }
+    window.dispatchEvent(new Event("navigate"));
+  };
 
+  const matchResult = <P>(result: URLPatternResult) => {
+    return {
+      params: result.pathname.groups as P,
+    };
+  };
+
+  const match = (pattern: string) => {
+    const pat = new URLPattern({ pathname: pattern });
+    const result = pat.exec({ pathname: location.pathname });
+    return result ? matchResult(result) : null;
+  };
+  const namedGroups = (groups: Record<string, string | undefined>) =>
+    Object.fromEntries(
+      Object.entries(groups).filter(([k]) => isNaN(Number(k))),
+    );
+
+  const createMatchListener = <P = {}>(
+    pattern: string,
+    callback: (res: MatchResult<P> | null) => void,
+    signal?: AbortSignal,
+  ) => {
+    const pat = new URLPattern({ pathname: pattern });
+
+    let didMatch = false;
+    let prevParams: string | null = null;
+
+    const checkMatch = () => {
+      const result = pat.exec({ pathname: location.pathname });
+      const newParams = result
+        ? JSON.stringify(namedGroups(result.pathname.groups))
+        : null;
+      if (!didMatch && result) {
+        didMatch = true;
+        prevParams = newParams;
+        callback(matchResult(result));
+        return;
+      }
+      if (didMatch && result && newParams !== prevParams) {
+        prevParams = newParams;
+        callback(matchResult(result));
+        return;
+      }
+      if (didMatch && !result) {
+        didMatch = false;
+        callback(null);
+        return;
+      }
+    };
+
+    checkMatch();
+    window.addEventListener("navigate", checkMatch, { signal });
+  };
   window.addEventListener("popstate", () => {
-    for (const entry of entries) {
-      const matches = entry.routes.some((r) =>
-        r.pattern.exec({ pathname: location.pathname }),
-      );
-      if (matches) entry.lastKey = "__uninitialized__";
-    }
-    dispatch(location.pathname);
+    window.dispatchEvent(new Event("navigate"));
   });
 
-  return { match, navigate };
+  return { navigate, match, createMatchListener };
 };
 
-export const router = createRouter([
-  { path: "/" },
-  { path: "/login" },
-  {
-    path: "/app",
-    children: [
-      { path: "/" },
-      { path: "/servers/:serverId" },
-      { path: "/servers/:serverId/:channelId" },
-      { path: "/*" },
-    ],
-  },
-] as const);
-
-export type {
-  RouteDefinition,
-  RouteCallback,
-  ParamsFor,
-  ExtractParams,
-  MatchOptions,
-};
+export const router = createRouter();

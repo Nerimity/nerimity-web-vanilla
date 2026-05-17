@@ -23,7 +23,7 @@ const content = css`
   overflow: hidden;
 `;
 
-export const createAppPage = () => {
+const createAppPage = () => {
   lazyLoadEmojis();
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -36,23 +36,23 @@ export const createAppPage = () => {
 
   app.replaceChildren(Drawer().render());
 
-  router.match(
-    ["/app/servers/:serverId/:channelId"],
-    (params) => {
-      if (!params.serverId || !params.channelId) {
+  router.createMatchListener<{ serverId: string; channelId: string }>(
+    "/app/servers/:serverId/:channelId",
+    (res) => {
+      serverStore.setCurrentServerId(res?.params.serverId);
+      channelStore.setCurrentChannelId(res?.params.channelId);
+      if (!res) {
         messagePane?.destroy();
         messagePane = null;
         return;
       }
-      serverStore.setCurrentServerId(params.serverId);
-      channelStore.setCurrentChannelId(params.channelId);
 
       if (messagePane) return;
 
       messagePane = createMessagePane();
       contentEl.replaceChildren(messagePane.render());
     },
-    { signal },
+    signal,
   );
 
   storeEmitter.on(
@@ -63,15 +63,6 @@ export const createAppPage = () => {
       serverStore.currentChannelsSorted.rerun();
     },
     signal,
-  );
-
-  router.match(
-    ["/app/servers/:serverId/:channelId"],
-    (params) => {
-      serverStore.setCurrentServerId(params.serverId);
-      channelStore.setCurrentChannelId(params.channelId);
-    },
-    { trackParams: true, signal },
   );
 
   let serverSidebar: ReturnType<typeof createSidebar> | null = null;
@@ -111,3 +102,5 @@ export const createAppPage = () => {
 
   return { render, destroy };
 };
+
+export default createAppPage;

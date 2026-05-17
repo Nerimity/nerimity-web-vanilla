@@ -1,91 +1,66 @@
 import "./i18n";
-import { Link } from "./components/link";
 
 import "./style.css";
-import { h } from "./h";
-import type { createAppPage } from "./pages/AppPage";
-import { getLocalItem } from "./utils/localStorage";
-import { router } from "./utils/router";
+import { router, type MatchResult } from "./utils/router";
 import { userAgent } from "./utils/userAgent";
+import type createAppPage from "./pages/AppPage";
+import { getLocalItem } from "./utils/localStorage";
 
 const AppPage = () => import("./pages/AppPage");
 const LoginPage = () => import("./pages/LoginPage");
-
-const HomePage = () => (
-  <div>
-    <Link decoration href="/app">
-      App
-    </Link>
-    <br />
-    <Link decoration href="/login">
-      Login
-    </Link>
-  </div>
-);
+const HomePage = () => import("./pages/HomePage");
 
 const App = () => {
+  const ac = new AbortController();
+  const { signal } = ac;
   const app = document.getElementById("app")!;
   if (userAgent.mobile) {
     app.classList.add("mobileAgent");
   }
-  let currentPage: ReturnType<typeof createAppPage> | null = null;
-  let cancelCurrent: (() => void) | null = null;
-  let currentRoute: "app" | "login" | null = null;
+  let currentPage: ReturnType<typeof createAppPage> | undefined = undefined;
 
-  const navigateTo = (path: any) => {
-    currentRoute = null;
-    cancelCurrent = null;
-    router.navigate(path, { replace: true });
+  let generation = 0;
+
+  const navigate = async (create?: typeof AppPage) => {
+    const gen = ++generation;
+    currentPage?.destroy();
+    app.replaceChildren();
+    currentPage = create ? (await create()).default() : undefined;
+    if (gen !== generation) return;
+    currentPage?.render();
+  };
+  const handleEnter = (cb: () => void) => {
+    return (res: MatchResult | null) => {
+      if (res) {
+        cb();
+      }
+    };
   };
 
-  router.match(["/"], () => {
-    currentPage?.destroy();
-    currentPage = null;
-    currentRoute = null;
-    app.replaceChildren(HomePage());
-  });
-
-  router.match(
-    ["/", "/app/*", "/app/", "/app", "/login"],
-    async (_, pathname) => {
-      if (pathname === "/") {
-        currentPage?.destroy();
-        currentPage = null;
-        currentRoute = null;
-        app.replaceChildren(HomePage());
-        return;
+  router.createMatchListener(
+    "/app/*?",
+    handleEnter(() => {
+      if (!getLocalItem("userToken")) {
+        return router.navigate("/login", { replace: true });
       }
-
-      const nextRoute = pathname.startsWith("/app") ? "app" : "login";
-      if (nextRoute === currentRoute) return;
-      currentRoute = nextRoute;
-
-      cancelCurrent?.();
-      currentPage?.destroy();
-      currentPage = null;
-
-      let cancelled = false;
-      cancelCurrent = () => {
-        cancelled = true;
-      };
-
-      if (pathname.startsWith("/app")) {
-        if (!getLocalItem("userToken")) return navigateTo("/login");
-        const { createAppPage } = await AppPage();
-        if (cancelled) return;
-        currentPage = createAppPage();
-        currentPage.render();
-        return;
+      navigate(AppPage);
+    }),
+    signal,
+  );
+  router.createMatchListener(
+    "/login",
+    handleEnter(() => {
+      if (getLocalItem("userToken")) {
+        return router.navigate("/app", { replace: true });
       }
-
-      if (pathname === "/login") {
-        if (getLocalItem("userToken")) return navigateTo("/app/");
-        const { createLoginPage } = await LoginPage();
-        if (cancelled) return;
-        currentPage = createLoginPage();
-        currentPage.render();
-      }
-    },
+      navigate(LoginPage);
+    }),
+    signal,
+  );
+  router.createMatchListener(
+    "/",
+    handleEnter(() => navigate(HomePage)),
+    signal,
   );
 };
 
