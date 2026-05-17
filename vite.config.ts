@@ -17,7 +17,7 @@ export default defineConfig({
       classNameSlug: "[title]_[hash]",
       babelOptions: {
         presets: ["@babel/preset-typescript"],
-        plugins: ["@babel/plugin-transform-modules-commonjs"],
+        plugins: ["@babel/plugin-transform-modules-commonjs", "macros"],
       },
     }),
   ],
