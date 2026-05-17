@@ -28,7 +28,6 @@ const messagePane = css`
     flex-direction: column;
     padding-top: 56px;
     padding-bottom: 74px;
-    gap: 4px;
     width: 100%;
     flex: 1;
   }
