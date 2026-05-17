@@ -55,6 +55,8 @@ export const createLoginPage = () => {
     <form class="inputs">
       <Input class="emailInput" label={t`Email`} />
       <Input class="passwordInput" label={t`Password`} type="password" />
+      <div class="error"></div>
+      <Button class="loginButton" icon="login" label={t`Login`} primary />
     </form>
   ) as unknown as HTMLFormElement;
 
@@ -63,8 +65,6 @@ export const createLoginPage = () => {
       <div class="container">
         <div class="title">{t`Login to continue`}</div>
         {form}
-        <div class="error"></div>
-        <Button class="loginButton" icon="login" label={t`Login`} primary />
       </div>
     </div>
   ) as unknown as HTMLDivElement;
@@ -95,30 +95,33 @@ export const createLoginPage = () => {
     loggingIn = false;
   };
 
-  form.addEventListener("submit", (e) => e.preventDefault(), {
-    signal: abortController.signal,
-  });
+  const handleLogin = async () => {
+    if (loggingIn) return;
+    loggingIn = true;
+    resetError();
+    loginText.textContent = t`Logging in...`;
 
-  loginButton.addEventListener(
-    "click",
-    async () => {
-      if (loggingIn) return;
-      loggingIn = true;
-      resetError();
-      loginText.textContent = t`Logging in...`;
+    const email = emailInput.value as string;
+    const password = passwordInput.value as string;
 
-      const email = emailInput.value as string;
-      const password = passwordInput.value as string;
+    const [res, err] = await postLogin({ email, password });
+    if (err) {
+      setError(err.message);
+      return;
+    }
+    setLocalItem("userToken", res.token);
+    router.navigate("/app/", { replace: true });
+  };
 
-      const [res, err] = await postLogin({ email, password });
-      if (err) {
-        setError(err.message);
-        return;
-      }
-      setLocalItem("userToken", res.token);
-      router.navigate("/app/", { replace: true });
+  form.addEventListener(
+    "submit",
+    (e) => {
+      e.preventDefault();
+      handleLogin();
     },
-    { signal: abortController.signal },
+    {
+      signal: abortController.signal,
+    },
   );
 
   const destroy = () => {
