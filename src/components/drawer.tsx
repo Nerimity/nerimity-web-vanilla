@@ -1,8 +1,8 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
-import { userAgent } from "../utils/userAgent";
 import { storeEmitter } from "../utils/EventEmitter";
+import { userAgent } from "../utils/userAgent";
 
 let drawer: ReturnType<typeof createDrawer> | null = null;
 
@@ -137,12 +137,12 @@ function createDrawer() {
   let animationTimeout: NodeJS.Timeout | null = null;
 
   const updatePage = (opts?: { animate?: boolean; page?: number }) => {
+    if (opts?.page !== undefined) currentPage = opts.page;
     if (currentMode === "desktop") {
       currentPage = 1;
       leftDrawer.style.zIndex = "1";
       rightDrawer.style.zIndex = "1";
     }
-    if (opts?.page !== undefined) currentPage = opts.page;
     const contentWidth = content.clientWidth;
 
     if (animationTimeout) clearTimeout(animationTimeout);
