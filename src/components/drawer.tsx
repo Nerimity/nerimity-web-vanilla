@@ -15,6 +15,7 @@ const drawerContainer = css`
   overflow: hidden;
   > .content {
     display: flex;
+    flex-direction: column;
     overflow: hidden;
     flex: 1;
   }

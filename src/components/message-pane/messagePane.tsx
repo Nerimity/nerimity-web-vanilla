@@ -18,6 +18,7 @@ const messagePane = css`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   > .logs {
     display: flex;
     flex-direction: column;

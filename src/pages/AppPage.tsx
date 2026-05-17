@@ -1,14 +1,25 @@
+import { css } from "@linaria/core";
+import { createAppHeader } from "../components/appHeader";
 import { Drawer } from "../components/drawer";
 import { createMessagePane } from "../components/message-pane/messagePane";
 import { createServerChannelList } from "../components/serverChannelList";
 import { createServerMemberList } from "../components/serverMemberList";
 import { createSidebar } from "../components/sidebar";
+import { h } from "../h";
 import { socket } from "../services/socket";
 import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
 import { lazyLoadEmojis } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
+
+const content = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+`;
 
 export const createAppPage = () => {
   lazyLoadEmojis();
@@ -17,6 +28,9 @@ export const createAppPage = () => {
   socket.connect();
   const app = document.getElementById("app")!;
   let messagePane: ReturnType<typeof createMessagePane> | null = null;
+  let appHeader = createAppHeader();
+
+  let contentEl = (<div class={content}></div>) as unknown as HTMLElement;
 
   app.replaceChildren(Drawer().render());
 
@@ -34,7 +48,7 @@ export const createAppPage = () => {
       if (messagePane) return;
 
       messagePane = createMessagePane();
-      Drawer().content.replaceChildren(messagePane.render());
+      contentEl.replaceChildren(messagePane.render());
     },
     { signal },
   );
@@ -64,6 +78,7 @@ export const createAppPage = () => {
 
   const destroy = () => {
     abortController.abort();
+    appHeader.destroy();
     socket.disconnect();
     messagePane?.destroy();
     serverSidebar?.destroy();
@@ -73,6 +88,7 @@ export const createAppPage = () => {
     serverChannelList = null;
     serverMemberList = null;
     Drawer().destroy();
+    contentEl.remove();
   };
 
   const render = () => {
@@ -85,7 +101,7 @@ export const createAppPage = () => {
       serverSidebar.render(),
       serverChannelList.render(),
     );
-    drawer.content.replaceChildren(messagePane?.render()!);
+    drawer.content.replaceChildren(appHeader.render(), contentEl);
 
     drawer.rightDrawer.replaceChildren(serverMemberList.render());
   };
