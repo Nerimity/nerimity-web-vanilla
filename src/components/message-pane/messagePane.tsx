@@ -26,10 +26,11 @@ const messagePane = css`
   > .logs {
     display: flex;
     flex-direction: column;
+    padding-top: 56px;
+    padding-bottom: 74px;
     gap: 4px;
     width: 100%;
     flex: 1;
-    padding-bottom: 16px;
   }
 `;
 export const createMessagePane = () => {

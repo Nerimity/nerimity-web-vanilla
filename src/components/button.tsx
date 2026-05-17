@@ -15,12 +15,13 @@ const button = css`
   align-items: center;
   justify-content: center;
   background-color: transparent;
-  border: solid 1px var(--gray-600);
+  border: solid 1px var(--gray-700);
   border-radius: var(--radius-6);
   padding: 8px;
   gap: 8px;
   cursor: pointer;
   transition: 0.2s;
+  background-color: var(--gray-900);
   .label {
     color: var(--primary-color);
   }
@@ -32,7 +33,9 @@ const button = css`
   }
   &.hoverBorder {
     border-color: transparent;
+    background-color: transparent;
     &:hover {
+      background-color: var(--gray-900);
       border-color: var(--gray-700);
     }
   }

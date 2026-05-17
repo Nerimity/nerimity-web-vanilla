@@ -17,6 +17,7 @@ const drawerContainer = css`
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    position: relative;
     flex: 1;
     > .contentInner {
       display: flex;
@@ -68,7 +69,7 @@ const drawerContainer = css`
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 111111111;
     background-color: var(--background);
     transition: 0.2s;
     opacity: 0;

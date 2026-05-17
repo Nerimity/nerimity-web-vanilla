@@ -68,6 +68,11 @@ const header = css`
   padding-right: 8px;
   flex-shrink: 0;
   gap: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1111;
   > .button {
     > .icon {
       font-size: 18px;
@@ -76,6 +81,22 @@ const header = css`
   > .details {
     display: flex;
     flex: 1;
+  }
+  .backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 180px;
+
+    z-index: -1;
+
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0)
+    );
+    pointer-events: none;
   }
 `;
 export const createAppHeader = () => {
@@ -91,6 +112,7 @@ export const createAppHeader = () => {
 
   const container = (
     <header class={header}>
+      <div class="backdrop"></div>
       {leftDrawerButton}
       <div class="details">
         <Pill />
