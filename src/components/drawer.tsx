@@ -18,6 +18,12 @@ const drawerContainer = css`
     flex-direction: column;
     overflow: hidden;
     flex: 1;
+    > .contentInner {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex: 1;
+    }
   }
 
   > .leftDrawer,
@@ -55,6 +61,22 @@ const drawerContainer = css`
     z-index: 111111111;
     background: var(--background);
   }
+  .overlay {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    background-color: var(--background);
+    transition: 0.2s;
+    opacity: 0;
+    &.visible {
+      opacity: 0.8;
+      pointer-events: all;
+    }
+  }
 `;
 
 const MOBILE_WIDTH = 800;
@@ -65,8 +87,15 @@ function createDrawer() {
   let visiblePage = 1;
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
-  const leftDrawer = (<div class="leftDrawer"></div>) as unknown as HTMLElement;
-  const content = (<div class="content"></div>) as unknown as HTMLElement;
+  const leftDrawer = (<div class="leftDrawer"></div>) as HTMLElement;
+  const contentInner = (<div class="contentInner"></div>) as HTMLElement;
+  const overlay = (<div class="overlay"></div>) as HTMLElement;
+  const content = (
+    <div class="content">
+      {overlay}
+      {contentInner}
+    </div>
+  ) as HTMLElement;
   const rightDrawer = (
     <div class="rightDrawer"></div>
   ) as unknown as HTMLElement;
@@ -171,6 +200,8 @@ function createDrawer() {
     offsetAtDragStart = currentOffset;
     content.style.transform = `translate(${currentOffset}px, 0)`;
     updateVisible(currentPage);
+    if (currentPage !== 1) overlay.classList.add("visible");
+    if (currentPage === 1) overlay.classList.remove("visible");
   };
 
   const handleTouchUp = () => {
@@ -248,6 +279,13 @@ function createDrawer() {
     capture: true,
     signal: abortController.signal,
   });
+  overlay.addEventListener(
+    "click",
+    () => {
+      updatePage({ page: 1 });
+    },
+    { signal: abortController.signal },
+  );
 
   const onModeChange = () => {
     drawerEl.dataset.mode = currentMode;
@@ -281,7 +319,7 @@ function createDrawer() {
     render,
     destroy,
     leftDrawer,
-    content,
+    content: contentInner,
     rightDrawer,
     updatePage,
     get currentPage() {
