@@ -20,10 +20,10 @@ export class ManualMemo<T> {
     this.listeners.forEach((l) => l(value));
   }
 
-  onUpdate(listener: (value: T) => void, signal?: AbortSignal) {
+  onUpdate(listener: (value: T) => void, signal: AbortSignal) {
     this.listeners.add(listener);
     const unsub = () => this.listeners.delete(listener);
-    signal?.addEventListener("abort", unsub, { once: true });
+    signal.addEventListener("abort", unsub, { once: true });
     return unsub;
   }
 }

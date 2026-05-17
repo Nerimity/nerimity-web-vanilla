@@ -44,7 +44,7 @@ const createRouter = () => {
   const createMatchListener = <P = {}>(
     pattern: string,
     callback: (res: MatchResult<P> | null) => void,
-    signal?: AbortSignal,
+    signal: AbortSignal,
   ) => {
     const pat = new URLPattern({ pathname: pattern });
 
