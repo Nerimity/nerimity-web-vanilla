@@ -56,15 +56,15 @@ const item = css`
         color: var(--text-color);
       }
     }
-  }
-
-  &[data-alert="true"] {
-    &:before {
-      height: 40%;
-      opacity: 1;
-      background-color: var(--alert-color);
+    &[data-alert="true"] {
+      &:before {
+        height: 40%;
+        opacity: 1;
+        background-color: var(--alert-color);
+      }
     }
   }
+
   .label {
     color: var(--text-muted);
     transition: 0.2s;
