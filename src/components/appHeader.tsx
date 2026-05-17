@@ -1,15 +1,16 @@
 import { css } from "@linaria/core";
+import morphdom from "morphdom";
+
 import { h } from "../h";
-import { Button } from "./button";
-import { Drawer } from "./drawer";
-import { storeEmitter } from "../utils/EventEmitter";
+import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
+import { storeEmitter } from "../utils/EventEmitter";
 import { Avatar } from "./avatar";
+import { Button } from "./button";
 import { CdnIcon } from "./cdnIcon";
-import morphdom from "morphdom";
+import { Drawer } from "./drawer";
 import { Icon } from "./icon";
-import { accountStore } from "../store/accountStore";
 
 const pill = css`
   display: flex;
@@ -73,6 +74,7 @@ const header = css`
     }
   }
   > .details {
+    display: flex;
     flex: 1;
   }
 `;
