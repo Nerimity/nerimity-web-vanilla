@@ -37,6 +37,10 @@ msgstr "Do not distrub"
 msgid "Email"
 msgstr "Email"
 
+#: src/components/appHeader.tsx:59
+msgid "Home"
+msgstr "Home"
+
 #: src/pages/LoginPage.tsx:108
 msgid "Logging in..."
 msgstr "Logging in..."
