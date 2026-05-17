@@ -19,9 +19,11 @@ import { shouldGroup } from "./utils";
 const messageItem = css`
   display: flex;
   flex-direction: column;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding-left: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
   flex-shrink: 0;
+  border-radius: var(--radius-6);
   overflow: hidden;
 
   &:hover {
@@ -55,7 +57,8 @@ const messageItem = css`
   }
 
   &.withDetails {
-    margin-top: 10px;
+    margin-top: 6px;
+    padding-top: 4px;
   }
   .username {
     font-weight: 500;

@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
 
+import { Dynamic } from "../dynamic";
 import { h, Fragment } from "../h";
 import { channelStore, type Channel } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
@@ -11,17 +12,15 @@ import { CdnIcon } from "./cdnIcon";
 import { Drawer } from "./drawer";
 import { Item } from "./item";
 import { Link } from "./link";
-import { Dynamic } from "../dynamic";
 
 const serverChannelList = css`
   display: flex;
-  overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
   height: 100%;
   gap: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 6px;
+  --padding-right: 2px;
   flex: 1;
 `;
 
@@ -74,7 +73,7 @@ export const createServerChannelList = () => {
 
   const render = () => {
     containerEl = (
-      <div class={serverChannelList}></div>
+      <div class={[serverChannelList, "scrollbarHover"]}></div>
     ) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
       {
@@ -121,6 +120,7 @@ export const createServerChannelList = () => {
 const channelItemLink = css`
   .channelItem {
     padding: 6px 6px;
+    border-radius: var(--radius-8);
   }
 
   .categoryLabel {

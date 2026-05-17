@@ -106,11 +106,12 @@ const roleOrder = () => {
 
 const memberListContainer = css`
   display: flex;
-  overflow: auto;
   flex-direction: column;
   flex-shrink: 0;
   height: 100%;
   width: 100%;
+  --padding-right: 2px;
+  padding-left: 6px;
 `;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;
@@ -343,7 +344,7 @@ export const createServerMemberList = () => {
 
   const render = () => {
     containerEl = (
-      <div class={memberListContainer}></div>
+      <div class={[memberListContainer, "scrollbarHover"]}></div>
     ) as unknown as HTMLDivElement;
 
     hoverAnimator = new HoverAnimator(containerEl, [
@@ -388,8 +389,7 @@ const memberItemContainer = css`
   height: 44px;
   padding: 6px 6px;
   gap: 8px;
-  margin-left: 4px;
-  margin-right: 4px;
+
   &:hover {
     background-color: var(--gray-800);
     border-radius: var(--radius-8);

@@ -20,13 +20,15 @@ const messagePane = css`
   width: 100%;
   height: 100%;
   overflow: hidden;
+  --padding-right: 0;
+  --mobile-padding-right: 0;
+
   > .logs {
     display: flex;
     flex-direction: column;
     gap: 4px;
     width: 100%;
     flex: 1;
-    overflow: auto;
     padding-bottom: 16px;
   }
 `;
@@ -34,7 +36,9 @@ export const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const chatbar = createChatbar();
-  const logs = (<div class="logs"></div>) as unknown as HTMLDivElement;
+  const logs = (
+    <div class={["logs", "scrollbarHover"]}></div>
+  ) as unknown as HTMLDivElement;
   const el = (
     <div class={messagePane}>
       {logs}

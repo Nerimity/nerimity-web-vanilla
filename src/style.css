@@ -40,12 +40,12 @@
 
 html,
 body {
+  overflow: hidden;
+  height: 100%;
   padding: 0;
   margin: 0;
   font-size: 14px;
   overscroll-behavior-x: none;
-  height: 100%;
-  overflow: hidden;
 }
 body {
   color: var(--text-color);
@@ -75,22 +75,40 @@ body {
   font-variation-settings: "FILL" 1;
 }
 
-
-#app:not(.mobileAgent)  {
+body .scrollbarHover {
+  overflow: auto;
+  padding-right: var(--mobile-padding-right, 6px);
+}
+#app:not(.mobileAgent) {
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 4px;
+    height: 4px;
   }
   ::-webkit-scrollbar-track {
     border-radius: var(--radius-6);
-    background: var(--gray-800);
   }
   ::-webkit-scrollbar-thumb {
     border-radius: var(--radius-6);
     background-color: var(--primary-color);
   }
-}
+  .scrollbarHover {
+    overflow-y: scroll;
+    padding-right: var(--padding-right);
 
+    &:hover {
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--primary-color);
+      }
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+    }
+  }
+}
 
 a {
   color: var(--primary-color);
