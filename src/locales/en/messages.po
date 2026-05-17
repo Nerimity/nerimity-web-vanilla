@@ -13,9 +13,21 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/store/accountStore.ts:59
+msgid "Authenticating..."
+msgstr "Authenticating..."
+
 #: src/store/userPresenceStore.ts:28
 msgid "Away from keyboard"
 msgstr "Away from keyboard"
+
+#: src/store/accountStore.ts:64
+msgid "Connected!"
+msgstr "Connected!"
+
+#: src/store/accountStore.ts:62
+msgid "Connecting..."
+msgstr "Connecting..."
 
 #: src/store/userPresenceStore.ts:32
 msgid "Do not distrub"
@@ -42,16 +54,16 @@ msgstr "Login to continue"
 msgid "Looking to play"
 msgstr "Looking to play"
 
-#. placeholder {0}: channelStore.currentChannel()?.name!
-#: src/components/message-pane/chatbar.tsx:73
+#. placeholder {0}: channel.name!
+#: src/components/message-pane/chatbar.tsx:90
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
-#: src/components/message-pane/messageItem.tsx:273
+#: src/components/message-pane/messageItem.tsx:276
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/serverMemberList.tsx:37
+#: src/components/serverMemberList.tsx:38
 #: src/store/userPresenceStore.ts:16
 msgid "Offline"
 msgstr "Offline"
