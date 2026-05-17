@@ -98,7 +98,14 @@ export const createSidebar = () => {
   };
 
   storeEmitter.on("server:update", renderList, signal);
-  storeEmitter.on("user:authenticated", renderList, signal);
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    (state) => {
+      if (!state) return;
+      renderList();
+    },
+    signal,
+  );
   storeEmitter.on(
     "navigate:serverId",
     () => {

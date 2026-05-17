@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
+import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -76,24 +77,23 @@ export const createChatbar = () => {
 
   const updatePlaceholder = () => {
     const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
-    input.placeholder = t`Message in ${channelStore.currentChannel()?.name!}`;
+    const channel = channelStore.currentChannel();
+    const authenticated = accountStore.authenticated;
+
+    if (!channel) {
+      if (!authenticated) {
+        input.placeholder = accountStore.connectionState();
+      }
+
+      return;
+    }
+    input.placeholder = t`Message in ${channel.name!}`;
   };
 
-  storeEmitter.on(
-    "navigate:channelId",
-    () => {
-      updatePlaceholder();
-    },
-    signal,
-  );
+  storeEmitter.on("navigate:channelId", updatePlaceholder, signal);
 
-  storeEmitter.on(
-    "user:authenticated",
-    () => {
-      updatePlaceholder();
-    },
-    signal,
-  );
+  storeEmitter.on("ws:authStateUpdate", updatePlaceholder, signal);
+  storeEmitter.on("ws:connectStateUpdate", updatePlaceholder, signal);
 
   const destroy = () => {
     chatbar.remove();

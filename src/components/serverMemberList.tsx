@@ -313,8 +313,9 @@ export const createServerMemberList = () => {
   storeEmitter.on("drawer:modeChange", updateVisibility, signal);
 
   storeEmitter.on(
-    "user:authenticated",
-    () => {
+    "ws:authStateUpdate",
+    (state) => {
+      if (!state) return;
       roleOrderMemoized.rerun();
       visibleRoleIdsMemoized.rerun();
       isDefaultPublicMemoized.rerun();

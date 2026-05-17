@@ -127,8 +127,9 @@ export const createMessagePane = () => {
     signal,
   );
   storeEmitter.on(
-    "user:authenticated",
-    () => {
+    "ws:authStateUpdate",
+    (state) => {
+      if (!state) return;
       messageStore
         .loadMessages(channelStore.currentChannelId!)
         .then(() => rerender());

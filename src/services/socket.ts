@@ -1,3 +1,4 @@
+import { accountStore } from "../store/accountStore";
 import { getLocalItem } from "../utils/localStorage";
 import { socketEventHandler } from "./socketEvents";
 
@@ -39,6 +40,7 @@ function createSocket() {
       if (raw.startsWith("40")) {
         const data = JSON.parse(raw.slice(2));
         socketId = data.sid;
+        accountStore.setConnected(true);
 
         emit("user:authenticate", {
           token: getLocalItem("userToken"),
@@ -58,6 +60,9 @@ function createSocket() {
         return;
       }
     };
+    ws.onclose = () => {
+      disconnect();
+    };
   };
 
   const emit = (event: string, payload: any) => {
@@ -65,6 +70,8 @@ function createSocket() {
   };
 
   const disconnect = () => {
+    accountStore.setAuthenticated(false);
+    accountStore.setConnected(false);
     ws?.close();
   };
 

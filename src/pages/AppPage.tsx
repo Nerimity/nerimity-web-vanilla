@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+
 import { createAppHeader } from "../components/appHeader";
 import { Drawer } from "../components/drawer";
 import { createMessagePane } from "../components/message-pane/messagePane";
@@ -55,8 +56,9 @@ export const createAppPage = () => {
   );
 
   storeEmitter.on(
-    "user:authenticated",
-    () => {
+    "ws:authStateUpdate",
+    (state) => {
+      if (!state) return;
       serverStore.currentServerSortedRoles.rerun();
       serverStore.currentChannelsSorted.rerun();
     },

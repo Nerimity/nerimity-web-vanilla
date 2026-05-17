@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import type { RawUser, RawUserNotificationSettings } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { User } from "./userStore";
@@ -5,6 +6,7 @@ import { User } from "./userStore";
 export const accountStore = createAccountStore();
 
 function createAccountStore() {
+  let connected = false;
   let authenticated = false;
   let currentUser: User | null = null;
   let notificationSettings = new Map<string, RawUserNotificationSettings>();
@@ -45,7 +47,21 @@ function createAccountStore() {
 
   const setAuthenticated = (newAuthenticated: boolean) => {
     authenticated = newAuthenticated;
-    storeEmitter.emit("user:authenticated");
+    storeEmitter.emit("ws:authStateUpdate", authenticated);
+  };
+  const setConnected = (newConnected: boolean) => {
+    connected = newConnected;
+    storeEmitter.emit("ws:connectStateUpdate", connected);
+  };
+
+  const connectionState = () => {
+    if (connected && !authenticated) {
+      return t`Authenticating...`;
+    }
+    if (!connected) {
+      return t`Connecting...`;
+    }
+    return t`Connected!`;
   };
 
   return {
@@ -59,8 +75,13 @@ function createAccountStore() {
     get notificationSettings() {
       return notificationSettings;
     },
+    get connected() {
+      return connected;
+    },
+    setConnected,
     setCurrentUser,
     setNotificationSettings,
     getCombinedNotification,
+    connectionState,
   };
 }

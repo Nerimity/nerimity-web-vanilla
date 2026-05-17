@@ -16,7 +16,6 @@ const pill = css`
   display: flex;
   align-items: center;
   font-size: 12px;
-  color: var(--gray-400);
   background-color: var(--gray-900);
   padding: 0 6px;
   height: 36px;
@@ -42,7 +41,9 @@ const Pill = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const channel = channelStore.channels.get(channelStore.currentChannelId!);
 
-  const label = !accountStore.authenticated ? "Connecting..." : null;
+  const label = !accountStore.authenticated
+    ? accountStore.connectionState()
+    : null;
   const icon = !accountStore.authenticated ? "cached" : null;
 
   return (
@@ -87,7 +88,7 @@ const header = css`
     top: 0;
     left: 0;
     right: 0;
-    height: 180px;
+    height: 160px;
 
     z-index: -1;
 
@@ -141,7 +142,8 @@ export const createAppHeader = () => {
     morphdom(container.querySelector(`.${pill}`)!, <Pill />);
   };
 
-  storeEmitter.on("user:authenticated", updatePill, signal);
+  storeEmitter.on("ws:authStateUpdate", updatePill, signal);
+  storeEmitter.on("ws:connectStateUpdate", updatePill, signal);
   storeEmitter.on("navigate:channelId", updatePill, signal);
 
   const render = () => {
