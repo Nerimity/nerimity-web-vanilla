@@ -39,7 +39,6 @@ function createEventEmitter<T extends Record<string, unknown>>() {
       }
     };
     signal.addEventListener("abort", unsub, { once: true });
-    return unsub;
   };
 
   const emit = <K extends keyof T>(event: K, data?: T[K]) => {

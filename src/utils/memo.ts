@@ -24,6 +24,5 @@ export class ManualMemo<T> {
     this.listeners.add(listener);
     const unsub = () => this.listeners.delete(listener);
     signal.addEventListener("abort", unsub, { once: true });
-    return unsub;
   }
 }
