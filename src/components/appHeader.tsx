@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h } from "../h";
@@ -20,9 +21,14 @@ const pill = css`
   padding: 0 6px;
   height: 36px;
   border-radius: var(--radius-max);
-  place-self: start;
   border: solid 1px var(--gray-700);
   padding-right: 12px;
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
   > .channelIcon {
     margin-left: 4px;
     margin-right: 4px;
@@ -30,10 +36,15 @@ const pill = css`
   }
   > .icon {
     border-radius: var(--radius-max);
-    background-color: var(--gray-700);
+    background-color: var(--gray-800);
     padding: 4px;
     margin-right: 4px;
     font-size: 16px;
+  }
+  > .label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
@@ -41,10 +52,12 @@ const Pill = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const channel = channelStore.channels.get(channelStore.currentChannelId!);
 
+  const authenticated = accountStore.authenticated;
+
   const label = !accountStore.authenticated
     ? accountStore.connectionState()
-    : null;
-  const icon = !accountStore.authenticated ? "cached" : null;
+    : channel?.name || t`Home`;
+  const icon = !authenticated ? "cached" : !server ? "home" : null;
 
   return (
     <div class={pill}>
@@ -53,10 +66,10 @@ const Pill = () => {
       ) : (
         <Avatar size={24} server={server} />
       )}
-      {channel ? (
+      {authenticated && channel ? (
         <CdnIcon channel={channel} size={14} class="channelIcon" />
       ) : null}
-      <div>{label || channel?.name}</div>
+      <div class="label">{label}</div>
     </div>
   );
 };
@@ -74,7 +87,9 @@ const header = css`
   left: 0;
   right: 0;
   z-index: 1111;
+  overflow: hidden;
   > .button {
+    flex-shrink: 0;
     > .icon {
       font-size: 18px;
     }
@@ -82,6 +97,8 @@ const header = css`
   > .details {
     display: flex;
     flex: 1;
+    max-width: 100%;
+    min-width: 0;
   }
   .backdrop {
     position: absolute;
@@ -139,7 +156,26 @@ export const createAppHeader = () => {
   );
 
   const updatePill = () => {
-    morphdom(container.querySelector(`.${pill}`)!, <Pill />);
+    const pillEl = container.querySelector(`.${pill}`) as HTMLElement;
+    const oldWidth = pillEl.getBoundingClientRect().width;
+
+    morphdom(pillEl, <Pill />);
+
+    const newWidth = pillEl.getBoundingClientRect().width;
+
+    if (oldWidth !== newWidth) {
+      const labelEl = pillEl.querySelector(".label") as HTMLElement;
+      labelEl.style.textOverflow = "clip";
+
+      const anim = pillEl.animate(
+        [{ width: `${oldWidth}px` }, { width: `${newWidth}px` }],
+        { duration: 200, easing: "ease", fill: "none" },
+      );
+
+      anim.onfinish = () => {
+        labelEl.style.textOverflow = "";
+      };
+    }
   };
 
   storeEmitter.on("ws:authStateUpdate", updatePill, signal);

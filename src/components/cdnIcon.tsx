@@ -1,10 +1,10 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
+import { ChannelType } from "../Types";
 import { unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
 import { Icon } from "./icon";
-import { ChannelType } from "../Types";
 
 const cdnIcon = css`
   display: flex;
@@ -14,6 +14,7 @@ const cdnIcon = css`
   padding: 4px;
   border-radius: var(--radius-4);
   background-color: var(--gray-800);
+  flex-shrink: 0;
   img {
     width: 100%;
     height: 100%;
