@@ -88,6 +88,7 @@ const header = css`
   right: 0;
   z-index: 1111;
   > .button {
+    border-radius: var(--radius-max);
     flex-shrink: 0;
     > .icon {
       font-size: 18px;
