@@ -1,20 +1,130 @@
 import { css } from "@linaria/core";
 import { h } from "../h";
+import { Button } from "./button";
+import { Drawer } from "./drawer";
+import { storeEmitter } from "../utils/EventEmitter";
+import { channelStore } from "../store/channelStore";
+import { serverStore } from "../store/serverStore";
+import { Avatar } from "./avatar";
+import { CdnIcon } from "./cdnIcon";
+import morphdom from "morphdom";
+import { Icon } from "./icon";
+import { accountStore } from "../store/accountStore";
+
+const pill = css`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--gray-400);
+  background-color: var(--gray-900);
+  padding: 0 6px;
+  height: 36px;
+  border-radius: var(--radius-max);
+  place-self: start;
+  border: solid 1px var(--gray-700);
+  padding-right: 12px;
+  > .channelIcon {
+    margin-left: 4px;
+    margin-right: 4px;
+    background-color: transparent;
+  }
+  > .icon {
+    border-radius: var(--radius-max);
+    background-color: var(--gray-700);
+    padding: 4px;
+    margin-right: 4px;
+    font-size: 16px;
+  }
+`;
+
+const Pill = () => {
+  const server = serverStore.servers.get(serverStore.currentServerId!);
+  const channel = channelStore.channels.get(channelStore.currentChannelId!);
+
+  const label = !accountStore.authenticated ? "Connecting..." : null;
+  const icon = !accountStore.authenticated ? "cached" : null;
+
+  return (
+    <div class={pill}>
+      {icon ? (
+        <Icon name={icon} class="icon" />
+      ) : (
+        <Avatar size={24} server={server} />
+      )}
+      {channel ? (
+        <CdnIcon channel={channel} size={14} class="channelIcon" />
+      ) : null}
+      <div>{label || channel?.name}</div>
+    </div>
+  );
+};
 
 const header = css`
-  height: 60px;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding-left: 8px;
+  padding-right: 8px;
+  flex-shrink: 0;
+  gap: 8px;
+  > .button {
+    > .icon {
+      font-size: 18px;
+    }
+  }
+  > .details {
+    flex: 1;
+  }
 `;
 export const createAppHeader = () => {
+  const abortController = new AbortController();
+  const { signal } = abortController;
+  const leftDrawerButton = (
+    <Button icon="side_navigation" class="button" />
+  ) as HTMLButtonElement;
+
+  const rightDrawerButton = (
+    <Button icon="info" class="button" />
+  ) as HTMLButtonElement;
+
   const container = (
     <header class={header}>
-      <h1>header</h1>
+      {leftDrawerButton}
+      <div class="details">
+        <Pill />
+      </div>
+      {rightDrawerButton}
     </header>
   ) as unknown as HTMLDivElement;
+
+  leftDrawerButton.addEventListener(
+    "click",
+    () => {
+      Drawer().updatePage({ page: 0 });
+    },
+    { signal },
+  );
+
+  rightDrawerButton.addEventListener(
+    "click",
+    () => {
+      Drawer().updatePage({ page: 2 });
+    },
+    { signal },
+  );
+
+  const updatePill = () => {
+    morphdom(container.querySelector(`.${pill}`)!, <Pill />);
+  };
+
+  storeEmitter.on("user:authenticated", updatePill, signal);
+  storeEmitter.on("navigate:channelId", updatePill, signal);
 
   const render = () => {
     return container;
   };
   const destroy = () => {
+    abortController.abort();
     container.remove();
   };
   return { render, destroy };
