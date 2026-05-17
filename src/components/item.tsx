@@ -33,29 +33,31 @@ const item = css`
     content: "";
     transition: 0.2s;
   }
-  &:hover:not([data-disabled="true"]) {
-    background-color: var(--item-bg);
-    &:before {
-      height: 20%;
-      opacity: 1;
-      background-color: var(--gray-500);
+  &:not([data-disabled="true"]) {
+    &:hover {
+      background-color: var(--item-bg);
+      &:before {
+        height: 20%;
+        opacity: 1;
+        background-color: var(--gray-500);
+      }
+      .label {
+        color: var(--text-color);
+      }
     }
-    .label {
-      color: var(--text-color);
+    &[data-selected="true"] {
+      background-color: var(--item-bg);
+      &:before {
+        height: 40%;
+        opacity: 1;
+        background-color: var(--primary-color);
+      }
+      .label {
+        color: var(--text-color);
+      }
     }
   }
 
-  &[data-selected="true"] {
-    background-color: var(--item-bg);
-    &:before {
-      height: 40%;
-      opacity: 1;
-      background-color: var(--primary-color);
-    }
-    .label {
-      color: var(--text-color);
-    }
-  }
   &[data-alert="true"] {
     &:before {
       height: 40%;
