@@ -293,12 +293,7 @@ export const createServerMemberList = () => {
     "navigate:channelId",
     () => {
       cachedDontRender = dontRender();
-      roleOrderMemoized.rerun();
-      visibleRoleIdsMemoized.rerun();
-      isDefaultPublicMemoized.rerun();
-      categorizedMembersMemoized.rerun();
-
-      renderList();
+      rerunAndRender();
     },
     signal,
   );
