@@ -15,6 +15,7 @@ export default defineConfig({
     }),
     wyw({
       classNameSlug: "[title]_[hash]",
+      include: ["src/components/**/*", "src/pages/**/*"],
       babelOptions: {
         presets: ["@babel/preset-typescript"],
         plugins: ["@babel/plugin-transform-modules-commonjs", "macros"],

@@ -315,15 +315,27 @@ export const createServerMemberList = () => {
   storeEmitter.on("drawer:modeChange", updateVisibility, signal);
   storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
 
+  const rerunAndRender = () => {
+    roleOrderMemoized.rerun();
+    visibleRoleIdsMemoized.rerun();
+    isDefaultPublicMemoized.rerun();
+    categorizedMembersMemoized.rerun();
+    renderList();
+  };
+
+  storeEmitter.on(
+    "server:members_fetched",
+    ({ serverId }) => {
+      if (serverId !== serverStore.currentServerId) return;
+      rerunAndRender();
+    },
+    signal,
+  );
   storeEmitter.on(
     "ws:authStateUpdate",
     (state) => {
       if (!state) return;
-      roleOrderMemoized.rerun();
-      visibleRoleIdsMemoized.rerun();
-      isDefaultPublicMemoized.rerun();
-      categorizedMembersMemoized.rerun();
-      renderList();
+      rerunAndRender();
     },
     signal,
   );

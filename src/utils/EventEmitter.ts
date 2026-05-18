@@ -6,6 +6,7 @@ type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 
 type StoreEvents = {
   "server:update": WithId<RawServer>;
+  "server:members_fetched": { serverId: string };
   "ws:authStateUpdate": boolean;
   "ws:connectStateUpdate": boolean;
   "navigate:channelId": string | null;

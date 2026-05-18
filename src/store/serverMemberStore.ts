@@ -1,4 +1,5 @@
 import type { RawServerMember } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
 import { userStore } from "./userStore";
 
 export const serverMemberStore = createServerMemberStore();
@@ -21,7 +22,24 @@ export class ServerMember {
 function createServerMemberStore() {
   const serverMembers = new Map<string, Map<string, ServerMember>>();
 
-  const setServerMembers = (newMembers: RawServerMember[]) => {
+  const setServerMembers = (
+    newMembers: RawServerMember[],
+    serverId?: string,
+  ) => {
+    if (serverId) {
+      const members = new Map<string, ServerMember>();
+      for (let i = 0; i < newMembers.length; i++) {
+        const member = newMembers[i]!;
+        if (member.serverId === serverId) {
+          userStore.addUser(member.user);
+          members.set(member.userId, new ServerMember(member));
+        }
+      }
+      serverMembers.set(serverId, members);
+      storeEmitter.emit("server:members_fetched", { serverId });
+      return;
+    }
+
     serverMembers.clear();
     for (let i = 0; i < newMembers.length; i++) {
       const member = newMembers[i]!;

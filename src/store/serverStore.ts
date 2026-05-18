@@ -1,4 +1,7 @@
+import { socket } from "../services/socket";
 import { ChannelType, NotificationMode, type RawServer } from "../Types";
+import { debounce } from "../utils/debounce";
+
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
 import { accountStore } from "./accountStore";
@@ -16,6 +19,10 @@ export class Server {
   defaultChannelId: string;
   defaultRoleId: string;
   createdById: string;
+  /**
+   * @description if true, server members are not loaded yet.
+   */
+  lazy = true;
   constructor(data: RawServer) {
     this.id = data.id;
     this.name = data.name;
@@ -32,11 +39,16 @@ function createServerStore() {
   const servers = new Map<string, Server>();
   const lastSeenChannelIds = new Map<string, number>();
 
-  const setServers = (newServers: RawServer[]) => {
+  const setServers = (newServers: RawServer[], notLazyServerId?: string) => {
     servers.clear();
     for (let i = 0; i < newServers.length; i++) {
       const server = newServers[i]!;
       servers.set(server.id, new Server(server));
+    }
+
+    if (notLazyServerId) {
+      const server = servers.get(notLazyServerId);
+      if (server) server.lazy = false;
     }
   };
 
@@ -60,7 +72,17 @@ function createServerStore() {
     serverStore.currentServerSortedRoles.rerun();
     currentChannelsSorted.rerun();
     storeEmitter.emit("navigate:serverId", newId);
+    fetchMembers();
   };
+
+  const fetchMembers = debounce(() => {
+    const server = servers.get(currentServerId!);
+    if (!server) return;
+    console.log(server.lazy);
+    if (!server.lazy) return;
+    server.lazy = false;
+    socket.requestServerMembers(currentServerId!);
+  }, 1000);
 
   const currentChannelsSorted = new ManualMemo(() => {
     if (!currentServerId) return null;

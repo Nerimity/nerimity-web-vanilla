@@ -6,7 +6,7 @@ import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
-import type { RawMessage } from "../Types";
+import type { RawMessage, RawServerMember } from "../Types";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
 
@@ -33,6 +33,9 @@ export const socketEventHandler = (event: string, payload: any) => {
   if (event === "notification:dismissed") {
     onNotificationDismissed(payload);
   }
+  if (event === "server:members_fetched") {
+    onServerMembersFetched(payload);
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -41,7 +44,7 @@ const onAuthenticated = (payload: any) => {
   }
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
-  serverStore.setServers(payload.servers);
+  serverStore.setServers(payload.servers, payload.currentServerId);
   serverStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
   serverMemberStore.setServerMembers(payload.serverMembers);
   serverRoleStore.setRoles(payload.serverRoles);
@@ -90,4 +93,11 @@ const onMessageUpdated = (payload: any) => {
 
 const onNotificationDismissed = (payload: { channelId: string }) => {
   serverStore.updateLastSeenServerChannel(payload.channelId);
+};
+
+const onServerMembersFetched = (payload: {
+  serverId: string;
+  members: RawServerMember[];
+}) => {
+  serverMemberStore.setServerMembers(payload.members, payload.serverId);
 };

@@ -1,4 +1,5 @@
 import { accountStore } from "../store/accountStore";
+import { serverStore } from "../store/serverStore";
 import { getLocalItem } from "../utils/localStorage";
 import { socketEventHandler } from "./socketEvents";
 
@@ -45,6 +46,8 @@ function createSocket() {
         emit("user:authenticate", {
           token: getLocalItem("userToken"),
           compression: "zstd",
+          partial: true,
+          currentServerId: serverStore.currentServerId,
         });
         return;
       }
@@ -75,9 +78,14 @@ function createSocket() {
     ws?.close();
   };
 
+  const requestServerMembers = (serverId: string) => {
+    emit("user:request_server_members", { serverId });
+  };
+
   return {
     disconnect,
     connect,
+    requestServerMembers,
     get socketId() {
       return socketId;
     },
