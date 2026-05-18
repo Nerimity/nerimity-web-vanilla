@@ -78,7 +78,6 @@ function createServerStore() {
   const fetchMembers = debounce(() => {
     const server = servers.get(currentServerId!);
     if (!server) return;
-    console.log(server.lazy);
     if (!server.lazy) return;
     server.lazy = false;
     socket.requestServerMembers(currentServerId!);

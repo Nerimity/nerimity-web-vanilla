@@ -11,6 +11,9 @@ import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
 
 export const socketEventHandler = (event: string, payload: any) => {
+  if (payload instanceof ArrayBuffer) {
+    payload = decompressObject(new Uint8Array(payload));
+  }
   if (event === "user:authenticated") {
     onAuthenticated(payload);
   }
@@ -39,9 +42,6 @@ export const socketEventHandler = (event: string, payload: any) => {
 };
 
 const onAuthenticated = (payload: any) => {
-  if (payload instanceof ArrayBuffer) {
-    payload = decompressObject(new Uint8Array(payload));
-  }
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
   serverStore.setServers(payload.servers, payload.currentServerId);

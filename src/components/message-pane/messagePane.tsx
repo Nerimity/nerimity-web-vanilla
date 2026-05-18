@@ -5,6 +5,7 @@ import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
+import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -67,7 +68,7 @@ export const createMessagePane = () => {
     );
   };
 
-  const rerender = async (loadFromCache?: boolean) => {
+  const rerender = async (loadFromCache?: boolean, forceRecreate?: boolean) => {
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
     if (!accountStore.authenticated) return;
@@ -90,6 +91,7 @@ export const createMessagePane = () => {
         />
       ),
       shouldRecreate: (node, m, i) => {
+        if (forceRecreate) return true;
         const prevGrouped = node.dataset.grouped === "true";
         const nextGrouped = shouldGroup(m, messages[i - 1]);
         return prevGrouped !== nextGrouped;
@@ -106,6 +108,15 @@ export const createMessagePane = () => {
     () => {
       logs.replaceChildren();
       rerender();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "server:members_fetched",
+    ({ serverId }) => {
+      if (serverId !== serverStore.currentServerId) return;
+      rerender(true, true);
     },
     signal,
   );

@@ -293,7 +293,7 @@ export const createServerMemberList = () => {
     "navigate:channelId",
     () => {
       cachedDontRender = dontRender();
-      rerunAndRender();
+      rerunAndRender(true);
     },
     signal,
   );
@@ -310,12 +310,15 @@ export const createServerMemberList = () => {
   storeEmitter.on("drawer:modeChange", updateVisibility, signal);
   storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
 
-  const rerunAndRender = () => {
+  const rerunAndRender = (rerender?: boolean) => {
     roleOrderMemoized.rerun();
     visibleRoleIdsMemoized.rerun();
     isDefaultPublicMemoized.rerun();
     categorizedMembersMemoized.rerun();
     renderList();
+    if (rerender) {
+      vt?.rerenderItems();
+    }
   };
 
   storeEmitter.on(

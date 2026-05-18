@@ -135,10 +135,22 @@ export function createVirtualList<T, V extends string | number>(
     if (!existing) return;
     morphdom(existing, props.renderItem(item) as unknown as HTMLElement);
   };
+
+  const rerenderItems = () => {
+    for (const [id, el] of elMap) {
+      const item = cacheItems.find((i) => props.id(i) === id);
+      if (!item) continue;
+      const existing = el.firstElementChild;
+      if (!existing) continue;
+      morphdom(existing, props.renderItem(item) as unknown as HTMLElement);
+    }
+  };
+
   return {
     rerenderItem,
     updateItems,
     render,
     destroy,
+    rerenderItems,
   };
 }
