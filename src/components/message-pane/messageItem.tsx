@@ -45,6 +45,7 @@ const messageItem = css`
     align-items: center;
     gap: 4px;
     overflow: hidden;
+    margin-bottom: 2px;
     .timestamp {
       font-size: 12px;
       color: var(--gray-400);
@@ -52,13 +53,14 @@ const messageItem = css`
       flex-shrink: 0;
     }
     .roleIcon {
+      padding: 0;
       background-color: transparent;
     }
   }
-
+  padding-top: 2px;
+  padding-bottom: 2px;
   &.withDetails {
-    margin-top: 6px;
-    padding-top: 4px;
+    margin-top: 8px;
   }
   .username {
     font-weight: 500;
