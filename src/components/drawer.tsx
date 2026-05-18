@@ -31,16 +31,40 @@ const drawerContainer = css`
   > .rightDrawer {
     background-color: var(--drawer-bg);
     display: flex;
-    &.hide {
-      display: none;
-    }
+    overflow: hidden;
+  }
+
+  .innerDrawer {
+    display: flex;
+    overflow: hidden;
+    flex-shrink: 0;
   }
 
   &[data-mode="desktop"] > .leftDrawer {
+    transition: width 0.2s;
+
     width: 300px;
+    .leftDrawerInner {
+      width: 300px;
+    }
+    &.hide {
+      width: 0;
+    }
   }
   &[data-mode="desktop"] > .rightDrawer {
+    transition: width 0.2s;
+
     width: 260px;
+    .rightDrawerInner {
+      width: 260px;
+    }
+    &.hide {
+      width: 0;
+    }
+  }
+
+  &[data-mode="mobile"] .innerDrawer {
+    flex: 1;
   }
 
   &[data-mode="mobile"] > .leftDrawer {
@@ -91,7 +115,20 @@ function createDrawer() {
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
 
-  const leftDrawer = (<div class="leftDrawer"></div>) as HTMLElement;
+  const leftDrawerInner = (
+    <div class="leftDrawerInner innerDrawer"></div>
+  ) as HTMLElement;
+  const leftDrawer = (
+    <div class="leftDrawer">{leftDrawerInner}</div>
+  ) as HTMLElement;
+
+  const rightDrawerInner = (
+    <div class="rightDrawerInner innerDrawer"></div>
+  ) as HTMLElement;
+  const rightDrawer = (
+    <div class="rightDrawer">{rightDrawerInner}</div>
+  ) as unknown as HTMLElement;
+
   const contentInner = (<div class="contentInner"></div>) as HTMLElement;
   const overlay = (<div class="overlay"></div>) as HTMLElement;
 
@@ -104,9 +141,7 @@ function createDrawer() {
       {contentInner}
     </div>
   ) as HTMLElement;
-  const rightDrawer = (
-    <div class="rightDrawer"></div>
-  ) as unknown as HTMLElement;
+
   const drawerEl = (
     <div class={drawerContainer} data-mode={currentMode}>
       {leftDrawer}
@@ -124,7 +159,7 @@ function createDrawer() {
         currentMode = newMode;
         onModeChange();
       }
-      updatePage();
+      updatePage({ animate: false });
     },
     { signal: abortController.signal },
   );
@@ -344,9 +379,9 @@ function createDrawer() {
   return {
     render,
     destroy,
-    leftDrawer,
+    leftDrawer: leftDrawerInner,
     content: contentInner,
-    rightDrawer,
+    rightDrawer: rightDrawerInner,
     updatePage,
     get currentPage() {
       return currentPage;
