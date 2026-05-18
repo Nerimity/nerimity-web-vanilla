@@ -298,9 +298,17 @@ function createDrawer() {
 
   const { safari, firefox } = userAgent;
 
-  const handleScroll = () => {
-    if (safari || firefox) return;
+  let ignoreNextScroll = false;
+  const setIgnoreNextScroll = () => {
+    ignoreNextScroll = true;
+  };
 
+  const handleScroll = () => {
+    if (ignoreNextScroll) {
+      ignoreNextScroll = false;
+      return;
+    }
+    if (safari || firefox) return;
     pauseTouches = true;
     updatePage({ animate: false });
   };
@@ -383,6 +391,7 @@ function createDrawer() {
     content: contentInner,
     rightDrawer: rightDrawerInner,
     updatePage,
+    setIgnoreNextScroll,
     get currentPage() {
       return currentPage;
     },

@@ -10,6 +10,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
+import { Drawer } from "../drawer";
 import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
@@ -48,6 +49,8 @@ export const createMessagePane = () => {
   ) as unknown as HTMLDivElement;
 
   const scrollToBottom = () => {
+    // when drawer is  currently being dragged, dont reset the position.
+    Drawer().setIgnoreNextScroll();
     logs.scrollTop = logs.scrollHeight;
   };
   const updateMessage = (message: Message, index: number) => {
