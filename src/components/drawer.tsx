@@ -30,8 +30,10 @@ const drawerContainer = css`
   > .leftDrawer,
   > .rightDrawer {
     background-color: var(--drawer-bg);
-
     display: flex;
+    &.hide {
+      display: none;
+    }
   }
 
   &[data-mode="desktop"] > .leftDrawer {
@@ -88,9 +90,14 @@ function createDrawer() {
   let visiblePage = 1;
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
+
   const leftDrawer = (<div class="leftDrawer"></div>) as HTMLElement;
   const contentInner = (<div class="contentInner"></div>) as HTMLElement;
   const overlay = (<div class="overlay"></div>) as HTMLElement;
+
+  let desktopHideLeftDrawer = false;
+  let desktopHideRightDrawer = false;
+
   const content = (
     <div class="content">
       {overlay}
@@ -166,12 +173,30 @@ function createDrawer() {
 
   let animationTimeout: NodeJS.Timeout | null = null;
 
-  const updatePage = (opts?: { animate?: boolean; page?: number }) => {
+  const updatePage = (opts?: {
+    animate?: boolean;
+    page?: number;
+    toggleLeftDesktop?: boolean;
+    toggleRightDesktop?: boolean;
+  }) => {
     if (opts?.page !== undefined) currentPage = opts.page;
     if (currentMode === "desktop") {
       currentPage = 1;
       leftDrawer.style.zIndex = "1";
       rightDrawer.style.zIndex = "1";
+      if (opts?.toggleLeftDesktop)
+        desktopHideLeftDrawer = !desktopHideLeftDrawer;
+      if (opts?.toggleRightDesktop) {
+        desktopHideRightDrawer = !desktopHideRightDrawer;
+        storeEmitter.emit("drawer:toggleRightDesktop", desktopHideRightDrawer);
+      }
+
+      leftDrawer.classList.toggle("hide", desktopHideLeftDrawer);
+      rightDrawer.classList.toggle("hide", desktopHideRightDrawer);
+    }
+    if (currentMode === "mobile") {
+      leftDrawer.classList.remove("hide");
+      rightDrawer.classList.remove("hide");
     }
     const contentWidth = content.clientWidth;
 
@@ -331,6 +356,9 @@ function createDrawer() {
     },
     get visiblePage() {
       return visiblePage;
+    },
+    get desktopHideRightDrawer() {
+      return desktopHideRightDrawer;
     },
   };
 }

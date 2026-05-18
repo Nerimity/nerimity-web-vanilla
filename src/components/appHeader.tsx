@@ -142,7 +142,7 @@ export const createAppHeader = () => {
   leftDrawerButton.addEventListener(
     "click",
     () => {
-      Drawer().updatePage({ page: 0 });
+      Drawer().updatePage({ page: 0, toggleLeftDesktop: true });
     },
     { signal },
   );
@@ -150,7 +150,7 @@ export const createAppHeader = () => {
   rightDrawerButton.addEventListener(
     "click",
     () => {
-      Drawer().updatePage({ page: 2 });
+      Drawer().updatePage({ page: 2, toggleRightDesktop: true });
     },
     { signal },
   );

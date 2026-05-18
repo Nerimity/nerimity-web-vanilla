@@ -123,7 +123,9 @@ export const createServerMemberList = () => {
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
   let dontRender = () =>
-    Drawer().currentMode === "mobile" && Drawer().visiblePage !== 2;
+    (Drawer().currentMode === "mobile" && Drawer().visiblePage !== 2) ||
+    (Drawer().currentMode === "desktop" && Drawer().desktopHideRightDrawer);
+
   let cachedDontRender = dontRender();
   const categorizedMembersMemoized = new ManualMemo((prev) => {
     if (cachedDontRender) return { result: [], userIdToRoleId: {} };
@@ -311,6 +313,7 @@ export const createServerMemberList = () => {
 
   storeEmitter.on("drawer:pageVisible", updateVisibility, signal);
   storeEmitter.on("drawer:modeChange", updateVisibility, signal);
+  storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
 
   storeEmitter.on(
     "ws:authStateUpdate",

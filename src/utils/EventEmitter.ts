@@ -16,6 +16,7 @@ type StoreEvents = {
   "message:updated": { message: Message; index: number };
   "drawer:pageVisible": number;
   "drawer:modeChange": "mobile" | "desktop";
+  "drawer:toggleRightDesktop": boolean;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

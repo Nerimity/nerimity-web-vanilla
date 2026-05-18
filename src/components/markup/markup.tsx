@@ -289,7 +289,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       const name = entity.params.name;
       // const url = entity.params.url;
       ctx.textCount += name.length;
-      return <div>link</div>;
+      return <a href="#">{name}</a>;
     }
     case "bold":
     case "italic":
