@@ -17,6 +17,7 @@ import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
+import { debounce } from "../../utils/debounce";
 
 const messagePane = css`
   display: flex;
@@ -86,6 +87,19 @@ export const createMessagePane = () => {
     </div>
   ) as HTMLDivElement;
 
+  const handleStillObserving = debounce(() => {
+    if (topObserver.intersecting) {
+      console.log("topObserver.intersecting");
+      onTopSkeletonIntersect();
+      return;
+    }
+
+    if (bottomObserver.intersecting) {
+      onBottomSkeletonIntersect();
+      return;
+    }
+  }, 1000);
+
   const onTopSkeletonIntersect = async () => {
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
@@ -119,6 +133,7 @@ export const createMessagePane = () => {
     rerender({ dontScrollDown: true });
     const newAnchorOffsetTop = anchorEl?.offsetTop ?? 0;
     el.scrollTop += newAnchorOffsetTop - anchorOffsetTop;
+    handleStillObserving();
   };
 
   const onBottomSkeletonIntersect = async (loadNew?: boolean) => {
@@ -127,19 +142,25 @@ export const createMessagePane = () => {
     const properties = channelStore.getProperty(channelId)!;
     if (properties.loading) return;
 
+    const setLoadingFalse = () => {
+      channelStore.setProperty(channelId, { loading: false });
+    };
+
+    channelStore.setProperty(channelId, { loading: true });
     const messages = messageStore.messages.get(channelId);
     // if there are no messages, load them.
     if (loadNew) {
       if (messages) {
         rerender({ useSavedTop: true, forceScrollDown: true });
-        return;
+        return setLoadingFalse();
       }
-      if (!accountStore.authenticated) return;
-      channelStore.setProperty(channelId, { loading: true });
+      if (!accountStore.authenticated) {
+        return setLoadingFalse();
+      }
+
       const newMessages = await messageStore.loadMessages(channelId);
       if (!newMessages) {
-        channelStore.setProperty(channelId, { loading: false });
-        return;
+        return setLoadingFalse();
       }
       const canLoadTop = newMessages?.length === 50;
       channelStore.setProperty(channelId, {
@@ -151,9 +172,13 @@ export const createMessagePane = () => {
       scrollToBottom(true);
       return;
     }
-    if (!messages) return;
+    if (!messages) return setLoadingFalse();
     const lastMessageId = messages[messages.length - 1]?.id;
-    if (!lastMessageId) return;
+    if (!lastMessageId) return setLoadingFalse();
+
+    const messageEls = logs.querySelectorAll(".messageItem");
+    const lastMessage = messageEls[messageEls.length - 1]!;
+    const lastMessageBottom = lastMessage.getBoundingClientRect().bottom;
 
     const newMessages = await messageStore.loadMessages(channelId, {
       after: lastMessageId,
@@ -171,15 +196,26 @@ export const createMessagePane = () => {
     });
 
     rerender({ dontScrollDown: true });
+
+    const afterBottom = lastMessage.getBoundingClientRect().bottom;
+    const difference = afterBottom - lastMessageBottom!;
+    el.scrollTop = el.scrollTop + difference;
+
+    handleStillObserving();
   };
 
-  createIntersectionObserver(
+  const bottomObserver = createIntersectionObserver(
     skeletonsBottom,
     el,
     onBottomSkeletonIntersect,
     signal,
   );
-  createIntersectionObserver(skeletonsTop, el, onTopSkeletonIntersect, signal);
+  const topObserver = createIntersectionObserver(
+    skeletonsTop,
+    el,
+    onTopSkeletonIntersect,
+    signal,
+  );
 
   const isScrolledToBottom = () => {
     const threshold = 50;
@@ -290,7 +326,7 @@ export const createMessagePane = () => {
     "message:created",
     (message) => {
       if (message.channelId !== channelStore.currentChannelId) return;
-      rerender();
+      rerender({ forceScrollDown: isScrolledToBottom() });
     },
     signal,
   );
