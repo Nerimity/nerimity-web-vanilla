@@ -329,6 +329,9 @@ export const createMessagePane = () => {
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
 
   const render = () => {
+    if (accountStore.authenticated) {
+      onBottomSkeletonIntersect(true);
+    }
     return el;
   };
 
