@@ -89,7 +89,6 @@ export const createMessagePane = () => {
 
   const handleStillObserving = debounce(() => {
     if (topObserver.intersecting) {
-      console.log("topObserver.intersecting");
       onTopSkeletonIntersect();
       return;
     }
