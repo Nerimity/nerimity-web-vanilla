@@ -9,6 +9,7 @@ import type {
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
+import { channelStore } from "./channelStore";
 
 export const messageStore = createMessageStore();
 
@@ -43,22 +44,38 @@ export class Message {
 function createMessageStore() {
   const messages = new Map<string, Message[]>();
 
-  const loadMessages = async (channelId: string) => {
+  const loadMessages = async (
+    channelId: string,
+    opts?: { before?: string; after?: string },
+  ) => {
     const existing = messages.get(channelId);
-    if (existing) return existing;
+    if (!opts?.before && !opts?.after && existing) return existing;
 
-    const [rawMessages, error] = await fetchMessages(channelId);
+    const [rawMessages, error] = await fetchMessages(channelId, {
+      before: opts?.before,
+      after: opts?.after,
+    });
     if (error) {
-      return alert(error.message);
+      alert(error.message);
+      return undefined;
     }
 
     const newMessages = rawMessages.map((m) => new Message(m));
 
-    messages.set(channelId, newMessages);
+    const messagesToSet = opts?.before
+      ? [...newMessages, ...(existing ?? [])].slice(0, 100)
+      : opts?.after
+        ? [...(existing ?? []), ...newMessages].slice(-100)
+        : newMessages;
+
+    messages.set(channelId, messagesToSet);
     return newMessages;
   };
 
   const pushMessage = (channelId: string, rawMessage: RawMessage) => {
+    const property = channelStore.getProperty(channelId, false);
+    if (!property) return;
+    if (property.canLoadBottom) return;
     const existing = messages.get(channelId);
     if (!existing) return;
     const message = new Message(rawMessage);

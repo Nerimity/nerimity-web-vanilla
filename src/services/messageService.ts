@@ -1,9 +1,13 @@
 import type { RawMessage } from "../Types";
 import { request } from "./request";
 
-export const fetchMessages = async (channelId: string) => {
+export const fetchMessages = async (
+  channelId: string,
+  opts?: { before?: string; after?: string },
+) => {
   return request<RawMessage[]>(`/channels/${channelId}/messages`, {
     useToken: true,
+    params: opts,
   });
 };
 

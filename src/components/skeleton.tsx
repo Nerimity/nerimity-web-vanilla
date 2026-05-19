@@ -47,10 +47,13 @@ const skeletonItem = css`
     margin-top: 0;
     background: var(--gray-700);
   }
+  &.message {
+    padding: 4px 8px;
+  }
 `;
 
 export const MessageSkeleton = (props: { wide?: boolean }) => (
-  <div class={skeletonItem}>
+  <div class={[skeletonItem, "message"]}>
     <div class="avatarSkeleton" />
     <div class="lines">
       <div class="line" style={{ width: "120px" }} />

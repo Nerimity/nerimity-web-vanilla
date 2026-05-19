@@ -6,13 +6,22 @@ interface RequestOpts {
   useToken?: boolean;
   body?: any;
   method?: "GET" | "POST" | "PUT" | "DELETE";
+  params?: Record<string, string | undefined>;
 }
 
 export interface Error {
   message: string;
 }
-export async function request<T>(url: string, opts?: RequestOpts) {
-  const res = await fetch(`${apiUrl}${url}`, {
+export async function request<T>(rawUrl: string, opts?: RequestOpts) {
+  const url = new URL(`${apiUrl}${rawUrl}`);
+  if (opts?.params) {
+    Object.entries(opts.params).forEach(([key, value]) => {
+      if (value === undefined) return;
+      url.searchParams.set(key, value);
+    });
+  }
+
+  const res = await fetch(url, {
     method: opts?.method,
     ...(opts?.body && { body: JSON.stringify(opts.body) }),
     headers: {

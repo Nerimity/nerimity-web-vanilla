@@ -35,9 +35,39 @@ export class Channel {
   }
 }
 
+interface ChannelProperty {
+  content: string;
+  canLoadTop: boolean;
+  canLoadBottom: boolean;
+  loading: boolean;
+  scrollTop?: number;
+}
+
 function createChannelStore() {
   let currentChannelId: string | null = null;
   const channels = new Map<string, Channel>();
+  const properties = new Map<string, ChannelProperty>();
+
+  const getProperty = (channelId: string, create = true) => {
+    const property = properties.get(channelId);
+    if (property) return property;
+    if (!create) return null;
+    const newProperty: ChannelProperty = {
+      content: "",
+      canLoadTop: false,
+      loading: false,
+      canLoadBottom: false,
+    };
+    properties.set(channelId, newProperty);
+    return newProperty;
+  };
+
+  const setProperty = (
+    channelId: string,
+    property: Partial<ChannelProperty>,
+  ) => {
+    properties.set(channelId, { ...getProperty(channelId)!, ...property });
+  };
 
   const setChannels = (newChannels: RawChannel[]) => {
     channels.clear();
@@ -110,5 +140,7 @@ function createChannelStore() {
     setCurrentChannelId,
     notificationsMemo,
     currentChannel,
+    getProperty,
+    setProperty,
   };
 }
