@@ -131,7 +131,7 @@ export const createMessagePane = () => {
     // if there are no messages, load them.
     if (loadNew) {
       if (messages) {
-        rerender({ useSavedTop: true });
+        rerender({ useSavedTop: true, forceScrollDown: true });
         return;
       }
       if (!accountStore.authenticated) return;
@@ -214,6 +214,7 @@ export const createMessagePane = () => {
     forceRecreate?: boolean;
     dontScrollDown?: boolean;
     useSavedTop?: boolean;
+    forceScrollDown?: boolean;
   }) => {
     skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
 
@@ -247,7 +248,7 @@ export const createMessagePane = () => {
       if (opts?.useSavedTop && savedScrollTop !== undefined) {
         el.scrollTop = savedScrollTop;
       } else {
-        scrollToBottom();
+        scrollToBottom(opts?.forceScrollDown);
       }
     }
   };
