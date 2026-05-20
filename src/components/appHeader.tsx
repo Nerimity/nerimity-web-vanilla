@@ -105,13 +105,13 @@ const header = css`
     top: 0;
     left: 0;
     right: 0;
-    height: 160px;
+    height: 70px;
 
     z-index: -1;
 
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0.7),
+      rgba(0, 0, 0, 0.85),
       rgba(0, 0, 0, 0)
     );
     pointer-events: none;
