@@ -44,11 +44,11 @@ const createRouter = () => {
   const createMatchListener = <P = {}>(
     pattern: string,
     callback: (res: MatchResult<P> | null) => void,
-    signal: AbortSignal,
+    opts: { signal: AbortSignal; defer?: boolean },
   ) => {
     const pat = new URLPattern({ pathname: pattern });
 
-    let didMatch = false;
+    let didMatch: boolean | undefined = undefined;
     let prevParams: string | null = null;
 
     const checkMatch = () => {
@@ -56,6 +56,12 @@ const createRouter = () => {
       const newParams = result
         ? JSON.stringify(namedGroups(result.pathname.groups))
         : null;
+      if (didMatch === undefined) {
+        didMatch = !!result;
+        prevParams = newParams;
+        callback(result ? matchResult(result) : null);
+        return;
+      }
       if (!didMatch && result) {
         didMatch = true;
         prevParams = newParams;
@@ -73,9 +79,8 @@ const createRouter = () => {
         return;
       }
     };
-
-    checkMatch();
-    window.addEventListener("navigate", checkMatch, { signal });
+    if (!opts.defer) checkMatch();
+    window.addEventListener("navigate", checkMatch, { signal: opts.signal });
   };
   window.addEventListener("popstate", () => {
     window.dispatchEvent(new Event("navigate"));

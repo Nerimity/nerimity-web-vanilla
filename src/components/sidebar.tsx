@@ -8,30 +8,25 @@ import { reconcile } from "../utils/html";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Item } from "./item";
-import { Link } from "./link";
 import { LogoMono } from "./LogoMono";
 
-const serverItemLink = css`
+const sidebarItem = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
-  .serverItem {
-    padding: 6px 14px;
-  }
+  width: 64px;
+  height: 50px;
 `;
 
 const homeItem = css`
-  display: block;
-  border-bottom: solid 1px var(--gray-700);
   margin-top: 4px;
-  margin-bottom: 4px;
-  padding-bottom: 4px;
-
   &:hover {
     .logoContainer {
       background-color: var(--gray-700);
     }
   }
-
   .logoContainer {
     corner-shape: squircle;
     border-radius: var(--radius-max);
@@ -40,12 +35,13 @@ const homeItem = css`
     width: 42px;
     height: 42px;
     overflow: hidden;
+    flex-shrink: 0;
   }
   .logo {
     width: 42px;
     height: 42px;
   }
-  [data-selected="true"] {
+  &[data-selected="true"] {
     .logoContainer {
       background-color: var(--primary-color);
     }
@@ -58,32 +54,28 @@ const SidebarItem = (props: {
   selected: boolean;
   children?: JSX.Element;
   class?: string;
+  alert?: boolean;
+  [key: string]: any;
 }) => {
+  const { children, class: className, ...rest } = props;
   return (
-    <Link class={[serverItemLink, props.class]} href={props.href}>
-      <Item.Base class="serverItem" selected={props.selected}>
-        {props.children}
-      </Item.Base>
-    </Link>
+    <Item.Base class={[sidebarItem, className]} {...rest}>
+      {children}
+    </Item.Base>
   );
 };
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
-    <Link
+    <SidebarItem
       data-server-id={server.id}
+      alert={!!serverStore.notificationsMemo.value()[server.id]}
+      selected={serverStore.currentServerId === server.id}
       title={server.name}
-      class={serverItemLink}
       href={`/app/servers/${server.id}/${server.defaultChannelId}`}
     >
-      <Item.Base
-        class="serverItem"
-        alert={!!serverStore.notificationsMemo.value()[server.id]}
-        selected={serverStore.currentServerId === server.id}
-      >
-        <Avatar size={42} server={server} imgClass="avatar" />
-      </Item.Base>
-    </Link>
+      <Avatar size={42} server={server} imgClass="avatar" />
+    </SidebarItem>
   );
 
   const updateSelected = (container: HTMLElement, serverId?: string | null) => {
@@ -95,9 +87,7 @@ const createServerItemHelper = () => {
 
     if (!serverId) return;
 
-    const item = container.querySelector(
-      `[data-server-id="${serverId}"] .item`,
-    );
+    const item = container.querySelector(`[data-server-id="${serverId}"].item`);
     item?.setAttribute("data-selected", "true");
   };
 
@@ -107,7 +97,7 @@ const createServerItemHelper = () => {
   };
 };
 
-const serverItem = createServerItemHelper();
+const serverItemHelper = createServerItemHelper();
 
 const sidebar = css`
   display: flex;
@@ -130,6 +120,10 @@ const sidebar = css`
     align-items: center;
     flex-direction: column;
     gap: 2px;
+    border-top: solid 1px var(--gray-700);
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding-top: 4px;
   }
 `;
 
@@ -160,7 +154,7 @@ export const createSidebar = () => {
       dataAttr: "server-id",
       values: servers,
       valueId: "id",
-      create: serverItem.create,
+      create: serverItemHelper.create,
       shouldRecreate(node, item) {
         const domAlert = !!node.querySelector(`[data-alert="true"]`);
         const alert = !!serverStore.notificationsMemo.value()[item.id];
@@ -172,12 +166,10 @@ export const createSidebar = () => {
   router.createMatchListener(
     "/app",
     (match) => {
-      homeEl.firstElementChild?.setAttribute(
-        "data-selected",
-        match ? "true" : "false",
-      );
+      console.log("homeMatch", match);
+      homeEl.setAttribute("data-selected", match ? "true" : "false");
     },
-    signal,
+    { signal },
   );
 
   storeEmitter.on("server:update", renderList, signal);
@@ -193,7 +185,7 @@ export const createSidebar = () => {
     "navigate:serverId",
     () => {
       if (!containerEl) return;
-      serverItem.updateSelected(containerEl, serverStore.currentServerId);
+      serverItemHelper.updateSelected(containerEl, serverStore.currentServerId);
     },
     signal,
   );
@@ -212,7 +204,7 @@ export const createSidebar = () => {
       </div>
     ) as HTMLElement;
     hoverAnimator = new HoverAnimator(serverListEl, [
-      { trigger: `.${serverItemLink}`, image: "img.avatar" },
+      { trigger: `.${sidebarItem}`, image: "img.avatar" },
     ]);
     renderList();
     return containerEl;

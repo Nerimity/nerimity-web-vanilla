@@ -52,7 +52,7 @@ const createAppPage = () => {
       messagePane = createMessagePane();
       contentEl.replaceChildren(messagePane.render());
     },
-    signal,
+    { signal },
   );
 
   storeEmitter.on(

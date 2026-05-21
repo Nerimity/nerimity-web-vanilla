@@ -1,13 +1,17 @@
 import { css } from "@linaria/core";
 
+import { Dynamic } from "../dynamic";
 import { h } from "../h";
+import { Link } from "./link";
 
 interface BaseProps {
   selected?: boolean;
   alert?: boolean;
   children?: JSX.Element;
-  class?: string | string[];
+  class?: string | (string | undefined)[];
   disabled?: boolean;
+  href?: string;
+  [key: string]: any;
 }
 
 const item = css`
@@ -74,15 +78,26 @@ const item = css`
 
 export const Item = {
   Base(props: BaseProps) {
+    const {
+      selected,
+      class: className,
+      alert,
+      children,
+      disabled,
+      ...rest
+    } = props;
     return (
-      <div
-        class={["item", item, props.class]}
-        data-selected={props.selected}
-        data-disabled={props.disabled}
-        data-alert={props.alert}
+      <Dynamic
+        component={props.href ? Link : "div"}
+        href={props.href}
+        class={["item", item, className]}
+        data-selected={selected}
+        data-disabled={disabled}
+        data-alert={alert}
+        {...rest}
       >
-        {props.children}
-      </div>
+        {children}
+      </Dynamic>
     );
   },
   Icon() {

@@ -1,10 +1,9 @@
 import "./i18n";
-
 import "./style.css";
-import { router, type MatchResult } from "./utils/router";
-import { userAgent } from "./utils/userAgent";
 import type createAppPage from "./pages/AppPage";
 import { getLocalItem } from "./utils/localStorage";
+import { router, type MatchResult } from "./utils/router";
+import { userAgent } from "./utils/userAgent";
 
 const AppPage = () => import("./pages/AppPage");
 const LoginPage = () => import("./pages/LoginPage");
@@ -45,7 +44,7 @@ const App = () => {
       }
       navigate(AppPage);
     }),
-    signal,
+    { signal },
   );
   router.createMatchListener(
     "/login",
@@ -55,12 +54,12 @@ const App = () => {
       }
       navigate(LoginPage);
     }),
-    signal,
+    { signal },
   );
   router.createMatchListener(
     "/",
     handleEnter(() => navigate(HomePage)),
-    signal,
+    { signal },
   );
 };
 
