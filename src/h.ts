@@ -15,6 +15,40 @@ type Props = {
 };
 type Child = Node | string | number | null | undefined | false;
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+const SVG_TAGS = new Set([
+  "svg",
+  "path",
+  "g",
+  "rect",
+  "circle",
+  "ellipse",
+  "line",
+  "polyline",
+  "polygon",
+  "text",
+  "tspan",
+  "defs",
+  "use",
+  "symbol",
+  "clipPath",
+  "mask",
+  "pattern",
+  "image",
+  "foreignObject",
+  "marker",
+  "linearGradient",
+  "radialGradient",
+  "stop",
+  "filter",
+  "feBlend",
+  "feColorMatrix",
+  "feComposite",
+  "feGaussianBlur",
+  "feMerge",
+  "feMergeNode",
+]);
+
 export function h(
   tag: keyof HTMLElementTagNameMap,
   props?: Props | null,
@@ -41,7 +75,9 @@ export function h(
     };
     return tag(componentProps, ...children);
   }
-  const el = document.createElement(tag);
+  const el = SVG_TAGS.has(tag)
+    ? document.createElementNS(SVG_NS, tag)
+    : document.createElement(tag);
 
   if (props) {
     for (const [key, value] of Object.entries(props)) {
@@ -52,7 +88,7 @@ export function h(
       if (key === "class") {
         const classValue = [value].flat(Infinity).filter(Boolean).join(" ");
         if (classValue) {
-          el.className = classValue;
+          el.setAttribute("class", classValue);
         }
       } else if (key === "style" && typeof value === "object") {
         for (const [prop, val] of Object.entries(value)) {

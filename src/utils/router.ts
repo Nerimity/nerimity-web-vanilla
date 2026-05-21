@@ -4,7 +4,7 @@ export interface MatchResult<P = {}> {
 
 const createRouter = () => {
   document.addEventListener("click", (e) => {
-    if (e.target instanceof HTMLElement) {
+    if (e.target instanceof Element) {
       const href = e.target
         .closest("a[data-route]")
         ?.attributes.getNamedItem("href")?.value;

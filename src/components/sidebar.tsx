@@ -5,9 +5,11 @@ import { Server, serverStore } from "../store/serverStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
+import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Item } from "./item";
 import { Link } from "./link";
+import { LogoMono } from "./LogoMono";
 
 const serverItemLink = css`
   overflow: hidden;
@@ -16,6 +18,55 @@ const serverItemLink = css`
     padding: 6px 14px;
   }
 `;
+
+const homeItem = css`
+  display: block;
+  border-bottom: solid 1px var(--gray-700);
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding-bottom: 4px;
+
+  &:hover {
+    .logoContainer {
+      background-color: var(--gray-700);
+    }
+  }
+
+  .logoContainer {
+    corner-shape: squircle;
+    border-radius: var(--radius-max);
+    transition: background-color 0.2s;
+    background-color: var(--gray-800);
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+  }
+  .logo {
+    width: 42px;
+    height: 42px;
+  }
+  [data-selected="true"] {
+    .logoContainer {
+      background-color: var(--primary-color);
+    }
+  }
+`;
+
+const SidebarItem = (props: {
+  title?: string;
+  href: string;
+  selected: boolean;
+  children?: JSX.Element;
+  class?: string;
+}) => {
+  return (
+    <Link class={[serverItemLink, props.class]} href={props.href}>
+      <Item.Base class="serverItem" selected={props.selected}>
+        {props.children}
+      </Item.Base>
+    </Link>
+  );
+};
 
 const createServerItemHelper = () => {
   const create = (server: Server) => (
@@ -61,16 +112,24 @@ const serverItem = createServerItemHelper();
 const sidebar = css`
   display: flex;
 
-  overflow: auto;
   align-items: center;
   flex-direction: column;
   flex-shrink: 0;
   width: 76px;
   height: 100%;
-  gap: 2px;
   background-color: var(--sidebar-bg);
-  &::-webkit-scrollbar {
-    display: none;
+
+  .scrollable {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    overflow: auto;
+  }
+  .serverList {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
   }
 `;
 
@@ -79,12 +138,25 @@ export const createSidebar = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
+  const serverListEl = (<div class="serverList"></div>) as HTMLElement;
+
+  const homeEl = (
+    <SidebarItem
+      class={homeItem}
+      title="Home"
+      href="/app"
+      selected={!!router.match("/app")}
+    >
+      <div class="logoContainer">
+        <LogoMono />
+      </div>
+    </SidebarItem>
+  ) as HTMLElement;
 
   const renderList = () => {
-    if (!containerEl) return;
     const servers = [...serverStore.servers.values()];
     reconcile({
-      container: containerEl,
+      container: serverListEl,
       dataAttr: "server-id",
       values: servers,
       valueId: "id",
@@ -96,6 +168,17 @@ export const createSidebar = () => {
       },
     });
   };
+
+  router.createMatchListener(
+    "/app",
+    (match) => {
+      homeEl.firstElementChild?.setAttribute(
+        "data-selected",
+        match ? "true" : "false",
+      );
+    },
+    signal,
+  );
 
   storeEmitter.on("server:update", renderList, signal);
   storeEmitter.on(
@@ -120,8 +203,15 @@ export const createSidebar = () => {
   }, signal);
 
   const render = () => {
-    containerEl = (<div class={sidebar}></div>) as unknown as HTMLElement;
-    hoverAnimator = new HoverAnimator(containerEl, [
+    containerEl = (
+      <div class={sidebar}>
+        <div class="scrollable">
+          {homeEl}
+          {serverListEl}
+        </div>
+      </div>
+    ) as HTMLElement;
+    hoverAnimator = new HoverAnimator(serverListEl, [
       { trigger: `.${serverItemLink}`, image: "img.avatar" },
     ]);
     renderList();
@@ -131,6 +221,8 @@ export const createSidebar = () => {
   const destroy = () => {
     abortController.abort();
     hoverAnimator?.destroy();
+
+    serverListEl.remove();
 
     containerEl?.remove();
     containerEl = null;
