@@ -18,6 +18,7 @@ const cdnIcon = css`
   img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
   .icon {
     font-size: var(--size);
