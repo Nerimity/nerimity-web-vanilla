@@ -7,6 +7,7 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import type { RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
+import { scoped } from "../../utils/css";
 import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
@@ -35,24 +36,24 @@ const messageItem = css`
   &.error {
     color: var(--alert-color);
   }
-  .messageContainer {
+  .${scoped`messageContainer`} {
     display: flex;
     gap: 10px;
   }
 
-  .details {
+  .${scoped`details`} {
     display: flex;
     align-items: center;
     gap: 4px;
     overflow: hidden;
     margin-bottom: 2px;
-    .timestamp {
+    .${scoped`timestamp`} {
       font-size: 12px;
       color: var(--gray-400);
       white-space: nowrap;
       flex-shrink: 0;
     }
-    .roleIcon {
+    .${scoped`roleIcon`} {
       padding: 0;
       background-color: transparent;
     }
@@ -62,7 +63,7 @@ const messageItem = css`
   &.withDetails {
     margin-top: 8px;
   }
-  .username {
+  .${scoped`username`} {
     font-weight: 500;
     overflow: hidden;
     min-width: 0;
@@ -70,21 +71,22 @@ const messageItem = css`
     white-space: nowrap;
     flex-shrink: 1;
   }
-  .avatarPlaceholder {
+  .${scoped`avatarPlaceholder`} {
     width: 40px;
     flex-shrink: 0;
     height: 1px;
   }
-  .content {
+  .${scoped`content`} {
     white-space: pre-wrap;
     word-break: break-word;
   }
 
-  .messageBody {
+  .${scoped`messageBody`} {
     min-width: 0;
     overflow: hidden;
   }
 `;
+
 export const MessageItem = (props: {
   message: Message;
   prevMessage?: Message;
@@ -122,16 +124,16 @@ export const MessageItem = (props: {
       data-grouped={group}
     >
       {hasMessageReplies && <MessageReplies message={props.message} />}
-      <div class="messageContainer">
+      <div class={scoped`messageContainer`}>
         {group ? (
-          <div class="avatarPlaceholder"></div>
+          <div class={scoped`avatarPlaceholder`}></div>
         ) : (
           <Avatar user={creator} size={40} />
         )}
-        <div class="messageBody">
+        <div class={scoped`messageBody`}>
           {!group && (
-            <span class="details">
-              <GradientText class="username" color={color}>
+            <span class={scoped`details`}>
+              <GradientText class={scoped`username`} color={color}>
                 {name}
               </GradientText>
               {creator?.profile?.clan && (
@@ -139,17 +141,17 @@ export const MessageItem = (props: {
               )}
               {topRole?.icon && (
                 <CdnIcon
-                  class="roleIcon"
+                  class={scoped`roleIcon`}
                   role={{ icon: topRole.icon }}
                   size={14}
                 />
               )}
-              <span class="timestamp">
+              <span class={scoped`timestamp`}>
                 {friendlyTimestamp(props.message.createdAt)}
               </span>
             </span>
           )}
-          <div class="content">
+          <div class={scoped`content`}>
             {!isImageEmbedOnly && (
               <Markup text={props.message.content} message={props.message} />
             )}
@@ -192,7 +194,7 @@ const MessageEmbeds = (props: {
 const messageReplies = css`
   display: flex;
   margin-bottom: 8px;
-  .arc {
+  .${scoped`arc`} {
     width: 50px;
     flex-shrink: 0;
     position: relative;
@@ -208,7 +210,7 @@ const messageReplies = css`
       border-top-left-radius: 6px;
     }
   }
-  .replies {
+  .${scoped`replies`} {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -222,8 +224,8 @@ const MessageReplies = (props: { message: Message }) => {
   const replies = props.message.replyMessages!;
   return (
     <div class={messageReplies}>
-      <div class="arc"></div>
-      <div class="replies">
+      <div class={scoped`arc`}></div>
+      <div class={scoped`replies`}>
         {replies.map((reply) => (
           <ReplyMessage message={reply} />
         ))}
@@ -237,15 +239,15 @@ const replyMessage = css`
   gap: 4px;
   min-width: 0;
   overflow: hidden;
-  .username {
+  .${scoped`username`} {
     font-weight: 500;
     opacity: 0.8;
     flex-shrink: 0;
   }
-  .deleted {
+  &.deleted {
     opacity: 0.4;
   }
-  .content {
+  .${scoped`content`} {
     flex: 1;
     min-width: 0;
     overflow: hidden;
@@ -269,13 +271,13 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
     <div class={replyMessage}>
       {message ? (
         <>
-          <GradientText class="username" color={color}>
+          <GradientText class={scoped`username`} color={color}>
             {creator.username}
           </GradientText>
-          <span class="content">{message?.content}</span>
+          <span class={scoped`content`}>{message?.content}</span>
         </>
       ) : (
-        <span class="content deleted">{t`Message was deleted.`}</span>
+        <span class={`${replyMessage} deleted`}>{t`Message was deleted.`}</span>
       )}
     </div>
   );

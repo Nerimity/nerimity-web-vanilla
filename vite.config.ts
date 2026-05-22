@@ -4,9 +4,11 @@ import babel from "@rolldown/plugin-babel";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 import { googleFontsLocal } from "./vitePluginGoogleFontsLocal";
 import { devRerenderHighlighter } from "./vitePluginRerenderhighlighter";
+import { cssScopedPlugin } from "./vitePluginScopedCss";
 
 export default defineConfig({
   plugins: [
+    cssScopedPlugin(),
     devRerenderHighlighter(),
     googleFontsLocal(),
     lingui(),

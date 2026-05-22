@@ -6,6 +6,8 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
+import { scoped } from "../../utils/css";
+import { debounce } from "../../utils/debounce";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -17,7 +19,6 @@ import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
 import { shouldGroup } from "./utils";
-import { debounce } from "../../utils/debounce";
 
 const messagePane = css`
   display: flex;
@@ -30,7 +31,7 @@ const messagePane = css`
   padding-top: 56px;
   padding-bottom: 74px;
 
-  > .logs {
+  .${scoped`logs`} {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -44,7 +45,7 @@ export const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const chatbar = createChatbar();
-  const logs = (<div class="logs"></div>) as unknown as HTMLDivElement;
+  const logs = (<div class={scoped`logs`}></div>) as unknown as HTMLDivElement;
 
   const shouldShowBottomSkel = () => {
     const channelId = channelStore.currentChannelId;

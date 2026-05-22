@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
+import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { userAgent } from "../utils/userAgent";
 
@@ -13,13 +14,14 @@ const drawerContainer = css`
   position: relative;
   flex: 1;
   overflow: hidden;
-  > .content {
+  .${scoped`content`} {
     display: flex;
     flex-direction: column;
     overflow: hidden;
     position: relative;
     flex: 1;
-    > .contentInner {
+
+    .${scoped`contentInner`} {
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -27,68 +29,69 @@ const drawerContainer = css`
     }
   }
 
-  > .leftDrawer,
-  > .rightDrawer {
+  .${scoped`leftDrawer`}, .${scoped`rightDrawer`} {
     background-color: var(--drawer-bg);
     display: flex;
     overflow: hidden;
   }
 
-  .innerDrawer {
+  .${scoped`innerDrawer`} {
     display: flex;
     overflow: hidden;
     flex-shrink: 0;
   }
 
-  &[data-mode="desktop"] > .leftDrawer {
+  &[data-mode="desktop"] .${scoped`leftDrawer`} {
     transition: width 0.2s;
 
     width: 300px;
-    .leftDrawerInner {
+    .${scoped`leftDrawerInner`} {
       width: 300px;
     }
-    &.hide {
+    &.${scoped`hide`} {
       width: 0;
     }
   }
-  &[data-mode="desktop"] > .rightDrawer {
+  &[data-mode="desktop"] .${scoped`rightDrawer`} {
     transition: width 0.2s;
 
     width: 260px;
-    .rightDrawerInner {
+    .${scoped`rightDrawerInner`} {
       width: 260px;
     }
-    &.hide {
+    &.${scoped`hide`} {
       width: 0;
     }
   }
 
-  &[data-mode="mobile"] .innerDrawer {
+  &[data-mode="mobile"] .${scoped`innerDrawer`} {
     flex: 1;
   }
 
-  &[data-mode="mobile"] > .leftDrawer {
+  &[data-mode="mobile"] .${scoped`leftDrawer`} {
     right: 50px;
     left: 0;
   }
-  &[data-mode="mobile"] > .rightDrawer {
+  &[data-mode="mobile"] .${scoped`rightDrawer`} {
     left: 50px;
     right: 0;
   }
 
-  &[data-mode="mobile"] > .leftDrawer,
-  &[data-mode="mobile"] > .rightDrawer {
+  &[data-mode="mobile"]
+    .${scoped`leftDrawer`},
+    &[data-mode="mobile"]
+    .${scoped`rightDrawer`} {
     position: absolute;
     top: 0;
     bottom: 0;
     z-index: 1;
   }
-  &[data-mode="mobile"] > .content {
+  &[data-mode="mobile"] .${scoped`content`} {
     position: relative;
     z-index: 111111111;
     background: var(--background);
   }
-  .overlay {
+  .${scoped`overlay`} {
     pointer-events: none;
     position: absolute;
     top: 0;
@@ -99,7 +102,7 @@ const drawerContainer = css`
     background-color: var(--background);
     transition: 0.2s;
     opacity: 0;
-    &.visible {
+    &.${scoped`visible`} {
       opacity: 0.8;
       pointer-events: all;
     }
@@ -116,27 +119,29 @@ function createDrawer() {
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
 
   const leftDrawerInner = (
-    <div class="leftDrawerInner innerDrawer"></div>
+    <div class={`${scoped`leftDrawerInner`} ${scoped`innerDrawer`}`}></div>
   ) as HTMLElement;
   const leftDrawer = (
-    <div class="leftDrawer">{leftDrawerInner}</div>
+    <div class={scoped`leftDrawer`}>{leftDrawerInner}</div>
   ) as HTMLElement;
 
   const rightDrawerInner = (
-    <div class="rightDrawerInner innerDrawer"></div>
+    <div class={`${scoped`rightDrawerInner`} ${scoped`innerDrawer`}`}></div>
   ) as HTMLElement;
   const rightDrawer = (
-    <div class="rightDrawer">{rightDrawerInner}</div>
+    <div class={scoped`rightDrawer`}>{rightDrawerInner}</div>
   ) as unknown as HTMLElement;
 
-  const contentInner = (<div class="contentInner"></div>) as HTMLElement;
-  const overlay = (<div class="overlay"></div>) as HTMLElement;
+  const contentInner = (
+    <div class={scoped`contentInner`}></div>
+  ) as HTMLElement;
+  const overlay = (<div class={scoped`overlay`}></div>) as HTMLElement;
 
   let desktopHideLeftDrawer = false;
   let desktopHideRightDrawer = false;
 
   const content = (
-    <div class="content">
+    <div class={scoped`content`}>
       {overlay}
       {contentInner}
     </div>
@@ -226,12 +231,12 @@ function createDrawer() {
         storeEmitter.emit("drawer:toggleRightDesktop", desktopHideRightDrawer);
       }
 
-      leftDrawer.classList.toggle("hide", desktopHideLeftDrawer);
-      rightDrawer.classList.toggle("hide", desktopHideRightDrawer);
+      leftDrawer.classList.toggle(scoped`hide`, desktopHideLeftDrawer);
+      rightDrawer.classList.toggle(scoped`hide`, desktopHideRightDrawer);
     }
     if (currentMode === "mobile") {
-      leftDrawer.classList.remove("hide");
-      rightDrawer.classList.remove("hide");
+      leftDrawer.classList.remove(scoped`hide`);
+      rightDrawer.classList.remove(scoped`hide`);
     }
     const contentWidth = content.clientWidth;
 
@@ -261,8 +266,8 @@ function createDrawer() {
     offsetAtDragStart = currentOffset;
     content.style.transform = `translate(${currentOffset}px, 0)`;
     updateVisible(currentPage);
-    if (currentPage !== 1) overlay.classList.add("visible");
-    if (currentPage === 1) overlay.classList.remove("visible");
+    if (currentPage !== 1) overlay.classList.add(scoped`visible`);
+    if (currentPage === 1) overlay.classList.remove(scoped`visible`);
   };
 
   const handleTouchUp = () => {
