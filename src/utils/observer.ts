@@ -6,8 +6,9 @@ export const createIntersectionObserver = (
 ) => {
   let intersecting = false;
   const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry?.isIntersecting) {
+    (entries) => {
+      const isIntersecting = entries.find((e) => e.isIntersecting);
+      if (isIntersecting) {
         intersecting = true;
         onIntersect();
         return;

@@ -176,10 +176,6 @@ export const createMessagePane = () => {
     const lastMessageId = messages[messages.length - 1]?.id;
     if (!lastMessageId) return setLoadingFalse();
 
-    const messageEls = logs.querySelectorAll(".messageItem");
-    const lastMessage = messageEls[messageEls.length - 1]!;
-    const lastMessageBottom = lastMessage.getBoundingClientRect().bottom;
-
     const newMessages = await messageStore.loadMessages(channelId, {
       after: lastMessageId,
     });
@@ -194,6 +190,10 @@ export const createMessagePane = () => {
       canLoadBottom,
       loading: false,
     });
+
+    const messageEls = logs.querySelectorAll(".messageItem");
+    const lastMessage = messageEls[messageEls.length - 1]!;
+    const lastMessageBottom = lastMessage.getBoundingClientRect().bottom;
 
     rerender({ dontScrollDown: true });
 
