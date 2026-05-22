@@ -166,7 +166,6 @@ export const createSidebar = () => {
   router.createMatchListener(
     "/app",
     (match) => {
-      console.log("homeMatch", match);
       homeEl.setAttribute("data-selected", match ? "true" : "false");
     },
     { signal },
