@@ -8,7 +8,7 @@ interface BaseProps {
   selected?: boolean;
   alert?: boolean;
   children?: JSX.Element;
-  class?: string | (string | undefined)[];
+  class?: string | (string | undefined | boolean)[];
   disabled?: boolean;
   href?: string;
   [key: string]: any;
