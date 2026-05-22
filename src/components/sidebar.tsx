@@ -51,7 +51,7 @@ const homeItem = css`
 const SidebarItem = (props: {
   title?: string;
   href: string;
-  selected: boolean;
+  selected?: boolean;
   children?: JSX.Element;
   class?: string;
   alert?: boolean;
@@ -68,6 +68,7 @@ const SidebarItem = (props: {
 const createServerItemHelper = () => {
   const create = (server: Server) => (
     <SidebarItem
+      class="serverItem"
       data-server-id={server.id}
       alert={!!serverStore.notificationsMemo.value()[server.id]}
       selected={serverStore.currentServerId === server.id}
@@ -79,7 +80,9 @@ const createServerItemHelper = () => {
   );
 
   const updateSelected = (container: HTMLElement, serverId?: string | null) => {
-    const selected = container.querySelector(`.item[data-selected="true"]`);
+    const selected = container.querySelector(
+      `.serverItem[data-selected="true"]`,
+    );
 
     if (selected) {
       selected.setAttribute("data-selected", "false");
@@ -135,12 +138,7 @@ export const createSidebar = () => {
   const serverListEl = (<div class="serverList"></div>) as HTMLElement;
 
   const homeEl = (
-    <SidebarItem
-      class={homeItem}
-      title="Home"
-      href="/app"
-      selected={!!router.match("/app")}
-    >
+    <SidebarItem class={homeItem} title="Home" href="/app">
       <div class="logoContainer">
         <LogoMono />
       </div>

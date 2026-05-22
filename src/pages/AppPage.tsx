@@ -6,7 +6,7 @@ import { createMessagePane } from "../components/message-pane/messagePane";
 import { createServerChannelList } from "../components/serverChannelList";
 import { createServerMemberList } from "../components/serverMemberList";
 import { createSidebar } from "../components/sidebar";
-import { h } from "../h";
+import { h, Fragment } from "../h";
 import { socket } from "../services/socket";
 import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
@@ -23,37 +23,36 @@ const content = css`
   overflow: hidden;
 `;
 
-const createAppPage = () => {
-  lazyLoadEmojis();
+const leftDrawerInner = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+`;
+
+const handleServerChannelRoute = (leftDrawer: HTMLElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
-  socket.connect();
-  const app = document.getElementById("app")!;
+
   let messagePane: ReturnType<typeof createMessagePane> | null = null;
-  let appHeader = createAppHeader();
 
   let contentEl = (<div class={content}></div>) as unknown as HTMLElement;
 
-  app.replaceChildren(Drawer().render());
+  let appHeader = createAppHeader();
 
-  router.createMatchListener<{ serverId: string; channelId: string }>(
-    "/app/servers/:serverId/:channelId",
-    (res) => {
-      serverStore.setCurrentServerId(res?.params.serverId);
-      channelStore.setCurrentChannelId(res?.params.channelId);
-      if (!res) {
-        messagePane?.destroy();
-        messagePane = null;
-        return;
-      }
+  const serverChannelList = createServerChannelList();
+  const serverMemberList = createServerMemberList();
+  const drawer = Drawer();
 
-      if (messagePane) return;
+  leftDrawer.replaceChildren(serverChannelList.render());
+  drawer.content.replaceChildren(appHeader.render(), contentEl);
 
-      messagePane = createMessagePane();
-      contentEl.replaceChildren(messagePane.render());
-    },
-    { signal },
-  );
+  drawer.rightDrawer.replaceChildren(serverMemberList.render());
+
+  messagePane = createMessagePane();
+  contentEl.replaceChildren(messagePane.render());
 
   storeEmitter.on(
     "ws:authStateUpdate",
@@ -65,40 +64,65 @@ const createAppPage = () => {
     signal,
   );
 
-  let serverSidebar: ReturnType<typeof createSidebar> | null = null;
-  let serverChannelList: ReturnType<typeof createServerChannelList> | null =
-    null;
-  let serverMemberList: ReturnType<typeof createServerMemberList> | null = null;
-
   const destroy = () => {
     abortController.abort();
     appHeader.destroy();
-    socket.disconnect();
     messagePane?.destroy();
-    serverSidebar?.destroy();
-    serverChannelList?.destroy();
-    serverMemberList?.destroy();
-    serverSidebar = null;
-    serverChannelList = null;
-    serverMemberList = null;
-    Drawer().destroy();
     contentEl.remove();
+    serverChannelList.destroy();
+    serverMemberList.destroy();
   };
 
-  const render = () => {
-    serverSidebar ??= createSidebar();
-    serverChannelList ??= createServerChannelList();
-    serverMemberList ??= createServerMemberList();
-    const drawer = Drawer();
+  return { destroy };
+};
 
-    drawer.leftDrawer.replaceChildren(
-      serverSidebar.render(),
-      serverChannelList.render(),
-    );
-    drawer.content.replaceChildren(appHeader.render(), contentEl);
+const createAppPage = () => {
+  lazyLoadEmojis();
+  const abortController = new AbortController();
+  const { signal } = abortController;
+  socket.connect();
+  const app = document.getElementById("app")!;
+  app.replaceChildren(Drawer().render());
+  const serverSidebar = createSidebar();
 
-    drawer.rightDrawer.replaceChildren(serverMemberList.render());
+  const leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
+
+  Drawer().leftDrawer.replaceChildren(
+    <>
+      {serverSidebar.render()}
+      {leftDrawer}
+    </>,
+  );
+
+  let serverChannelPage: ReturnType<typeof handleServerChannelRoute> | null =
+    null;
+
+  router.createMatchListener<{ serverId: string; channelId: string }>(
+    "/app/servers/:serverId/:channelId",
+    (res) => {
+      serverStore.setCurrentServerId(res?.params.serverId);
+      channelStore.setCurrentChannelId(res?.params.channelId);
+      if (!res) {
+        serverChannelPage?.destroy();
+        serverChannelPage = null;
+        return;
+      }
+
+      if (serverChannelPage) return;
+      serverChannelPage = handleServerChannelRoute(leftDrawer);
+    },
+    { signal },
+  );
+
+  const destroy = () => {
+    abortController.abort();
+    socket.disconnect();
+    serverSidebar.destroy();
+
+    Drawer().destroy();
   };
+
+  const render = () => {};
 
   return { render, destroy };
 };
