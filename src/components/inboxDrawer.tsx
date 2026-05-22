@@ -4,10 +4,12 @@ import { h } from "../h";
 import { channelStore } from "../store/channelStore";
 import { Inbox, inboxStore } from "../store/inboxStore";
 import { userStore } from "../store/userStore";
+import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { reconcile } from "../utils/html";
 import { ManualMemo } from "../utils/memo";
 import { Avatar } from "./avatar";
+import { UserPresence } from "./userPresence";
 
 const inboxList = css`
   display: flex;
@@ -19,6 +21,17 @@ const inboxItem = css`
   display: flex;
   align-items: center;
   gap: 8px;
+  .${scoped`info`} {
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    overflow: hidden;
+    > div {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
 `;
 
 const InboxItem = (item: Inbox) => {
@@ -26,7 +39,10 @@ const InboxItem = (item: Inbox) => {
   return (
     <div class={inboxItem} data-inbox-id={item.id}>
       <Avatar user={user!} size={32} />
-      <div>{user?.username}</div>
+      <div class={scoped`info`}>
+        <div>{user?.username}</div>
+        <UserPresence userId={item.recipientId} />
+      </div>
     </div>
   );
 };
