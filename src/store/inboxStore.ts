@@ -27,7 +27,7 @@ function createInboxStore() {
       const inbox = newInboxes[i]!;
       if (inbox.closed) continue;
       userStore.addUser(inbox.recipient);
-      inboxes.set(inbox.id, new Inbox(inbox));
+      inboxes.set(inbox.channelId, new Inbox(inbox));
     }
   };
 

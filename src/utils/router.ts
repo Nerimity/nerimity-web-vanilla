@@ -42,17 +42,29 @@ const createRouter = () => {
     );
 
   const createMatchListener = <P = {}>(
-    pattern: string,
+    pattern: string | string[],
     callback: (res: MatchResult<P> | null) => void,
     opts: { signal: AbortSignal; defer?: boolean },
   ) => {
-    const pat = new URLPattern({ pathname: pattern });
+    const pats = Array.isArray(pattern)
+      ? pattern.map((p) => new URLPattern({ pathname: p }))
+      : [new URLPattern({ pathname: pattern })];
 
     let didMatch: boolean | undefined = undefined;
     let prevParams: string | null = null;
 
     const checkMatch = () => {
-      const result = pat.exec({ pathname: location.pathname });
+      let result: URLPatternResult | null = null;
+
+      for (let i = 0; i < pats.length; i++) {
+        const pat = pats[i]!;
+        const res = pat.exec({ pathname: location.pathname });
+        if (res) {
+          result = res;
+          break;
+        }
+      }
+
       const newParams = result
         ? JSON.stringify(namedGroups(result.pathname.groups))
         : null;

@@ -10,6 +10,8 @@ import { reconcile } from "../utils/html";
 import { ManualMemo } from "../utils/memo";
 import { Avatar } from "./avatar";
 import { UserPresence } from "./userPresence";
+import { Link } from "./link";
+import { Drawer } from "./drawer";
 
 const inboxList = css`
   display: flex;
@@ -37,13 +39,17 @@ const inboxItem = css`
 const InboxItem = (item: Inbox) => {
   const user = userStore.users.get(item.recipientId);
   return (
-    <div class={inboxItem} data-inbox-id={item.id}>
+    <Link
+      href={`/app/inbox/${item.channelId}`}
+      class={inboxItem}
+      data-inbox-id={item.id}
+    >
       <Avatar user={user!} size={32} />
       <div class={scoped`info`}>
         <div>{user?.username}</div>
         <UserPresence userId={item.recipientId} />
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -74,6 +80,17 @@ export const createInboxDrawer = () => {
       create: InboxItem,
     });
   };
+
+  containerEl.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLElement;
+      if (target.closest(`.${inboxItem}`)) {
+        Drawer().updatePage({ page: 1 });
+      }
+    },
+    { signal },
+  );
 
   storeEmitter.on(
     "ws:authStateUpdate",

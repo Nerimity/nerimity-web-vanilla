@@ -41,7 +41,7 @@ const messagePane = css`
     display: none;
   }
 `;
-export const createMessagePane = () => {
+const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const chatbar = createChatbar();
@@ -225,8 +225,10 @@ export const createMessagePane = () => {
   const scrollToBottom = (force?: boolean) => {
     if (!force && !isScrolledToBottom()) return;
     // when drawer is  currently being dragged, dont reset the position.
-    Drawer().setIgnoreNextScroll();
-    el.scrollTop = el.scrollHeight;
+    requestAnimationFrame(() => {
+      Drawer().setIgnoreNextScroll();
+      el.scrollTop = el.scrollHeight;
+    });
   };
   const updateMessage = (message: Message, index: number) => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
@@ -282,7 +284,9 @@ export const createMessagePane = () => {
     skeletonsTop.classList.toggle("hide", !shouldShowTopSkel());
     if (!opts?.dontScrollDown) {
       if (opts?.useSavedTop && savedScrollTop !== undefined) {
-        el.scrollTop = savedScrollTop;
+        requestAnimationFrame(() => {
+          el.scrollTop = savedScrollTop;
+        });
       } else {
         scrollToBottom(opts?.forceScrollDown);
       }
@@ -384,3 +388,5 @@ export const createMessagePane = () => {
 
   return { render, destroy };
 };
+
+export default createMessagePane;

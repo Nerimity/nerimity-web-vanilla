@@ -8,6 +8,8 @@ import { messageStore } from "../../store/messageStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
+import { inboxStore } from "../../store/inboxStore";
+import { userStore } from "../../store/userStore";
 
 const chatbarContainer = css`
   position: absolute;
@@ -87,7 +89,15 @@ export const createChatbar = () => {
 
       return;
     }
-    input.placeholder = t`Message in ${channel.name!}`;
+
+    if (channel.serverId) {
+      input.placeholder = t`Message in ${channel.name!}`;
+    } else {
+      const inbox = inboxStore.inboxes.get(channel.id);
+      if (!inbox) return;
+      const user = userStore.users.get(inbox.recipientId);
+      input.placeholder = t`Message ${user?.username ?? ""}`;
+    }
   };
 
   storeEmitter.on("navigate:channelId", updatePlaceholder, signal);

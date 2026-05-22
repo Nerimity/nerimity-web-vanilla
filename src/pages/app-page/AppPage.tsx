@@ -12,6 +12,12 @@ import { lazyLoadEmojis } from "../../utils/emojis";
 import { router } from "../../utils/router";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
+const createMessagePane = async () => {
+  return await import("../../components/message-pane/messagePane").then((m) =>
+    m.default(),
+  );
+};
+
 const leftDrawerInner = css`
   display: flex;
   flex-direction: column;
@@ -39,6 +45,8 @@ const createAppPage = () => {
   let appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
+  let messagePane: Awaited<ReturnType<typeof createMessagePane>> | null = null;
+
   const leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
   const content = (<div class={contentInner}></div>) as HTMLElement;
 
@@ -65,7 +73,6 @@ const createAppPage = () => {
     "/app/servers/:serverId/:channelId",
     async (res) => {
       serverStore.setCurrentServerId(res?.params.serverId);
-      channelStore.setCurrentChannelId(res?.params.channelId);
       if (!res) {
         inboxDrawer = createInboxDrawer();
         leftDrawer.replaceChildren(inboxDrawer.render());
@@ -77,10 +84,28 @@ const createAppPage = () => {
       if (serverChannelPage) return;
       inboxDrawer?.destroy();
       inboxDrawer = null;
+
       const createServerChannelRoute = (
         await import("./createServerChannelRoute")
       ).default;
-      serverChannelPage = createServerChannelRoute(leftDrawer, content);
+      serverChannelPage = createServerChannelRoute(leftDrawer);
+    },
+    { signal },
+  );
+
+  router.createMatchListener<{ channelId: string }>(
+    ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
+    async (res) => {
+      channelStore.setCurrentChannelId(res?.params.channelId);
+      if (!res) {
+        messagePane?.destroy();
+        messagePane = null;
+        content.replaceChildren();
+        return;
+      }
+      if (messagePane) return;
+      messagePane = await createMessagePane();
+      content.replaceChildren(messagePane.render());
     },
     { signal },
   );
@@ -90,6 +115,7 @@ const createAppPage = () => {
     socket.disconnect();
     serverSidebar.destroy();
     appHeader.destroy();
+    messagePane?.destroy();
     serverChannelPage?.destroy();
     serverChannelPage = null;
     inboxDrawer?.destroy();
