@@ -60,7 +60,11 @@ function createServerStore() {
   };
 
   const updateLastSeenServerChannel = (channelId: string) => {
-    lastSeenChannelIds.set(channelId, Date.now() + 10);
+    const channel = channelStore.channels.get(channelId);
+    lastSeenChannelIds.set(
+      channelId,
+      (channel?.lastMessagedAt || Date.now()) + 100,
+    );
     channelStore.notificationsMemo.rerun();
     serverStore.notificationsMemo.rerun();
   };

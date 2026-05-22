@@ -156,7 +156,7 @@ export const createSidebar = () => {
       valueId: "id",
       create: serverItemHelper.create,
       shouldRecreate(node, item) {
-        const domAlert = !!node.querySelector(`[data-alert="true"]`);
+        const domAlert = !!node.matches(`[data-alert="true"]`);
         const alert = !!serverStore.notificationsMemo.value()[item.id];
         return domAlert !== alert;
       },
