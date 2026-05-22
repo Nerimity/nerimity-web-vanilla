@@ -14,15 +14,6 @@ import { lazyLoadEmojis } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
 
-const content = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  overflow: hidden;
-`;
-
 const leftDrawerInner = css`
   display: flex;
   flex-direction: column;
@@ -32,27 +23,34 @@ const leftDrawerInner = css`
   overflow: hidden;
 `;
 
-const handleServerChannelRoute = (leftDrawer: HTMLElement) => {
+const contentInner = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  overflow: hidden;
+`;
+
+const handleServerChannelRoute = (
+  leftDrawer: HTMLElement,
+  content: HTMLElement,
+) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
   let messagePane: ReturnType<typeof createMessagePane> | null = null;
-
-  let contentEl = (<div class={content}></div>) as unknown as HTMLElement;
-
-  let appHeader = createAppHeader();
 
   const serverChannelList = createServerChannelList();
   const serverMemberList = createServerMemberList();
   const drawer = Drawer();
 
   leftDrawer.replaceChildren(serverChannelList.render());
-  drawer.content.replaceChildren(appHeader.render(), contentEl);
 
   drawer.rightDrawer.replaceChildren(serverMemberList.render());
 
   messagePane = createMessagePane();
-  contentEl.replaceChildren(messagePane.render());
+  content.replaceChildren(messagePane.render());
 
   storeEmitter.on(
     "ws:authStateUpdate",
@@ -66,9 +64,7 @@ const handleServerChannelRoute = (leftDrawer: HTMLElement) => {
 
   const destroy = () => {
     abortController.abort();
-    appHeader.destroy();
     messagePane?.destroy();
-    contentEl.remove();
     serverChannelList.destroy();
     serverMemberList.destroy();
   };
@@ -82,10 +78,11 @@ const createAppPage = () => {
   const { signal } = abortController;
   socket.connect();
   const app = document.getElementById("app")!;
-  app.replaceChildren(Drawer().render());
+  let appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
   const leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
+  const content = (<div class={contentInner}></div>) as HTMLElement;
 
   Drawer().leftDrawer.replaceChildren(
     <>
@@ -93,6 +90,13 @@ const createAppPage = () => {
       {leftDrawer}
     </>,
   );
+
+  Drawer().content.replaceChildren(
+    <>
+      {appHeader.render()} {content}
+    </>,
+  );
+  app.replaceChildren(Drawer().render());
 
   let serverChannelPage: ReturnType<typeof handleServerChannelRoute> | null =
     null;
@@ -109,7 +113,7 @@ const createAppPage = () => {
       }
 
       if (serverChannelPage) return;
-      serverChannelPage = handleServerChannelRoute(leftDrawer);
+      serverChannelPage = handleServerChannelRoute(leftDrawer, content);
     },
     { signal },
   );
@@ -118,6 +122,9 @@ const createAppPage = () => {
     abortController.abort();
     socket.disconnect();
     serverSidebar.destroy();
+    appHeader.destroy();
+    serverChannelPage?.destroy();
+    serverChannelPage = null;
 
     Drawer().destroy();
   };
