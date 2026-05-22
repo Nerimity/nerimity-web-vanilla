@@ -1,5 +1,6 @@
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
+import { inboxStore } from "../store/inboxStore";
 import { messageMentionStore } from "../store/messageMentionStore";
 import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
@@ -44,6 +45,7 @@ export const socketEventHandler = (event: string, payload: any) => {
 const onAuthenticated = (payload: any) => {
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
+  inboxStore.setInboxes(payload.inbox);
   serverStore.setServers(payload.servers, payload.currentServerId);
   serverStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
   serverMemberStore.setServerMembers(payload.serverMembers);

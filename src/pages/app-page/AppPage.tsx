@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
+import { createInboxDrawer } from "../../components/inboxDrawer";
 import { createSidebar } from "../../components/sidebar";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
@@ -58,18 +59,24 @@ const createAppPage = () => {
   let serverChannelPage: ReturnType<typeof createServerChannelRoute> | null =
     null;
 
+  let inboxDrawer: ReturnType<typeof createInboxDrawer> | null = null;
+
   router.createMatchListener<{ serverId: string; channelId: string }>(
     "/app/servers/:serverId/:channelId",
     async (res) => {
       serverStore.setCurrentServerId(res?.params.serverId);
       channelStore.setCurrentChannelId(res?.params.channelId);
       if (!res) {
+        inboxDrawer = createInboxDrawer();
+        leftDrawer.replaceChildren(inboxDrawer.render());
         serverChannelPage?.destroy();
         serverChannelPage = null;
         return;
       }
 
       if (serverChannelPage) return;
+      inboxDrawer?.destroy();
+      inboxDrawer = null;
       const createServerChannelRoute = (
         await import("./createServerChannelRoute")
       ).default;
@@ -85,7 +92,7 @@ const createAppPage = () => {
     appHeader.destroy();
     serverChannelPage?.destroy();
     serverChannelPage = null;
-
+    inboxDrawer?.destroy();
     Drawer().destroy();
   };
 

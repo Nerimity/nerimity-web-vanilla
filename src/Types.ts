@@ -68,6 +68,17 @@ export interface RawUserPresence {
   custom?: string;
 }
 
+export interface RawInbox {
+  id: string;
+  channelId: string;
+  closed: boolean;
+  createdAt: number;
+  createdById: string;
+  lastSeen: number;
+  recipient: RawUser;
+  recipientId: string;
+}
+
 // interface CustomEmoji {
 //   id: string;
 // }
