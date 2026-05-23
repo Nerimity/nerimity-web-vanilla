@@ -1,6 +1,6 @@
 import { css } from "@linaria/core";
 
-import { h } from "../h";
+import { h, Fragment } from "../h";
 import { channelStore } from "../store/channelStore";
 import { Inbox, inboxStore } from "../store/inboxStore";
 import { userStore } from "../store/userStore";
@@ -9,20 +9,24 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { reconcile } from "../utils/html";
 import { ManualMemo } from "../utils/memo";
 import { Avatar } from "./avatar";
-import { UserPresence } from "./userPresence";
-import { Link } from "./link";
 import { Drawer } from "./drawer";
+import { Item } from "./item";
+import { UserPresence } from "./userPresence";
 
 const inboxList = css`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
+  margin-left: 4px;
 `;
 
 const inboxItem = css`
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 40px;
+  padding-left: 12px;
+  border-radius: var(--radius-8);
   .${scoped`info`} {
     display: flex;
     flex-direction: column;
@@ -39,18 +43,30 @@ const inboxItem = css`
 const InboxItem = (item: Inbox) => {
   const user = userStore.users.get(item.recipientId);
   return (
-    <Link
+    <Item.Base
+      selected={channelStore.currentChannelId === item.channelId}
       href={`/app/inbox/${item.channelId}`}
       class={inboxItem}
-      data-inbox-id={item.id}
+      data-channel-id={item.channelId}
     >
-      <Avatar user={user!} size={32} />
+      <Avatar user={user!} size={28} />
       <div class={scoped`info`}>
         <div>{user?.username}</div>
         <UserPresence userId={item.recipientId} />
       </div>
-    </Link>
+    </Item.Base>
   );
+};
+
+const updateSelected = (container: HTMLElement) => {
+  const channelId = channelStore.currentChannelId;
+  const oldSelected = container.querySelector(`[data-selected="true"]`);
+  oldSelected?.removeAttribute("data-selected");
+  if (!channelId) return;
+  const newSelected = container.querySelector(
+    `[data-channel-id="${channelId}"]`,
+  );
+  if (newSelected) newSelected.setAttribute("data-selected", "true");
 };
 
 export const createInboxDrawer = () => {
@@ -76,7 +92,7 @@ export const createInboxDrawer = () => {
       container: inboxListEl,
       values: sortedInboxes.value(),
       valueId: "id",
-      dataAttr: "inbox-id",
+      dataAttr: "channel-id",
       create: InboxItem,
     });
   };
@@ -98,6 +114,13 @@ export const createInboxDrawer = () => {
       if (!state) return;
       sortedInboxes.rerun();
       rerender();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      updateSelected(inboxListEl);
     },
     signal,
   );

@@ -93,6 +93,9 @@ const header = css`
     > .icon {
       font-size: 18px;
     }
+    &.hide {
+      display: none;
+    }
   }
   > .details {
     display: flex;
@@ -181,6 +184,13 @@ export const createAppHeader = () => {
   storeEmitter.on("ws:authStateUpdate", updatePill, signal);
   storeEmitter.on("ws:connectStateUpdate", updatePill, signal);
   storeEmitter.on("navigate:channelId", updatePill, signal);
+  storeEmitter.on(
+    "drawer:rightDrawerAvailable",
+    (available) => {
+      rightDrawerButton.classList.toggle("hide", !available);
+    },
+    signal,
+  );
 
   const render = () => {
     return container;

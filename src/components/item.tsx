@@ -7,7 +7,7 @@ import { Link } from "./link";
 interface BaseProps {
   selected?: boolean;
   alert?: boolean;
-  children?: JSX.Element;
+  children?: any;
   class?: string | (string | undefined | boolean)[];
   disabled?: boolean;
   href?: string;

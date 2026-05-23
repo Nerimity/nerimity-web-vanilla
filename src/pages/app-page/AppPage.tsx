@@ -101,8 +101,10 @@ const createAppPage = () => {
         messagePane?.destroy();
         messagePane = null;
         content.replaceChildren();
+        Drawer().updateRightDrawerAvailable(false);
         return;
       }
+      Drawer().updateRightDrawerAvailable(true);
       if (messagePane) return;
       messagePane = await createMessagePane();
       content.replaceChildren(messagePane.render());

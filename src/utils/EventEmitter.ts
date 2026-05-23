@@ -18,6 +18,7 @@ type StoreEvents = {
   "drawer:pageVisible": number;
   "drawer:modeChange": "mobile" | "desktop";
   "drawer:toggleRightDesktop": boolean;
+  "drawer:rightDrawerAvailable": boolean;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

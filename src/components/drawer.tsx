@@ -139,6 +139,21 @@ function createDrawer() {
 
   let desktopHideLeftDrawer = false;
   let desktopHideRightDrawer = false;
+  let rightDrawerAvailable = false;
+
+  const updateRightDrawerAvailable = (available: boolean) => {
+    rightDrawerAvailable = available;
+    storeEmitter.emit("drawer:rightDrawerAvailable", rightDrawerAvailable);
+    if (currentPage === 2 && !available) {
+      updatePage({ page: 1 });
+    }
+
+    if (available) {
+      rightDrawer.classList.toggle(scoped`hide`, desktopHideRightDrawer);
+    } else if (!available) {
+      rightDrawer.classList.toggle(scoped`hide`, true);
+    }
+  };
 
   const content = (
     <div class={scoped`content`}>
@@ -187,13 +202,14 @@ function createDrawer() {
     if (window.innerWidth - currentOffset <= PEEK_WIDTH) return;
     if (currentOffset + window.innerWidth <= PEEK_WIDTH) return;
 
+    const isLeft = currentOffset > 0;
+    const isRight = currentOffset + window.innerWidth < window.innerWidth;
+    if (isRight && !rightDrawerAvailable) return;
+
     if (rafPending) return;
     rafPending = true;
     requestAnimationFrame(() => {
       content.style.transform = `translate(${currentOffset}px, 0)`;
-
-      const isLeft = currentOffset > 0;
-      const isRight = currentOffset + window.innerWidth < window.innerWidth;
 
       if (isLeft) {
         leftDrawer.style.zIndex = "1";
@@ -291,11 +307,16 @@ function createDrawer() {
 
       if (isSwipingRight && beforePage <= 2) {
         currentPage = beforePage + 1;
-        if (currentPage > 2) currentPage = 2;
+        if (currentPage > 2) {
+          currentPage = 2;
+        }
       } else if (isSwipingLeft && beforePage >= 0) {
         currentPage = beforePage - 1;
         if (currentPage < 0) currentPage = 0;
       }
+    }
+    if (!rightDrawerAvailable && currentPage === 2) {
+      currentPage = 1;
     }
 
     updatePage();
@@ -409,5 +430,9 @@ function createDrawer() {
     get desktopHideRightDrawer() {
       return desktopHideRightDrawer;
     },
+    get rightDrawerAvailable() {
+      return rightDrawerAvailable;
+    },
+    updateRightDrawerAvailable,
   };
 }
