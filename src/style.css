@@ -3,6 +3,7 @@
   --text-color: #ffffff;
   --text-muted: hsl(220, 6%, 50%);
   --primary-color: #3b82f6;
+  --primary-dark: #0b1a33;
   --alert-color: #ef4444;
   --item-bg: var(--gray-800);
 

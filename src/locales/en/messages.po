@@ -37,20 +37,28 @@ msgstr "Do not distrub"
 msgid "Email"
 msgstr "Email"
 
-#: src/components/appHeader.tsx:59
+#: src/components/inboxDrawer.tsx:147
+msgid "Friends"
+msgstr "Friends"
+
+#: src/components/appHeader.tsx:62
 msgid "Home"
 msgstr "Home"
 
-#: src/pages/LoginPage.tsx:108
+#: src/components/inboxDrawer.tsx:146
+msgid "Inbox"
+msgstr "Inbox"
+
+#: src/pages/LoginPage.tsx:107
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/LoginPage.tsx:67
-#: src/pages/LoginPage.tsx:94
+#: src/pages/LoginPage.tsx:64
+#: src/pages/LoginPage.tsx:99
 msgid "Login"
 msgstr "Login"
 
-#: src/pages/LoginPage.tsx:64
+#: src/pages/LoginPage.tsx:71
 msgid "Login to continue"
 msgstr "Login to continue"
 
@@ -58,12 +66,17 @@ msgstr "Login to continue"
 msgid "Looking to play"
 msgstr "Looking to play"
 
+#. placeholder {0}: user?.username ?? ""
+#: src/components/message-pane/chatbar.tsx:99
+msgid "Message {0}"
+msgstr "Message {0}"
+
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:90
+#: src/components/message-pane/chatbar.tsx:94
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
-#: src/components/message-pane/messageItem.tsx:276
+#: src/components/message-pane/messageItem.tsx:280
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -76,6 +89,6 @@ msgstr "Offline"
 msgid "Online"
 msgstr "Online"
 
-#: src/pages/LoginPage.tsx:57
+#: src/pages/LoginPage.tsx:59
 msgid "Password"
 msgstr "Password"
