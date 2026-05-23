@@ -5,7 +5,9 @@ import morphdom from "morphdom";
 import { h } from "../h";
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
+import { inboxStore } from "../store/inboxStore";
 import { serverStore } from "../store/serverStore";
+import { userStore } from "../store/userStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
@@ -25,13 +27,12 @@ const pill = css`
   padding-right: 12px;
   overflow: hidden;
   min-width: 0;
+  gap: 6px;
   white-space: nowrap;
   width: fit-content;
   max-width: 100%;
   box-sizing: border-box;
   > .channelIcon {
-    margin-left: 4px;
-    margin-right: 4px;
     background-color: transparent;
   }
   > .icon {
@@ -51,22 +52,26 @@ const pill = css`
 const Pill = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const channel = channelStore.channels.get(channelStore.currentChannelId!);
+  const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
+  const user = !inbox ? null : userStore.users.get(inbox.recipientId)!;
 
   const authenticated = accountStore.authenticated;
 
   const label = !accountStore.authenticated
     ? accountStore.connectionState()
-    : channel?.name || t`Home`;
-  const icon = !authenticated ? "cached" : !server ? "home" : null;
+    : channel?.name || user?.username || t`Home`;
+  const icon = !authenticated ? "cached" : !server && !channel ? "home" : null;
+
+  const isServerChannel = server && channel;
 
   return (
     <div class={pill}>
       {icon ? (
         <Icon name={icon} class="icon" />
       ) : (
-        <Avatar size={24} server={server} />
+        <Avatar size={24} server={server} user={user} />
       )}
-      {authenticated && channel ? (
+      {authenticated && isServerChannel ? (
         <CdnIcon channel={channel} size={14} class="channelIcon" />
       ) : null}
       <div class="label">{label}</div>
