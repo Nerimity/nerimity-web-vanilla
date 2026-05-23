@@ -310,7 +310,12 @@ export const createServerMemberList = () => {
   storeEmitter.on("drawer:modeChange", updateVisibility, signal);
   storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
 
+  serverStore.currentServerSortedRoles.onUpdate(() => {
+    rerunAndRender();
+  }, signal);
+
   const rerunAndRender = (rerender?: boolean) => {
+    // serverStore.currentServerSortedRoles.rerun();
     roleOrderMemoized.rerun();
     visibleRoleIdsMemoized.rerun();
     isDefaultPublicMemoized.rerun();
@@ -325,14 +330,6 @@ export const createServerMemberList = () => {
     "server:members_fetched",
     ({ serverId }) => {
       if (serverId !== serverStore.currentServerId) return;
-      rerunAndRender();
-    },
-    signal,
-  );
-  storeEmitter.on(
-    "ws:authStateUpdate",
-    (state) => {
-      if (!state) return;
       rerunAndRender();
     },
     signal,
