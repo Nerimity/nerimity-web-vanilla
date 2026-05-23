@@ -105,8 +105,6 @@ export const ImageEmbed = (props: {
 };
 
 export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
-  const abortController = new AbortController();
-  const { signal } = abortController;
   const onResize = throttle(() => {
     const imageEmbeds = logElement.querySelectorAll(`.${imageContainer}`);
     const maxWidth = clamp(logElement.clientWidth - 70, 600);
@@ -130,9 +128,11 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
     }
   }, 20);
 
-  window.addEventListener("resize", onResize, { signal });
+  const observer = new ResizeObserver(onResize);
+  observer.observe(logElement);
+
   const destroy = () => {
-    abortController.abort();
+    observer.disconnect();
   };
 
   return {
