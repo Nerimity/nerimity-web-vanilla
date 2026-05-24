@@ -7,6 +7,12 @@ import { devRerenderHighlighter } from "./vitePluginRerenderhighlighter";
 import { cssScopedPlugin } from "./vitePluginScopedCss";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@trans": "/src/macro.ts",
+      "@trans-runtime": "/src/Trans.ts",
+    },
+  },
   plugins: [
     cssScopedPlugin(),
     devRerenderHighlighter(),

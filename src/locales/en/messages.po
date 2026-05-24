@@ -37,7 +37,7 @@ msgstr "Do not distrub"
 msgid "Email"
 msgstr "Email"
 
-#: src/components/inboxDrawer.tsx:252
+#: src/components/inboxDrawer.tsx:273
 msgid "Friends"
 msgstr "Friends"
 
@@ -45,7 +45,7 @@ msgstr "Friends"
 msgid "Home"
 msgstr "Home"
 
-#: src/components/inboxDrawer.tsx:251
+#: src/components/inboxDrawer.tsx:272
 msgid "Inbox"
 msgstr "Inbox"
 
@@ -86,7 +86,7 @@ msgid "Offline"
 msgstr "Offline"
 
 #. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:217
+#: src/components/inboxDrawer.tsx:227
 msgid "Offline - {0}"
 msgstr "Offline - {0}"
 
@@ -95,7 +95,7 @@ msgid "Online"
 msgstr "Online"
 
 #. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:216
+#: src/components/inboxDrawer.tsx:226
 msgid "Online - {0}"
 msgstr "Online - {0}"
 
