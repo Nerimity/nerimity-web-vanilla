@@ -53,8 +53,9 @@ function formatElements(
       continue;
     }
 
-    const clone = template.cloneNode(false) as Element;
-    const childNodes = children ? formatElements(children, elements) : [];
+    const hasChildren = children.length > 0;
+    const clone = template.cloneNode(!hasChildren) as Element;
+    const childNodes = hasChildren ? formatElements(children, elements) : [];
     for (const child of childNodes) {
       clone.append(
         typeof child === "string" ? document.createTextNode(child) : child,
