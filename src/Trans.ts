@@ -23,7 +23,7 @@ const voidElementTags = new Set([
 
 function formatElements(
   value: string,
-  elements: Record<string, Node> = {},
+  elements: Record<string, Node | Node[]> = {},
 ): (string | Node)[] {
   const parts = value.split(tagRe);
   if (parts.length === 1) return [value];
@@ -33,11 +33,12 @@ function formatElements(
   if (before) tree.push(before);
 
   for (const [index, children, after] of getElements(parts)) {
-    let template = elements[index];
+    let template = typeof index !== "undefined" ? elements[index] : undefined;
 
     if (
       !template ||
-      (voidElementTags.has((template as Element).tagName?.toLowerCase()) &&
+      (!Array.isArray(template) &&
+        voidElementTags.has((template as Element).tagName?.toLowerCase()) &&
         children)
     ) {
       if (!template) {
@@ -47,20 +48,28 @@ function formatElements(
           `Trans: ${(template as Element).tagName} is a void element and cannot have children`,
         );
       }
-      const frag = document.createDocumentFragment();
-      tree.push(frag);
+      tree.push(document.createDocumentFragment());
       if (after) tree.push(after);
       continue;
     }
 
     const hasChildren = children.length > 0;
-    const clone = template.cloneNode(!hasChildren) as Element;
+
+    let clone: Element | DocumentFragment;
+    if (Array.isArray(template)) {
+      clone = document.createDocumentFragment();
+      for (const node of template) clone.append(node.cloneNode(true));
+    } else {
+      clone = template.cloneNode(!hasChildren) as Element;
+    }
+
     const childNodes = hasChildren ? formatElements(children, elements) : [];
     for (const child of childNodes) {
       clone.append(
         typeof child === "string" ? document.createTextNode(child) : child,
       );
     }
+
     tree.push(clone);
     if (after) tree.push(after);
   }
@@ -79,20 +88,20 @@ interface TransProps {
   id?: string;
   message?: string;
   values?: Record<string, string | number | Node>;
-  components?: Record<string, Node>;
+  components?: Record<string, Node | Node[]>;
   children?: unknown;
 }
 
 function getInterpolationValuesAndComponents(props: TransProps): {
   values: Record<string, string | number> | undefined;
-  components: Record<string, Node>;
+  components: Record<string, Node | Node[]>;
 } {
   if (!props.values) {
     return { values: undefined, components: props.components ?? {} };
   }
 
   const values: Record<string, string | number> = {};
-  const components: Record<string, Node> = { ...props.components };
+  const components: Record<string, Node | Node[]> = { ...props.components };
 
   for (const [key, value] of Object.entries(props.values)) {
     if (typeof value === "string" || typeof value === "number") {
