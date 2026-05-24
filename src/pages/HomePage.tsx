@@ -1,17 +1,21 @@
 import { h } from "../h";
-import { Link } from "../components/link";
+import { css } from "@linaria/core";
+import { Button } from "../components/button";
+
+const homeContainer = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+`;
 
 const createHomePage = () => {
   const app = document.getElementById("app")!;
   const content = (
-    <div>
-      <Link decoration href="/app">
-        App
-      </Link>
-      <br />
-      <Link decoration href="/login">
-        Login
-      </Link>
+    <div class={homeContainer}>
+      <Button label="App" primary href="/app" />
+      <Button href="/login" label="Login" />
     </div>
   ) as HTMLFormElement;
 

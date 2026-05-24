@@ -2,6 +2,8 @@ import { css } from "@linaria/core";
 
 import { h } from "../h";
 import { Icon } from "./icon";
+import { Dynamic } from "../dynamic";
+import { Link } from "./link";
 
 interface ButtonProps {
   icon?: string;
@@ -9,6 +11,7 @@ interface ButtonProps {
   class?: string | string[];
   hoverBorder?: boolean;
   primary?: boolean;
+  href?: string;
 }
 const button = css`
   display: flex;
@@ -54,7 +57,9 @@ const button = css`
   }
 `;
 export const Button = (props: ButtonProps) => (
-  <button
+  <Dynamic
+    component={props.href ? Link : "button"}
+    href={props.href}
     class={[
       button,
       props.class,
@@ -64,5 +69,5 @@ export const Button = (props: ButtonProps) => (
   >
     {props.icon && <Icon class="icon" name={props.icon} />}
     {props.label && <div class="label">{props.label}</div>}
-  </button>
+  </Dynamic>
 );
