@@ -4,7 +4,7 @@ import { t } from "@lingui/core/macro";
 import { h } from "../h";
 import { channelStore } from "../store/channelStore";
 import { Inbox, inboxStore } from "../store/inboxStore";
-import { userStore } from "../store/userStore";
+import { User, userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { reconcile } from "../utils/html";
@@ -13,13 +13,23 @@ import { Avatar } from "./avatar";
 import { Drawer } from "./drawer";
 import { Icon } from "./icon";
 import { Item } from "./item";
-import { UserPresence } from "./userPresence";
+import { UserPresence as UserPresenceItem } from "./userPresence";
+import { Friend, friendStore } from "../store/friendStore";
+import { userPresenceStore } from "../store/userPresenceStore";
 
 const inboxList = css`
   display: flex;
   flex-direction: column;
   gap: 4px;
   margin-left: 4px;
+  .friendsTitle {
+    margin-left: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+    &.hide {
+      display: none;
+    }
+  }
 `;
 
 const tabs = css`
@@ -89,22 +99,32 @@ const TabItem = (props: { name: string; icon: string; selected?: boolean }) => {
   );
 };
 
-const InboxItem = (item: Inbox) => {
-  const user = userStore.users.get(item.recipientId);
+const UserItem = (props: { inbox?: Inbox; user: User }) => {
+  const channelId = props.inbox?.channelId;
   return (
     <Item.Base
-      selected={channelStore.currentChannelId === item.channelId}
-      href={`/app/inbox/${item.channelId}`}
+      selected={channelStore.currentChannelId === channelId}
+      href={channelId && `/app/inbox/${channelId}`}
       class={inboxItem}
-      data-channel-id={item.channelId}
+      data-channel-id={channelId}
+      data-user-id={props.user.id}
     >
-      <Avatar user={user!} size={28} />
+      <Avatar user={props.user} size={28} />
       <div class={scoped`info`}>
-        <div>{user?.username}</div>
-        <UserPresence userId={item.recipientId} />
+        <div>{props.user?.username}</div>
+        <UserPresenceItem userId={props.user.id} />
       </div>
     </Item.Base>
   );
+};
+
+const FriendItem = (item: Friend) => {
+  const user = userStore.users.get(item.recipientId);
+  return <UserItem user={user!} />;
+};
+const InboxItem = (item: Inbox) => {
+  const user = userStore.users.get(item.recipientId);
+  return <UserItem inbox={item} user={user!} />;
 };
 
 const updateSelectedItem = (container?: HTMLElement) => {
@@ -132,23 +152,112 @@ const createInboxList = () => {
     });
   });
 
-  const rerender = () => {
-    // inboxTitle.querySelector(".count")!.textContent =
-    //   inboxStore.inboxes.size.toLocaleString();
+  const rerender = (forceRerenderId?: string) => {
     reconcile({
       container: inboxListEl,
       values: sorted.value(),
-      valueId: "id",
+      valueId: "channelId",
       dataAttr: "channel-id",
       create: InboxItem,
+      shouldRecreate: (_, item) => item.recipientId === forceRerenderId,
     });
   };
   rerender();
+
+  const handlePresenceUpdate = (event: { userId: string }) => {
+    const inboxEl = inboxListEl.querySelector(
+      `[data-user-id="${event.userId}"]`,
+    );
+    if (!inboxEl) return;
+    rerender(event.userId);
+  };
 
   return {
     rerender,
     inboxListEl,
     sorted,
+    handlePresenceUpdate,
+  };
+};
+
+const createFriendsList = () => {
+  const onlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
+  const offlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
+
+  const onlineListEl = (<div></div>) as HTMLElement;
+  const offlineListEl = (<div></div>) as HTMLElement;
+  const friendListEl = (
+    <div class={inboxList}>
+      {onlineTitle}
+      {onlineListEl}
+      {offlineTitle}
+      {offlineListEl}
+    </div>
+  ) as HTMLElement;
+
+  const sorted = new ManualMemo(() => {
+    return [...friendStore.friends.values()].sort((a, b) => {
+      const usernameA = userStore.users.get(a.recipientId)?.username ?? "";
+      const usernameB = userStore.users.get(b.recipientId)?.username ?? "";
+      return usernameA.localeCompare(usernameB);
+    });
+  });
+
+  const categorizedFriends = new ManualMemo(() => {
+    const online: Friend[] = [];
+    const offline: Friend[] = [];
+    const friends = sorted.value();
+
+    for (let i = 0; i < friends.length; i++) {
+      const friend = friends[i]!;
+      const presence = userPresenceStore.presences.get(friend.recipientId);
+      if (presence?.status) online.push(friend);
+      else offline.push(friend);
+    }
+
+    return { online, offline };
+  });
+
+  const rerender = (forceRerenderId?: string) => {
+    const online = categorizedFriends.value().online;
+    const offline = categorizedFriends.value().offline;
+    onlineTitle.classList.toggle("hide", online.length === 0);
+    offlineTitle.classList.toggle("hide", offline.length === 0);
+    onlineTitle.textContent = t`Online - ${online.length}`;
+    offlineTitle.textContent = t`Offline - ${offline.length}`;
+    reconcile({
+      container: onlineListEl,
+      values: online,
+      valueId: "recipientId",
+      dataAttr: "user-id",
+      create: FriendItem,
+      shouldRecreate: (_, item) => item.recipientId === forceRerenderId,
+    });
+    reconcile({
+      container: offlineListEl,
+      values: offline,
+      valueId: "recipientId",
+      dataAttr: "user-id",
+      create: FriendItem,
+    });
+  };
+  rerender();
+
+  const handlePresenceUpdate = (event: { userId: string }) => {
+    const friendEl = friendListEl.querySelector(
+      `[data-user-id="${event.userId}"]`,
+    );
+    if (!friendEl) return;
+    categorizedFriends.rerun();
+    rerender(event.userId);
+  };
+
+  return {
+    rerender,
+    inboxListEl: friendListEl,
+    sorted,
+    categorizedFriends,
+    handlePresenceUpdate,
   };
 };
 
@@ -156,6 +265,7 @@ export const createInboxDrawer = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let inboxList: ReturnType<typeof createInboxList> | null = createInboxList();
+  let friendList: ReturnType<typeof createFriendsList> | null = null;
 
   const tabsEl = (
     <div class={tabs}>
@@ -176,6 +286,10 @@ export const createInboxDrawer = () => {
     inboxList = createInboxList();
     containerEl.appendChild(inboxList.inboxListEl);
   };
+  const onFriendsTab = () => {
+    friendList = createFriendsList();
+    containerEl.appendChild(friendList.inboxListEl);
+  };
 
   tabsEl.addEventListener(
     "click",
@@ -184,15 +298,18 @@ export const createInboxDrawer = () => {
       const tabItemEl = target.closest(`.${tabItem}`);
       const elements = tabsEl.children;
       if (!tabItemEl) return;
+
       elements[0]?.setAttribute("data-selected", "false");
       elements[1]?.setAttribute("data-selected", "false");
+
       if (tabItemEl === elements[0]) {
         elements[0].setAttribute("data-selected", "true");
+        friendList?.inboxListEl.remove();
         onInboxTab();
       } else if (tabItemEl === elements[1]) {
         elements[1].setAttribute("data-selected", "true");
         inboxList?.inboxListEl.remove();
-        inboxList = null;
+        onFriendsTab();
       }
     },
     { signal },
@@ -210,11 +327,23 @@ export const createInboxDrawer = () => {
   );
 
   storeEmitter.on(
+    "user:presence_update",
+    (event) => {
+      const list = friendList || inboxList;
+      list?.handlePresenceUpdate(event);
+    },
+    signal,
+  );
+  storeEmitter.on(
     "ws:authStateUpdate",
     (state) => {
       if (!state) return;
       inboxList?.sorted.rerun();
       inboxList?.rerender();
+
+      friendList?.sorted.rerun();
+      friendList?.categorizedFriends.rerun();
+      friendList?.rerender();
     },
     signal,
   );

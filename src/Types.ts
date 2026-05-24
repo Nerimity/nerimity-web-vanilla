@@ -1,3 +1,12 @@
+export interface RawFriend {
+  id: string;
+  status: number;
+  userId: string;
+  recipientId: string;
+  createdAt: number;
+  recipient: RawUser;
+}
+
 export interface RawServerMember {
   id: string;
   userId: string;

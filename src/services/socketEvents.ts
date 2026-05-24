@@ -1,5 +1,6 @@
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
+import { friendStore } from "../store/friendStore";
 import { inboxStore } from "../store/inboxStore";
 import { messageMentionStore } from "../store/messageMentionStore";
 import { messageStore } from "../store/messageStore";
@@ -53,6 +54,7 @@ const onAuthenticated = (payload: any) => {
   userPresenceStore.setPresences(payload.presences);
   messageMentionStore.setMentions(payload.messageMentions);
   accountStore.setCurrentUser(payload.user);
+  friendStore.setFriends(payload.friends);
   accountStore.setAuthenticated(true);
 };
 
