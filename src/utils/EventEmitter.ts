@@ -1,3 +1,4 @@
+import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message } from "../store/messageStore";
 import type { UserPresence } from "../store/userPresenceStore";
@@ -21,6 +22,7 @@ type StoreEvents = {
   "drawer:toggleRightDesktop": boolean;
   "drawer:rightDrawerAvailable": boolean;
   "mention:dm_update": MessageMention;
+  "inbox:open": Inbox;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

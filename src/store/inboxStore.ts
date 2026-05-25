@@ -1,4 +1,6 @@
+import { openInbox } from "../services/inboxService";
 import type { RawInbox } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
 import { userStore } from "./userStore";
 
 export const inboxStore = createInboxStore();
@@ -31,5 +33,23 @@ function createInboxStore() {
     }
   };
 
-  return { inboxes, setInboxes };
+  const setInbox = (inbox: RawInbox) => {
+    userStore.addUser(inbox.recipient);
+    const newInbox = new Inbox(inbox);
+    inboxes.set(inbox.channelId, newInbox);
+    storeEmitter.emit("inbox:open", inbox);
+    return newInbox;
+  };
+
+  const loadInbox = async (userId: string) => {
+    const [inbox, error] = await openInbox(userId);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    const newInbox = setInbox(inbox);
+    return newInbox;
+  };
+
+  return { inboxes, setInboxes, setInbox, loadInbox };
 }

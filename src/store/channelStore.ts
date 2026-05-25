@@ -77,6 +77,10 @@ function createChannelStore() {
     }
   };
 
+  const setChannel = (channel: RawChannel) => {
+    channels.set(channel.id, new Channel(channel));
+  };
+
   const setCurrentChannelId = (id?: string) => {
     let newId = id ?? null;
     if (newId === currentChannelId) return;
@@ -142,5 +146,6 @@ function createChannelStore() {
     currentChannel,
     getProperty,
     setProperty,
+    setChannel,
   };
 }

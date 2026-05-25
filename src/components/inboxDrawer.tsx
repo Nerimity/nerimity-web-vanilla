@@ -13,8 +13,10 @@ import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
+import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
 import { ManualMemo } from "../utils/memo";
+import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Drawer } from "./drawer";
 import { Icon } from "./icon";
@@ -108,33 +110,38 @@ const TabItem = (props: { name: string; icon: string; selected?: boolean }) => {
   );
 };
 
-const UserItem = (props: { inbox?: InboxItem; user: User }) => {
-  const channelId = props.inbox?.type === 1 ? props.inbox.channelId : undefined;
+const UserItem = (props: {
+  inbox?: InboxItem;
+  user: User;
+  friendItem?: FriendItem;
+}) => {
+  const channelId =
+    props.friendItem?.inbox?.channelId ||
+    (props.inbox?.type === 1 ? props.inbox?.channelId : undefined);
+
+  const count = props.inbox?.count ?? props.friendItem?.count;
 
   return (
     <Item.Base
       selected={channelStore.currentChannelId === channelId}
       href={channelId && `/app/inbox/${channelId}`}
       class={inboxItem}
-      data-channel-id={props.inbox?.channelId}
+      data-channel-id={channelId || props.inbox?.channelId}
       data-user-id={props.user.id}
-      alert={!!props.inbox?.count}
+      alert={!!count}
     >
       <Avatar user={props.user} size={28} />
       <div class={scoped`info`}>
         <div>{props.user?.username}</div>
         <UserPresenceItem userId={props.user.id} />
       </div>
-      {props.inbox?.count && (
-        <NotificationPill class="pill" count={props.inbox.count} />
-      )}
+      {count && <NotificationPill class="pill" count={count} />}
     </Item.Base>
   );
 };
 
-const FriendItem = (item: Friend) => {
-  const user = userStore.users.get(item.recipientId);
-  return <UserItem user={user!} />;
+const FriendItem = (item: FriendItem) => {
+  return <UserItem user={item.user} friendItem={item} />;
 };
 const InboxItem = (item: InboxItem) => {
   return <UserItem inbox={item} user={item.user} />;
@@ -197,12 +204,18 @@ const createInboxList = () => {
         const aHasCount = (a.count ?? 0) > 0 ? 1 : 0;
         const bHasCount = (b.count ?? 0) > 0 ? 1 : 0;
         if (bHasCount !== aHasCount) return bHasCount - aHasCount;
-        const aTime = a.channel?.lastMessagedAt ?? a.inbox.createdAt ?? 0;
-        const bTime = b.channel?.lastMessagedAt ?? b.inbox.createdAt ?? 0;
+        const aTime =
+          a.channel?.lastMessagedAt ??
+          a.inbox.lastSeen ??
+          a.inbox.createdAt ??
+          0;
+        const bTime =
+          b.channel?.lastMessagedAt ??
+          b.inbox.lastSeen ??
+          b.inbox.createdAt ??
+          0;
         return bTime - aTime;
       });
-
-    console.log([...items, ...inboxes].map((item) => item.user.username));
 
     return [...items, ...inboxes] as InboxItem[];
   });
@@ -241,6 +254,13 @@ const createInboxList = () => {
   };
 };
 
+interface FriendItem {
+  userId: string;
+  friend: Friend;
+  user: User;
+  inbox?: Inbox;
+  count?: number;
+}
 const createFriendsList = () => {
   const onlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
   const offlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
@@ -257,21 +277,48 @@ const createFriendsList = () => {
   ) as HTMLElement;
 
   const sorted = new ManualMemo(() => {
-    return [...friendStore.friends.values()].sort((a, b) => {
-      const usernameA = userStore.users.get(a.recipientId)?.username ?? "";
-      const usernameB = userStore.users.get(b.recipientId)?.username ?? "";
-      return usernameA.localeCompare(usernameB);
-    });
+    const userIdToInbox = new Map<string, Inbox>();
+
+    for (const inbox of inboxStore.inboxes.values()) {
+      userIdToInbox.set(inbox.recipientId, inbox);
+    }
+    const userIdToMentionCount = new Map<string, number>();
+
+    for (const mention of messageMentionStore.mentions.values()) {
+      userIdToMentionCount.set(mention.mentionedBy.id, mention.count ?? 0);
+    }
+
+    const sorted = [...friendStore.friends.values()]
+      .map((friend) => ({
+        friend,
+        user: userStore.users.get(friend.recipientId),
+      }))
+      .sort((a, b) =>
+        a.user!.username < b.user!.username
+          ? -1
+          : a.user!.username > b.user!.username
+            ? 1
+            : 0,
+      )
+      .map(({ friend, user }) => ({
+        userId: friend.recipientId,
+        friend,
+        inbox: userIdToInbox.get(friend.recipientId)!,
+        count: userIdToMentionCount.get(friend.recipientId),
+        user,
+      }));
+
+    return sorted as FriendItem[];
   });
 
   const categorizedFriends = new ManualMemo(() => {
-    const online: Friend[] = [];
-    const offline: Friend[] = [];
+    const online: FriendItem[] = [];
+    const offline: FriendItem[] = [];
     const friends = sorted.value();
 
     for (let i = 0; i < friends.length; i++) {
       const friend = friends[i]!;
-      const presence = userPresenceStore.presences.get(friend.recipientId);
+      const presence = userPresenceStore.presences.get(friend.userId);
       if (presence?.status) online.push(friend);
       else offline.push(friend);
     }
@@ -289,17 +336,18 @@ const createFriendsList = () => {
     reconcile({
       container: onlineListEl,
       values: online,
-      valueId: "recipientId",
+      valueId: "userId",
       dataAttr: "user-id",
       create: FriendItem,
-      shouldRecreate: (_, item) => item.recipientId === forceRerenderId,
+      shouldRecreate: (_, item) => item.userId === forceRerenderId,
     });
     reconcile({
       container: offlineListEl,
       values: offline,
-      valueId: "recipientId",
+      valueId: "userId",
       dataAttr: "user-id",
       create: FriendItem,
+      shouldRecreate: (_, item) => item.userId === forceRerenderId,
     });
   };
   rerender();
@@ -361,6 +409,13 @@ const createInboxDrawer = () => {
     containerEl.appendChild(friendList.inboxListEl);
   };
 
+  const hoverAnimator = new HoverAnimator(containerEl, [
+    {
+      trigger: `.${inboxItem}`,
+      image: ".avatar img",
+    },
+  ]);
+
   tabsEl.addEventListener(
     "click",
     (e) => {
@@ -383,12 +438,28 @@ const createInboxDrawer = () => {
     { signal },
   );
 
+  let dmOpening = false;
+  const openChannel = async (userId: string) => {
+    if (dmOpening) return;
+    dmOpening = true;
+    const inbox = await inboxStore.loadInbox(userId).finally(() => {
+      dmOpening = false;
+    });
+    if (!inbox) return;
+    router.navigate(`/app/inbox/${inbox.channelId}`);
+  };
+
   containerEl.addEventListener(
     "click",
     (e) => {
       const target = e.target as HTMLElement;
-      if (target.closest(`.${inboxItem}`)) {
+      const item = target.closest(`.${inboxItem}`) as HTMLElement;
+      if (item) {
         Drawer().updatePage({ page: 1 });
+        if (item.dataset.channelId) return;
+        const userId = item.dataset.userId;
+        if (!userId) return;
+        openChannel(userId);
       }
     },
     { signal },
@@ -418,7 +489,7 @@ const createInboxDrawer = () => {
   storeEmitter.on(
     "navigate:channelId",
     () => {
-      updateSelectedItem(inboxList?.inboxListEl);
+      updateSelectedItem(containerEl);
     },
     signal,
   );
@@ -430,12 +501,25 @@ const createInboxDrawer = () => {
     signal,
   );
 
+  storeEmitter.on(
+    "inbox:open",
+    (event) => {
+      inboxList?.sorted.rerun();
+      inboxList?.rerender();
+      friendList?.sorted.rerun();
+      friendList?.categorizedFriends.rerun();
+      friendList?.rerender(event.recipientId);
+    },
+    signal,
+  );
+
   const render = () => {
     return containerEl;
   };
 
   const destroy = () => {
     abortController.abort();
+    hoverAnimator.destroy();
     containerEl?.remove();
   };
 

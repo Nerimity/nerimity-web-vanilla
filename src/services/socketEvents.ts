@@ -8,7 +8,12 @@ import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
-import type { RawMessage, RawServerMember } from "../Types";
+import type {
+  RawChannel,
+  RawInbox,
+  RawMessage,
+  RawServerMember,
+} from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
@@ -19,28 +24,39 @@ export const socketEventHandler = (event: string, payload: any) => {
   }
   if (event === "user:authenticated") {
     onAuthenticated(payload);
+    return;
   }
   // if (event === "server:channel_updated") {
   //   onServerChannelUpdated(payload);
   // }
   if (event === "user:presence_update") {
     onUserPresenceUpdate(payload);
+    return;
   }
   if (event === "message:created") {
     onMessageCreated(payload);
+    return;
   }
   if (event === "message:deleted") {
     onMessageDeleted(payload);
+    return;
   }
   if (event === "message:updated") {
     onMessageUpdated(payload);
+    return;
   }
 
   if (event === "notification:dismissed") {
     onNotificationDismissed(payload);
+    return;
   }
   if (event === "server:members_fetched") {
     onServerMembersFetched(payload);
+    return;
+  }
+  if (event === "inbox:opened") {
+    onInboxOpened(payload);
+    return;
   }
 };
 
@@ -115,4 +131,9 @@ const onServerMembersFetched = (payload: {
   members: RawServerMember[];
 }) => {
   serverMemberStore.setServerMembers(payload.members, payload.serverId);
+};
+
+const onInboxOpened = (payload: { channel: RawChannel } & RawInbox) => {
+  channelStore.setChannel(payload.channel);
+  inboxStore.setInbox(payload);
 };
