@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
+import { channelStore } from "../store/channelStore";
 import { Server, serverStore } from "../store/serverStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
@@ -9,6 +10,7 @@ import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Item } from "./item";
 import { LogoMono } from "./LogoMono";
+import { NotificationPill } from "./NotificationPill";
 
 const sidebarItem = css`
   display: flex;
@@ -18,6 +20,11 @@ const sidebarItem = css`
   flex-shrink: 0;
   width: 64px;
   height: 50px;
+  .notify-pill {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+  }
 `;
 
 const homeItem = css`
@@ -54,30 +61,37 @@ const SidebarItem = (props: {
   selected?: boolean;
   children?: JSX.Element;
   class?: string;
-  alert?: boolean;
+  alert?: boolean | number;
   [key: string]: any;
 }) => {
   const { children, class: className, ...rest } = props;
   return (
-    <Item.Base class={[sidebarItem, className]} {...rest}>
+    <Item.Base class={[sidebarItem, className]} {...rest} alert={!!props.alert}>
       {children}
+      {typeof props.alert === "number" && props.alert > 0 && (
+        <NotificationPill class="notify-pill" count={props.alert} />
+      )}
     </Item.Base>
   );
 };
 
 const createServerItemHelper = () => {
-  const create = (server: Server) => (
-    <SidebarItem
-      class="serverItem"
-      data-server-id={server.id}
-      alert={!!serverStore.notificationsMemo.value()[server.id]}
-      selected={serverStore.currentServerId === server.id}
-      title={server.name}
-      href={`/app/servers/${server.id}/${server.defaultChannelId}`}
-    >
-      <Avatar size={42} server={server} imgClass="avatar" />
-    </SidebarItem>
-  );
+  const create = (server: Server) => {
+    const notifications = serverStore.notificationsMemo.value()[server.id];
+
+    return (
+      <SidebarItem
+        class="serverItem"
+        data-server-id={server.id}
+        alert={notifications}
+        selected={serverStore.currentServerId === server.id}
+        title={server.name}
+        href={`/app/servers/${server.id}/${server.defaultChannelId}`}
+      >
+        <Avatar size={42} server={server} imgClass="avatar" />
+      </SidebarItem>
+    );
+  };
 
   const updateSelected = (container: HTMLElement, serverId?: string | null) => {
     const selected = container.querySelector(
@@ -145,7 +159,7 @@ export const createSidebar = () => {
     </SidebarItem>
   ) as HTMLElement;
 
-  const renderList = () => {
+  const renderList = (opts?: { id?: string }) => {
     const servers = [...serverStore.servers.values()];
     reconcile({
       container: serverListEl,
@@ -153,10 +167,8 @@ export const createSidebar = () => {
       values: servers,
       valueId: "id",
       create: serverItemHelper.create,
-      shouldRecreate(node, item) {
-        const domAlert = !!node.matches(`[data-alert="true"]`);
-        const alert = !!serverStore.notificationsMemo.value()[item.id];
-        return domAlert !== alert;
+      shouldRecreate(_, item) {
+        return opts?.id === item.id;
       },
     });
   };
@@ -170,6 +182,15 @@ export const createSidebar = () => {
   );
 
   storeEmitter.on("server:update", renderList, signal);
+  storeEmitter.on(
+    "channel:notify_update",
+    (event) => {
+      const channel = channelStore.channels.get(event.channelId)!;
+      renderList({ id: channel.serverId });
+    },
+    signal,
+  );
+
   storeEmitter.on(
     "ws:authStateUpdate",
     (state) => {
@@ -186,10 +207,6 @@ export const createSidebar = () => {
     },
     signal,
   );
-  serverStore.notificationsMemo.onUpdate(() => {
-    if (!containerEl) return;
-    renderList();
-  }, signal);
 
   const render = () => {
     containerEl = (

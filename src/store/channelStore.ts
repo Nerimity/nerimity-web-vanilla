@@ -88,37 +88,39 @@ function createChannelStore() {
     storeEmitter.emit("navigate:channelId", newId);
   };
 
+  const hasNotification = (channel: Channel) => {
+    const mentions = messageMentionStore.mentions;
+    const lastSeen = serverStore.lastSeenChannelIds;
+    const notifySettings = accountStore.notificationSettings.get(channel.id);
+
+    const muted =
+      notifySettings?.notificationPingMode === NotificationMode.MUTE;
+    const mentionsOnly =
+      notifySettings?.notificationPingMode === NotificationMode.MENTIONS_ONLY;
+    if (muted) return false;
+
+    const mentionCount = mentions.get(channel.id)?.count;
+    if (mentionCount && mentionCount > 0) {
+      return mentionCount;
+    }
+    if (mentionsOnly) return false;
+    if (!channel.serverId) return false;
+    const lastSeenAt = lastSeen.get(channel.id);
+    const hasNotSeen =
+      channel.lastMessagedAt &&
+      (!lastSeenAt || channel.lastMessagedAt! > lastSeenAt);
+    if (hasNotSeen) {
+      return -1;
+    }
+    return false;
+  };
+
   const notificationsMemo = new ManualMemo(() => {
     const notifications: Record<string, number> = {};
 
-    const mentions = messageMentionStore.mentions;
-    const lastSeen = serverStore.lastSeenChannelIds;
-
     for (const channel of channels.values()) {
-      const notifySettings = accountStore.notificationSettings.get(channel.id);
-
-      const muted =
-        notifySettings?.notificationPingMode === NotificationMode.MUTE;
-      const mentionsOnly =
-        notifySettings?.notificationPingMode === NotificationMode.MENTIONS_ONLY;
-      if (muted) continue;
-
-      const mentionCount = mentions.get(channel.id)?.count;
-      if (mentionCount && mentionCount > 0) {
-        notifications[channel.id] = mentionCount;
-        continue;
-      }
-      if (mentionsOnly) continue;
-      if (!channel.serverId) continue;
-      const lastSeenAt = lastSeen.get(channel.id);
-      const hasNotSeen =
-        channel.lastMessagedAt &&
-        (!lastSeenAt || channel.lastMessagedAt! > lastSeenAt);
-      if (hasNotSeen) {
-        if (channel.id === "1756082194151030785") {
-        }
-        notifications[channel.id] = -1;
-      }
+      const count = hasNotification(channel);
+      if (count !== false) notifications[channel.id] = count;
     }
     return notifications;
   });
@@ -147,5 +149,6 @@ function createChannelStore() {
     getProperty,
     setProperty,
     setChannel,
+    hasNotification,
   };
 }

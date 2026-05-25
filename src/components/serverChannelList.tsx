@@ -10,6 +10,7 @@ import { reconcile } from "../utils/html";
 import { CdnIcon } from "./cdnIcon";
 import { Drawer } from "./drawer";
 import { Item } from "./item";
+import { NotificationPill } from "./NotificationPill";
 
 const serverChannelList = css`
   display: flex;
@@ -27,7 +28,7 @@ export const createServerChannelList = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
-  const renderList = () => {
+  const renderList = (opts?: { channelId: string }) => {
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
     if (!containerEl) return;
@@ -43,15 +44,15 @@ export const createServerChannelList = () => {
       values: serverChannels,
       valueId: "id",
       create: channelItemHelper.create,
-      shouldRecreate(node, item) {
-        const domAlert = !!node.matches(`[data-alert="true"]`);
-        const alert = !!channelStore.notificationsMemo.value()[item.id];
-        return domAlert !== alert;
+      shouldRecreate(_, item) {
+        return opts?.channelId === item.id;
       },
     });
   };
 
-  serverStore.currentChannelsSorted.onUpdate(renderList, signal);
+  serverStore.currentChannelsSorted.onUpdate(() => renderList(), signal);
+
+  storeEmitter.on("channel:notify_update", renderList, signal);
 
   storeEmitter.on(
     "navigate:channelId",
@@ -63,11 +64,6 @@ export const createServerChannelList = () => {
     },
     signal,
   );
-
-  channelStore.notificationsMemo.onUpdate(() => {
-    if (!containerEl) return;
-    renderList();
-  }, signal);
 
   const render = () => {
     containerEl = (
@@ -119,6 +115,12 @@ const channelItem = css`
   padding: 6px 6px;
   border-radius: var(--radius-8);
 
+  .itemLabel {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .categoryLabel {
     color: var(--text-color);
   }
@@ -131,6 +133,9 @@ const channelItem = css`
 const createChannelItemHelper = () => {
   const create = (channel: Channel) => {
     const isCategory = channel.type === ChannelType.CATEGORY;
+
+    const notification = channelStore.notificationsMemo.value()[channel.id];
+
     return (
       <Item.Base
         class={[channelItem, isCategory && "categoryItem"]}
@@ -143,7 +148,7 @@ const createChannelItemHelper = () => {
         }
         disabled={isCategory}
         selected={channelStore.currentChannelId === channel.id}
-        alert={!!channelStore.notificationsMemo.value()[channel.id]}
+        alert={!!notification}
         data-category-id={channel.categoryId}
       >
         <>
@@ -153,11 +158,14 @@ const createChannelItemHelper = () => {
             channel={channel}
           />
           <Item.Label
-            class={[isCategory && "categoryLabel"]}
+            class={["itemLabel", isCategory && "categoryLabel"]}
             size={isCategory ? 12 : 14}
           >
             {channel.name}
           </Item.Label>
+          {notification && notification > 0 ? (
+            <NotificationPill count={notification} />
+          ) : null}
         </>
       </Item.Base>
     );

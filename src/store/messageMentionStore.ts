@@ -22,7 +22,6 @@ function createMessageMentionStore() {
     mentions.clear();
     for (let i = 0; i < newMentions.length; i++) {
       const mention = newMentions[i]!;
-      console.log(mention);
       const existing = mentions.get(mention.channelId);
       if (existing) {
         existing.count = mention.count;
@@ -30,6 +29,10 @@ function createMessageMentionStore() {
         mentions.set(mention.channelId, new MessageMention(mention));
       }
     }
+  };
+
+  const removeMention = (channelId: string) => {
+    mentions.delete(channelId);
   };
 
   const incrementMention = (mention: {
@@ -49,5 +52,5 @@ function createMessageMentionStore() {
     }
   };
 
-  return { mentions, setMentions, incrementMention };
+  return { mentions, setMentions, incrementMention, removeMention };
 }

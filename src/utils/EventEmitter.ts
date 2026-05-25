@@ -22,6 +22,7 @@ type StoreEvents = {
   "drawer:toggleRightDesktop": boolean;
   "drawer:rightDrawerAvailable": boolean;
   "mention:dm_update": MessageMention;
+  "channel:notify_update": { channelId: string };
   "inbox:open": Inbox;
 };
 

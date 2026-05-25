@@ -12,6 +12,7 @@ const pill = css`
   justify-content: center;
   font-size: 12px;
   font-weight: bold;
+  flex-shrink: 0;
 `;
 export const NotificationPill = (props: { count: number; class?: string }) => (
   <div class={[pill, props.class]}>{props.count}</div>

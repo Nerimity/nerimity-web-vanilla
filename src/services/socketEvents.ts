@@ -89,22 +89,43 @@ const onMessageCreated = (payload: {
 }) => {
   if (payload.socketId && payload.socketId === socket.socketId) return;
   const message = payload.message;
-  const createdByMe = message.createdBy.id == accountStore.currentUser?.id;
-  const channel = channelStore.channels.get(message.channelId);
-  if (channel && !createdByMe) {
-    channelStore.updateLastMessagedAt(message.channelId, message.createdAt);
-    channelStore.notificationsMemo.rerun();
-    serverStore.notificationsMemo.rerun();
-  }
 
+  const channel = channelStore.channels.get(message.channelId);
+  const currentUserId = accountStore.currentUser?.id;
+  const createdByMe = message.createdBy.id == currentUserId;
   const isDmMessage = !channel || !channel?.serverId;
-  if (isDmMessage && !createdByMe) {
-    const mention = messageMentionStore.incrementMention({
-      channelId: message.channelId,
-      mentionedBy: message.createdBy,
-      count: 1,
-    });
-    storeEmitter.emit("mention:dm_update", mention);
+  const isServerMessage = channel && channel?.serverId;
+  const isMentioned = payload.message.mentions?.find(
+    (m) => m.id === currentUserId,
+  );
+  const notificationBefore = !channel
+    ? false
+    : channelStore.hasNotification(channel);
+
+  if (!createdByMe) {
+    channelStore.updateLastMessagedAt(message.channelId, message.createdAt);
+
+    if (isDmMessage || isMentioned) {
+      const mention = messageMentionStore.incrementMention({
+        channelId: message.channelId,
+        mentionedBy: message.createdBy,
+        serverId: channel?.serverId,
+        count: 1,
+      });
+      if (isDmMessage) {
+        storeEmitter.emit("mention:dm_update", mention);
+      }
+    }
+    if (isServerMessage) {
+      const notificationAfter = channelStore.hasNotification(channel);
+      if (notificationBefore !== notificationAfter) {
+        channelStore.notificationsMemo.rerun();
+        serverStore.notificationsMemo.rerun();
+        storeEmitter.emit("channel:notify_update", {
+          channelId: message.channelId,
+        });
+      }
+    }
   }
 
   messageStore.pushMessage(message.channelId, message);
@@ -123,6 +144,7 @@ const onMessageUpdated = (payload: any) => {
 };
 
 const onNotificationDismissed = (payload: { channelId: string }) => {
+  messageMentionStore.removeMention(payload.channelId);
   serverStore.updateLastSeenServerChannel(payload.channelId);
 };
 

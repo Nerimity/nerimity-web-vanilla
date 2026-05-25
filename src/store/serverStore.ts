@@ -1,7 +1,6 @@
 import { socket } from "../services/socket";
 import { ChannelType, NotificationMode, type RawServer } from "../Types";
 import { debounce } from "../utils/debounce";
-
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
 import { accountStore } from "./accountStore";
@@ -65,8 +64,9 @@ function createServerStore() {
       channelId,
       (channel?.lastMessagedAt || Date.now()) + 100,
     );
-    channelStore.notificationsMemo.rerun();
+    delete channelStore.notificationsMemo.value()[channelId];
     serverStore.notificationsMemo.rerun();
+    storeEmitter.emit("channel:notify_update", { channelId });
   };
 
   const setCurrentServerId = (id?: string) => {
