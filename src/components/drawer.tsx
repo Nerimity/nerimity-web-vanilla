@@ -115,6 +115,12 @@ const PEEK_WIDTH = 50;
 function createDrawer() {
   let currentPage = 1;
   let visiblePage = 1;
+
+  let desktopHideLeftDrawer = false;
+  let desktopHideRightDrawer = false;
+
+  let rightDrawerAvailable = false;
+
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
 
@@ -137,10 +143,6 @@ function createDrawer() {
   ) as HTMLElement;
   const overlay = (<div class={scoped`overlay`}></div>) as HTMLElement;
 
-  let desktopHideLeftDrawer = false;
-  let desktopHideRightDrawer = false;
-  let rightDrawerAvailable = false;
-
   const updateRightDrawerAvailable = (available: boolean) => {
     rightDrawerAvailable = available;
     storeEmitter.emit("drawer:rightDrawerAvailable", rightDrawerAvailable);
@@ -149,9 +151,9 @@ function createDrawer() {
     }
 
     if (available) {
-      rightDrawer.classList.toggle(scoped`hide`, desktopHideRightDrawer);
+      rightDrawer.style.display = "";
     } else if (!available) {
-      rightDrawer.classList.toggle(scoped`hide`, true);
+      rightDrawer.style.display = "none";
     }
   };
 

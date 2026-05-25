@@ -2,21 +2,21 @@ import { css } from "@linaria/core";
 
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
-import { createInboxDrawer } from "../../components/inboxDrawer";
 import { createSidebar } from "../../components/sidebar";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { lazyLoadEmojis } from "../../utils/emojis";
+import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
-const createMessagePane = async () => {
-  return await import("../../components/message-pane/messagePane").then((m) =>
-    m.default(),
-  );
-};
+const createMessagePane = lazy(
+  () => import("../../components/message-pane/messagePane"),
+);
+
+const createInboxDrawer = lazy(() => import("../../components/inboxDrawer"));
 
 const leftDrawerInner = css`
   display: flex;
@@ -45,7 +45,7 @@ const createAppPage = () => {
   let appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
-  let messagePane: Awaited<ReturnType<typeof createMessagePane>> | null = null;
+  let messagePane: LazyResult<typeof createMessagePane> | null = null;
 
   const leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
   const content = (<div class={contentInner}></div>) as HTMLElement;
@@ -67,17 +67,18 @@ const createAppPage = () => {
   let serverChannelPage: ReturnType<typeof createServerChannelRoute> | null =
     null;
 
-  let inboxDrawer: ReturnType<typeof createInboxDrawer> | null = null;
+  let inboxDrawer: LazyResult<typeof createInboxDrawer> | null = null;
 
   router.createMatchListener<{ serverId: string; channelId: string }>(
     "/app/servers/:serverId/:channelId",
     async (res) => {
       serverStore.setCurrentServerId(res?.params.serverId);
       if (!res) {
-        inboxDrawer = createInboxDrawer();
-        leftDrawer.replaceChildren(inboxDrawer.render());
         serverChannelPage?.destroy();
         serverChannelPage = null;
+        if (inboxDrawer) return;
+        inboxDrawer = await createInboxDrawer();
+        leftDrawer.replaceChildren(inboxDrawer.render());
         return;
       }
 

@@ -3,7 +3,9 @@ import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
 import { channelStore } from "../store/channelStore";
+import { Friend, friendStore } from "../store/friendStore";
 import { Inbox, inboxStore } from "../store/inboxStore";
+import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -14,8 +16,6 @@ import { Drawer } from "./drawer";
 import { Icon } from "./icon";
 import { Item } from "./item";
 import { UserPresence as UserPresenceItem } from "./userPresence";
-import { Friend, friendStore } from "../store/friendStore";
-import { userPresenceStore } from "../store/userPresenceStore";
 
 const inboxList = css`
   display: flex;
@@ -261,7 +261,7 @@ const createFriendsList = () => {
   };
 };
 
-export const createInboxDrawer = () => {
+const createInboxDrawer = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let inboxList: ReturnType<typeof createInboxList> | null = createInboxList();
@@ -283,10 +283,19 @@ export const createInboxDrawer = () => {
   ) as HTMLElement;
 
   const onInboxTab = () => {
+    if (inboxList) return;
+    friendList?.inboxListEl.remove();
+    friendList = null;
+
     inboxList = createInboxList();
     containerEl.appendChild(inboxList.inboxListEl);
   };
   const onFriendsTab = () => {
+    if (friendList) return;
+
+    inboxList?.inboxListEl.remove();
+    inboxList = null;
+
     friendList = createFriendsList();
     containerEl.appendChild(friendList.inboxListEl);
   };
@@ -304,11 +313,9 @@ export const createInboxDrawer = () => {
 
       if (tabItemEl === elements[0]) {
         elements[0].setAttribute("data-selected", "true");
-        friendList?.inboxListEl.remove();
         onInboxTab();
       } else if (tabItemEl === elements[1]) {
         elements[1].setAttribute("data-selected", "true");
-        inboxList?.inboxListEl.remove();
         onFriendsTab();
       }
     },
@@ -369,3 +376,4 @@ export const createInboxDrawer = () => {
     render,
   };
 };
+export default createInboxDrawer;

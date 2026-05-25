@@ -137,6 +137,8 @@ const createMessagePane = () => {
   };
 
   const onBottomSkeletonIntersect = async (loadNew?: boolean) => {
+    skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
+
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
     const properties = channelStore.getProperty(channelId)!;
