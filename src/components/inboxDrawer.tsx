@@ -361,12 +361,19 @@ const createFriendsList = () => {
     rerender(event.userId);
   };
 
+  const handleMentionUpdate = (mention: MessageMention) => {
+    sorted.rerun();
+    categorizedFriends.rerun();
+    rerender(mention.mentionedBy.id);
+  };
+
   return {
     rerender,
     inboxListEl: friendListEl,
     sorted,
     categorizedFriends,
     handlePresenceUpdate,
+    handleMentionUpdate,
   };
 };
 
@@ -489,14 +496,14 @@ const createInboxDrawer = () => {
   storeEmitter.on(
     "navigate:channelId",
     () => {
-      updateSelectedItem(containerEl);
+      updateSelectedItem(inboxList?.inboxListEl || friendList?.inboxListEl);
     },
     signal,
   );
   storeEmitter.on(
     "mention:dm_update",
     (mention) => {
-      inboxList?.handleMentionUpdate(mention);
+      (inboxList || friendList)?.handleMentionUpdate(mention);
     },
     signal,
   );
