@@ -21,6 +21,7 @@ const avatar = css`
     justify-content: center;
     background-color: var(--color);
     font-weight: bold;
+    color: var(--gray-900);
   }
 `;
 

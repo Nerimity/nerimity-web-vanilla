@@ -16,7 +16,7 @@ const toCamelCase = (str: string) =>
 
 const activeJobs = new WeakMap<HTMLElement, { cancelled: boolean }>();
 
-export function reconcile<T extends { id: string }>(opts: ReconcileOpts<T>) {
+export function reconcile<T>(opts: ReconcileOpts<T>) {
   const { container, dataAttr, values, create, chunkSize, onDone } = opts;
   const camelAttr = toCamelCase(dataAttr);
 
@@ -65,6 +65,8 @@ export function reconcile<T extends { id: string }>(opts: ReconcileOpts<T>) {
       }
 
       if (children[i] !== node) {
+        const oldIndex = children.indexOf(node);
+        if (oldIndex !== -1) children.splice(oldIndex, 1);
         container.insertBefore(node, children[i] ?? null);
         children.splice(i, 0, node);
       }

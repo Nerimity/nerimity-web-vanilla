@@ -9,6 +9,7 @@ import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import type { RawMessage, RawServerMember } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
 
@@ -78,6 +79,16 @@ const onMessageCreated = (payload: {
     channelStore.updateLastMessagedAt(message.channelId, message.createdAt);
     channelStore.notificationsMemo.rerun();
     serverStore.notificationsMemo.rerun();
+  }
+
+  const isDmMessage = !channel || !channel?.serverId;
+  if (isDmMessage && !createdByMe) {
+    const mention = messageMentionStore.incrementMention({
+      channelId: message.channelId,
+      mentionedBy: message.createdBy,
+      count: 1,
+    });
+    storeEmitter.emit("mention:dm_update", mention);
   }
 
   messageStore.pushMessage(message.channelId, message);

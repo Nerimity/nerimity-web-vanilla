@@ -2,9 +2,13 @@ import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
-import { channelStore } from "../store/channelStore";
+import { Channel, channelStore } from "../store/channelStore";
 import { Friend, friendStore } from "../store/friendStore";
 import { Inbox, inboxStore } from "../store/inboxStore";
+import {
+  MessageMention,
+  messageMentionStore,
+} from "../store/messageMentionStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
@@ -15,6 +19,7 @@ import { Avatar } from "./avatar";
 import { Drawer } from "./drawer";
 import { Icon } from "./icon";
 import { Item } from "./item";
+import { NotificationPill } from "./NotificationPill";
 import { UserPresence as UserPresenceItem } from "./userPresence";
 
 const inboxList = css`
@@ -46,6 +51,7 @@ const inboxItem = css`
   gap: 8px;
   height: 40px;
   padding-left: 12px;
+  padding-right: 8px;
   border-radius: var(--radius-8);
   .${scoped`info`} {
     display: flex;
@@ -57,6 +63,9 @@ const inboxItem = css`
       text-overflow: ellipsis;
       overflow: hidden;
     }
+  }
+  .pill {
+    margin-left: auto;
   }
 `;
 
@@ -99,21 +108,26 @@ const TabItem = (props: { name: string; icon: string; selected?: boolean }) => {
   );
 };
 
-const UserItem = (props: { inbox?: Inbox; user: User }) => {
-  const channelId = props.inbox?.channelId;
+const UserItem = (props: { inbox?: InboxItem; user: User }) => {
+  const channelId = props.inbox?.type === 1 ? props.inbox.channelId : undefined;
+
   return (
     <Item.Base
       selected={channelStore.currentChannelId === channelId}
       href={channelId && `/app/inbox/${channelId}`}
       class={inboxItem}
-      data-channel-id={channelId}
+      data-channel-id={props.inbox?.channelId}
       data-user-id={props.user.id}
+      alert={!!props.inbox?.count}
     >
       <Avatar user={props.user} size={28} />
       <div class={scoped`info`}>
         <div>{props.user?.username}</div>
         <UserPresenceItem userId={props.user.id} />
       </div>
+      {props.inbox?.count && (
+        <NotificationPill class="pill" count={props.inbox.count} />
+      )}
     </Item.Base>
   );
 };
@@ -122,9 +136,8 @@ const FriendItem = (item: Friend) => {
   const user = userStore.users.get(item.recipientId);
   return <UserItem user={user!} />;
 };
-const InboxItem = (item: Inbox) => {
-  const user = userStore.users.get(item.recipientId);
-  return <UserItem inbox={item} user={user!} />;
+const InboxItem = (item: InboxItem) => {
+  return <UserItem inbox={item} user={item.user} />;
 };
 
 const updateSelectedItem = (container?: HTMLElement) => {
@@ -139,17 +152,59 @@ const updateSelectedItem = (container?: HTMLElement) => {
   if (newSelected) newSelected.setAttribute("data-selected", "true");
 };
 
+type InboxItem =
+  | {
+      type: 0;
+      channelId: string;
+      user: User;
+      count?: number;
+    }
+  | {
+      type: 1;
+      channelId: string;
+      channel: Channel;
+      inbox: Inbox;
+      user: User;
+      count?: number;
+    };
 const createInboxList = () => {
   const inboxListEl = (<div class={inboxList}></div>) as HTMLElement;
 
   const sorted = new ManualMemo(() => {
-    return [...inboxStore.inboxes.values()].sort((a, b) => {
-      const aChannel = channelStore.channels.get(a.channelId);
-      const bChannel = channelStore.channels.get(b.channelId);
-      const aTime = aChannel?.lastMessagedAt ?? a?.createdAt ?? 0;
-      const bTime = bChannel?.lastMessagedAt ?? b?.createdAt ?? 0;
-      return bTime - aTime;
-    });
+    let items: InboxItem[] = [];
+
+    for (const mentions of messageMentionStore.mentions.values()) {
+      if (mentions.serverId) continue;
+      if (inboxStore.inboxes.has(mentions.channelId)) continue;
+      items.push({
+        type: 0,
+        channelId: mentions.channelId,
+        user: mentions.mentionedBy,
+        count: mentions.count,
+      });
+    }
+
+    const inboxes = [...inboxStore.inboxes.values()]
+      .map((item) => ({
+        type: 1,
+        channelId: item.channelId,
+        inbox: item,
+        channel: channelStore.channels.get(item.channelId)!,
+        user: userStore.users.get(item.recipientId)!,
+        count: messageMentionStore.mentions.get(item.channelId)?.count,
+      }))
+      .sort((a, b) => {
+        const aHasCount = (a.count ?? 0) > 0 ? 1 : 0;
+        const bHasCount = (b.count ?? 0) > 0 ? 1 : 0;
+        if (bHasCount !== aHasCount) return bHasCount - aHasCount;
+        const aTime = a.channel?.lastMessagedAt ?? a.inbox.createdAt ?? 0;
+        const bTime = b.channel?.lastMessagedAt ?? b.inbox.createdAt ?? 0;
+        return bTime - aTime;
+      });
+
+    console.log([...items, ...inboxes].map((item) => item.user.username));
+
+    return [...items, ...inboxes] as InboxItem[];
   });
 
   const rerender = (forceRerenderId?: string) => {
@@ -159,7 +214,7 @@ const createInboxList = () => {
       valueId: "channelId",
       dataAttr: "channel-id",
       create: InboxItem,
-      shouldRecreate: (_, item) => item.recipientId === forceRerenderId,
+      shouldRecreate: (_, item) => item.user.id === forceRerenderId,
     });
   };
   rerender();
@@ -172,11 +227,17 @@ const createInboxList = () => {
     rerender(event.userId);
   };
 
+  const handleMentionUpdate = (mention: MessageMention) => {
+    sorted.rerun();
+    rerender(mention.mentionedBy.id);
+  };
+
   return {
     rerender,
     inboxListEl,
     sorted,
     handlePresenceUpdate,
+    handleMentionUpdate,
   };
 };
 
@@ -358,6 +419,13 @@ const createInboxDrawer = () => {
     "navigate:channelId",
     () => {
       updateSelectedItem(inboxList?.inboxListEl);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "mention:dm_update",
+    (mention) => {
+      inboxList?.handleMentionUpdate(mention);
     },
     signal,
   );

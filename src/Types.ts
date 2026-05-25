@@ -146,8 +146,9 @@ export interface Attachment {
 
 export interface RawMessageMention {
   channelId: string;
-  serverId: string;
+  serverId?: string;
   count: number;
+  mentionedBy: RawUser;
 }
 
 export const NotificationMode = {

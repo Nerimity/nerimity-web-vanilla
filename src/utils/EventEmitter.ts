@@ -1,3 +1,4 @@
+import type { MessageMention } from "../store/messageMentionStore";
 import type { Message } from "../store/messageStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { RawServer } from "../Types";
@@ -19,6 +20,7 @@ type StoreEvents = {
   "drawer:modeChange": "mobile" | "desktop";
   "drawer:toggleRightDesktop": boolean;
   "drawer:rightDrawerAvailable": boolean;
+  "mention:dm_update": MessageMention;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();
