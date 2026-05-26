@@ -164,8 +164,8 @@ export const MessageItem = (props: {
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
-      {props.newMarker && <Marker alert label={t`New Messages`} />}
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
+      {props.newMarker && <Marker alert label={t`New Messages`} />}
       <div
         class={[
           "messageItem",
