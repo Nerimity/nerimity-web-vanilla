@@ -32,7 +32,7 @@
     "@rolldown/plugin-babel": "^0.2.3",
     "@wyw-in-js/vite": "^1.1.0",
     "babel-plugin-macros": "^3.1.0",
-    "oxfmt": "^0.50.0",
+    "oxfmt": "^0.51.0",
     "oxlint": "^1.66.0",
     "typescript": "~6.0.3",
     "vite": "^8.0.14"
