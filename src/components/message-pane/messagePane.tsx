@@ -148,13 +148,9 @@ const createMessagePane = () => {
 
     const lastLastSeenMessage = lastSeenMessage;
 
-    lastSeenMessage = hasFocusAndScrolledToBottom()
+    lastSeenMessage = opts?.removeLastSeenMarker
       ? null
       : getLastSeenMessage(channelId, messages);
-
-    if (opts?.removeLastSeenMarker) {
-      lastSeenMessage = null;
-    }
 
     const lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
     dismissNotification();
