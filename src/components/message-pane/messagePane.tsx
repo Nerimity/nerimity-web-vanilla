@@ -51,20 +51,23 @@ const createMessagePane = () => {
   const chatbar = createChatbar();
   const logs = (<div class={scoped`logs`}></div>) as unknown as HTMLDivElement;
 
-  const shouldShowBottomSkel = () => {
+  const getChannelProperty = () => {
     const channelId = channelStore.currentChannelId;
-    if (!channelId) return false;
-    const properties = channelStore.getProperty(channelId);
-    const messages = messageStore.messages.get(channelId);
-
-    return properties!.canLoadBottom || !messages;
+    if (!channelId) return null;
+    return channelStore.getProperty(channelId);
   };
-  const shouldShowTopSkel = () => {
-    const channelId = channelStore.currentChannelId;
-    if (!channelId) return false;
-    const properties = channelStore.getProperty(channelId);
 
-    return properties!.canLoadTop;
+  const shouldShowBottomSkel = () => {
+    const property = getChannelProperty();
+    if (!property) return false;
+    const messages = messageStore.messages.get(channelStore.currentChannelId!);
+    return property.canLoadBottom || !messages;
+  };
+
+  const shouldShowTopSkel = () => {
+    const property = getChannelProperty();
+    if (!property) return false;
+    return property.canLoadTop;
   };
 
   const skeletonsTop = (
@@ -128,16 +131,31 @@ const createMessagePane = () => {
     );
   };
 
-  let lastSeenMessage: Message | null = null;
-
-  const rerender = async (opts?: {
+  type RerenderOpts = {
     forceRecreate?: boolean;
     dontScrollDown?: boolean;
     useSavedTop?: boolean;
     forceScrollDown?: boolean;
     removeLastSeenMarker?: boolean;
     updateLastSeenMarker?: boolean;
-  }) => {
+  };
+
+  const restoreScrollPosition = (opts?: RerenderOpts) => {
+    if (opts?.dontScrollDown) return;
+    const property = getChannelProperty();
+    const savedScrollTop = property?.scrollTop;
+    if (opts?.useSavedTop && savedScrollTop !== undefined) {
+      requestAnimationFrame(() => {
+        el.scrollTop = savedScrollTop;
+      });
+    } else {
+      scrollToBottom(opts?.forceScrollDown);
+    }
+  };
+
+  let lastSeenMessage: Message | null = null;
+
+  const rerender = async (opts?: RerenderOpts) => {
     skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
 
     const channelId = channelStore.currentChannelId;
@@ -145,12 +163,15 @@ const createMessagePane = () => {
     if (!accountStore.authenticated) return;
     const messages = messageStore.messages.get(channelId);
     if (!messages) return;
-    if (channelId !== channelStore.currentChannelId) return;
 
     const lastLastSeenMessage = lastSeenMessage;
     let markerChanged = false;
 
-    if (opts?.updateLastSeenMarker || opts?.removeLastSeenMarker) {
+    if (
+      lastSeenMessage === null ||
+      opts?.updateLastSeenMarker ||
+      opts?.removeLastSeenMarker
+    ) {
       lastSeenMessage = opts?.removeLastSeenMarker
         ? null
         : getLastSeenMessage(channelId, messages);
@@ -183,18 +204,8 @@ const createMessagePane = () => {
       },
     });
 
-    const property = channelStore.getProperty(channelId);
-    const savedScrollTop = property?.scrollTop;
     skeletonsTop.classList.toggle("hide", !shouldShowTopSkel());
-    if (!opts?.dontScrollDown) {
-      if (opts?.useSavedTop && savedScrollTop !== undefined) {
-        requestAnimationFrame(() => {
-          el.scrollTop = savedScrollTop;
-        });
-      } else {
-        scrollToBottom(opts?.forceScrollDown);
-      }
-    }
+    restoreScrollPosition(opts);
   };
   const { onBottomSkeletonIntersect } = createInfiniteScroll({
     el,
@@ -214,6 +225,7 @@ const createMessagePane = () => {
   storeEmitter.on(
     "navigate:channelId",
     () => {
+      lastSeenMessage = null;
       const scrolledToBottom = isScrolledToBottom();
       const scrollTop = el.scrollTop;
 
