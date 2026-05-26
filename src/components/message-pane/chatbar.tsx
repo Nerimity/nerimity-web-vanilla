@@ -4,15 +4,15 @@ import { t } from "@lingui/core/macro";
 import { h, Fragment } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
+import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
+import { userStore } from "../../store/userStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
-import { inboxStore } from "../../store/inboxStore";
-import { userStore } from "../../store/userStore";
 
 const chatbarContainer = css`
-  position: absolute;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;

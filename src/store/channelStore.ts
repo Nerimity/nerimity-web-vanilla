@@ -1,3 +1,4 @@
+import { socket } from "../services/socket";
 import {
   ChannelType,
   NotificationMode,
@@ -136,6 +137,12 @@ function createChannelStore() {
     return channels.get(currentChannelId!);
   };
 
+  const dismissNotification = (channelId: string) => {
+    if (notificationsMemo.value()[channelId]) {
+      socket.dismissNotification(channelId);
+    }
+  };
+
   return {
     channels,
     setChannels,
@@ -150,5 +157,6 @@ function createChannelStore() {
     setProperty,
     setChannel,
     hasNotification,
+    dismissNotification,
   };
 }

@@ -2,7 +2,7 @@ export const createIntersectionObserver = (
   target: HTMLDivElement,
   root: HTMLDivElement,
   onIntersect: () => void,
-  signal: AbortSignal,
+  opts: { rootMargin?: string; signal: AbortSignal },
 ) => {
   let intersecting = false;
   const observer = new IntersectionObserver(
@@ -15,12 +15,12 @@ export const createIntersectionObserver = (
       }
       intersecting = false;
     },
-    { root },
+    { root, rootMargin: opts.rootMargin },
   );
 
   observer.observe(target);
 
-  signal.addEventListener(
+  opts.signal.addEventListener(
     "abort",
     () => {
       observer.disconnect();

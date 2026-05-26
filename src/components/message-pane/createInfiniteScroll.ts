@@ -153,13 +153,13 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     skeletonsBottom,
     el,
     onBottomSkeletonIntersect,
-    signal,
+    { signal },
   );
   const topObserver = createIntersectionObserver(
     skeletonsTop,
     el,
     onTopSkeletonIntersect,
-    signal,
+    { signal },
   );
 
   return { onBottomSkeletonIntersect };

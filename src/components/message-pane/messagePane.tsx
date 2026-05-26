@@ -11,6 +11,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
+import { createIntersectionObserver } from "../../utils/observer";
 import { Drawer } from "../drawer";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
@@ -28,13 +29,17 @@ const messagePane = css`
   --padding-right: 0;
   --mobile-padding-right: 0;
   padding-top: 56px;
-  padding-bottom: 74px;
 
   .${scoped`logs`} {
     display: flex;
     flex-direction: column;
     width: 100%;
     flex: 1;
+    margin-bottom: 10px;
+  }
+  .${scoped`bottomSentinel`} {
+    height: 1px;
+    flex-shrink: 0;
   }
   .hide {
     display: none;
@@ -78,11 +83,16 @@ const createMessagePane = () => {
     </div>
   ) as HTMLDivElement;
 
+  const bottomSentinel = (
+    <div class={scoped`bottomSentinel`} />
+  ) as HTMLDivElement;
+
   const el = (
     <div class={[messagePane, "scrollbarHover"]}>
       {skeletonsTop}
       {logs}
       {skeletonsBottom}
+      {bottomSentinel}
       {chatbar.render()}
     </div>
   ) as HTMLDivElement;
@@ -138,13 +148,16 @@ const createMessagePane = () => {
 
     const lastLastSeenMessage = lastSeenMessage;
 
-    lastSeenMessage = getLastSeenMessage(channelId, messages);
+    lastSeenMessage = hasFocusAndScrolledToBottom()
+      ? null
+      : getLastSeenMessage(channelId, messages);
 
     if (opts?.removeLastSeenMarker) {
       lastSeenMessage = null;
     }
 
     const lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
+    dismissNotification();
 
     reconcile({
       container: logs,
@@ -227,6 +240,25 @@ const createMessagePane = () => {
     signal,
   );
 
+  const hasFocusAndScrolledToBottom = () =>
+    document.hasFocus() && isScrolledToBottom();
+
+  const dismissNotification = () => {
+    const messages = messageStore.messages.get(channelStore.currentChannelId!);
+
+    if (!messages) return;
+    if (!hasFocusAndScrolledToBottom()) return;
+
+    channelStore.dismissNotification(channelStore.currentChannelId!);
+  };
+
+  createIntersectionObserver(bottomSentinel, el, dismissNotification, {
+    signal,
+    rootMargin: "0px 0px -50px 0px",
+  });
+
+  window.addEventListener("focus", dismissNotification, { signal });
+
   storeEmitter.on(
     "message:created",
     (message) => {
@@ -274,6 +306,7 @@ const createMessagePane = () => {
   ]);
 
   const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
+  scrollToBottom(true);
 
   const render = () => {
     if (accountStore.authenticated) {

@@ -1,7 +1,19 @@
+import { wsUrl } from "../config";
 import { accountStore } from "../store/accountStore";
 import { serverStore } from "../store/serverStore";
 import { getLocalItem } from "../utils/localStorage";
 import { socketEventHandler } from "./socketEvents";
+
+interface ClientEvents {
+  "notification:dismiss": { channelId: string };
+  "user:request_server_members": { serverId: string };
+  "user:authenticate": {
+    token: string;
+    currentServerId?: string | null;
+    compression: "zstd";
+    partial: boolean;
+  };
+}
 
 export const socket = createSocket();
 
@@ -16,10 +28,7 @@ function createSocket() {
       ws.onmessage = null;
       ws.close();
     }
-    ws = new WebSocket(
-      "wss://nerimity.com/socket.io/?EIO=4&transport=websocket",
-      // "ws://localhost:8000/socket.io/?EIO=4&transport=websocket",
-    );
+    ws = new WebSocket(wsUrl);
     ws.onmessage = async (event) => {
       if (event.data instanceof Blob) {
         if (!binaryEventName) return;
@@ -44,7 +53,7 @@ function createSocket() {
         accountStore.setConnected(true);
 
         emit("user:authenticate", {
-          token: getLocalItem("userToken"),
+          token: getLocalItem("userToken")!,
           compression: "zstd",
           partial: true,
           currentServerId: serverStore.currentServerId,
@@ -68,7 +77,10 @@ function createSocket() {
     };
   };
 
-  const emit = (event: string, payload: any) => {
+  const emit = <T extends keyof ClientEvents>(
+    event: T,
+    payload: ClientEvents[T],
+  ) => {
     ws?.send(`42${JSON.stringify([event, payload])}`);
   };
 
@@ -81,11 +93,15 @@ function createSocket() {
   const requestServerMembers = (serverId: string) => {
     emit("user:request_server_members", { serverId });
   };
+  const dismissNotification = (channelId: string) => {
+    emit("notification:dismiss", { channelId });
+  };
 
   return {
     disconnect,
     connect,
     requestServerMembers,
+    dismissNotification,
     get socketId() {
       return socketId;
     },
