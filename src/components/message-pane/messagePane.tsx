@@ -264,7 +264,7 @@ const createMessagePane = () => {
 
       rerender({
         forceScrollDown: isScrolledToBottom(),
-        removeLastSeenMarker: createdByMe,
+        removeLastSeenMarker: createdByMe || hasFocusAndScrolledToBottom(),
       });
     },
     signal,
