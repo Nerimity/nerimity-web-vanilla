@@ -1,5 +1,6 @@
 import { accountStore } from "../../store/accountStore";
-import type { Message } from "../../store/messageStore";
+
+import { type Message } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {

@@ -7,15 +7,14 @@ import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
 import { scoped } from "../../utils/css";
-import { debounce } from "../../utils/debounce";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
-import { createIntersectionObserver } from "../../utils/observer";
 import { Drawer } from "../drawer";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
+import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
 import { getLastSeenMessage, shouldGroup } from "./utils";
@@ -87,137 +86,6 @@ const createMessagePane = () => {
       {chatbar.render()}
     </div>
   ) as HTMLDivElement;
-
-  const handleStillObserving = debounce(() => {
-    if (topObserver.intersecting) {
-      onTopSkeletonIntersect();
-      return;
-    }
-
-    if (bottomObserver.intersecting) {
-      onBottomSkeletonIntersect();
-      return;
-    }
-  }, 1000);
-
-  const onTopSkeletonIntersect = async () => {
-    const channelId = channelStore.currentChannelId;
-    if (!channelId) return;
-    const properties = channelStore.getProperty(channelId);
-    if (properties!.loading) return;
-
-    const messages = messageStore.messages.get(channelId);
-    const firstMessageId = messages?.[0]?.id;
-    if (!firstMessageId) return;
-
-    const anchorEl = logs.querySelector(
-      `[data-message-id="${firstMessageId}"]`,
-    ) as HTMLDivElement | null;
-    const anchorOffsetTop = anchorEl?.offsetTop ?? 0;
-
-    channelStore.setProperty(channelId, { loading: true });
-    const newMessages = await messageStore.loadMessages(channelId, {
-      before: firstMessageId,
-    });
-    if (!newMessages) {
-      channelStore.setProperty(channelId, { loading: false });
-      return;
-    }
-    const canLoadTop = newMessages?.length === 50;
-    channelStore.setProperty(channelId, {
-      canLoadTop,
-      canLoadBottom: true,
-      loading: false,
-    });
-
-    rerender({ dontScrollDown: true });
-    const newAnchorOffsetTop = anchorEl?.offsetTop ?? 0;
-    el.scrollTop += newAnchorOffsetTop - anchorOffsetTop;
-    handleStillObserving();
-  };
-
-  const onBottomSkeletonIntersect = async (loadNew?: boolean) => {
-    skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
-
-    const channelId = channelStore.currentChannelId;
-    if (!channelId) return;
-    const properties = channelStore.getProperty(channelId)!;
-    if (properties.loading) return;
-
-    const setLoadingFalse = () => {
-      channelStore.setProperty(channelId, { loading: false });
-    };
-
-    channelStore.setProperty(channelId, { loading: true });
-    const messages = messageStore.messages.get(channelId);
-    // if there are no messages, load them.
-    if (loadNew) {
-      if (messages) {
-        rerender({ useSavedTop: true, forceScrollDown: true });
-        return setLoadingFalse();
-      }
-      if (!accountStore.authenticated) {
-        return setLoadingFalse();
-      }
-
-      const newMessages = await messageStore.loadMessages(channelId);
-      if (!newMessages) {
-        return setLoadingFalse();
-      }
-      const canLoadTop = newMessages?.length === 50;
-      channelStore.setProperty(channelId, {
-        loading: false,
-        canLoadTop,
-        canLoadBottom: false,
-      });
-      rerender();
-      scrollToBottom(true);
-      return;
-    }
-    if (!messages) return setLoadingFalse();
-    const lastMessageId = messages[messages.length - 1]?.id;
-    if (!lastMessageId) return setLoadingFalse();
-
-    const newMessages = await messageStore.loadMessages(channelId, {
-      after: lastMessageId,
-    });
-    if (!newMessages) {
-      channelStore.setProperty(channelId, { loading: false });
-      return;
-    }
-
-    const canLoadBottom = newMessages?.length === 50;
-    channelStore.setProperty(channelId, {
-      canLoadTop: true,
-      canLoadBottom,
-      loading: false,
-    });
-
-    const messageEls = logs.querySelectorAll(".messageItem");
-    const lastMessage = messageEls[messageEls.length - 1]!;
-    const lastMessageBottom = lastMessage.getBoundingClientRect().bottom;
-
-    rerender({ dontScrollDown: true });
-
-    const afterBottom = lastMessage.getBoundingClientRect().bottom;
-    const difference = afterBottom - lastMessageBottom!;
-    el.scrollTop = el.scrollTop + difference;
-
-    handleStillObserving();
-  };
-
-  const bottomObserver = createIntersectionObserver(
-    skeletonsBottom,
-    el,
-    onBottomSkeletonIntersect,
-    signal,
-  );
-  const topObserver = createIntersectionObserver(
-    skeletonsTop,
-    el,
-    onTopSkeletonIntersect,
-    signal,
-  );
 
   const isScrolledToBottom = () => {
     const threshold = 50;
@@ -315,6 +183,16 @@ const createMessagePane = () => {
       }
     }
   };
+  const { onBottomSkeletonIntersect } = createInfiniteScroll({
+    el,
+    logs,
+    skeletonsTop,
+    skeletonsBottom,
+    signal,
+    rerender,
+    scrollToBottom,
+    shouldShowBottomSkel,
+  });
 
   const imageEmbedResizer = createImageEmbedResizer(el);
 
