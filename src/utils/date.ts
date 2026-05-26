@@ -1,3 +1,4 @@
+// hh:mm | Yesterday at hh:mm | dd/mm/yyyy at hh:mm
 export function friendlyTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
   const now = new Date();
@@ -30,4 +31,14 @@ export function friendlyTimestamp(timestamp: number): string {
   const yyyy = date.getFullYear();
 
   return `${dd}/${mm}/${yyyy} at ${time}`;
+}
+
+// Tuesday, 26 May 2026
+export function fullDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 }

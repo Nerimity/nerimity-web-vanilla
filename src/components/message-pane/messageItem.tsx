@@ -8,14 +8,14 @@ import { serverStore } from "../../store/serverStore";
 import type { RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { scoped } from "../../utils/css";
-import { friendlyTimestamp } from "../../utils/date";
+import { friendlyTimestamp, fullDate } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { ImageEmbed } from "./imageEmbed";
-import { shouldGroup } from "./utils";
+import { isNewDay, shouldGroup } from "./utils";
 
 const messageItem = css`
   display: flex;
@@ -87,14 +87,62 @@ const messageItem = css`
   }
 `;
 
+const marker = css`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+  margin-left: 14px;
+
+  &[data-alert="true"] {
+    .line {
+      background: linear-gradient(to left, transparent, var(--alert-color));
+    }
+    span {
+      color: var(--alert-color);
+    }
+  }
+
+  span {
+    border-radius: 99px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: bold;
+  }
+
+  .line {
+    flex: 1;
+    height: 1px;
+
+    background: linear-gradient(to left, transparent, var(--gray-700));
+  }
+`;
+
+const Marker = (props: { alert?: boolean; label?: string }) => {
+  return (
+    <div class={marker} data-alert={props.alert}>
+      <span>{props.label}</span>
+      <div class="line" />
+    </div>
+  );
+};
+
 export const MessageItem = (props: {
   message: Message;
   prevMessage?: Message;
   container: HTMLDivElement;
 }) => {
   const creator = props.message.createdBy;
+
+  const newDay = isNewDay(props.message, props.prevMessage);
+
   const group =
-    props.prevMessage && shouldGroup(props.message, props.prevMessage);
+    !newDay &&
+    props.prevMessage &&
+    shouldGroup(props.message, props.prevMessage);
 
   const member = serverMemberStore.serverMembers
     .get(serverStore.currentServerId!)
@@ -113,52 +161,53 @@ export const MessageItem = (props: {
   const hasMessageReplies = !!props.message.replyMessages?.length;
 
   return (
-    <div
-      class={[
-        "messageItem",
-        messageItem,
-        !group && "withDetails",
-        props.message.state,
-      ]}
-      data-message-id={props.message.id}
-      data-grouped={group}
-    >
-      {hasMessageReplies && <MessageReplies message={props.message} />}
-      <div class={scoped`messageContainer`}>
-        {group ? (
-          <div class={scoped`avatarPlaceholder`}></div>
-        ) : (
-          <Avatar user={creator} size={40} />
-        )}
-        <div class={scoped`messageBody`}>
-          {!group && (
-            <span class={scoped`details`}>
-              <GradientText class={scoped`username`} color={color}>
-                {name}
-              </GradientText>
-              {creator?.profile?.clan && (
-                <ServerClanItem clan={creator.profile.clan} />
-              )}
-              {topRole?.icon && (
-                <CdnIcon
-                  class={scoped`roleIcon`}
-                  role={{ icon: topRole.icon }}
-                  size={14}
-                />
-              )}
-              <span class={scoped`timestamp`}>
-                {friendlyTimestamp(props.message.createdAt)}
-              </span>
-            </span>
+    <div data-message-id={props.message.id} data-grouped={group}>
+      {newDay && <Marker label={fullDate(props.message.createdAt)} />}
+      <div
+        class={[
+          "messageItem",
+          messageItem,
+          !group && "withDetails",
+          props.message.state,
+        ]}
+      >
+        {hasMessageReplies && <MessageReplies message={props.message} />}
+        <div class={scoped`messageContainer`}>
+          {group ? (
+            <div class={scoped`avatarPlaceholder`}></div>
+          ) : (
+            <Avatar user={creator} size={40} />
           )}
-          <div class={scoped`content`}>
-            {!isImageEmbedOnly && (
-              <Markup text={props.message.content} message={props.message} />
+          <div class={scoped`messageBody`}>
+            {!group && (
+              <span class={scoped`details`}>
+                <GradientText class={scoped`username`} color={color}>
+                  {name}
+                </GradientText>
+                {creator?.profile?.clan && (
+                  <ServerClanItem clan={creator.profile.clan} />
+                )}
+                {topRole?.icon && (
+                  <CdnIcon
+                    class={scoped`roleIcon`}
+                    role={{ icon: topRole.icon }}
+                    size={14}
+                  />
+                )}
+                <span class={scoped`timestamp`}>
+                  {friendlyTimestamp(props.message.createdAt)}
+                </span>
+              </span>
             )}
-            <MessageEmbeds
-              message={props.message}
-              container={props.container}
-            />
+            <div class={scoped`content`}>
+              {!isImageEmbedOnly && (
+                <Markup text={props.message.content} message={props.message} />
+              )}
+              <MessageEmbeds
+                message={props.message}
+                container={props.container}
+              />
+            </div>
           </div>
         </div>
       </div>
