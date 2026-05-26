@@ -163,27 +163,41 @@ export const createAppHeader = () => {
     { signal },
   );
 
+  let pendingAnim: Animation | null = null;
+
   const updatePill = () => {
     const pillEl = container.querySelector(`.${pill}`) as HTMLElement;
+
     const oldWidth = pillEl.getBoundingClientRect().width;
 
+    pendingAnim?.cancel();
+    pendingAnim = null;
+
     morphdom(pillEl, <Pill />);
+
+    const newLabelEl = pillEl.querySelector(".label") as HTMLElement;
 
     const newWidth = pillEl.getBoundingClientRect().width;
 
     if (oldWidth !== newWidth) {
-      const labelEl = pillEl.querySelector(".label") as HTMLElement;
-      labelEl.style.textOverflow = "clip";
-
-      const anim = pillEl.animate(
-        [{ width: `${oldWidth}px` }, { width: `${newWidth}px` }],
-        { duration: 200, easing: "ease", fill: "none" },
-      );
-
-      anim.onfinish = () => {
-        labelEl.style.textOverflow = "";
+      newLabelEl.style.textOverflow = "clip";
+      pillEl.animate([{ width: `${oldWidth}px` }, { width: `${newWidth}px` }], {
+        duration: 200,
+        easing: "ease",
+        fill: "none",
+      }).onfinish = () => {
+        newLabelEl.style.textOverflow = "";
       };
     }
+
+    pendingAnim = newLabelEl.animate([{ opacity: 0 }, { opacity: 1 }], {
+      duration: 260,
+      easing: "ease",
+      fill: "forwards",
+    });
+    pendingAnim.onfinish = () => {
+      pendingAnim = null;
+    };
   };
 
   storeEmitter.on("ws:authStateUpdate", updatePill, signal);
