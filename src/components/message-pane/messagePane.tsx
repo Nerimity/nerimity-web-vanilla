@@ -18,7 +18,7 @@ import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { MessageItem } from "./messageItem";
-import { shouldGroup } from "./utils";
+import { getLastSeenMessage, shouldGroup } from "./utils";
 
 const messagePane = css`
   display: flex;
@@ -416,17 +416,6 @@ const createMessagePane = () => {
   };
 
   return { render, destroy };
-};
-
-const getLastSeenMessage = (channelId: string, messages: Message[]) => {
-  const lastSeenAt = serverStore.lastSeenChannelIds.get(channelId);
-  const selfUserId = accountStore.currentUser?.id;
-  if (!lastSeenAt) return null;
-  const message = messages.find((m) => {
-    if (m.createdBy.id === selfUserId) return false;
-    return m.createdAt - lastSeenAt >= 0;
-  });
-  return message || null;
 };
 
 export default createMessagePane;

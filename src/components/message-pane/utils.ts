@@ -1,4 +1,6 @@
+import { accountStore } from "../../store/accountStore";
 import type { Message } from "../../store/messageStore";
+import { serverStore } from "../../store/serverStore";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -17,4 +19,15 @@ export const isNewDay = (message: Message, prev?: Message) => {
   const prevLocal = prev.createdAt - TZ_OFFSET;
   const prevMidnight = prevLocal - (prevLocal % MS_PER_DAY);
   return message.createdAt - TZ_OFFSET >= prevMidnight + MS_PER_DAY;
+};
+
+export const getLastSeenMessage = (channelId: string, messages: Message[]) => {
+  const lastSeenAt = serverStore.lastSeenChannelIds.get(channelId);
+  const selfUserId = accountStore.currentUser?.id;
+  if (!lastSeenAt) return null;
+  const message = messages.find((m) => {
+    if (m.createdBy.id === selfUserId) return false;
+    return m.createdAt - lastSeenAt >= 0;
+  });
+  return message || null;
 };
