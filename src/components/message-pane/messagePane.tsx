@@ -136,6 +136,7 @@ const createMessagePane = () => {
     useSavedTop?: boolean;
     forceScrollDown?: boolean;
     removeLastSeenMarker?: boolean;
+    updateLastSeenMarker?: boolean;
   }) => {
     skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
 
@@ -147,12 +148,15 @@ const createMessagePane = () => {
     if (channelId !== channelStore.currentChannelId) return;
 
     const lastLastSeenMessage = lastSeenMessage;
+    let lastSeenUpdated = false;
 
-    lastSeenMessage = opts?.removeLastSeenMarker
-      ? null
-      : getLastSeenMessage(channelId, messages);
+    if (opts?.updateLastSeenMarker || opts?.removeLastSeenMarker) {
+      lastSeenMessage = opts?.removeLastSeenMarker
+        ? null
+        : getLastSeenMessage(channelId, messages);
 
-    const lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
+      lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
+    }
     dismissNotification();
 
     reconcile({
@@ -265,6 +269,7 @@ const createMessagePane = () => {
       rerender({
         forceScrollDown: isScrolledToBottom(),
         removeLastSeenMarker: createdByMe || hasFocusAndScrolledToBottom(),
+        updateLastSeenMarker: true,
       });
     },
     signal,
