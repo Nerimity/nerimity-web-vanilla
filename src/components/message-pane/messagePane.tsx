@@ -348,14 +348,6 @@ const createMessagePane = () => {
     },
     signal,
   );
-  // storeEmitter.on(
-  //   "channel:notify_update",
-  //   (event) => {
-  //     if (event.channelId !== channelStore.currentChannelId) return;
-  //     lastSeenMessage = null;
-  //   },
-  //   signal,
-  // );
 
   storeEmitter.on(
     "message:created",
