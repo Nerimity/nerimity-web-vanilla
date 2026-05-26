@@ -148,14 +148,14 @@ const createMessagePane = () => {
     if (channelId !== channelStore.currentChannelId) return;
 
     const lastLastSeenMessage = lastSeenMessage;
-    let lastSeenUpdated = false;
+    let markerChanged = false;
 
     if (opts?.updateLastSeenMarker || opts?.removeLastSeenMarker) {
       lastSeenMessage = opts?.removeLastSeenMarker
         ? null
         : getLastSeenMessage(channelId, messages);
 
-      lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
+      markerChanged = lastSeenMessage !== lastLastSeenMessage;
     }
     dismissNotification();
 
@@ -174,7 +174,7 @@ const createMessagePane = () => {
       ),
       shouldRecreate: (node, m, i) => {
         if (opts?.forceRecreate) return true;
-        if (lastSeenUpdated && m.id === lastSeenMessage?.id) return true;
+        if (markerChanged && m.id === lastSeenMessage?.id) return true;
         if (lastLastSeenMessage && m.id === lastLastSeenMessage?.id)
           return true;
         const prevGrouped = node.dataset.grouped === "true";
@@ -240,14 +240,13 @@ const createMessagePane = () => {
     signal,
   );
 
-  const hasFocusAndScrolledToBottom = () =>
-    document.hasFocus() && isScrolledToBottom();
+  const isFocusedAtBottom = () => document.hasFocus() && isScrolledToBottom();
 
   const dismissNotification = () => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
 
     if (!messages) return;
-    if (!hasFocusAndScrolledToBottom()) return;
+    if (!isFocusedAtBottom()) return;
 
     channelStore.dismissNotification(channelStore.currentChannelId!);
   };
@@ -268,7 +267,7 @@ const createMessagePane = () => {
 
       rerender({
         forceScrollDown: isScrolledToBottom(),
-        removeLastSeenMarker: createdByMe || hasFocusAndScrolledToBottom(),
+        removeLastSeenMarker: createdByMe || isFocusedAtBottom(),
         updateLastSeenMarker: true,
       });
     },
@@ -306,7 +305,7 @@ const createMessagePane = () => {
     { trigger: `.messageItem`, image: ".emoji" },
   ]);
 
-  const imageEmbedFocus = new FocusAnimator(logs, ".imageEmbed .image");
+  const imageEmbedFocusAnimator = new FocusAnimator(logs, ".imageEmbed .image");
   scrollToBottom(true);
 
   const render = () => {
@@ -319,7 +318,7 @@ const createMessagePane = () => {
   const destroy = () => {
     abortController.abort();
     imageEmbedResizer.destroy();
-    imageEmbedFocus.destroy();
+    imageEmbedFocusAnimator.destroy();
     hoverAnimator.destroy();
 
     chatbar.destroy();
