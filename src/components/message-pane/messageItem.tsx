@@ -133,6 +133,7 @@ const Marker = (props: { alert?: boolean; label?: string }) => {
 export const MessageItem = (props: {
   message: Message;
   prevMessage?: Message;
+  newMarker?: boolean;
   container: HTMLDivElement;
 }) => {
   const creator = props.message.createdBy;
@@ -141,6 +142,7 @@ export const MessageItem = (props: {
 
   const group =
     !newDay &&
+    !props.newMarker &&
     props.prevMessage &&
     shouldGroup(props.message, props.prevMessage);
 
@@ -162,6 +164,7 @@ export const MessageItem = (props: {
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
+      {props.newMarker && <Marker alert label={t`New Messages`} />}
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
       <div
         class={[

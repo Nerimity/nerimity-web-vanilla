@@ -250,11 +250,14 @@ const createMessagePane = () => {
     );
   };
 
+  let lastSeenMessage: Message | null = null;
+
   const rerender = async (opts?: {
     forceRecreate?: boolean;
     dontScrollDown?: boolean;
     useSavedTop?: boolean;
     forceScrollDown?: boolean;
+    removeLastSeenMarker?: boolean;
   }) => {
     skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
 
@@ -265,16 +268,34 @@ const createMessagePane = () => {
     if (!messages) return;
     if (channelId !== channelStore.currentChannelId) return;
 
+    const lastLastSeenMessage = lastSeenMessage;
+
+    lastSeenMessage = getLastSeenMessage(channelId, messages);
+
+    if (opts?.removeLastSeenMarker) {
+      lastSeenMessage = null;
+    }
+
+    const lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
+
     reconcile({
       container: logs,
       dataAttr: "message-id",
       values: messages,
       valueId: "id",
       create: (m, i) => (
-        <MessageItem message={m} prevMessage={messages[i - 1]} container={el} />
+        <MessageItem
+          newMarker={m.id === lastSeenMessage?.id}
+          message={m}
+          prevMessage={messages[i - 1]}
+          container={el}
+        />
       ),
       shouldRecreate: (node, m, i) => {
         if (opts?.forceRecreate) return true;
+        if (lastSeenUpdated && m.id === lastSeenMessage?.id) return true;
+        if (lastLastSeenMessage && m.id === lastLastSeenMessage?.id)
+          return true;
         const prevGrouped = node.dataset.grouped === "true";
         const nextGrouped = shouldGroup(m, messages[i - 1]);
         return prevGrouped !== nextGrouped;
@@ -327,12 +348,26 @@ const createMessagePane = () => {
     },
     signal,
   );
+  // storeEmitter.on(
+  //   "channel:notify_update",
+  //   (event) => {
+  //     if (event.channelId !== channelStore.currentChannelId) return;
+  //     lastSeenMessage = null;
+  //   },
+  //   signal,
+  // );
 
   storeEmitter.on(
     "message:created",
     (message) => {
       if (message.channelId !== channelStore.currentChannelId) return;
-      rerender({ forceScrollDown: isScrolledToBottom() });
+
+      const createdByMe = message.createdBy.id === accountStore.currentUser?.id;
+
+      rerender({
+        forceScrollDown: isScrolledToBottom(),
+        removeLastSeenMarker: createdByMe,
+      });
     },
     signal,
   );
@@ -389,6 +424,17 @@ const createMessagePane = () => {
   };
 
   return { render, destroy };
+};
+
+const getLastSeenMessage = (channelId: string, messages: Message[]) => {
+  const lastSeenAt = serverStore.lastSeenChannelIds.get(channelId);
+  const selfUserId = accountStore.currentUser?.id;
+  if (!lastSeenAt) return null;
+  const message = messages.find((m) => {
+    if (m.createdBy.id === selfUserId) return false;
+    return m.createdAt - lastSeenAt >= 0;
+  });
+  return message || null;
 };
 
 export default createMessagePane;
