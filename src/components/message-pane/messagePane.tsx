@@ -102,12 +102,13 @@ const createMessagePane = () => {
     return el.scrollTop + el.clientHeight >= el.scrollHeight - threshold;
   };
 
-  const scrollToBottom = (force?: boolean) => {
+  const scrollToBottom = (force?: boolean, dismissNoti?: boolean) => {
     if (!force && !isScrolledToBottom()) return;
     // when drawer is  currently being dragged, dont reset the position.
     requestAnimationFrame(() => {
       Drawer().setIgnoreNextScroll();
       el.scrollTop = el.scrollHeight;
+      if (dismissNoti) dismissNotification();
     });
   };
   const updateMessage = (message: Message, index: number) => {
@@ -153,7 +154,6 @@ const createMessagePane = () => {
       : getLastSeenMessage(channelId, messages);
 
     const lastSeenUpdated = lastSeenMessage !== lastLastSeenMessage;
-    dismissNotification();
 
     reconcile({
       container: logs,
@@ -188,7 +188,7 @@ const createMessagePane = () => {
           el.scrollTop = savedScrollTop;
         });
       } else {
-        scrollToBottom(opts?.forceScrollDown);
+        scrollToBottom(opts?.forceScrollDown, true);
       }
     }
   };
