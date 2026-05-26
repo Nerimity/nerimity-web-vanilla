@@ -259,6 +259,7 @@ const createMessagePane = () => {
 
     if (!messages) return;
     if (!isFocusedAtBottom()) return;
+    if (getChannelProperty()?.canLoadBottom) return;
 
     channelStore.dismissNotification(channelStore.currentChannelId!);
   };
