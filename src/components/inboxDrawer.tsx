@@ -64,6 +64,7 @@ const inboxItem = css`
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+      line-height: 1.25;
     }
   }
   .pill {
@@ -132,7 +133,7 @@ const UserItem = (props: {
     >
       <Avatar user={props.user} size={28} />
       <div class={scoped`info`}>
-        <div>{props.user?.username}</div>
+        <div class={scoped`username`}>{props.user?.username}</div>
         <UserPresenceItem userId={props.user.id} />
       </div>
       {count && <NotificationPill class="pill" count={count} />}

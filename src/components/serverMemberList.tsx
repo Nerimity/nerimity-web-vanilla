@@ -420,6 +420,7 @@ const memberItemContainer = css`
     text-overflow: ellipsis;
     white-space: nowrap;
     flex-shrink: 1;
+    line-height: 1.25;
   }
   .info {
     display: flex;
