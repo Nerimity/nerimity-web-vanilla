@@ -23,7 +23,6 @@ const item = css`
   &:not([data-disabled="true"]) {
     cursor: pointer;
   }
-  transition: 0.2s;
   gap: 10px;
 
   &:before {
@@ -71,7 +70,6 @@ const item = css`
 
   .label {
     color: var(--text-muted);
-    transition: 0.2s;
     font-size: var(--size);
   }
 `;
