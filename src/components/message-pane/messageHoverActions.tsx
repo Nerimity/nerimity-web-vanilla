@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
+import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore } from "../../store/messageStore";
 import { friendlyTimestamp } from "../../utils/date";
@@ -19,6 +20,7 @@ const hoverActionContainer = css`
   z-index: 999999999;
   border-radius: var(--radius-max);
   padding-right: 2px;
+  padding-left: 2px;
   right: 10px;
 
   &.hide {
@@ -49,12 +51,15 @@ const HoverActions = (props: {
   const messages = messageStore.messages.get(channelId!);
   const message = messages?.findLast((m) => m.id === props.messageId!);
   const grouped = props.messageElement?.dataset.grouped;
+
+  const createdBySelf = message?.createdBy.id === accountStore.currentUser?.id;
+
   return (
     <div class={[hoverActionContainer, "hide"]}>
       {grouped && (
         <span class="timestamp">{friendlyTimestamp(message?.createdAt!)}</span>
       )}
-      <Button class="button" icon="edit" hoverBorder />
+      {createdBySelf && <Button class="button" icon="edit" hoverBorder />}
       <Button class="button" icon="delete" alert hoverBorder />
     </div>
   );
