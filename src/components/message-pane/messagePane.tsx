@@ -17,6 +17,7 @@ import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
+import { createMessageHoverActions } from "./messageHoverActions";
 import { MessageItem } from "./messageItem";
 import { getLastSeenMessage, shouldGroup } from "./utils";
 
@@ -29,6 +30,7 @@ const messagePane = css`
   --padding-right: 0;
   --mobile-padding-right: 0;
   padding-top: 56px;
+  position: relative;
 
   .${scoped`logs`} {
     display: flex;
@@ -99,6 +101,9 @@ const createMessagePane = () => {
       {chatbar.render()}
     </div>
   ) as HTMLDivElement;
+  const hoverActions = createMessageHoverActions({ container: el, signal });
+
+  el.appendChild(hoverActions.hoverActionEl);
 
   const isScrolledToBottom = () => {
     const threshold = 50;

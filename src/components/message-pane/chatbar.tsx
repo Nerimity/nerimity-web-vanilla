@@ -21,6 +21,7 @@ const chatbarContainer = css`
   gap: 8px;
   padding: 8px;
   padding-top: 0;
+  z-index: 9999999999999;
   .chatInput {
   }
   .button {

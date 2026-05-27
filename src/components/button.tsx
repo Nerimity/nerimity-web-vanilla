@@ -1,8 +1,8 @@
 import { css } from "@linaria/core";
 
+import { Dynamic } from "../dynamic";
 import { h } from "../h";
 import { Icon } from "./icon";
-import { Dynamic } from "../dynamic";
 import { Link } from "./link";
 
 interface ButtonProps {
@@ -12,6 +12,7 @@ interface ButtonProps {
   hoverBorder?: boolean;
   primary?: boolean;
   href?: string;
+  alert?: boolean;
 }
 const button = css`
   display: flex;
@@ -55,6 +56,14 @@ const button = css`
       opacity: 0.8;
     }
   }
+  &.alert {
+    .label {
+      color: var(--alert-color);
+    }
+    .icon {
+      color: var(--alert-color);
+    }
+  }
 `;
 export const Button = (props: ButtonProps) => (
   <Dynamic
@@ -65,6 +74,7 @@ export const Button = (props: ButtonProps) => (
       props.class,
       props.hoverBorder && "hoverBorder",
       props.primary && "primary",
+      props.alert && "alert",
     ]}
   >
     {props.icon && <Icon class="icon" name={props.icon} />}

@@ -27,6 +27,7 @@ const messageItem = css`
   border-radius: var(--radius-6);
   overflow: hidden;
 
+  &.force-hover,
   &:hover {
     background-color: var(--gray-800);
   }

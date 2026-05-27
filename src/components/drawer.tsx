@@ -98,7 +98,7 @@ const drawerContainer = css`
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 111111111;
+    z-index: 1111111111;
     background-color: var(--background);
     transition: 0.2s;
     opacity: 0;
