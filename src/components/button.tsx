@@ -13,6 +13,7 @@ interface ButtonProps {
   primary?: boolean;
   href?: string;
   alert?: boolean;
+  [key: string]: any;
 }
 const button = css`
   display: flex;
@@ -65,19 +66,30 @@ const button = css`
     }
   }
 `;
-export const Button = (props: ButtonProps) => (
-  <Dynamic
-    component={props.href ? Link : "button"}
-    href={props.href}
-    class={[
-      button,
-      props.class,
-      props.hoverBorder && "hoverBorder",
-      props.primary && "primary",
-      props.alert && "alert",
-    ]}
-  >
-    {props.icon && <Icon class="icon" name={props.icon} />}
-    {props.label && <div class="label">{props.label}</div>}
-  </Dynamic>
-);
+export const Button = (props: ButtonProps) => {
+  const {
+    hoverBorder,
+    alert,
+    primary,
+    label,
+    icon,
+    class: className,
+    ...rest
+  } = props;
+  return (
+    <Dynamic
+      component={rest.href ? Link : "button"}
+      class={[
+        button,
+        className,
+        hoverBorder && "hoverBorder",
+        primary && "primary",
+        alert && "alert",
+      ]}
+      {...rest}
+    >
+      {icon && <Icon class="icon" name={icon} />}
+      {label && <div class="label">{label}</div>}
+    </Dynamic>
+  );
+};

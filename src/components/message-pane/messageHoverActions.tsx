@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
@@ -7,6 +8,7 @@ import { channelStore } from "../../store/channelStore";
 import { messageStore } from "../../store/messageStore";
 import { friendlyTimestamp } from "../../utils/date";
 import { Button } from "../button";
+import { createModal, Modal } from "../modal";
 
 const hoverActionContainer = css`
   display: flex;
@@ -59,8 +61,16 @@ const HoverActions = (props: {
       {grouped && (
         <span class="timestamp">{friendlyTimestamp(message?.createdAt!)}</span>
       )}
-      {createdBySelf && <Button class="button" icon="edit" hoverBorder />}
-      <Button class="button" icon="delete" alert hoverBorder />
+      {createdBySelf && (
+        <Button class="button" data-action="edit" icon="edit" hoverBorder />
+      )}
+      <Button
+        class="button"
+        data-action="delete"
+        icon="delete"
+        alert
+        hoverBorder
+      />
     </div>
   );
 };
@@ -91,6 +101,29 @@ export const createMessageHoverActions = (opts: {
     hoveredMessageItem?.classList.remove("force-hover");
     hoverActionEl.classList.toggle("hide", true);
   };
+
+  const handleEditMessage = () => {
+    createModal(
+      <Modal.Root>
+        <Modal.Header alert label={t`Delete Message`} icon="delete" />
+        <Modal.Body>Hello</Modal.Body>
+      </Modal.Root>,
+    );
+  };
+
+  hoverActionEl.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLElement;
+      const button = target.closest(".button") as HTMLElement | null;
+      const action = button?.dataset.action;
+      console.log(action, button);
+      if (action === "delete") {
+        handleEditMessage();
+      }
+    },
+    { signal: opts.signal },
+  );
 
   opts.container.addEventListener(
     "mouseover",
