@@ -10,6 +10,7 @@ import { userStore } from "../../store/userStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
+import { createTypingIndicator } from "./typingIndicator";
 
 const chatbarContainer = css`
   position: sticky;
@@ -38,8 +39,12 @@ const chatbarContainer = css`
 export const createChatbar = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
+
+  const typingIndicator = createTypingIndicator(abortController);
+
   const chatbar = (
     <div class={chatbarContainer}>
+      {typingIndicator.el}
       <Input
         class="chatInput"
         suffix={

@@ -1,0 +1,162 @@
+import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
+
+import { h, Fragment } from "../../h";
+import { channelStore } from "../../store/channelStore";
+import { userStore, type User } from "../../store/userStore";
+import { Avatar } from "../avatar";
+
+interface TypingUser {
+  user: User;
+  timestamp: number;
+}
+
+const onTyping = (callback: (evet: any) => void) => {
+  const interval = setInterval(() => {
+    const userIds = [
+      "1477289864272715776",
+      "1387155078351331329",
+      "1289157673362825217",
+    ];
+    const randomUser = userIds[Math.floor(Math.random() * userIds.length)];
+    const payload = {
+      channelId: "1291473473448878081",
+      userId: randomUser,
+    };
+
+    callback(payload);
+  }, 1000);
+  console.log(interval);
+};
+
+const typingIndicator = css`
+  display: flex;
+  gap: 4px;
+  border-radius: var(--radius-max);
+  background: var(--gray-900);
+  border: solid 1px var(--gray-600);
+  padding: 4px 4px;
+  padding-right: 8px;
+  color: var(--text-color);
+  align-self: start;
+  align-items: center;
+  font-size: 12px;
+  height: 26px;
+
+  &.hide {
+    visibility: hidden;
+  }
+  .avatars {
+    display: flex;
+
+    .avatar {
+      margin-left: -6px;
+      outline: 2px solid var(--gray-900);
+      border-radius: 50%;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+`;
+
+export const createTypingIndicator = (abortController: AbortController) => {
+  const { signal } = abortController;
+  const usernamesEl = (<div class="usernames"></div>) as HTMLDivElement;
+  const avatarsEl = (<div class="avatars"></div>) as HTMLDivElement;
+  let timeout: NodeJS.Timeout | null = null;
+  const el = (
+    <div class={[typingIndicator, "hide"]}>
+      {avatarsEl}
+      {usernamesEl}
+    </div>
+  ) as HTMLDivElement;
+  const typingUsers = new Map<string, TypingUser>();
+
+  const upsertTypingUser = (userId: string) => {
+    const existing = typingUsers.get(userId);
+    if (existing) {
+      existing.timestamp = Date.now();
+      return;
+    }
+    const user = userStore.users.get(userId);
+    if (!user) return;
+    const typingUser = { user, timestamp: Date.now() };
+    typingUsers.set(userId, typingUser);
+    rerender();
+  };
+
+  const clearOldTypingUsers = () => {
+    if (timeout) return;
+    const now = Date.now();
+    for (const [userId, typingUser] of typingUsers) {
+      if (now - typingUser.timestamp > 2000) {
+        typingUsers.delete(userId);
+      }
+    }
+
+    rerender();
+
+    if (typingUsers.size === 0) return;
+    timeout = setTimeout(() => {
+      timeout = null;
+      clearOldTypingUsers();
+    }, 1000);
+  };
+
+  const rerender = () => {
+    if (!typingUsers.size) {
+      usernamesEl.replaceChildren();
+      avatarsEl.replaceChildren();
+      el.classList.add("hide");
+      return;
+    }
+    el.classList.remove("hide");
+
+    const values = [...typingUsers.values()];
+    const usernames = formatNames(values.map((u) => u.user.username))!;
+
+    const avatars = values.map((u) => <Avatar user={u.user} size={16} />);
+
+    usernamesEl.replaceChildren(usernames);
+    avatarsEl.replaceChildren(...avatars);
+  };
+
+  onTyping((payload: { channelId: string; userId: string }) => {
+    if (channelStore.currentChannelId !== payload.channelId) return;
+    upsertTypingUser(payload.userId);
+    clearOldTypingUsers();
+  });
+
+  signal.addEventListener("abort", () => {
+    if (timeout) clearTimeout(timeout);
+    timeout = null;
+  });
+
+  return {
+    el,
+  };
+};
+
+function formatNames(names: string[]) {
+  if (names.length === 0) return null;
+  if (names.length === 1) return <b>{names[0]}</b>;
+  if (names.length >= 5) return <b>{t`${names.length} users are typing...`}</b>;
+
+  const init = names.slice(0, -1);
+  const last = names[names.length - 1];
+
+  return (
+    <>
+      {init.map((name, i) => (
+        <>
+          <b>{name}</b>
+          {i < init.length - 1 ? ", " : " "}
+        </>
+      ))}
+      {"& "}
+      <b>{last}</b>
+    </>
+  );
+}

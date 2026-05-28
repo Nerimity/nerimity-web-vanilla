@@ -43,7 +43,7 @@ const messagePane = css`
     height: 1px;
     flex-shrink: 0;
   }
-  .hide {
+  .${scoped`hide`} {
     display: none;
   }
 `;
@@ -73,7 +73,7 @@ const createMessagePane = () => {
   };
 
   const skeletonsTop = (
-    <div class={[shouldShowTopSkel() ? "" : "hide"]}>
+    <div class={[shouldShowTopSkel() ? "" : scoped`hide`]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
       ))}
@@ -81,7 +81,7 @@ const createMessagePane = () => {
   ) as HTMLDivElement;
 
   const skeletonsBottom = (
-    <div class={[shouldShowBottomSkel() ? "" : "hide"]}>
+    <div class={[shouldShowBottomSkel() ? "" : scoped`hide`]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
       ))}
@@ -161,7 +161,7 @@ const createMessagePane = () => {
   let lastSeenMessage: Message | null = null;
 
   const rerender = async (opts?: RerenderOpts) => {
-    skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
+    skeletonsBottom.classList.toggle(scoped`hide`, !shouldShowBottomSkel());
 
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
@@ -209,7 +209,7 @@ const createMessagePane = () => {
       },
     });
 
-    skeletonsTop.classList.toggle("hide", !shouldShowTopSkel());
+    skeletonsTop.classList.toggle(scoped`hide`, !shouldShowTopSkel());
     restoreScrollPosition(opts);
   };
   const { onBottomSkeletonIntersect } = createInfiniteScroll({
