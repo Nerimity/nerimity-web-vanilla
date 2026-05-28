@@ -1,5 +1,6 @@
 import { css } from "@linaria/core";
 
+import { mobileWidth } from "../config";
 import { h } from "../h";
 import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -109,7 +110,7 @@ const drawerContainer = css`
   }
 `;
 
-const MOBILE_WIDTH = 800;
+const MOBILE_WIDTH = mobileWidth;
 const PEEK_WIDTH = 50;
 
 function createDrawer() {

@@ -70,7 +70,7 @@ export const ImageEmbed = (props: {
   if (cached) img.classList.add("loaded");
   const maxWidth = clamp(props.container.clientWidth - 70, 600);
 
-  const maxHeight = props.container.clientHeight / 2;
+  const maxHeight = Math.max(props.container.clientHeight / 2, 200);
 
   const skeleton = cached
     ? null
@@ -108,7 +108,7 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
   const onResize = throttle(() => {
     const imageEmbeds = logElement.querySelectorAll(`.${imageContainer}`);
     const maxWidth = clamp(logElement.clientWidth - 70, 600);
-    const maxHeight = logElement.clientHeight / 2;
+    const maxHeight = Math.max(logElement.clientHeight / 2, 200);
 
     for (let i = 0; i < imageEmbeds.length; i++) {
       const embedEl = imageEmbeds[i] as HTMLDivElement;

@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/message-pane/deleteMessageModal.tsx:30
+msgid "Are you sure you want to delete this message?"
+msgstr "Are you sure you want to delete this message?"
+
 #: src/store/accountStore.ts:59
 msgid "Authenticating..."
 msgstr "Authenticating..."
@@ -29,15 +33,27 @@ msgstr "Connected!"
 msgid "Connecting..."
 msgstr "Connecting..."
 
+#: src/components/message-pane/deleteMessageModal.tsx:55
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/message-pane/deleteMessageModal.tsx:42
+msgid "Delete Message"
+msgstr "Delete Message"
+
 #: src/store/userPresenceStore.ts:32
-msgid "Do not distrub"
-msgstr "Do not distrub"
+msgid "Do not disturb"
+msgstr "Do not disturb"
+
+#: src/components/message-pane/deleteMessageModal.tsx:48
+msgid "Don't Delete"
+msgstr "Don't Delete"
 
 #: src/pages/LoginPage.tsx:56
 msgid "Email"
 msgstr "Email"
 
-#: src/components/inboxDrawer.tsx:389
+#: src/components/inboxDrawer.tsx:390
 msgid "Friends"
 msgstr "Friends"
 
@@ -45,7 +61,7 @@ msgstr "Friends"
 msgid "Home"
 msgstr "Home"
 
-#: src/components/inboxDrawer.tsx:388
+#: src/components/inboxDrawer.tsx:389
 msgid "Inbox"
 msgstr "Inbox"
 
@@ -67,20 +83,20 @@ msgid "Looking to play"
 msgstr "Looking to play"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:99
+#: src/components/message-pane/chatbar.tsx:100
 msgid "Message {0}"
 msgstr "Message {0}"
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:94
+#: src/components/message-pane/chatbar.tsx:95
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
-#: src/components/message-pane/messageItem.tsx:332
+#: src/components/message-pane/messageItem.tsx:336
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messageItem.tsx:167
+#: src/components/message-pane/messageItem.tsx:172
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -90,7 +106,7 @@ msgid "Offline"
 msgstr "Offline"
 
 #. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:335
+#: src/components/inboxDrawer.tsx:336
 msgid "Offline - {0}"
 msgstr "Offline - {0}"
 
@@ -99,7 +115,7 @@ msgid "Online"
 msgstr "Online"
 
 #. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:334
+#: src/components/inboxDrawer.tsx:335
 msgid "Online - {0}"
 msgstr "Online - {0}"
 

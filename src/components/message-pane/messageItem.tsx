@@ -137,10 +137,12 @@ export const MessageItem = (props: {
   prevMessage?: Message;
   newMarker?: boolean;
   container: HTMLDivElement;
+  hideNewDayMarker?: boolean;
 }) => {
   const creator = props.message.createdBy;
 
-  const newDay = isNewDay(props.message, props.prevMessage);
+  const newDay =
+    !props.hideNewDayMarker && isNewDay(props.message, props.prevMessage);
 
   const group =
     !newDay &&
@@ -177,7 +179,7 @@ export const MessageItem = (props: {
         ]}
       >
         {hasMessageReplies && <MessageReplies message={props.message} />}
-        <div class={scoped`messageContainer`}>
+        <div class={[scoped`messageContainer`, "messageContainer"]}>
           {group ? (
             <div class={scoped`avatarPlaceholder`}></div>
           ) : (

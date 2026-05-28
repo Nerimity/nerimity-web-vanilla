@@ -7,7 +7,7 @@ export const UserPresenceType = {
   ONLINE: 1,
   LOOKING_TO_PLAY: 2,
   AWAY_FROM_KEYBOARD: 3,
-  DO_NOT_DISTRUB: 4,
+  DO_NOT_DISTURB: 4,
 } as const;
 
 export const UserPresenceDetails = {
@@ -27,9 +27,9 @@ export const UserPresenceDetails = {
     id: "away-from-keyboard",
     text: t`Away from keyboard`,
   },
-  [UserPresenceType.DO_NOT_DISTRUB]: {
-    id: "do-not-distrub",
-    text: t`Do not distrub`,
+  [UserPresenceType.DO_NOT_DISTURB]: {
+    id: "do-not-disturb",
+    text: t`Do not disturb`,
   },
 } as const;
 

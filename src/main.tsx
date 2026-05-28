@@ -2,6 +2,7 @@ import "./i18n";
 import "./style.css";
 import type createAppPage from "./pages/app-page/AppPage";
 import { getLocalItem } from "./utils/localStorage";
+import { portalElement } from "./utils/portal";
 import { router, type MatchResult } from "./utils/router";
 import { userAgent } from "./utils/userAgent";
 
@@ -15,6 +16,7 @@ const App = () => {
   const app = document.getElementById("app")!;
   if (userAgent.mobile) {
     app.classList.add("mobileAgent");
+    portalElement().classList.add("mobileAgent");
   }
   let currentPage: ReturnType<typeof createAppPage> | undefined = undefined;
 

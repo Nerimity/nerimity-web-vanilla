@@ -58,6 +58,15 @@ const button = css`
     }
   }
   &.alert {
+    &.primary {
+      background-color: var(--alert-color);
+      .label {
+        color: var(--text-color);
+      }
+      .icon {
+        color: var(--text-color);
+      }
+    }
     .label {
       color: var(--alert-color);
     }

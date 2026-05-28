@@ -36,7 +36,7 @@
   --status-online: #78e380;
   --status-looking-to-play: #3b82f6;
   --status-away-from-keyboard: #ff8f2c;
-  --status-do-not-distrub: #eb6e6e;
+  --status-do-not-disturb: #eb6e6e;
 }
 
 html,
@@ -76,10 +76,12 @@ body {
   font-variation-settings: "FILL" 1;
 }
 
+#portal .scrollbarHover,
 body .scrollbarHover {
   overflow: auto;
   padding-right: var(--mobile-padding-right, 6px);
 }
+#portal:not(.mobileAgent),
 #app:not(.mobileAgent) {
   ::-webkit-scrollbar {
     width: 4px;
