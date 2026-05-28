@@ -13,61 +13,74 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/message-pane/deleteMessageModal.tsx:30
-msgid "Are you sure you want to delete this message?"
-msgstr "Are you sure you want to delete this message?"
-
-#: src/store/accountStore.ts:59
-msgid "Authenticating..."
-msgstr "Authenticating..."
-
-#: src/store/userPresenceStore.ts:28
-msgid "Away from keyboard"
-msgstr "Away from keyboard"
-
-#: src/store/accountStore.ts:64
-msgid "Connected!"
-msgstr "Connected!"
-
-#: src/store/accountStore.ts:62
-msgid "Connecting..."
-msgstr "Connecting..."
-
-#: src/components/message-pane/deleteMessageModal.tsx:55
-msgid "Delete"
-msgstr "Delete"
-
-#: src/components/message-pane/deleteMessageModal.tsx:42
-msgid "Delete Message"
-msgstr "Delete Message"
-
-#: src/store/userPresenceStore.ts:32
-msgid "Do not disturb"
-msgstr "Do not disturb"
-
-#: src/components/message-pane/deleteMessageModal.tsx:48
-msgid "Don't Delete"
-msgstr "Don't Delete"
-
-#: src/pages/LoginPage.tsx:56
-msgid "Email"
-msgstr "Email"
-
-#: src/components/inboxDrawer.tsx:390
-msgid "Friends"
-msgstr "Friends"
-
 #: src/components/appHeader.tsx:62
 msgid "Home"
 msgstr "Home"
+
+#. placeholder {0}: online.length
+#: src/components/inboxDrawer.tsx:335
+msgid "Online - {0}"
+msgstr "Online - {0}"
+
+#. placeholder {0}: offline.length
+#: src/components/inboxDrawer.tsx:336
+msgid "Offline - {0}"
+msgstr "Offline - {0}"
 
 #: src/components/inboxDrawer.tsx:389
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/pages/LoginPage.tsx:107
-msgid "Logging in..."
-msgstr "Logging in..."
+#: src/components/inboxDrawer.tsx:390
+msgid "Friends"
+msgstr "Friends"
+
+#. placeholder {0}: channel.name!
+#: src/components/message-pane/chatbar.tsx:95
+msgid "Message in {0}"
+msgstr "Message in {0}"
+
+#. placeholder {0}: user?.username ?? ""
+#: src/components/message-pane/chatbar.tsx:100
+msgid "Message {0}"
+msgstr "Message {0}"
+
+#: src/components/message-pane/deleteMessageModal.tsx:30
+msgid "Are you sure you want to delete this message?"
+msgstr "Are you sure you want to delete this message?"
+
+#: src/components/message-pane/deleteMessageModal.tsx:42
+msgid "Delete Message"
+msgstr "Delete Message"
+
+#: src/components/message-pane/deleteMessageModal.tsx:48
+msgid "Don't Delete"
+msgstr "Don't Delete"
+
+#: src/components/message-pane/deleteMessageModal.tsx:55
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/message-pane/messageItem.tsx:172
+msgid "New Messages"
+msgstr "New Messages"
+
+#: src/components/message-pane/messageItem.tsx:336
+msgid "Message was deleted."
+msgstr "Message was deleted."
+
+#: src/components/serverMemberList.tsx:38
+#: src/store/userPresenceStore.ts:16
+msgid "Offline"
+msgstr "Offline"
+
+#: src/pages/LoginPage.tsx:56
+msgid "Email"
+msgstr "Email"
+
+#: src/pages/LoginPage.tsx:59
+msgid "Password"
+msgstr "Password"
 
 #: src/pages/LoginPage.tsx:64
 #: src/pages/LoginPage.tsx:99
@@ -78,47 +91,34 @@ msgstr "Login"
 msgid "Login to continue"
 msgstr "Login to continue"
 
-#: src/store/userPresenceStore.ts:24
-msgid "Looking to play"
-msgstr "Looking to play"
+#: src/pages/LoginPage.tsx:107
+msgid "Logging in..."
+msgstr "Logging in..."
 
-#. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:100
-msgid "Message {0}"
-msgstr "Message {0}"
+#: src/store/accountStore.ts:59
+msgid "Authenticating..."
+msgstr "Authenticating..."
 
-#. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:95
-msgid "Message in {0}"
-msgstr "Message in {0}"
+#: src/store/accountStore.ts:62
+msgid "Connecting..."
+msgstr "Connecting..."
 
-#: src/components/message-pane/messageItem.tsx:336
-msgid "Message was deleted."
-msgstr "Message was deleted."
-
-#: src/components/message-pane/messageItem.tsx:172
-msgid "New Messages"
-msgstr "New Messages"
-
-#: src/components/serverMemberList.tsx:38
-#: src/store/userPresenceStore.ts:16
-msgid "Offline"
-msgstr "Offline"
-
-#. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:336
-msgid "Offline - {0}"
-msgstr "Offline - {0}"
+#: src/store/accountStore.ts:64
+msgid "Connected!"
+msgstr "Connected!"
 
 #: src/store/userPresenceStore.ts:20
 msgid "Online"
 msgstr "Online"
 
-#. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:335
-msgid "Online - {0}"
-msgstr "Online - {0}"
+#: src/store/userPresenceStore.ts:24
+msgid "Looking to play"
+msgstr "Looking to play"
 
-#: src/pages/LoginPage.tsx:59
-msgid "Password"
-msgstr "Password"
+#: src/store/userPresenceStore.ts:28
+msgid "Away from keyboard"
+msgstr "Away from keyboard"
+
+#: src/store/userPresenceStore.ts:32
+msgid "Do not disturb"
+msgstr "Do not disturb"

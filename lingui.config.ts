@@ -4,6 +4,7 @@ export default defineConfig({
   sourceLocale: "en",
   locales: ["en"],
   compileNamespace: "ts",
+  orderBy: "origin",
   macro: {
     jsxPackage: ["@lingui/react/macro", "@trans"],
   },
