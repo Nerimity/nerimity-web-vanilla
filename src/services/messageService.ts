@@ -22,3 +22,10 @@ export const postMessage = async (channelId: string, body: PostMessageBody) => {
     body,
   });
 };
+
+export const deleteMessage = async (channelId: string, messageId: string) => {
+  return request(`/channels/${channelId}/messages/${messageId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};

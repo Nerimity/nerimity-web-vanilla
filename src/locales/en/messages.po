@@ -45,21 +45,26 @@ msgstr "Message in {0}"
 msgid "Message {0}"
 msgstr "Message {0}"
 
-#: src/components/message-pane/deleteMessageModal.tsx:30
+#: src/components/message-pane/deleteMessageModal.tsx:31
 msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
-#: src/components/message-pane/deleteMessageModal.tsx:42
+#: src/components/message-pane/deleteMessageModal.tsx:43
 msgid "Delete Message"
 msgstr "Delete Message"
 
-#: src/components/message-pane/deleteMessageModal.tsx:48
+#: src/components/message-pane/deleteMessageModal.tsx:49
 msgid "Don't Delete"
 msgstr "Don't Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:55
+#: src/components/message-pane/deleteMessageModal.tsx:56
+#: src/components/message-pane/deleteMessageModal.tsx:77
 msgid "Delete"
 msgstr "Delete"
+
+#: src/components/message-pane/deleteMessageModal.tsx:70
+msgid "Deleting..."
+msgstr "Deleting..."
 
 #: src/components/message-pane/messageItem.tsx:172
 msgid "New Messages"

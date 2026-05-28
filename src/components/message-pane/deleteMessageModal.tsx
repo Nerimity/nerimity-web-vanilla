@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
+import { deleteMessage } from "../../services/messageService";
 import type { Message } from "../../store/messageStore";
 import { Button } from "../button";
 import { createModal, Modal } from "../modal";
@@ -60,14 +61,34 @@ export const createDeleteMessageModal = (props: { message: Message }) => {
     </Modal.Root>
   ) as HTMLDivElement;
 
+  let deleting = false;
+
+  const handleDeleteMessage = async (button: HTMLElement) => {
+    if (deleting) return;
+    const label = button?.querySelector(".label")!;
+    deleting = true;
+    label.textContent = t`Deleting...`;
+
+    const [, error] = await deleteMessage(
+      props.message.channelId,
+      props.message.id,
+    );
+    deleting = false;
+    label.textContent = t`Delete`;
+    if (!error) {
+      abortController.abort();
+    }
+  };
+
   modal.addEventListener(
     "click",
-    (e) => {
+    async (e) => {
       const target = e.target as HTMLElement;
       const button = target.closest(".button") as HTMLElement | null;
       const action = button?.dataset.action;
       if (action === "delete") {
-        console.log("DELETE MESSAGE");
+        handleDeleteMessage(button!);
+        return;
       }
       if (action === "close") {
         abortController.abort();
