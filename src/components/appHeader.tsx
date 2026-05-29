@@ -41,6 +41,9 @@ const pill = css`
     padding: 4px;
     margin-right: 4px;
     font-size: 16px;
+    &.warn {
+      background-color: var(--warn-color);
+    }
   }
   > .label {
     overflow: hidden;
@@ -56,7 +59,6 @@ const Pill = () => {
   const user = !inbox ? null : userStore.users.get(inbox.recipientId)!;
 
   const authenticated = accountStore.authenticated;
-
   const label = !accountStore.authenticated
     ? accountStore.connectionState()
     : channel?.name || user?.username || t`Home`;
@@ -67,7 +69,7 @@ const Pill = () => {
   return (
     <div class={pill}>
       {icon ? (
-        <Icon name={icon} class="icon" />
+        <Icon name={icon} class={["icon", !authenticated && "warn"]} />
       ) : (
         <Avatar size={24} server={server} user={user} />
       )}
