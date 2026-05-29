@@ -7,6 +7,7 @@ interface RequestOpts {
   body?: any;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   params?: Record<string, string | undefined>;
+  text?: boolean;
 }
 
 export interface Error {
@@ -39,6 +40,9 @@ export async function request<T>(rawUrl: string, opts?: RequestOpts) {
     const error = safeParseJson(raw);
     if (!error) return [null, { message: raw } as Error] as const;
     return [null, error as Error] as const;
+  }
+  if (opts?.text) {
+    return [res.text() as T, null] as const;
   }
 
   const json = await res.json();

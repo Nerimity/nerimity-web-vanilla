@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
+import type { Message } from "../../store/messageStore";
 import { userStore, type User } from "../../store/userStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Avatar } from "../avatar";
@@ -119,13 +120,22 @@ export const createTypingIndicator = (abortController: AbortController) => {
     avatarsEl.replaceChildren(...avatars);
   };
 
-  const onTyping = (payload: { channelId: string; userId: string }) => {
+  const handleTyping = (payload: { channelId: string; userId: string }) => {
     if (channelStore.currentChannelId !== payload.channelId) return;
     upsertTypingUser(payload.userId);
     clearOldTypingUsers();
   };
 
-  storeEmitter.on("channel:typing", onTyping, signal);
+  const handleMessageCreated = (payload: Message) => {
+    if (channelStore.currentChannelId !== payload.channelId) return;
+    const deleted = typingUsers.delete(payload.createdBy.id);
+    if (deleted) {
+      rerender();
+    }
+  };
+
+  storeEmitter.on("channel:typing", handleTyping, signal);
+  storeEmitter.on("message:created", handleMessageCreated, signal);
 
   signal.addEventListener("abort", () => {
     if (timeout) clearTimeout(timeout);

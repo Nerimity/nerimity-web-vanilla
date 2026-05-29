@@ -138,7 +138,8 @@ function createChannelStore() {
   };
 
   const dismissNotification = (channelId: string) => {
-    if (notificationsMemo.value()[channelId]) {
+    const hasMention = messageMentionStore.mentions.get(channelId)?.count;
+    if (hasMention || notificationsMemo.value()[channelId]) {
       socket.dismissNotification(channelId);
     }
   };

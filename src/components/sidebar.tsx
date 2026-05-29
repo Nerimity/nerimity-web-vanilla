@@ -186,6 +186,7 @@ export const createSidebar = () => {
     "channel:notify_update",
     (event) => {
       const channel = channelStore.channels.get(event.channelId)!;
+      if (!channel?.serverId) return;
       renderList({ id: channel.serverId });
     },
     signal,

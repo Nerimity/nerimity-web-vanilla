@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
+import { postTyping } from "../../services/channelService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
@@ -58,10 +59,24 @@ export const createChatbar = () => {
   const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
   const sendButton = chatbar.querySelector(".button.send") as HTMLButtonElement;
 
+  let lastInputAt = 0;
+  const handleInput = () => {
+    const property = channelStore.getProperty(channelStore.currentChannelId!)!;
+    property.content = input.value.trim();
+    if (lastInputAt >= Date.now() - 4000) {
+      return;
+    }
+    lastInputAt = Date.now();
+    postTyping(channelStore.currentChannel()!.id);
+  };
+
   const sendMessage = () => {
+    lastInputAt = 0;
+    const property = channelStore.getProperty(channelStore.currentChannelId!)!;
     input.focus();
     const value = input.value.trim();
     if (!value) return;
+    property.content = "";
     input.value = "";
     messageStore.sendMessage(channelStore.currentChannel()!.id, {
       content: value,
@@ -75,6 +90,7 @@ export const createChatbar = () => {
   };
 
   input.addEventListener("keydown", handleKeyDown, { signal });
+  input.addEventListener("input", handleInput, { signal });
 
   sendButton.addEventListener("click", sendMessage, { signal });
 
@@ -106,7 +122,19 @@ export const createChatbar = () => {
     }
   };
 
-  storeEmitter.on("navigate:channelId", updatePlaceholder, signal);
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      lastInputAt = 0;
+
+      const property = channelStore.getProperty(
+        channelStore.currentChannelId!,
+      )!;
+      input.value = property.content || "";
+      updatePlaceholder();
+    },
+    signal,
+  );
 
   storeEmitter.on("ws:authStateUpdate", updatePlaceholder, signal);
   storeEmitter.on("ws:connectStateUpdate", updatePlaceholder, signal);

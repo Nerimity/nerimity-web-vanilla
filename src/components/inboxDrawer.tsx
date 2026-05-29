@@ -221,14 +221,17 @@ const createInboxList = () => {
     return [...items, ...inboxes] as InboxItem[];
   });
 
-  const rerender = (forceRerenderId?: string) => {
+  const rerender = (forceRerenderId?: string | boolean) => {
     reconcile({
       container: inboxListEl,
       values: sorted.value(),
       valueId: "channelId",
       dataAttr: "channel-id",
       create: InboxItem,
-      shouldRecreate: (_, item) => item.user.id === forceRerenderId,
+      shouldRecreate: (_, item) => {
+        if (forceRerenderId === true) return true;
+        return item.user.id === forceRerenderId;
+      },
     });
   };
   rerender();
@@ -241,9 +244,9 @@ const createInboxList = () => {
     rerender(event.userId);
   };
 
-  const handleMentionUpdate = (mention: MessageMention) => {
+  const handleMentionUpdate = (mention?: MessageMention) => {
     sorted.rerun();
-    rerender(mention.mentionedBy.id);
+    rerender(!mention ? true : mention.mentionedBy.id);
   };
 
   return {
@@ -327,7 +330,7 @@ const createFriendsList = () => {
     return { online, offline };
   });
 
-  const rerender = (forceRerenderId?: string) => {
+  const rerender = (forceRerenderId?: string | boolean) => {
     const online = categorizedFriends.value().online;
     const offline = categorizedFriends.value().offline;
     onlineTitle.classList.toggle("hide", online.length === 0);
@@ -340,7 +343,10 @@ const createFriendsList = () => {
       valueId: "userId",
       dataAttr: "user-id",
       create: FriendItem,
-      shouldRecreate: (_, item) => item.userId === forceRerenderId,
+      shouldRecreate: (_, item) => {
+        if (forceRerenderId === true) return true;
+        return item.userId === forceRerenderId;
+      },
     });
     reconcile({
       container: offlineListEl,
@@ -348,7 +354,10 @@ const createFriendsList = () => {
       valueId: "userId",
       dataAttr: "user-id",
       create: FriendItem,
-      shouldRecreate: (_, item) => item.userId === forceRerenderId,
+      shouldRecreate: (_, item) => {
+        if (forceRerenderId === true) return true;
+        return item.userId === forceRerenderId;
+      },
     });
   };
   rerender();
@@ -362,10 +371,10 @@ const createFriendsList = () => {
     rerender(event.userId);
   };
 
-  const handleMentionUpdate = (mention: MessageMention) => {
+  const handleMentionUpdate = (mention?: MessageMention) => {
     sorted.rerun();
     categorizedFriends.rerun();
-    rerender(mention.mentionedBy.id);
+    rerender(!mention ? true : mention.mentionedBy.id);
   };
 
   return {
@@ -464,7 +473,9 @@ const createInboxDrawer = () => {
       const item = target.closest(`.${inboxItem}`) as HTMLElement;
       if (item) {
         Drawer().updatePage({ page: 1 });
-        if (item.dataset.channelId) return;
+        const channelId = item.dataset.channelId;
+        const channel = channelStore.channels.get(channelId!);
+        if (channel) return;
         const userId = item.dataset.userId;
         if (!userId) return;
         openChannel(userId);
@@ -505,6 +516,17 @@ const createInboxDrawer = () => {
     "mention:dm_update",
     (mention) => {
       (inboxList || friendList)?.handleMentionUpdate(mention);
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "channel:notify_update",
+    (event) => {
+      const channel = channelStore.channels.get(event.channelId);
+      console.log("test");
+      if (channel?.serverId) return;
+      (inboxList || friendList)?.handleMentionUpdate();
     },
     signal,
   );
