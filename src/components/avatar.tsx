@@ -29,7 +29,7 @@ interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string } | null;
   server?: { avatar?: string; name: string; hexColor: string } | null;
 
-  size: 12 | 16 | 24 | 28 | 32 | 40 | 42 | 48 | 64;
+  size: 12 | 14 | 16 | 24 | 28 | 32 | 40 | 42 | 48 | 64;
   imgClass?: string;
 }
 const buildUrl = (props: AvatarProps) => {

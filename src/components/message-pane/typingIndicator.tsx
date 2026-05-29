@@ -20,13 +20,14 @@ const typingIndicator = css`
   border-radius: var(--radius-max);
   background: var(--gray-900);
   border: solid 1px var(--gray-600);
-  padding: 4px;
+  margin-top: 4px;
+  padding: 2px;
   padding-right: 8px;
   color: var(--text-color);
   align-self: start;
   align-items: center;
   font-size: 12px;
-  height: 26px;
+  height: 22px;
   .icon {
     color: var(--gray-400);
     font-size: 16px;
@@ -114,7 +115,7 @@ export const createTypingIndicator = (abortController: AbortController) => {
     const values = [...typingUsers.values()];
     const usernames = formatNames(values.map((u) => u.user.username))!;
 
-    const avatars = values.map((u) => <Avatar user={u.user} size={16} />);
+    const avatars = values.map((u) => <Avatar user={u.user} size={14} />);
 
     usernamesEl.replaceChildren(usernames);
     avatarsEl.replaceChildren(...avatars);
