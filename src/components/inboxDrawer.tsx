@@ -524,7 +524,6 @@ const createInboxDrawer = () => {
     "channel:notify_update",
     (event) => {
       const channel = channelStore.channels.get(event.channelId);
-      console.log("test");
       if (channel?.serverId) return;
       (inboxList || friendList)?.handleMentionUpdate();
     },
