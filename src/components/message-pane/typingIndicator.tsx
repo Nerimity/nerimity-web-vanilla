@@ -4,30 +4,14 @@ import { t } from "@lingui/core/macro";
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import { userStore, type User } from "../../store/userStore";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { Avatar } from "../avatar";
+import { Icon } from "../icon";
 
 interface TypingUser {
   user: User;
   timestamp: number;
 }
-
-const onTyping = (callback: (evet: any) => void) => {
-  const interval = setInterval(() => {
-    const userIds = [
-      "1477289864272715776",
-      "1387155078351331329",
-      "1289157673362825217",
-    ];
-    const randomUser = userIds[Math.floor(Math.random() * userIds.length)];
-    const payload = {
-      channelId: "1291473473448878081",
-      userId: randomUser,
-    };
-
-    callback(payload);
-  }, 1000);
-  console.log(interval);
-};
 
 const typingIndicator = css`
   display: flex;
@@ -35,13 +19,24 @@ const typingIndicator = css`
   border-radius: var(--radius-max);
   background: var(--gray-900);
   border: solid 1px var(--gray-600);
-  padding: 4px 4px;
+  padding: 4px;
   padding-right: 8px;
   color: var(--text-color);
   align-self: start;
   align-items: center;
   font-size: 12px;
   height: 26px;
+  .icon {
+    color: var(--gray-400);
+    font-size: 16px;
+  }
+
+  .usernames {
+    color: var(--gray-400);
+    b {
+      color: var(--text-color);
+    }
+  }
 
   &.hide {
     visibility: hidden;
@@ -68,6 +63,7 @@ export const createTypingIndicator = (abortController: AbortController) => {
   let timeout: NodeJS.Timeout | null = null;
   const el = (
     <div class={[typingIndicator, "hide"]}>
+      <Icon class="icon" name="pending" outlined />
       {avatarsEl}
       {usernamesEl}
     </div>
@@ -91,7 +87,7 @@ export const createTypingIndicator = (abortController: AbortController) => {
     if (timeout) return;
     const now = Date.now();
     for (const [userId, typingUser] of typingUsers) {
-      if (now - typingUser.timestamp > 2000) {
+      if (now - typingUser.timestamp > 5000) {
         typingUsers.delete(userId);
       }
     }
@@ -102,7 +98,7 @@ export const createTypingIndicator = (abortController: AbortController) => {
     timeout = setTimeout(() => {
       timeout = null;
       clearOldTypingUsers();
-    }, 1000);
+    }, 5000);
   };
 
   const rerender = () => {
@@ -123,11 +119,13 @@ export const createTypingIndicator = (abortController: AbortController) => {
     avatarsEl.replaceChildren(...avatars);
   };
 
-  onTyping((payload: { channelId: string; userId: string }) => {
+  const onTyping = (payload: { channelId: string; userId: string }) => {
     if (channelStore.currentChannelId !== payload.channelId) return;
     upsertTypingUser(payload.userId);
     clearOldTypingUsers();
-  });
+  };
+
+  storeEmitter.on("channel:typing", onTyping, signal);
 
   signal.addEventListener("abort", () => {
     if (timeout) clearTimeout(timeout);

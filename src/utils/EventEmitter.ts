@@ -24,6 +24,7 @@ type StoreEvents = {
   "mention:dm_update": MessageMention;
   "channel:notify_update": { channelId: string };
   "inbox:open": Inbox;
+  "channel:typing": { channelId: string; userId: string };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

@@ -22,6 +22,11 @@ export const socketEventHandler = (event: string, payload: any) => {
   if (payload instanceof ArrayBuffer) {
     payload = decompressObject(new Uint8Array(payload));
   }
+
+  if (event === "channel:typing") {
+    onTyping(payload);
+    return;
+  }
   if (event === "user:authenticated") {
     onAuthenticated(payload);
     return;
@@ -158,4 +163,8 @@ const onServerMembersFetched = (payload: {
 const onInboxOpened = (payload: { channel: RawChannel } & RawInbox) => {
   channelStore.setChannel(payload.channel);
   inboxStore.setInbox(payload);
+};
+
+const onTyping = (payload: { channelId: string; userId: string }) => {
+  storeEmitter.emit("channel:typing", payload);
 };

@@ -37,7 +37,6 @@ const messagePane = css`
     flex-direction: column;
     width: 100%;
     flex: 1;
-    margin-bottom: 10px;
   }
   .${scoped`bottomSentinel`} {
     height: 1px;

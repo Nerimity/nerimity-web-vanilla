@@ -19,7 +19,7 @@ const chatbarContainer = css`
   right: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   padding: 8px;
   padding-top: 0;
   z-index: 9999999999999;
