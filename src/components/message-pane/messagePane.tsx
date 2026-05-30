@@ -46,6 +46,9 @@ const messagePane = css`
     display: none;
   }
 `;
+
+const SCROLLED_BOTTOM_THRESHOLD = 50;
+
 const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -104,13 +107,21 @@ const createMessagePane = () => {
 
   el.appendChild(hoverActions.hoverActionEl);
 
-  const isScrolledToBottom = () => {
-    const threshold = 50;
-    return el.scrollTop + el.clientHeight >= el.scrollHeight - threshold;
+  let isScrolledToBottom = false;
+
+  const updateScrolledToBottom = () => {
+    isScrolledToBottom =
+      el.scrollTop + el.clientHeight >=
+      el.scrollHeight - SCROLLED_BOTTOM_THRESHOLD;
   };
 
+  el.addEventListener("scroll", updateScrolledToBottom, {
+    passive: true,
+    signal,
+  });
+
   const scrollToBottom = (force?: boolean) => {
-    if (!force && !isScrolledToBottom()) return;
+    if (!force && !isScrolledToBottom) return;
     // when drawer is  currently being dragged, dont reset the position.
     requestAnimationFrame(() => {
       Drawer().setIgnoreNextScroll();
@@ -209,6 +220,7 @@ const createMessagePane = () => {
     });
 
     skeletonsTop.classList.toggle(scoped`hide`, !shouldShowTopSkel());
+    updateScrolledToBottom();
     restoreScrollPosition(opts);
   };
   const { onBottomSkeletonIntersect } = createInfiniteScroll({
@@ -230,7 +242,7 @@ const createMessagePane = () => {
     "navigate:channelId",
     () => {
       lastSeenMessage = null;
-      const scrolledToBottom = isScrolledToBottom();
+      const scrolledToBottom = isScrolledToBottom;
       const scrollTop = el.scrollTop;
 
       if (previousChannelId) {
@@ -256,7 +268,7 @@ const createMessagePane = () => {
     signal,
   );
 
-  const isFocusedAtBottom = () => document.hasFocus() && isScrolledToBottom();
+  const isFocusedAtBottom = () => document.hasFocus() && isScrolledToBottom;
 
   const dismissNotification = () => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
@@ -273,7 +285,15 @@ const createMessagePane = () => {
     rootMargin: "0px 0px -50px 0px",
   });
 
+  const handleWindowResize = () => {
+    scrollToBottom();
+  };
+
   window.addEventListener("focus", dismissNotification, { signal });
+  window.addEventListener("resize", handleWindowResize, {
+    signal,
+    passive: true,
+  });
 
   storeEmitter.on(
     "message:created",
@@ -283,7 +303,7 @@ const createMessagePane = () => {
       const createdByMe = message.createdBy.id === accountStore.currentUser?.id;
 
       rerender({
-        forceScrollDown: isScrolledToBottom(),
+        forceScrollDown: isScrolledToBottom,
         removeLastSeenMarker: createdByMe || isFocusedAtBottom(),
         updateLastSeenMarker: true,
       });
