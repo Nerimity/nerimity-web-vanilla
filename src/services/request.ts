@@ -5,7 +5,7 @@ import { getLocalItem } from "../utils/localStorage";
 interface RequestOpts {
   useToken?: boolean;
   body?: any;
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   params?: Record<string, string | undefined>;
   text?: boolean;
 }

@@ -113,6 +113,7 @@ export interface RawMessage {
   channelId: string;
   createdBy: RawUser;
   createdAt: number;
+  editedAt?: number;
   mentions?: RawUser[];
   attachments?: Attachment[];
   embed?: RawMessageEmbed;

@@ -5,6 +5,7 @@ import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore } from "../../store/messageStore";
+import { MessageType } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
 import { Button } from "../button";
 import { createDeleteMessageModal } from "./deleteMessageModal";
@@ -55,12 +56,18 @@ const HoverActions = (props: {
 
   const createdBySelf = message?.createdBy.id === accountStore.currentUser?.id;
 
+  const canEdit = () => {
+    if (!createdBySelf) return false;
+    if (message?.type !== MessageType.CONTENT) return false;
+    return !message.state;
+  };
+
   return (
     <div class={[hoverActionContainer, "hide"]}>
       {grouped && (
         <span class="timestamp">{friendlyTimestamp(message?.createdAt!)}</span>
       )}
-      {createdBySelf && (
+      {canEdit() && (
         <Button class="button" data-action="edit" icon="edit" hoverBorder />
       )}
       <Button

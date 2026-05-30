@@ -14,12 +14,19 @@ import { serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
+import { Icon } from "../icon";
 import { Emoji } from "./Emoji";
 import { Mention } from "./Mention";
 
 const markup = css`
   line-height: 1.3;
   white-space: pre-wrap;
+
+  .edit {
+    font-size: 12px;
+    margin-left: 4px;
+    color: var(--gray-500);
+  }
 
   .heading {
     margin-top: 4px;
@@ -361,6 +368,7 @@ export function Markup(props: Props) {
   return (
     <span class={[markup, props.class, largeEmoji() && "largeEmoji"]}>
       {output}
+      {props.message?.editedAt ? <Icon class="edit" name="edit" /> : null}
     </span>
   );
 }

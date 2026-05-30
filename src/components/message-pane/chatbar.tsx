@@ -96,6 +96,17 @@ export const createChatbar = () => {
     if (!value) return;
     property.content = "";
     input.value = "";
+
+    if (property.editingMessage) {
+      messageStore.editMessage(
+        channelStore.currentChannel()!.id,
+        property.editingMessage.id,
+        value,
+      );
+      channelStore.setEditingMessage(channelStore.currentChannelId!, undefined);
+      return;
+    }
+
     messageStore.sendMessage(channelStore.currentChannel()!.id, {
       content: value,
     });

@@ -1,4 +1,8 @@
-import { fetchMessages, postMessage } from "../services/messageService";
+import {
+  fetchMessages,
+  patchEditMessage,
+  postMessage,
+} from "../services/messageService";
 import { socket } from "../services/socket";
 import {
   MessageType,
@@ -29,6 +33,7 @@ export class Message {
   embed?: LocalEmbed;
   replyMessages?: RawReplyMessage[];
   type: MessageType;
+  editedAt?: number;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -41,6 +46,7 @@ export class Message {
     this.embed = data.embed;
     this.replyMessages = data.replyMessages;
     this.type = data.type;
+    this.editedAt = data.editedAt;
   }
 }
 
@@ -118,8 +124,10 @@ function createMessageStore() {
       embed: rawMessage.embed ?? existing.embed,
       replyMessages: rawMessage.replyMessages,
       type: existing.type,
+      editedAt: rawMessage.editedAt ?? existing.editedAt,
       ...rawMessage,
     });
+    message.state = undefined;
     channelMessages[messageIndex] = message;
     messages.set(channelId, channelMessages);
     storeEmitter.emit("message:updated", { message, index: messageIndex });
@@ -146,6 +154,42 @@ function createMessageStore() {
     storeEmitter.emit("message:created", message);
     return message;
   };
+
+  const editMessage = async (
+    channelId: string,
+    messageId: string,
+    content: string,
+  ) => {
+    const messages = messageStore.messages.get(channelId);
+    if (!messages) return;
+    let messageIndex = messages.findLastIndex((m) => m.id === messageId);
+    if (messageIndex === -1) return;
+    const message = messages[messageIndex]!;
+    message.content = content;
+    message.state = "sending";
+    message.editedAt = Date.now();
+    storeEmitter.emit("message:updated", { message, index: messageIndex });
+
+    const [result, error] = await patchEditMessage(
+      channelId,
+      messageId,
+      content,
+    );
+
+    messageIndex = messages.findLastIndex((m) => m.id === messageId);
+    if (error) {
+      message.state = "error";
+      storeEmitter.emit("message:updated", { message, index: messageIndex });
+      return;
+    }
+    const newMessage = new Message(result);
+    messages[messageIndex] = newMessage;
+    storeEmitter.emit("message:updated", {
+      message: newMessage,
+      index: messageIndex,
+    });
+  };
+
   const sendMessage = async (channelId: string, opts: SendMessageOpts) => {
     const localMessage = createLocalMessage(channelId, opts);
     if (!localMessage) return;
@@ -177,5 +221,6 @@ function createMessageStore() {
     deleteMessage,
     updateMessage,
     sendMessage,
+    editMessage,
   };
 }

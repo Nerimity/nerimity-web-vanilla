@@ -32,6 +32,20 @@ export const postMessage = async (channelId: string, body: PostMessageBody) => {
   });
 };
 
+export const patchEditMessage = async (
+  channelId: string,
+  messageId: string,
+  content: string,
+) => {
+  return postMessagesQueue.add(() => {
+    return request<RawMessage>(`/channels/${channelId}/messages/${messageId}`, {
+      useToken: true,
+      method: "PATCH",
+      body: { content },
+    });
+  });
+};
+
 export const deleteMessage = async (channelId: string, messageId: string) => {
   return request(`/channels/${channelId}/messages/${messageId}`, {
     useToken: true,
