@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
-import { h, Fragment } from "../../h";
+import { h } from "../../h";
 import { postTyping } from "../../services/channelService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
