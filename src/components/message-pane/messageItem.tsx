@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
+import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
@@ -61,6 +62,9 @@ const messageItem = css`
   }
   padding-top: 2px;
   padding-bottom: 2px;
+  &.editing {
+    background-color: var(--gray-800);
+  }
   &.withDetails {
     margin-top: 8px;
   }
@@ -141,6 +145,7 @@ export const MessageItem = (props: {
 }) => {
   const creator = props.message.createdBy;
 
+  const channelProperty = channelStore.currentChannelProperty();
   const newDay =
     !props.hideNewDayMarker && isNewDay(props.message, props.prevMessage);
 
@@ -165,6 +170,7 @@ export const MessageItem = (props: {
     !props.message.content.includes(" ");
 
   const hasMessageReplies = !!props.message.replyMessages?.length;
+  const editing = channelProperty?.editingMessage?.id === props.message.id;
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
@@ -176,6 +182,7 @@ export const MessageItem = (props: {
           messageItem,
           !group && "withDetails",
           props.message.state,
+          editing && "editing",
         ]}
       >
         {hasMessageReplies && <MessageReplies message={props.message} />}

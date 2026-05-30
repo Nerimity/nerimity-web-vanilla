@@ -65,9 +65,14 @@ function createChannelStore() {
     return newProperty;
   };
 
+  const currentChannelProperty = () => getProperty(currentChannelId!);
+
   const setEditingMessage = (channelId: string, message?: Message) => {
+    const property = getProperty(channelId, false);
+    const prevMessage = property?.editingMessage;
+    if (prevMessage === message) return;
     setProperty(channelId, { editingMessage: message });
-    storeEmitter.emit("message:editing", { message });
+    storeEmitter.emit("message:editing", { message, prevMessage });
   };
 
   const setProperty = (
@@ -163,6 +168,7 @@ function createChannelStore() {
     notificationsMemo,
     currentChannel,
     getProperty,
+    currentChannelProperty,
     setProperty,
     setChannel,
     hasNotification,

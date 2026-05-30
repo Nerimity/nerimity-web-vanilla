@@ -12,6 +12,7 @@ import { MessageType } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
+import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 
 const chatbarContainer = css`
@@ -27,13 +28,20 @@ const chatbarContainer = css`
   z-index: 9999999999999;
   .chatInput {
   }
+  .buttons {
+    margin: 4px;
+    display: flex;
+    gap: 4px;
+  }
   .button {
     width: 50px;
-    margin: 4px;
     padding: 6px 0;
     border-radius: var(--radius-4);
     .icon {
       font-size: 20px;
+    }
+    &.hide {
+      display: none;
     }
   }
 `;
@@ -43,26 +51,35 @@ export const createChatbar = () => {
   const { signal } = abortController;
 
   const typingIndicator = createTypingIndicator(abortController);
+  const editMessageIndicator = createEditMessageIndicator(signal);
+
+  const sendButton = (
+    <Button class="button send" icon="send" hoverBorder />
+  ) as HTMLElement;
+  const editButton = (
+    <Button class="button edit hide" icon="edit" hoverBorder />
+  ) as HTMLElement;
 
   const chatbar = (
     <div class={chatbarContainer}>
       {typingIndicator.el}
+      {editMessageIndicator}
       <Input
         class="chatInput"
         suffix={
-          <>
-            <Button class="button send" icon="send" hoverBorder />
-          </>
+          <div class="buttons">
+            {sendButton}
+            {editButton}
+          </div>
         }
       />
     </div>
   ) as unknown as HTMLElement;
   const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
-  const sendButton = chatbar.querySelector(".button.send") as HTMLButtonElement;
 
   let lastInputAt = 0;
   const handleInput = () => {
-    const property = channelStore.getProperty(channelStore.currentChannelId!)!;
+    const property = channelStore.currentChannelProperty()!;
     property.content = input.value.trim();
     if (lastInputAt >= Date.now() - 4000) {
       return;
@@ -73,7 +90,7 @@ export const createChatbar = () => {
 
   const sendMessage = () => {
     lastInputAt = 0;
-    const property = channelStore.getProperty(channelStore.currentChannelId!)!;
+    const property = channelStore.currentChannelProperty()!;
     input.focus();
     const value = input.value.trim();
     if (!value) return;
@@ -89,22 +106,39 @@ export const createChatbar = () => {
       sendMessage();
       return;
     }
+    if (event.key === "Escape") {
+      const channelId = channelStore.currentChannelId!;
+      channelStore.setEditingMessage(channelId, undefined);
+      channelStore.setProperty(channelId!, {
+        content: "",
+      });
+      syncValue();
+
+      return;
+    }
     if (event.key === "ArrowUp") {
+      const channelId = channelStore.currentChannelId!;
+      const property = channelStore.currentChannelProperty();
+      if (property?.content.trim()) {
+        return;
+      }
       event.preventDefault();
-      const messages = messageStore.messages.get(
-        channelStore.currentChannelId!,
-      );
+      const messages = messageStore.messages.get(channelId);
       if (!messages) return;
+
       const lastMessage = messages.findLast((m) => {
         if (m.state) return;
         if (m.type !== MessageType.CONTENT) return;
         return m.createdBy.id === accountStore.currentUser?.id;
       });
+
       if (!lastMessage) return;
-      channelStore.setEditingMessage(
-        channelStore.currentChannelId!,
-        lastMessage,
-      );
+
+      channelStore.setProperty(channelId, {
+        content: lastMessage.content || "",
+      });
+      channelStore.setEditingMessage(channelId, lastMessage);
+      syncValue();
       return;
     }
   };
@@ -142,15 +176,22 @@ export const createChatbar = () => {
     }
   };
 
+  const syncValue = () => {
+    const property = channelStore.currentChannelProperty()!;
+    input.value = property.content || "";
+
+    const isEditing = !!property.editingMessage;
+
+    sendButton.classList.toggle("hide", isEditing);
+    editButton.classList.toggle("hide", !isEditing);
+  };
+
   storeEmitter.on(
     "navigate:channelId",
     () => {
       lastInputAt = 0;
 
-      const property = channelStore.getProperty(
-        channelStore.currentChannelId!,
-      )!;
-      input.value = property.content || "";
+      syncValue();
       updatePlaceholder();
     },
     signal,

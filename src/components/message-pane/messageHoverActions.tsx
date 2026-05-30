@@ -101,13 +101,23 @@ export const createMessageHoverActions = (opts: {
     hoverActionEl.classList.toggle("hide", true);
   };
 
-  const handleDeleteMessage = () => {
+  const getMessage = () => {
     const messageId = hoveredMessageItem?.parentElement?.dataset.messageId;
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
-    const message = messages?.findLast((m) => m.id === messageId);
+    return messages?.findLast((m) => m.id === messageId);
+  };
+
+  const handleDeleteMessage = () => {
+    const message = getMessage();
     if (!message) return;
 
     createDeleteMessageModal({ message });
+  };
+
+  const handleEditMessage = () => {
+    const message = getMessage();
+    if (!message) return;
+    channelStore.setEditingMessage(channelStore.currentChannelId!, message);
   };
 
   hoverActionEl.addEventListener(
@@ -118,6 +128,9 @@ export const createMessageHoverActions = (opts: {
       const action = button?.dataset.action;
       if (action === "delete") {
         handleDeleteMessage();
+      }
+      if (action === "edit") {
+        handleEditMessage();
       }
     },
     { signal: opts.signal },

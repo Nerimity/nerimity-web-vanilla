@@ -61,7 +61,7 @@ export interface Props {
   message?: Message;
   animateEmoji?: boolean;
   class?: string;
-  serverId?: string;
+  serverId?: string | null;
 }
 
 type RenderContext = {

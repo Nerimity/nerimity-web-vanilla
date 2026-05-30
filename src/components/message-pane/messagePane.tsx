@@ -59,9 +59,7 @@ const createMessagePane = () => {
   const logs = (<div class={scoped`logs`}></div>) as unknown as HTMLDivElement;
 
   const getChannelProperty = () => {
-    const channelId = channelStore.currentChannelId;
-    if (!channelId) return null;
-    return channelStore.getProperty(channelId);
+    return channelStore.currentChannelProperty();
   };
 
   const shouldShowBottomSkel = () => {
@@ -97,13 +95,15 @@ const createMessagePane = () => {
     <div class={scoped`bottomSentinel`} />
   ) as HTMLDivElement;
 
+  const chatbarEl = chatbar.render();
+
   const el = (
     <div class={[messagePane, "scrollbarHover"]}>
       {skeletonsTop}
       {logs}
       {skeletonsBottom}
       {bottomSentinel}
-      {chatbar.render()}
+      {chatbarEl}
     </div>
   ) as HTMLDivElement;
   const hoverActions = createMessageHoverActions({ container: el, signal });
@@ -289,6 +289,7 @@ const createMessagePane = () => {
   });
 
   createResizeObserver(logs, () => scrollToBottom(), { signal });
+  createResizeObserver(chatbarEl, () => scrollToBottom(), { signal });
   window.addEventListener("focus", dismissNotification, { signal });
   window.addEventListener("resize", () => scrollToBottom(), {
     signal,
@@ -332,6 +333,13 @@ const createMessagePane = () => {
     ({ message, index }) => {
       if (message.channelId !== channelStore.currentChannelId) return;
       updateMessage(message, index);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message:editing",
+    () => {
+      rerender({ forceRecreate: true });
     },
     signal,
   );
