@@ -100,6 +100,8 @@ body .scrollbarHover {
     padding-right: var(--padding-right);
 
     &:hover {
+      /* for some reason, i have to add something here or else hover breaks in production build */
+      float: initial;
       &::-webkit-scrollbar-thumb {
         background-color: var(--primary-color);
       }
