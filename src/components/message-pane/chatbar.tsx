@@ -8,6 +8,7 @@ import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
+import { MessageType } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
@@ -86,6 +87,25 @@ export const createChatbar = () => {
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
       sendMessage();
+      return;
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      const messages = messageStore.messages.get(
+        channelStore.currentChannelId!,
+      );
+      if (!messages) return;
+      const lastMessage = messages.findLast((m) => {
+        if (m.state) return;
+        if (m.type !== MessageType.CONTENT) return;
+        return m.createdBy.id === accountStore.currentUser?.id;
+      });
+      if (!lastMessage) return;
+      channelStore.setEditingMessage(
+        channelStore.currentChannelId!,
+        lastMessage,
+      );
+      return;
     }
   };
 

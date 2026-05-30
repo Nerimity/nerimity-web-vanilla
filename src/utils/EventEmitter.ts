@@ -17,6 +17,7 @@ type StoreEvents = {
   "message:created": Message;
   "message:deleted": { id: string; channelId: string };
   "message:updated": { message: Message; index: number };
+  "message:editing": { message?: Message };
   "drawer:pageVisible": number;
   "drawer:modeChange": "mobile" | "desktop";
   "drawer:toggleRightDesktop": boolean;

@@ -9,6 +9,7 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
 import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
+import type { Message } from "./messageStore";
 import { serverStore } from "./serverStore";
 
 export const channelStore = createChannelStore();
@@ -42,6 +43,7 @@ interface ChannelProperty {
   canLoadBottom: boolean;
   loading: boolean;
   scrollTop?: number;
+  editingMessage?: Message;
 }
 
 function createChannelStore() {
@@ -61,6 +63,11 @@ function createChannelStore() {
     };
     properties.set(channelId, newProperty);
     return newProperty;
+  };
+
+  const setEditingMessage = (channelId: string, message?: Message) => {
+    setProperty(channelId, { editingMessage: message });
+    storeEmitter.emit("message:editing", { message });
   };
 
   const setProperty = (
@@ -150,6 +157,7 @@ function createChannelStore() {
     get currentChannelId() {
       return currentChannelId;
     },
+    setEditingMessage,
     updateLastMessagedAt,
     setCurrentChannelId,
     notificationsMemo,

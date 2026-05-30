@@ -11,7 +11,10 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
-import { createIntersectionObserver } from "../../utils/observer";
+import {
+  createIntersectionObserver,
+  createResizeObserver,
+} from "../../utils/observer";
 import { Drawer } from "../drawer";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
@@ -285,12 +288,9 @@ const createMessagePane = () => {
     rootMargin: "0px 0px -50px 0px",
   });
 
-  const handleWindowResize = () => {
-    scrollToBottom();
-  };
-
+  createResizeObserver(logs, () => scrollToBottom(), { signal });
   window.addEventListener("focus", dismissNotification, { signal });
-  window.addEventListener("resize", handleWindowResize, {
+  window.addEventListener("resize", () => scrollToBottom(), {
     signal,
     passive: true,
   });

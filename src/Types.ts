@@ -102,6 +102,11 @@ export interface ServerClan {
   tag: string;
 }
 
+export const MessageType = {
+  CONTENT: 0,
+};
+export type MessageType = (typeof MessageType)[keyof typeof MessageType];
+
 export interface RawMessage {
   id: string;
   content: string;
@@ -112,6 +117,7 @@ export interface RawMessage {
   attachments?: Attachment[];
   embed?: RawMessageEmbed;
   replyMessages?: RawReplyMessage[];
+  type: MessageType;
 }
 
 export interface PartialMessage {

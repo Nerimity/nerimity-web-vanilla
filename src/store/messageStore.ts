@@ -1,11 +1,12 @@
 import { fetchMessages, postMessage } from "../services/messageService";
 import { socket } from "../services/socket";
-import type {
-  Attachment,
-  RawMessage,
-  RawMessageEmbed,
-  RawReplyMessage,
-  RawUser,
+import {
+  MessageType,
+  type Attachment,
+  type RawMessage,
+  type RawMessageEmbed,
+  type RawReplyMessage,
+  type RawUser,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
@@ -27,6 +28,7 @@ export class Message {
   attachments: LocalAttachment[];
   embed?: LocalEmbed;
   replyMessages?: RawReplyMessage[];
+  type: MessageType;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -38,6 +40,7 @@ export class Message {
     this.attachments = data.attachments || [];
     this.embed = data.embed;
     this.replyMessages = data.replyMessages;
+    this.type = data.type;
   }
 }
 
@@ -114,6 +117,7 @@ function createMessageStore() {
       attachments: rawMessage.attachments ?? existing.attachments,
       embed: rawMessage.embed ?? existing.embed,
       replyMessages: rawMessage.replyMessages,
+      type: existing.type,
       ...rawMessage,
     });
     channelMessages[messageIndex] = message;
@@ -135,6 +139,7 @@ function createMessageStore() {
       channelId,
       createdBy: accountStore.currentUser!,
       createdAt: Date.now(),
+      type: MessageType.CONTENT,
     });
     message.state = "sending";
     messages.set(channelId, [...existing, message]);
