@@ -118,10 +118,12 @@ function createChannelStore() {
     }
     if (mentionsOnly) return false;
     if (!channel.serverId) return false;
-    const lastSeenAt = lastSeen.get(channel.id);
-    const hasNotSeen =
-      channel.lastMessagedAt &&
-      (!lastSeenAt || channel.lastMessagedAt! > lastSeenAt);
+    const lastMessagedAt = channel.lastMessagedAt! || 0;
+
+    const lastSeenAt = lastSeen.get(channel.id) || 0;
+
+    const hasNotSeen = !lastSeenAt || lastMessagedAt! > lastSeenAt;
+
     if (hasNotSeen) {
       return -1;
     }
@@ -132,7 +134,9 @@ function createChannelStore() {
     const notifications: Record<string, number> = {};
 
     for (const channel of channels.values()) {
+      if (channel.type !== ChannelType.SERVER_TEXT) continue;
       const count = hasNotification(channel);
+
       if (count !== false) notifications[channel.id] = count;
     }
     return notifications;

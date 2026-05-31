@@ -127,7 +127,13 @@ function createServerStore() {
     const currentChannels: Channel[] = [];
     for (const channel of channelStore.channels.values()) {
       if (channel.serverId !== currentServerId) continue;
-      if (isAdmin || !isPrivateChannel(channel) || hasRolePermission(channel)) {
+      const isCategory = channel.type === ChannelType.CATEGORY;
+      if (
+        isAdmin ||
+        isCategory ||
+        !isPrivateChannel(channel) ||
+        hasRolePermission(channel)
+      ) {
         currentChannels.push(channel);
       }
     }
@@ -194,10 +200,44 @@ function createServerStore() {
     const result: Record<string, number> = {};
 
     const channelNotifs = channelStore.notificationsMemo.value();
+    const currentUserId = accountStore.currentUser?.id;
 
     for (const [id, count] of Object.entries(channelNotifs)) {
       const channel = channelStore.channels.get(id);
       if (!channel?.serverId) continue;
+
+      const server = serverStore.servers.get(channel.serverId);
+      const defaultRoleId = server?.defaultRoleId;
+      const publicChannelBit = ChannelPermissionFlag.publicChannel.bit;
+
+      const member = serverMemberStore.serverMembers
+        .get(channel.serverId)
+        ?.get(currentUserId!);
+
+      const isAdmin = serverMemberStore.hasPermission(
+        channel.serverId,
+        currentUserId!,
+        RolePermissionFlag.admin.bit,
+      );
+
+      const defaultPerm = channel.permissions?.find(
+        (p) => p.roleId === defaultRoleId,
+      );
+      const isPrivateChannel =
+        defaultPerm && !hasBit(defaultPerm.permissions, publicChannelBit);
+
+      if (isPrivateChannel && !isAdmin) {
+        const memberRoleIds = member ? new Set(member.roleIds) : null;
+        const hasRolePermission =
+          channel.permissions &&
+          memberRoleIds &&
+          channel.permissions.some(
+            (p) =>
+              memberRoleIds.has(p.roleId!) &&
+              hasBit(p.permissions, publicChannelBit),
+          );
+        if (!hasRolePermission) continue;
+      }
 
       const isMention = count > 0;
 
