@@ -1,11 +1,14 @@
 import { socket } from "../services/socket";
 import { ChannelType, NotificationMode, type RawServer } from "../Types";
+import { hasBit } from "../utils/bitwise";
+import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
 import { debounce } from "../utils/debounce";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { accountStore } from "./accountStore";
 import { Channel, channelStore } from "./channelStore";
-import type { ServerMember } from "./serverMemberStore";
+import { serverMemberStore, type ServerMember } from "./serverMemberStore";
 import { ServerRole, serverRoleStore } from "./serverRoleStore";
 
 export const serverStore = createServerStore();
@@ -90,12 +93,47 @@ function createServerStore() {
   const currentChannelsSorted = new ManualMemo(() => {
     if (!currentServerId) return null;
 
-    const currentChannels = [...channelStore.channels.values()]
-      .filter((channel) => channel.serverId === currentServerId)
-      .sort((a, b) => a.order! - b.order!);
+    const currentUserId = accountStore.currentUser?.id;
+    const member = serverMemberStore.serverMembers
+      .get(currentServerId!)
+      ?.get(currentUserId!);
+
+    const isAdmin = serverMemberStore.hasPermission(
+      serverStore.currentServerId!,
+      currentUserId!,
+      RolePermissionFlag.admin.bit,
+    );
+
+    const server = servers.get(currentServerId!);
+    const defaultRoleId = server?.defaultRoleId;
+    const publicChannelBit = ChannelPermissionFlag.publicChannel.bit;
+    const memberRoleIds = member ? new Set(member.roleIds) : null;
+
+    const isPrivateChannel = (channel: Channel) => {
+      if (!channel.permissions) return false;
+      const perm = channel.permissions.find((p) => p.roleId === defaultRoleId);
+      return perm ? !hasBit(perm.permissions, publicChannelBit) : false;
+    };
+
+    const hasRolePermission = (channel: Channel) => {
+      if (!channel.permissions || !memberRoleIds) return false;
+      for (const permission of channel.permissions) {
+        if (!memberRoleIds.has(permission.roleId!)) continue;
+        if (hasBit(permission.permissions, publicChannelBit)) return true;
+      }
+      return false;
+    };
+
+    const currentChannels: Channel[] = [];
+    for (const channel of channelStore.channels.values()) {
+      if (channel.serverId !== currentServerId) continue;
+      if (isAdmin || !isPrivateChannel(channel) || hasRolePermission(channel)) {
+        currentChannels.push(channel);
+      }
+    }
+    currentChannels.sort((a, b) => a.order! - b.order!);
 
     const byCategory = new Map<string, Channel[]>();
-
     for (const channel of currentChannels) {
       if (channel.categoryId) {
         const group = byCategory.get(channel.categoryId);
