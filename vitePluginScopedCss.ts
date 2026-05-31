@@ -33,7 +33,7 @@ export function cssScopedPlugin(): Plugin {
         if (!seen.has(name)) {
           const varName = `__scoped_${name}`;
           const value = cssScoped(name, id, code);
-          declarations.push(`const ${varName} = ${JSON.stringify(value)};`);
+          declarations.push(`var ${varName} = ${JSON.stringify(value)};`);
           seen.set(name, varName);
         }
         return seen.get(name)!;
@@ -41,7 +41,7 @@ export function cssScopedPlugin(): Plugin {
 
       if (declarations.length === 0) return;
 
-      return { code: declarations.join("\n") + "\n" + result, map: null };
+      return { code: result + "\n" + declarations.join("\n"), map: null };
     },
   };
 }
