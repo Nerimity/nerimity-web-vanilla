@@ -13,6 +13,7 @@ import type {
   RawInbox,
   RawMessage,
   RawServerMember,
+  RawUserNotificationSettings,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
@@ -61,6 +62,10 @@ export const socketEventHandler = (event: string, payload: any) => {
   }
   if (event === "inbox:opened") {
     onInboxOpened(payload);
+    return;
+  }
+  if (event === "user:notification_settings_update") {
+    onNotificationSettingsUpdate(payload);
     return;
   }
 };
@@ -167,4 +172,16 @@ const onInboxOpened = (payload: { channel: RawChannel } & RawInbox) => {
 
 const onTyping = (payload: { channelId: string; userId: string }) => {
   storeEmitter.emit("channel:typing", payload);
+};
+
+const onNotificationSettingsUpdate = (payload: {
+  serverId?: string;
+  channelId?: string;
+  updated: Partial<RawUserNotificationSettings>;
+}) => {
+  accountStore.updateNotificationSetting({
+    serverId: payload.serverId,
+    channelId: payload.channelId,
+    ...payload.updated,
+  });
 };

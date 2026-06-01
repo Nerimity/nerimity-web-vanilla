@@ -28,7 +28,11 @@ export const createServerChannelList = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
-  const renderList = (opts?: { channelId: string }) => {
+
+  const renderList = (opts?: {
+    channelId?: string;
+    forceRecreate?: boolean;
+  }) => {
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
     if (!containerEl) return;
@@ -45,12 +49,18 @@ export const createServerChannelList = () => {
       valueId: "id",
       create: channelItemHelper.create,
       shouldRecreate(_, item) {
+        if (opts?.forceRecreate) return true;
         return opts?.channelId === item.id;
       },
     });
   };
 
   serverStore.currentChannelsSorted.onUpdate(() => renderList(), signal);
+  storeEmitter.on(
+    "noti_settings:update",
+    () => renderList({ forceRecreate: true }),
+    signal,
+  );
 
   storeEmitter.on("channel:notify_update", renderList, signal);
 

@@ -159,7 +159,7 @@ export const createSidebar = () => {
     </SidebarItem>
   ) as HTMLElement;
 
-  const renderList = (opts?: { id?: string }) => {
+  const renderList = (opts?: { id?: string; forceRecreate?: boolean }) => {
     const servers = [...serverStore.servers.values()];
     reconcile({
       container: serverListEl,
@@ -168,6 +168,7 @@ export const createSidebar = () => {
       valueId: "id",
       create: serverItemHelper.create,
       shouldRecreate(_, item) {
+        if (opts?.forceRecreate) return true;
         return opts?.id === item.id;
       },
     });
@@ -189,6 +190,12 @@ export const createSidebar = () => {
       if (!channel?.serverId) return;
       renderList({ id: channel.serverId });
     },
+    signal,
+  );
+
+  storeEmitter.on(
+    "noti_settings:update",
+    () => renderList({ forceRecreate: true }),
     signal,
   );
 

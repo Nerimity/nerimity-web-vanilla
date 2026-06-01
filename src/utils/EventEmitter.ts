@@ -26,6 +26,7 @@ type StoreEvents = {
   "channel:notify_update": { channelId: string };
   "inbox:open": Inbox;
   "channel:typing": { channelId: string; userId: string };
+  "noti_settings:update": { channelId?: string; serverId?: string };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

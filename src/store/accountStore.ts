@@ -2,6 +2,8 @@ import { t } from "@lingui/core/macro";
 import type { RawUser, RawUserNotificationSettings } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { User } from "./userStore";
+import { serverStore } from "./serverStore";
+import { channelStore } from "./channelStore";
 
 export const accountStore = createAccountStore();
 
@@ -18,13 +20,36 @@ function createAccountStore() {
     for (let i = 0; i < newSettings.length; i++) {
       const setting = newSettings[i]!;
       const serverOrChannelId = setting.serverId || setting.channelId!;
-      notificationSettings.set(serverOrChannelId, setting);
+      notificationSettings.set(serverOrChannelId, {
+        notificationPingMode: setting.notificationPingMode,
+        notificationSoundMode: setting.notificationSoundMode,
+        channelId: setting.channelId,
+        serverId: setting.serverId,
+      });
     }
+  };
+
+  const updateNotificationSetting = (
+    updated: Partial<RawUserNotificationSettings>,
+  ) => {
+    const serverOrChannelId = updated.serverId || updated.channelId!;
+
+    notificationSettings.set(serverOrChannelId, {
+      ...notificationSettings.get(serverOrChannelId)!,
+      ...updated,
+    });
+    channelStore.notificationsMemo.rerun();
+    serverStore.notificationsMemo.rerun();
+    storeEmitter.emit("noti_settings:update", {
+      channelId: updated.channelId,
+      serverId: updated.serverId,
+    });
   };
 
   const getCombinedNotification = (serverId: string, channelId: string) => {
     const channelNotification = notificationSettings.get(channelId);
     const serverNotification = notificationSettings.get(serverId);
+
     if (!channelNotification) return serverNotification;
 
     const serverSoundMode = serverNotification?.notificationSoundMode;
@@ -83,5 +108,6 @@ function createAccountStore() {
     setNotificationSettings,
     getCombinedNotification,
     connectionState,
+    updateNotificationSetting,
   };
 }
