@@ -16,7 +16,26 @@ export default defineConfig({
   plugins: [
     cssScopedPlugin(),
     devRerenderHighlighter(),
-    googleFontsLocal(),
+    googleFontsLocal({
+      icons: [
+        "alternate_email",
+        "cached",
+        "close",
+        "delete",
+        "diversity_1",
+        "edit",
+        "home",
+        "inbox",
+        "info",
+        "login",
+        "more_horiz",
+        "pending",
+        "segment",
+        "send",
+        "side_navigation",
+        "tag",
+      ],
+    }),
     lingui(),
     babel({
       presets: [linguiTransformerBabelPreset()],

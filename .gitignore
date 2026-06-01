@@ -23,4 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 public/fonts/material-symbols.lock
-public/fonts/material-symbols.css
