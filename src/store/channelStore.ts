@@ -92,6 +92,31 @@ function createChannelStore() {
 
   const setChannel = (channel: RawChannel) => {
     channels.set(channel.id, new Channel(channel));
+    if (channel.serverId) {
+      if (channel.type !== ChannelType.CATEGORY) {
+        addNotification(channel.id, channel.serverId);
+      }
+      if (channel.serverId === serverStore.currentServerId) {
+        serverStore.currentChannelsSorted.rerun();
+      }
+    }
+  };
+
+  const addNotification = (channelId: string, serverId: string) => {
+    const isMuted =
+      accountStore.notificationSettings.get(channelId)?.notificationPingMode !==
+      NotificationMode.MUTE;
+
+    if (!notificationsMemo.value()[channelId]) {
+      notificationsMemo.value()[channelId] = -1;
+    }
+
+    if (isMuted) {
+      if (!serverStore.notificationsMemo.value()[serverId]) {
+        serverStore.notificationsMemo.value()[serverId] = -1;
+      }
+    }
+    storeEmitter.emit("channel:notify_update", { channelId: channelId });
   };
 
   const setCurrentChannelId = (id?: string) => {

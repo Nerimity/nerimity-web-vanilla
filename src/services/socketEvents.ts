@@ -68,6 +68,10 @@ export const socketEventHandler = (event: string, payload: any) => {
     onNotificationSettingsUpdate(payload);
     return;
   }
+  if (event === "server:channel_created") {
+    onServerChannelCreated(payload);
+    return;
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -184,4 +188,8 @@ const onNotificationSettingsUpdate = (payload: {
     channelId: payload.channelId,
     ...payload.updated,
   });
+};
+
+const onServerChannelCreated = (payload: { channel: RawChannel }) => {
+  channelStore.setChannel(payload.channel);
 };
