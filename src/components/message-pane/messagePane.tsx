@@ -127,7 +127,6 @@ const createMessagePane = () => {
     if (!force && !isScrolledToBottom) return;
     // when drawer is  currently being dragged, dont reset the position.
     requestAnimationFrame(() => {
-      console.trace("scrolling to bottom");
       Drawer().setIgnoreNextScroll();
       el.scrollTop = el.scrollHeight;
     });
@@ -165,7 +164,6 @@ const createMessagePane = () => {
     const savedScrollTop = property?.scrollTop;
     if (opts?.useSavedTop && savedScrollTop !== undefined) {
       requestAnimationFrame(() => {
-        console.trace("restore scroll position", savedScrollTop);
         el.scrollTop = savedScrollTop;
       });
     } else {
