@@ -127,6 +127,7 @@ const createMessagePane = () => {
     if (!force && !isScrolledToBottom) return;
     // when drawer is  currently being dragged, dont reset the position.
     requestAnimationFrame(() => {
+      console.trace("scrolling to bottom");
       Drawer().setIgnoreNextScroll();
       el.scrollTop = el.scrollHeight;
     });
@@ -164,6 +165,7 @@ const createMessagePane = () => {
     const savedScrollTop = property?.scrollTop;
     if (opts?.useSavedTop && savedScrollTop !== undefined) {
       requestAnimationFrame(() => {
+        console.trace("restore scroll position", savedScrollTop);
         el.scrollTop = savedScrollTop;
       });
     } else {
@@ -255,7 +257,9 @@ const createMessagePane = () => {
       }
 
       previousChannelId = channelStore.currentChannelId;
+
       logs.replaceChildren();
+      skeletonsBottom.classList.toggle(scoped`hide`, !shouldShowBottomSkel());
       scrollToBottom(true);
       onBottomSkeletonIntersect(true);
     },
@@ -288,8 +292,13 @@ const createMessagePane = () => {
     rootMargin: "0px 0px -50px 0px",
   });
 
-  createResizeObserver(logs, () => scrollToBottom(), { signal });
-  createResizeObserver(chatbarEl, () => scrollToBottom(), { signal });
+  const checkAndScrollBottom = () => {
+    const property = getChannelProperty();
+    if (property?.scrollTop === undefined) scrollToBottom();
+  };
+
+  createResizeObserver(logs, checkAndScrollBottom, { signal });
+  createResizeObserver(chatbarEl, checkAndScrollBottom, { signal });
   window.addEventListener("focus", dismissNotification, { signal });
   window.addEventListener("resize", () => scrollToBottom(), {
     signal,

@@ -30,9 +30,13 @@ const editMessageIndicator = css`
   }
   .text {
     text-overflow: ellipsis;
-    white-space: nowrap;
     overflow: hidden;
     opacity: 0.8;
+    .markup {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
   &.hide {
     display: none;
@@ -65,6 +69,7 @@ export const createEditMessageIndicator = (signal: AbortSignal) => {
         text={message.content}
         message={message}
         serverId={serverId}
+        class="markup"
         inline
       />,
     );
