@@ -16,7 +16,7 @@ const hoverActionContainer = css`
   align-items: center;
   justify-content: center;
   position: absolute;
-  background: var(--gray-800);
+  background: var(--gray-900);
   border: solid 1px var(--gray-700);
   height: 34px;
   z-index: 999999999;
