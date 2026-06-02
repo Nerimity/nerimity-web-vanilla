@@ -1,5 +1,6 @@
 import type { RawServerRole } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { patchProperty } from "../utils/object";
 import { accountStore } from "./accountStore";
 import { channelStore } from "./channelStore";
 import { serverMemberStore } from "./serverMemberStore";
@@ -63,18 +64,13 @@ function createServerRoleStore() {
 
     const hasRole = defaultRole || member?.roleIds.includes(roleId);
 
-    const newRole = new ServerRole({
-      id: role.id,
-      serverId: role.serverId,
-      permissions: data.permissions ?? role.permissions,
-      order: data.order ?? role.order,
-      name: data.name ?? role.name,
-      hideRole: data.hideRole ?? role.hideRole,
-      hexColor: data.hexColor ?? role.hexColor,
-      icon: data.icon ?? role.icon,
-    });
+    patchProperty(role, data, "permissions");
+    patchProperty(role, data, "order");
+    patchProperty(role, data, "name");
+    patchProperty(role, data, "hideRole");
+    patchProperty(role, data, "hexColor");
+    patchProperty(role, data, "icon");
 
-    serverRoles.set(roleId, newRole);
     if (hasRole) {
       channelStore.notificationsMemo.rerun();
       serverStore.notificationsMemo.rerun();

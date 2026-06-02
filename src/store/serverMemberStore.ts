@@ -1,6 +1,9 @@
 import type { RawServerMember } from "../Types";
 import { hasBit } from "../utils/bitwise";
 import { storeEmitter } from "../utils/EventEmitter";
+import { patchProperty } from "../utils/object";
+import { accountStore } from "./accountStore";
+import { channelStore } from "./channelStore";
 import { serverRoleStore } from "./serverRoleStore";
 import { serverStore } from "./serverStore";
 import { userStore } from "./userStore";
@@ -55,6 +58,30 @@ function createServerMemberStore() {
     }
   };
 
+  const updateMember = (
+    serverId: string,
+    userId: string,
+    updated: Partial<ServerMember>,
+  ) => {
+    const members = serverMembers.get(serverId);
+    if (!members) return;
+    const member = members.get(userId);
+    if (!member) return;
+
+    patchProperty(member, updated, "roleIds");
+    patchProperty(member, updated, "nickname");
+
+    const isMe = accountStore.currentUser?.id === userId;
+
+    if (isMe) {
+      channelStore.notificationsMemo.rerun();
+      serverStore.notificationsMemo.rerun();
+      serverStore.currentChannelsSorted.rerun();
+    }
+
+    storeEmitter.emit("server:member_update", { serverId, userId, isMe });
+  };
+
   const hasPermission = (
     serverId: string,
     userId: string,
@@ -89,5 +116,11 @@ function createServerMemberStore() {
     return members.get(userId);
   };
 
-  return { serverMembers, setServerMembers, hasPermission, getMember };
+  return {
+    serverMembers,
+    setServerMembers,
+    hasPermission,
+    getMember,
+    updateMember,
+  };
 }

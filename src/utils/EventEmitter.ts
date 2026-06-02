@@ -28,6 +28,7 @@ type StoreEvents = {
   "channel:typing": { channelId: string; userId: string };
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
+  "server:member_update": { serverId: string; userId: string; isMe: boolean };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

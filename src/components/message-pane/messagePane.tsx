@@ -251,6 +251,15 @@ const createMessagePane = () => {
   );
 
   storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (!event.isMe) return;
+      rerender({ forceRecreate: true });
+    },
+    signal,
+  );
+
+  storeEmitter.on(
     "navigate:channelId",
     () => {
       lastSeenMessage = null;

@@ -299,6 +299,15 @@ export const createServerMemberList = () => {
   );
 
   storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (!event.isMe) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
     "navigate:channelId",
     () => {
       cachedDontRender = dontRender();

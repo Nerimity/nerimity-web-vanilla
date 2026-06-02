@@ -81,6 +81,10 @@ export const socketEventHandler = (event: string, payload: any) => {
     onServerRoleUpdated(payload);
     return;
   }
+  if (event === "server:member_updated") {
+    onServerMemberUpdated(payload);
+    return;
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -219,4 +223,16 @@ const onServerRoleUpdated = (payload: {
   updated: Partial<RawServerRole>;
 }) => {
   serverRoleStore.updateRole(payload.serverId, payload.roleId, payload.updated);
+};
+
+const onServerMemberUpdated = (payload: {
+  serverId: string;
+  userId: string;
+  updated: Partial<RawServerMember>;
+}) => {
+  serverMemberStore.updateMember(
+    payload.serverId,
+    payload.userId,
+    payload.updated,
+  );
 };

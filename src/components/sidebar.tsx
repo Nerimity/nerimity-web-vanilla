@@ -192,6 +192,14 @@ export const createSidebar = () => {
   );
 
   storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (!event.isMe) return;
+      renderList({ id: event.serverId });
+    },
+    signal,
+  );
+  storeEmitter.on(
     "server:update_role",
     (event) => {
       if (!event.hasRole) return;
