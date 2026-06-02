@@ -85,8 +85,6 @@ function createChannelStore() {
 
     const hasRole = defaultRole || member?.roleIds.includes(payload.roleId);
 
-    console.log(hasRole);
-
     if (!defaultRole && payload.permissions === 0) {
       channel.permissions = channel.permissions?.filter(
         (perm) => perm.roleId !== payload.roleId,
