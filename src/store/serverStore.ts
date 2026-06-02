@@ -69,7 +69,10 @@ function createServerStore() {
     );
     delete channelStore.notificationsMemo.value()[channelId];
     serverStore.notificationsMemo.rerun();
-    storeEmitter.emit("channel:notify_update", { channelId });
+    storeEmitter.emit("channel:notify_update", {
+      channelId,
+      serverId: channel?.serverId,
+    });
   };
 
   const setCurrentServerId = (id?: string) => {

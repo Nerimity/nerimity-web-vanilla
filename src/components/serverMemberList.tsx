@@ -207,11 +207,11 @@ export const createServerMemberList = () => {
       const curr = result[cursor];
 
       if (curr && isSame(curr, item)) {
-        if (
-          item.type === CategoryType.role &&
-          (curr as any).count !== item.count
-        )
-          (curr as any).count = item.count;
+        if (item.type === CategoryType.role) {
+          if ((curr as any).count !== item.count)
+            (curr as any).count = item.count;
+          (curr as any).role = item.role;
+        }
         cursor++;
         return;
       }
@@ -227,11 +227,11 @@ export const createServerMemberList = () => {
       if (found !== -1) {
         const [existing] = result.splice(found, 1);
         result.splice(cursor, 0, existing!);
-        if (
-          item.type === CategoryType.role &&
-          (result[cursor] as any).count !== item.count
-        )
-          (result[cursor] as any).count = item.count;
+        if (item.type === CategoryType.role) {
+          if ((result[cursor] as any).count !== item.count)
+            (result[cursor] as any).count = item.count;
+          (result[cursor] as any).role = item.role; // ← add this
+        }
       } else {
         result.splice(cursor, 0, item);
       }
@@ -290,6 +290,15 @@ export const createServerMemberList = () => {
   };
 
   storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
     "navigate:channelId",
     () => {
       cachedDontRender = dontRender();
@@ -311,7 +320,7 @@ export const createServerMemberList = () => {
   storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
 
   serverStore.currentServerSortedRoles.onUpdate(() => {
-    rerunAndRender();
+    rerunAndRender(true);
   }, signal);
 
   const rerunAndRender = (rerender?: boolean) => {

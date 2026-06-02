@@ -523,8 +523,7 @@ const createInboxDrawer = () => {
   storeEmitter.on(
     "channel:notify_update",
     (event) => {
-      const channel = channelStore.channels.get(event.channelId);
-      if (channel?.serverId) return;
+      if (event.serverId) return;
       (inboxList || friendList)?.handleMentionUpdate();
     },
     signal,

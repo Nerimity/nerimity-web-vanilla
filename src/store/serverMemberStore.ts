@@ -83,5 +83,11 @@ function createServerMemberStore() {
     return hasBit(defaultRole.permissions, permission);
   };
 
-  return { serverMembers, setServerMembers, hasPermission };
+  const getMember = (serverId: string, userId: string) => {
+    const members = serverMembers.get(serverId);
+    if (!members) return;
+    return members.get(userId);
+  };
+
+  return { serverMembers, setServerMembers, hasPermission, getMember };
 }

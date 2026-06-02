@@ -1,7 +1,6 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
-import { channelStore } from "../store/channelStore";
 import { Server, serverStore } from "../store/serverStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
@@ -186,9 +185,17 @@ export const createSidebar = () => {
   storeEmitter.on(
     "channel:notify_update",
     (event) => {
-      const channel = channelStore.channels.get(event.channelId)!;
-      if (!channel?.serverId) return;
-      renderList({ id: channel.serverId });
+      if (!event.serverId) return;
+      renderList({ id: event.serverId });
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (!event.hasRole) return;
+      renderList({ id: event.serverId });
     },
     signal,
   );

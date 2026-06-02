@@ -242,6 +242,15 @@ const createMessagePane = () => {
   let previousChannelId = channelStore.currentChannelId;
 
   storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      rerender({ forceRecreate: true });
+    },
+    signal,
+  );
+
+  storeEmitter.on(
     "navigate:channelId",
     () => {
       lastSeenMessage = null;

@@ -13,6 +13,7 @@ import type {
   RawInbox,
   RawMessage,
   RawServerMember,
+  RawServerRole,
   RawUserNotificationSettings,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -74,6 +75,10 @@ export const socketEventHandler = (event: string, payload: any) => {
   }
   if (event === "server:channel_permissions_updated") {
     onServerChannelPermissionsUpdated(payload);
+    return;
+  }
+  if (event === "server:role_updated") {
+    onServerRoleUpdated(payload);
     return;
   }
 };
@@ -141,6 +146,7 @@ const onMessageCreated = (payload: {
         serverStore.notificationsMemo.rerun();
         storeEmitter.emit("channel:notify_update", {
           channelId: message.channelId,
+          serverId: channel?.serverId,
         });
       }
     }
@@ -205,4 +211,12 @@ const onServerChannelPermissionsUpdated = (payload: {
   channelId: string;
 }) => {
   channelStore.updatePermissions(payload);
+};
+
+const onServerRoleUpdated = (payload: {
+  serverId: string;
+  roleId: string;
+  updated: Partial<RawServerRole>;
+}) => {
+  serverRoleStore.updateRole(payload.serverId, payload.roleId, payload.updated);
 };

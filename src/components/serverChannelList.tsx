@@ -62,7 +62,23 @@ export const createServerChannelList = () => {
     signal,
   );
 
-  storeEmitter.on("channel:notify_update", renderList, signal);
+  storeEmitter.on(
+    "channel:notify_update",
+    (event) => {
+      const currentServer = event.serverId === serverStore.currentServerId;
+      if (!currentServer) return;
+      renderList(event);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (!event.hasRole) return;
+      renderList();
+    },
+    signal,
+  );
 
   storeEmitter.on(
     "navigate:channelId",

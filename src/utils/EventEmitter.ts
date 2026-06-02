@@ -23,10 +23,11 @@ type StoreEvents = {
   "drawer:toggleRightDesktop": boolean;
   "drawer:rightDrawerAvailable": boolean;
   "mention:dm_update": MessageMention;
-  "channel:notify_update": { channelId: string };
+  "channel:notify_update": { channelId?: string; serverId?: string };
   "inbox:open": Inbox;
   "channel:typing": { channelId: string; userId: string };
   "noti_settings:update": { channelId?: string; serverId?: string };
+  "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

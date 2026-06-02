@@ -1,4 +1,9 @@
 import type { RawServerRole } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
+import { accountStore } from "./accountStore";
+import { channelStore } from "./channelStore";
+import { serverMemberStore } from "./serverMemberStore";
+import { serverStore } from "./serverStore";
 
 export const serverRoleStore = createServerRoleStore();
 
@@ -37,5 +42,50 @@ function createServerRoleStore() {
     }
   };
 
-  return { roles, setRoles };
+  const updateRole = (
+    serverId: string,
+    roleId: string,
+    data: Partial<ServerRole>,
+  ) => {
+    const server = serverStore.servers.get(serverId);
+    const serverRoles = roles.get(serverId);
+    if (!serverRoles) return;
+
+    const role = serverRoles.get(roleId);
+    if (!role) return;
+
+    const member = serverMemberStore.getMember(
+      serverId,
+      accountStore.currentUser?.id!,
+    );
+
+    const defaultRole = server?.defaultRoleId === roleId;
+
+    const hasRole = defaultRole || member?.roleIds.includes(roleId);
+
+    const newRole = new ServerRole({
+      id: role.id,
+      serverId: role.serverId,
+      permissions: data.permissions ?? role.permissions,
+      order: data.order ?? role.order,
+      name: data.name ?? role.name,
+      hideRole: data.hideRole ?? role.hideRole,
+      hexColor: data.hexColor ?? role.hexColor,
+      icon: data.icon ?? role.icon,
+    });
+
+    serverRoles.set(roleId, newRole);
+    if (hasRole) {
+      channelStore.notificationsMemo.rerun();
+      serverStore.notificationsMemo.rerun();
+      serverStore.currentChannelsSorted.rerun();
+    }
+    storeEmitter.emit("server:update_role", {
+      hasRole: !!hasRole,
+      roleId,
+      serverId,
+    });
+  };
+
+  return { roles, setRoles, updateRole };
 }

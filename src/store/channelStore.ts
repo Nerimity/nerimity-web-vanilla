@@ -108,6 +108,7 @@ function createChannelStore() {
       serverStore.currentChannelsSorted.rerun();
       storeEmitter.emit("channel:notify_update", {
         channelId: payload.channelId,
+        serverId: payload.serverId,
       });
     }
   };
@@ -163,7 +164,10 @@ function createChannelStore() {
         serverStore.notificationsMemo.value()[serverId] = -1;
       }
     }
-    storeEmitter.emit("channel:notify_update", { channelId: channelId });
+    storeEmitter.emit("channel:notify_update", {
+      channelId: channelId,
+      serverId,
+    });
   };
 
   const setCurrentChannelId = (id?: string) => {
