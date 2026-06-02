@@ -1,4 +1,4 @@
-import { i18n } from "@lingui/core";
+import { i18n, type MessageId } from "@lingui/core";
 
 const tagRe = /<([a-zA-Z0-9]+)>([\s\S]*?)<\/\1>|<([a-zA-Z0-9]+)\/>/;
 
@@ -85,7 +85,7 @@ function getElements(parts: string[]): [string, string, string | undefined][] {
 }
 
 interface TransProps {
-  id?: string;
+  id: MessageId;
   message?: string;
   values?: Record<string, string | number | Node>;
   components?: Record<string, Node | Node[]>;

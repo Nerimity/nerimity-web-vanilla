@@ -13,35 +13,35 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/appHeader.tsx:62
+#: src/components/appHeader.tsx:64
 msgid "Home"
 msgstr "Home"
 
 #. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:335
+#: src/components/inboxDrawer.tsx:338
 msgid "Online - {0}"
 msgstr "Online - {0}"
 
 #. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:336
+#: src/components/inboxDrawer.tsx:339
 msgid "Offline - {0}"
 msgstr "Offline - {0}"
 
-#: src/components/inboxDrawer.tsx:389
+#: src/components/inboxDrawer.tsx:398
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:390
+#: src/components/inboxDrawer.tsx:399
 msgid "Friends"
 msgstr "Friends"
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:95
+#: src/components/message-pane/chatbar.tsx:181
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:100
+#: src/components/message-pane/chatbar.tsx:186
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -66,13 +66,18 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:172
+#: src/components/message-pane/messageItem.tsx:178
 msgid "New Messages"
 msgstr "New Messages"
 
-#: src/components/message-pane/messageItem.tsx:336
+#: src/components/message-pane/messageItem.tsx:343
 msgid "Message was deleted."
 msgstr "Message was deleted."
+
+#. placeholder {0}: names.length
+#: src/components/message-pane/typingIndicator.tsx:154
+msgid "{0} users are typing..."
+msgstr "{0} users are typing..."
 
 #: src/components/serverMemberList.tsx:38
 #: src/store/userPresenceStore.ts:16
@@ -100,15 +105,15 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/store/accountStore.ts:59
+#: src/store/accountStore.ts:84
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:62
+#: src/store/accountStore.ts:87
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:64
+#: src/store/accountStore.ts:89
 msgid "Connected!"
 msgstr "Connected!"
 

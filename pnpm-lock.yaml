@@ -12,8 +12,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       '@lingui/core':
-        specifier: ^6.1.0
-        version: 6.1.0(babel-plugin-macros@3.1.0)
+        specifier: ^6.2.0
+        version: 6.2.0(babel-plugin-macros@3.1.0)
       '@nerimity/nevula':
         specifier: ^0.15.0
         version: 0.15.0
@@ -34,17 +34,17 @@ importers:
         specifier: ^7.29.7
         version: 7.29.7(@babel/core@7.29.7)
       '@lingui/cli':
-        specifier: ^6.1.0
-        version: 6.1.0(babel-plugin-macros@3.1.0)
+        specifier: ^6.2.0
+        version: 6.2.0(babel-plugin-macros@3.1.0)
       '@lingui/conf':
-        specifier: ^6.1.0
-        version: 6.1.0
+        specifier: ^6.2.0
+        version: 6.2.0
       '@lingui/react':
-        specifier: ^6.1.0
-        version: 6.1.0(babel-plugin-macros@3.1.0)(react@19.2.6)
+        specifier: ^6.2.0
+        version: 6.2.0(babel-plugin-macros@3.1.0)(react@19.2.6)
       '@lingui/vite-plugin':
-        specifier: ^6.1.0
-        version: 6.1.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.1.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0)))(babel-plugin-macros@3.1.0)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))
+        specifier: ^6.2.0
+        version: 6.2.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0)))(babel-plugin-macros@3.1.0)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))
@@ -399,25 +399,25 @@ packages:
     resolution: {integrity: sha512-KRa5XaTNPLFoJawtQnt58tzdt9QrQsUL/u6yEsfYg3d0tcsTecpoHFhT4bPzwuZg9Hie7khTSFhEy+aY84Fo7A==}
     engines: {node: '>=20.0.0'}
 
-  '@lingui/babel-plugin-extract-messages@6.1.0':
-    resolution: {integrity: sha512-CRlWvISWj9WTS42j0Kz4suNSC8yP45kcmlnaes9vL2Y3hKeh1Uds74KZVIblHpEDSKxxQTQJdgGG37xxKfKcYw==}
+  '@lingui/babel-plugin-extract-messages@6.2.0':
+    resolution: {integrity: sha512-/iPL0DSvq6oZQjxLSHXofaxq18joGKEYzJjaZUWw9jdyWpRp1kNFMHPQVPbemVBR2PSJUNS7jlOu1iph7qtkrQ==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/babel-plugin-lingui-macro@6.1.0':
-    resolution: {integrity: sha512-f0ZIdt4ia01fr3Zjn8b7z3+LLGArNudY/t4rLkz4nFWzDKaIRgv/dHABdSnjTU6w5DtGcwU8ijbPIv6dGG2rag==}
+  '@lingui/babel-plugin-lingui-macro@6.2.0':
+    resolution: {integrity: sha512-sZqrd+RFLOePcimYoyNWs7n8brfkD5MXKb9trYNaV+/obt3C02LEpLrdIqUvykpn5+NgeZY6H0x/HqaXTil5vA==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/cli@6.1.0':
-    resolution: {integrity: sha512-v1YA86vZMUyFG7Gbo2dKBLY6HX2aAoKwCGdXbtscFD0rAhHbs3UkzMwa3lWxiZHY2LpgZK7CCI3npKiBUTgrOg==}
+  '@lingui/cli@6.2.0':
+    resolution: {integrity: sha512-47j2VnDCRAuxlwFnBshQqTGBmkiRvr2jUs7FzEHT0z/drCOhNwHoNCDDAGC/1SwsiK9kaeNZcObyZfrpe3z3PA==}
     engines: {node: '>=22.19.0'}
     hasBin: true
 
-  '@lingui/conf@6.1.0':
-    resolution: {integrity: sha512-GkgtaoersJxlTUsYLIHNbQIJuPEdtV/RcLAefT+0XZhVSn55CJRL9H0eYdOBNJtev0k7YuAKG+dPnFRaI7sYlg==}
+  '@lingui/conf@6.2.0':
+    resolution: {integrity: sha512-SVZlXH0MJgS6Cu9NFCtJeqT7VzbKp5VDQcd9j51x6lRCzknPJS4CjJ4GWzu0RHoTmtQyoADLzuQTPrzD0ommLA==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/core@6.1.0':
-    resolution: {integrity: sha512-5ZUR809ODdQ6DGyAyrIw/iPNCbhnknhWI/4w9S9BCtf1fx3LoqtBdb4ADSJ6OHz7kTvIgOZQPIAdPW/FtZui9w==}
+  '@lingui/core@6.2.0':
+    resolution: {integrity: sha512-iNxDy9+GfwBGi9YVgAt7q0V7hA7kwt5t+akScFWvIyzII0KpMd4oLq0JyPsedsKloWVmL8V0PuvtThM0Ja4SWg==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       babel-plugin-macros: 2 || 3
@@ -425,16 +425,16 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  '@lingui/format-po@6.1.0':
-    resolution: {integrity: sha512-oMpd7l82xxpMPAnfw8Hk8x/GG4IDSlonYlhlqIWhTWbV0lpAtrmlCDq0TXeTO43MvAm53jkpwWzIKBI14seZZw==}
+  '@lingui/format-po@6.2.0':
+    resolution: {integrity: sha512-rchqiXGySJagw/sN+fL6Wi9A1hAooSO7B/5qPmHbH2DP5kGnMbE61MwqvhGaJQrWMtnac9AGz1PC4AKBWKVAZw==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/message-utils@6.1.0':
-    resolution: {integrity: sha512-AYbUVx/1CnLLFHQWAU/ljczknIqepUZuYChcNJCOd/LzFM0jASgXRmzieP156V8EctBXNNIR145rw0HtJ1jmew==}
+  '@lingui/message-utils@6.2.0':
+    resolution: {integrity: sha512-oFmD6xYO40kC/7qBdxieEVekoYNI0KWtizCOanrlT6RXYPSwn5hH4Hf6u0mErEf23m/zNGDMO+D6YNQ4z7IxwQ==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/react@6.1.0':
-    resolution: {integrity: sha512-PKTMyXgIfcmjURONBQmWV7U3IwxWA9gSRqh9gxP2Pr84Kslcyly+4ov7uqJNg/sy3L0qegsjReAXc9bR7Q73Kw==}
+  '@lingui/react@6.2.0':
+    resolution: {integrity: sha512-DDdzKgHG+j13qA4In3nqBCSJDhdW9baIx+0a9/5znoHlnJsR2VG3AqlAtCmuTMr7uhjzwuZYJgG2Ms718Rr39A==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       babel-plugin-macros: 2 || 3
@@ -443,8 +443,8 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  '@lingui/vite-plugin@6.1.0':
-    resolution: {integrity: sha512-kIm8Z6QfYOQjbN+Gxx3JnGqR57VKq1xn/bD2ybtH8jtrzYqFJXOw2oAtXMl1Q+tOSkpOYNMB/w/OYCYpwXwgkQ==}
+  '@lingui/vite-plugin@6.2.0':
+    resolution: {integrity: sha512-Ti1wFsY40LP7+aXoooZ/fp1HqKLABBibaBNlboUYogsw6vZFatc3ZRYjOs6WcKozzlcawz8IeznGbCtAn3WVnA==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       '@babel/core': ^7.29.0 || ^8.0.0-rc.1
@@ -1353,8 +1353,9 @@ packages:
     resolution: {integrity: sha512-QP88BAKvMam/3NxH6vj2o21R6MjxZUAd6nlwAS/pnGvN9IVLocLHxGYIzFhg6fUQ+5th6P4dv4eW9jX3DSIj7A==}
     engines: {node: '>=12'}
 
-  pofile@1.1.4:
-    resolution: {integrity: sha512-r6Q21sKsY1AjTVVjOuU02VYKVNQGJNQHjTIvs4dEbeuuYfxgYk/DGD2mqqq4RDaVkwdSq0VEtmQUOPe/wH8X3g==}
+  pofile-ts@4.0.3:
+    resolution: {integrity: sha512-sz1pnjgEfPyZ+QvaeX3NtCmbYnEvG01LZRLoN/uXoLtPZtxCIH5IctL7yXXc0fFyk/fqV6K8g3hlNfr6IJwupA==}
+    engines: {node: '>=20'}
 
   postcss@8.5.15:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
@@ -1877,29 +1878,29 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@lingui/babel-plugin-extract-messages@6.1.0': {}
+  '@lingui/babel-plugin-extract-messages@6.2.0': {}
 
-  '@lingui/babel-plugin-lingui-macro@6.1.0':
+  '@lingui/babel-plugin-lingui-macro@6.2.0':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/types': 7.29.7
-      '@lingui/conf': 6.1.0
-      '@lingui/message-utils': 6.1.0
+      '@lingui/conf': 6.2.0
+      '@lingui/message-utils': 6.2.0
     transitivePeerDependencies:
       - supports-color
 
-  '@lingui/cli@6.1.0(babel-plugin-macros@3.1.0)':
+  '@lingui/cli@6.2.0(babel-plugin-macros@3.1.0)':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/generator': 7.29.7
       '@babel/parser': 7.29.7
       '@babel/types': 7.29.7
-      '@lingui/babel-plugin-extract-messages': 6.1.0
-      '@lingui/babel-plugin-lingui-macro': 6.1.0
-      '@lingui/conf': 6.1.0
-      '@lingui/core': 6.1.0(babel-plugin-macros@3.1.0)
-      '@lingui/format-po': 6.1.0
-      '@lingui/message-utils': 6.1.0
+      '@lingui/babel-plugin-extract-messages': 6.2.0
+      '@lingui/babel-plugin-lingui-macro': 6.2.0
+      '@lingui/conf': 6.2.0
+      '@lingui/core': 6.2.0(babel-plugin-macros@3.1.0)
+      '@lingui/format-po': 6.2.0
+      '@lingui/message-utils': 6.2.0
       chokidar: 5.0.0
       cli-table3: 0.6.5
       commander: 14.0.3
@@ -1916,52 +1917,52 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@lingui/conf@6.1.0':
+  '@lingui/conf@6.2.0':
     dependencies:
       jest-validate: 29.7.0
       jiti: 2.7.0
       lilconfig: 3.1.3
       normalize-path: 3.0.0
 
-  '@lingui/core@6.1.0(babel-plugin-macros@3.1.0)':
+  '@lingui/core@6.2.0(babel-plugin-macros@3.1.0)':
     dependencies:
-      '@lingui/babel-plugin-lingui-macro': 6.1.0
-      '@lingui/message-utils': 6.1.0
+      '@lingui/babel-plugin-lingui-macro': 6.2.0
+      '@lingui/message-utils': 6.2.0
     optionalDependencies:
       babel-plugin-macros: 3.1.0
     transitivePeerDependencies:
       - supports-color
 
-  '@lingui/format-po@6.1.0':
+  '@lingui/format-po@6.2.0':
     dependencies:
-      '@lingui/conf': 6.1.0
-      '@lingui/message-utils': 6.1.0
-      pofile: 1.1.4
+      '@lingui/conf': 6.2.0
+      '@lingui/message-utils': 6.2.0
+      pofile-ts: 4.0.3
 
-  '@lingui/message-utils@6.1.0':
+  '@lingui/message-utils@6.2.0':
     dependencies:
       '@messageformat/date-skeleton': 1.1.0
       '@messageformat/parser': 5.1.1
       js-sha256: 0.10.1
 
-  '@lingui/react@6.1.0(babel-plugin-macros@3.1.0)(react@19.2.6)':
+  '@lingui/react@6.2.0(babel-plugin-macros@3.1.0)(react@19.2.6)':
     dependencies:
-      '@lingui/babel-plugin-lingui-macro': 6.1.0
-      '@lingui/core': 6.1.0(babel-plugin-macros@3.1.0)
+      '@lingui/babel-plugin-lingui-macro': 6.2.0
+      '@lingui/core': 6.2.0(babel-plugin-macros@3.1.0)
       react: 19.2.6
     optionalDependencies:
       babel-plugin-macros: 3.1.0
     transitivePeerDependencies:
       - supports-color
 
-  '@lingui/vite-plugin@6.1.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.1.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0)))(babel-plugin-macros@3.1.0)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))':
+  '@lingui/vite-plugin@6.2.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.2.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0)))(babel-plugin-macros@3.1.0)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))':
     dependencies:
-      '@lingui/cli': 6.1.0(babel-plugin-macros@3.1.0)
-      '@lingui/conf': 6.1.0
+      '@lingui/cli': 6.2.0(babel-plugin-macros@3.1.0)
+      '@lingui/conf': 6.2.0
       vite: 8.0.15(@types/node@25.9.1)(jiti@2.7.0)
     optionalDependencies:
       '@babel/core': 7.29.7
-      '@lingui/babel-plugin-lingui-macro': 6.1.0
+      '@lingui/babel-plugin-lingui-macro': 6.2.0
       '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.3)(vite@8.0.15(@types/node@25.9.1)(jiti@2.7.0))
       rolldown: 1.0.3
     transitivePeerDependencies:
@@ -2661,7 +2662,7 @@ snapshots:
 
   picomatch@4.0.4: {}
 
-  pofile@1.1.4: {}
+  pofile-ts@4.0.3: {}
 
   postcss@8.5.15:
     dependencies:
