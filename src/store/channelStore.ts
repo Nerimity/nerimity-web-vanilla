@@ -10,6 +10,8 @@ import { ManualMemo } from "../utils/memo";
 import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
 import type { Message } from "./messageStore";
+import { serverMemberStore } from "./serverMemberStore";
+
 import { serverStore } from "./serverStore";
 
 export const channelStore = createChannelStore();
@@ -63,6 +65,53 @@ function createChannelStore() {
     };
     properties.set(channelId, newProperty);
     return newProperty;
+  };
+
+  const updatePermissions = (payload: {
+    permissions: 0;
+    roleId: string;
+    serverId: string;
+    channelId: string;
+  }) => {
+    const server = serverStore.servers.get(payload.serverId);
+    if (!server) return;
+    const channel = channels.get(payload.channelId);
+    if (!channel) return;
+    const defaultRole = server.defaultRoleId === payload.roleId;
+
+    const member = serverMemberStore.serverMembers
+      .get(payload.serverId!)
+      ?.get(accountStore.currentUser!.id);
+
+    const hasRole = defaultRole || member?.roleIds.includes(payload.roleId);
+
+    console.log(hasRole);
+
+    if (!defaultRole && payload.permissions === 0) {
+      channel.permissions = channel.permissions?.filter(
+        (perm) => perm.roleId !== payload.roleId,
+      );
+    }
+    const perm = channel.permissions?.find(
+      (perm) => perm.roleId === payload.roleId,
+    );
+    if (perm) {
+      perm.permissions = payload.permissions;
+    } else {
+      channel.permissions?.push({
+        roleId: payload.roleId,
+        permissions: payload.permissions,
+      });
+    }
+
+    if (hasRole) {
+      notificationsMemo.rerun();
+      serverStore.notificationsMemo.rerun();
+      serverStore.currentChannelsSorted.rerun();
+      storeEmitter.emit("channel:notify_update", {
+        channelId: payload.channelId,
+      });
+    }
   };
 
   const currentChannelProperty = () => getProperty(currentChannelId!);
@@ -202,5 +251,6 @@ function createChannelStore() {
     setChannel,
     hasNotification,
     dismissNotification,
+    updatePermissions,
   };
 }

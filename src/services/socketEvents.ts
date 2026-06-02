@@ -72,6 +72,10 @@ export const socketEventHandler = (event: string, payload: any) => {
     onServerChannelCreated(payload);
     return;
   }
+  if (event === "server:channel_permissions_updated") {
+    onServerChannelPermissionsUpdated(payload);
+    return;
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -192,4 +196,13 @@ const onNotificationSettingsUpdate = (payload: {
 
 const onServerChannelCreated = (payload: { channel: RawChannel }) => {
   channelStore.setChannel(payload.channel);
+};
+
+const onServerChannelPermissionsUpdated = (payload: {
+  permissions: 0;
+  roleId: string;
+  serverId: string;
+  channelId: string;
+}) => {
+  channelStore.updatePermissions(payload);
 };
