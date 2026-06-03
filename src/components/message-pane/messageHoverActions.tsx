@@ -39,6 +39,9 @@ const hoverActionContainer = css`
     border-radius: var(--radius-max);
     flex-shrink: 0;
     padding: 5px;
+    &:hover {
+      background: var(--gray-800);
+    }
     > .icon {
       font-size: 18px;
     }
