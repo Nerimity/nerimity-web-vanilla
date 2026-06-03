@@ -25,69 +25,57 @@ export const socketEventHandler = (event: string, payload: any) => {
     payload = decompressObject(new Uint8Array(payload));
   }
 
-  if (event === "channel:typing") {
-    onTyping(payload);
-    return;
-  }
-  if (event === "user:authenticated") {
-    onAuthenticated(payload);
-    return;
-  }
-  // if (event === "server:channel_updated") {
-  //   onServerChannelUpdated(payload);
-  // }
-  if (event === "user:presence_update") {
-    onUserPresenceUpdate(payload);
-    return;
-  }
-  if (event === "message:created") {
-    onMessageCreated(payload);
-    return;
-  }
-  if (event === "message:deleted") {
-    onMessageDeleted(payload);
-    return;
-  }
-  if (event === "message:updated") {
-    onMessageUpdated(payload);
-    return;
-  }
-
-  if (event === "notification:dismissed") {
-    onNotificationDismissed(payload);
-    return;
-  }
-  if (event === "server:members_fetched") {
-    onServerMembersFetched(payload);
-    return;
-  }
-  if (event === "inbox:opened") {
-    onInboxOpened(payload);
-    return;
-  }
-  if (event === "user:notification_settings_update") {
-    onNotificationSettingsUpdate(payload);
-    return;
-  }
-  if (event === "server:channel_created") {
-    onServerChannelCreated(payload);
-    return;
-  }
-  if (event === "server:channel_permissions_updated") {
-    onServerChannelPermissionsUpdated(payload);
-    return;
-  }
-  if (event === "server:role_updated") {
-    onServerRoleUpdated(payload);
-    return;
-  }
-  if (event === "server:member_updated") {
-    onServerMemberUpdated(payload);
-    return;
-  }
-  if (event === "server:role_deleted") {
-    onServerRoleDeleted(payload);
-    return;
+  switch (event) {
+    case "channel:typing":
+      onTyping(payload);
+      break;
+    case "user:authenticated":
+      onAuthenticated(payload);
+      break;
+    case "user:presence_update":
+      onUserPresenceUpdate(payload);
+      break;
+    case "message:created":
+      onMessageCreated(payload);
+      break;
+    case "message:deleted":
+      onMessageDeleted(payload);
+      break;
+    case "message:updated":
+      onMessageUpdated(payload);
+      break;
+    case "notification:dismissed":
+      onNotificationDismissed(payload);
+      break;
+    case "server:members_fetched":
+      onServerMembersFetched(payload);
+      break;
+    case "inbox:opened":
+      onInboxOpened(payload);
+      break;
+    case "user:notification_settings_update":
+      onNotificationSettingsUpdate(payload);
+      break;
+    case "server:channel_created":
+      onServerChannelCreated(payload);
+      break;
+    case "server:channel_permissions_updated":
+      onServerChannelPermissionsUpdated(payload);
+      break;
+    case "server:role_updated":
+      onServerRoleUpdated(payload);
+      break;
+    case "server:member_updated":
+      onServerMemberUpdated(payload);
+      break;
+    case "server:role_deleted":
+      onServerRoleDeleted(payload);
+      break;
+    case "server:channel_deleted":
+      onServerChannelDeleted(payload);
+      break;
+    default:
+      console.warn("Unhandled socket event:", event, payload);
   }
 };
 
@@ -243,4 +231,11 @@ const onServerMemberUpdated = (payload: {
 
 const onServerRoleDeleted = (payload: { serverId: string; roleId: string }) => {
   serverRoleStore.deleteRole(payload.serverId, payload.roleId);
+};
+
+const onServerChannelDeleted = (payload: {
+  serverId: string;
+  channelId: string;
+}) => {
+  channelStore.deleteChannel(payload.channelId, payload.serverId);
 };

@@ -67,6 +67,19 @@ function createChannelStore() {
     return newProperty;
   };
 
+  const deleteChannel = (channelId: string, serverId?: string) => {
+    const notifications = hasNotification(channels.get(channelId)!);
+    channels.delete(channelId);
+    if (notifications) {
+      delete notificationsMemo.value()[channelId];
+      if (serverId) {
+        serverStore.notificationsMemo.rerun();
+      }
+    }
+    serverStore.currentChannelsSorted.rerun();
+    storeEmitter.emit("channel:notify_update", { channelId, serverId });
+  };
+
   const updatePermissions = (payload: {
     permissions: 0;
     roleId: string;
@@ -253,6 +266,7 @@ function createChannelStore() {
     setChannel,
     hasNotification,
     dismissNotification,
+    deleteChannel,
     updatePermissions,
   };
 }
