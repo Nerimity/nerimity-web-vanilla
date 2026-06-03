@@ -83,5 +83,28 @@ function createServerRoleStore() {
     });
   };
 
-  return { roles, setRoles, updateRole };
+  const deleteRole = (serverId: string, roleId: string) => {
+    const serverRoles = roles.get(serverId);
+    if (!serverRoles) return;
+
+    const member = serverMemberStore.getMember(
+      serverId,
+      accountStore.currentUser?.id!,
+    );
+
+    const hasRole = member?.roleIds.includes(roleId);
+    serverRoles.delete(roleId);
+    if (hasRole) {
+      channelStore.notificationsMemo.rerun();
+      serverStore.notificationsMemo.rerun();
+      serverStore.currentChannelsSorted.rerun();
+    }
+    storeEmitter.emit("server:update_role", {
+      hasRole: !!hasRole,
+      roleId,
+      serverId,
+    });
+  };
+
+  return { roles, setRoles, updateRole, deleteRole };
 }

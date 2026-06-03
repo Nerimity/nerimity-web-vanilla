@@ -85,6 +85,10 @@ export const socketEventHandler = (event: string, payload: any) => {
     onServerMemberUpdated(payload);
     return;
   }
+  if (event === "server:role_deleted") {
+    onServerRoleDeleted(payload);
+    return;
+  }
 };
 
 const onAuthenticated = (payload: any) => {
@@ -235,4 +239,8 @@ const onServerMemberUpdated = (payload: {
     payload.userId,
     payload.updated,
   );
+};
+
+const onServerRoleDeleted = (payload: { serverId: string; roleId: string }) => {
+  serverRoleStore.deleteRole(payload.serverId, payload.roleId);
 };
