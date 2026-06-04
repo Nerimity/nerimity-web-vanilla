@@ -90,6 +90,7 @@ const messageItem = css`
   .${scoped`messageBody`} {
     min-width: 0;
     overflow: hidden;
+    width: 100%;
   }
 `;
 

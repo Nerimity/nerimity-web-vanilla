@@ -15,6 +15,7 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
 import { Icon } from "../icon";
+import { CodeBlock } from "./CodeBlock";
 import { Emoji } from "./Emoji";
 import { Mention } from "./Mention";
 
@@ -260,12 +261,13 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       return <span>{transformEntities(entity, ctx)}</span>;
     }
     case "codeblock": {
+      console.log("test");
       if (ctx.props().inline) {
         return <code class="code">{sliceText(ctx, entity.innerSpan)}</code>;
       }
       const lang = entity.params.lang;
       const value = sliceText(ctx, entity.innerSpan);
-      return <span value={value} lang={lang} />;
+      return <CodeBlock value={value} lang={lang?.toLowerCase()} />;
     }
     case "blockquote": {
       return (

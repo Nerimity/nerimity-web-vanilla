@@ -1,6 +1,7 @@
-import { h } from "../h";
 import { css } from "@linaria/core";
+
 import { Button } from "../components/button";
+import { h } from "../h";
 
 const homeContainer = css`
   display: flex;

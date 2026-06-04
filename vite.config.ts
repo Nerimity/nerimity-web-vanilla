@@ -5,6 +5,7 @@ import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
 import { googleFontsLocal } from "./vitePluginGoogleFontsLocal";
 import { devRerenderHighlighter } from "./vitePluginRerenderhighlighter";
 import { cssScopedPlugin } from "./vitePluginScopedCss";
+import { shikiLangsPlugin } from "./vitePluginShikiLangsCopy";
 
 export default defineConfig({
   resolve: {
@@ -14,10 +15,13 @@ export default defineConfig({
     },
   },
   plugins: [
+    shikiLangsPlugin(),
     cssScopedPlugin(),
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "wrap_text",
+        "content_copy",
         "alternate_email",
         "cached",
         "close",
@@ -63,6 +67,7 @@ export default defineConfig({
     port: 3000,
     host: true,
     allowedHosts: ["local.nerimity.com"],
+
     watch: {
       ignored: ["**/vitePluginRerenderhighlighter.ts"],
     },

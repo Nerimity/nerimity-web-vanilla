@@ -18,9 +18,13 @@
     "@linaria/core": "^7.0.0",
     "@lingui/core": "^6.2.0",
     "@nerimity/nevula": "^0.15.0",
+    "@shikijs/langs": "^4.2.0",
+    "@shikijs/themes": "^4.2.0",
     "fzstd": "^0.1.1",
     "idb": "^8.0.3",
-    "morphdom": "^2.7.8"
+    "idiomorph": "^0.7.4",
+    "morphdom": "^2.7.8",
+    "shiki": "^4.2.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.29.7",

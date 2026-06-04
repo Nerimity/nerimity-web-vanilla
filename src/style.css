@@ -27,6 +27,8 @@
   --gray-900: hsl(0, 0%, 5%);
 
   --radius-max: 9999px;
+  --radius-2: 2px;
+  --radius-3: 3px;
   --radius-4: 4px;
   --radius-5: 5px;
   --radius-6: 6px;
@@ -134,7 +136,5 @@ textarea,
 button,
 select,
 a {
-    -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-
-
