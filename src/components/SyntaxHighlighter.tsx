@@ -14,16 +14,10 @@ const highlighter = css`
   }
 `;
 
-const hash = (str: string) => {
-  let h = 5381;
-  for (let i = 0; i < str.length; i++) {
-    h = (h * 33) ^ str.charCodeAt(i);
-  }
-  return (h >>> 0).toString(36);
-};
+let counter = 0;
 
 export function SyntaxHighlighter(props: { code: string; lang?: string }) {
-  const id = `codeblock-${props.lang || "text"}-${hash(props.code)}`;
+  const id = `codeblock-${counter++}`;
 
   const el = (
     <code id={id} class={[highlighter, "highlighter"]}>
