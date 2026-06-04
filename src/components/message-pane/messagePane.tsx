@@ -363,8 +363,21 @@ const createMessagePane = () => {
   );
   storeEmitter.on(
     "message:editing",
-    () => {
-      rerender({ forceRecreate: true });
+    (event) => {
+      if (event.prevMessage) {
+        logs
+          .querySelector(
+            `[data-message-id="${event.prevMessage?.id}"] .messageItem`,
+          )
+          ?.classList.remove("editing");
+      }
+      if (event.message) {
+        logs
+          .querySelector(
+            `[data-message-id="${event.message?.id}"] .messageItem`,
+          )
+          ?.classList.add("editing");
+      }
     },
     signal,
   );

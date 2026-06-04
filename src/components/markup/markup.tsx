@@ -261,7 +261,6 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       return <span>{transformEntities(entity, ctx)}</span>;
     }
     case "codeblock": {
-      console.log("test");
       if (ctx.props().inline) {
         return <code class="code">{sliceText(ctx, entity.innerSpan)}</code>;
       }

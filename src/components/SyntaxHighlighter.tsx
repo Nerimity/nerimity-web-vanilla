@@ -13,9 +13,22 @@ const highlighter = css`
     margin: 0;
   }
 `;
+
+const hash = (str: string) => {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = (h * 33) ^ str.charCodeAt(i);
+  }
+  return (h >>> 0).toString(36);
+};
+
 export function SyntaxHighlighter(props: { code: string; lang?: string }) {
+  const id = `codeblock-${props.lang || "text"}-${hash(props.code)}`;
+
   const el = (
-    <code class={[highlighter, "highlighter"]}>{props.code}</code>
+    <code id={id} class={[highlighter, "highlighter"]}>
+      {props.code}
+    </code>
   ) as HTMLElement;
 
   if (!props.lang) return el;
@@ -23,8 +36,9 @@ export function SyntaxHighlighter(props: { code: string; lang?: string }) {
   import("../utils/shiki").then(({ highlight }) => {
     highlight(props.code, props.lang!).then((html) => {
       if (!html) return;
-      el.innerHTML = html;
-      el.querySelector("pre")?.style.removeProperty("background");
+      const live = document.getElementById(id) ?? el;
+      live.innerHTML = html;
+      live.querySelector("pre")?.style.removeProperty("background");
     });
   });
 
