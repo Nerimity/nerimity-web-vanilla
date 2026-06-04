@@ -22,7 +22,7 @@ const createRouter = () => {
     } else {
       history.pushState(null, "", pathname);
     }
-    window.dispatchEvent(new Event("navigate"));
+    queueMicrotask(() => window.dispatchEvent(new Event("navigate")));
   };
 
   const matchResult = <P>(result: URLPatternResult) => {
