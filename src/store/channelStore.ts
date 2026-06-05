@@ -46,6 +46,7 @@ interface ChannelProperty {
   loading: boolean;
   scrollTop?: number;
   editingMessage?: Message;
+  replyingMessages?: Message[];
 }
 
 function createChannelStore() {
@@ -133,7 +134,40 @@ function createChannelStore() {
     const prevMessage = property?.editingMessage;
     if (prevMessage === message) return;
     setProperty(channelId, { editingMessage: message });
-    storeEmitter.emit("message:editing", { message, prevMessage });
+
+    if (property?.replyingMessages?.length) {
+      setProperty(channelId, { replyingMessages: [] });
+      storeEmitter.emit("message_property:replying", { replies: [] });
+    }
+
+    storeEmitter.emit("message_property:editing", { message, prevMessage });
+  };
+
+  const addReply = (channelId: string, message?: Message) => {
+    const property = getProperty(channelId, false);
+    if (!property) return;
+    const replies = property.replyingMessages || [];
+    if (replies.length >= 5) return;
+    if (replies.includes(message!)) return;
+    if (property.editingMessage) {
+      setProperty(channelId, { editingMessage: undefined });
+      storeEmitter.emit("message_property:editing", { message: undefined });
+    }
+    replies.push(message!);
+    setProperty(channelId, { replyingMessages: replies });
+    storeEmitter.emit("message_property:replying", { replies });
+  };
+
+  const removeReply = (channelId: string, messageId: string) => {
+    const property = getProperty(channelId, false);
+    if (!property) return;
+    const replies = property.replyingMessages;
+    if (!replies) return;
+    const index = replies.findIndex((m) => m.id === messageId);
+    if (index === -1) return;
+    replies.splice(index, 1);
+    setProperty(channelId, { replyingMessages: replies });
+    storeEmitter.emit("message_property:replying", { replies });
   };
 
   const setProperty = (
@@ -255,6 +289,8 @@ function createChannelStore() {
     get currentChannelId() {
       return currentChannelId;
     },
+    addReply,
+    removeReply,
     setEditingMessage,
     updateLastMessagedAt,
     setCurrentChannelId,

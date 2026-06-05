@@ -70,6 +70,7 @@ const HoverActions = (props: {
       {grouped && (
         <span class="timestamp">{friendlyTimestamp(message?.createdAt!)}</span>
       )}
+      <Button class="button" data-action="reply" icon="reply" hoverBorder />
       {canEdit() && (
         <Button class="button" data-action="edit" icon="edit" hoverBorder />
       )}
@@ -92,6 +93,8 @@ export const createMessageHoverActions = (opts: {
 
   const hoverActionEl = (<HoverActions />) as HTMLDivElement;
 
+  let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
+
   const messageHovered = (messageEl: HTMLDivElement) => {
     messageEl.classList.add("force-hover");
 
@@ -107,6 +110,10 @@ export const createMessageHoverActions = (opts: {
     hoverActionEl.style.top = `${messageEl.offsetTop - 20}px`;
   };
   const messageUnhovered = () => {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = null;
+    }
     hoveredMessageItem?.classList.remove("force-hover");
     hoverActionEl.classList.toggle("hide", true);
   };
@@ -130,6 +137,12 @@ export const createMessageHoverActions = (opts: {
     channelStore.setEditingMessage(channelStore.currentChannelId!, message);
   };
 
+  const handleReplyMessage = () => {
+    const message = getMessage();
+    if (!message) return;
+    channelStore.addReply(channelStore.currentChannelId!, message);
+  };
+
   hoverActionEl.addEventListener(
     "click",
     (e) => {
@@ -141,6 +154,9 @@ export const createMessageHoverActions = (opts: {
       }
       if (action === "edit") {
         handleEditMessage();
+      }
+      if (action === "reply") {
+        handleReplyMessage();
       }
     },
     { signal: opts.signal },
@@ -154,9 +170,7 @@ export const createMessageHoverActions = (opts: {
 
       const messageItem = target.closest<HTMLDivElement>(".messageItem");
 
-      if (messageItem === hoveredMessageItem) {
-        return;
-      }
+      if (messageItem === hoveredMessageItem) return;
 
       if (hoveredMessageItem) {
         messageUnhovered();
@@ -164,8 +178,18 @@ export const createMessageHoverActions = (opts: {
 
       hoveredMessageItem = messageItem;
 
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = null;
+      }
+
       if (hoveredMessageItem) {
-        messageHovered(hoveredMessageItem);
+        hoverTimeout = setTimeout(() => {
+          if (hoveredMessageItem) {
+            messageHovered(hoveredMessageItem);
+          }
+          hoverTimeout = null;
+        }, 0);
       }
     },
     { signal: opts.signal },
@@ -209,6 +233,7 @@ export const createMessageHoverActions = (opts: {
   opts.signal.addEventListener(
     "abort",
     () => {
+      if (hoverTimeout) clearTimeout(hoverTimeout);
       hoverActionEl.remove();
     },
     { once: true },

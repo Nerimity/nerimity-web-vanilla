@@ -13,6 +13,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
 import { createEditMessageIndicator } from "./editMessageIndicator";
+import { createRepliesIndicator } from "./repliesIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 
 const chatbarContainer = css`
@@ -52,6 +53,7 @@ export const createChatbar = () => {
 
   const typingIndicator = createTypingIndicator(abortController);
   const editMessageIndicator = createEditMessageIndicator(signal);
+  const repliesIndicator = createRepliesIndicator(abortController);
 
   const sendButton = (
     <Button class="button send" icon="send" hoverBorder />
@@ -64,6 +66,7 @@ export const createChatbar = () => {
     <div class={chatbarContainer}>
       {typingIndicator.el}
       {editMessageIndicator}
+      {repliesIndicator}
       <Input
         class="chatInput"
         suffix={

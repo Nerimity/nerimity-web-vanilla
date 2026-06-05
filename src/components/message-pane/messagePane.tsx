@@ -362,21 +362,32 @@ const createMessagePane = () => {
     signal,
   );
   storeEmitter.on(
-    "message:editing",
+    "message_property:replying",
     (event) => {
-      if (event.prevMessage) {
-        logs
-          .querySelector(
-            `[data-message-id="${event.prevMessage?.id}"] .messageItem`,
-          )
-          ?.classList.remove("editing");
+      const messageItems = logs.querySelectorAll(`.messageItem`);
+      const ids = event.replies.map((m) => m.id);
+      for (const item of messageItems) {
+        const messageEl = item as HTMLDivElement;
+        const messageElParent = item.parentElement as HTMLDivElement;
+        messageEl.classList.toggle(
+          "editing",
+          ids.includes(messageElParent.dataset.messageId!),
+        );
       }
-      if (event.message) {
-        logs
-          .querySelector(
-            `[data-message-id="${event.message?.id}"] .messageItem`,
-          )
-          ?.classList.add("editing");
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message_property:editing",
+    (event) => {
+      const messageItems = logs.querySelectorAll(`.messageItem`);
+      for (const item of messageItems) {
+        const messageEl = item as HTMLDivElement;
+        const messageElParent = item.parentElement as HTMLDivElement;
+        messageEl.classList.toggle(
+          "editing",
+          event.message?.id === messageElParent.dataset.messageId,
+        );
       }
     },
     signal,

@@ -76,7 +76,7 @@ export const createEditMessageIndicator = (signal: AbortSignal) => {
     editMessageContainer.classList.remove("hide");
   };
 
-  storeEmitter.on("message:editing", rerender, signal);
+  storeEmitter.on("message_property:editing", rerender, signal);
   storeEmitter.on("navigate:channelId", rerender, signal);
   rerender();
 
