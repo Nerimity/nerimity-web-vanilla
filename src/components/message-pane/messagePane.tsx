@@ -125,7 +125,7 @@ const createMessagePane = () => {
 
   const scrollToBottom = (force?: boolean) => {
     if (!force && !isScrolledToBottom) return;
-    // when drawer is  currently being dragged, dont reset the position.
+    // when drawer is  currently being dragged, don't reset the position.
     requestAnimationFrame(() => {
       Drawer().setIgnoreNextScroll();
       el.scrollTop = el.scrollHeight;
@@ -151,7 +151,7 @@ const createMessagePane = () => {
 
   type RerenderOpts = {
     forceRecreate?: boolean;
-    dontScrollDown?: boolean;
+    preventScrollDown?: boolean;
     useSavedTop?: boolean;
     forceScrollDown?: boolean;
     removeLastSeenMarker?: boolean;
@@ -159,7 +159,7 @@ const createMessagePane = () => {
   };
 
   const restoreScrollPosition = (opts?: RerenderOpts) => {
-    if (opts?.dontScrollDown) return;
+    if (opts?.preventScrollDown) return;
     const property = getChannelProperty();
     const savedScrollTop = property?.scrollTop;
     if (opts?.useSavedTop && savedScrollTop !== undefined) {

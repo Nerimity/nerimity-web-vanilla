@@ -11,7 +11,7 @@ interface InfiniteScrollParams {
   skeletonsBottom: HTMLDivElement;
   signal: AbortSignal;
   rerender: (opts?: {
-    dontScrollDown?: boolean;
+    preventScrollDown?: boolean;
     useSavedTop?: boolean;
     forceScrollDown?: boolean;
   }) => void;
@@ -73,7 +73,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
       loading: false,
     });
 
-    rerender({ dontScrollDown: true });
+    rerender({ preventScrollDown: true });
     const newAnchorOffsetTop = anchorEl?.offsetTop ?? 0;
     el.scrollTop += newAnchorOffsetTop - anchorOffsetTop;
     handleStillObserving();
@@ -140,7 +140,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     const lastMessage = messageEls[messageEls.length - 1]!;
     const lastMessageBottom = lastMessage.getBoundingClientRect().bottom;
 
-    rerender({ dontScrollDown: true });
+    rerender({ preventScrollDown: true });
 
     const afterBottom = lastMessage.getBoundingClientRect().bottom;
     const difference = afterBottom - lastMessageBottom!;
