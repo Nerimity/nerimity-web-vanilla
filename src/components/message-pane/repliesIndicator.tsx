@@ -12,7 +12,7 @@ import { reconcile } from "../../utils/html";
 import { getLocalItem, setLocalItem } from "../../utils/localStorage";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
-import { Checkbox, createCheckboxHandler } from "../checkbox";
+import { Checkbox } from "../checkbox";
 import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
@@ -142,10 +142,12 @@ export const createRepliesIndicator = (abortController: AbortController) => {
       <div class="status">
         <Icon class="icon" name="reply" />
         {countPill}
-        <Checkbox
-          label={t`Mention`}
+        <Checkbox.Root
           checked={getLocalItem("messageReplyShouldMention", true)!}
-        />
+        >
+          <Checkbox.Label>{t`Mention`}</Checkbox.Label>
+          <Checkbox.Box />
+        </Checkbox.Root>
       </div>
     </div>
   ) as HTMLDivElement;
@@ -187,7 +189,7 @@ export const createRepliesIndicator = (abortController: AbortController) => {
     { signal },
   );
 
-  createCheckboxHandler({
+  Checkbox.createHandler({
     el,
     onChange: (checked) => {
       setLocalItem("messageReplyShouldMention", checked);

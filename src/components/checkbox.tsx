@@ -49,23 +49,32 @@ const checkboxContainer = css`
   }
 `;
 
-export const Checkbox = (props: {
-  label?: string;
+const Root = (props: {
   checked?: boolean;
   [key: string]: any;
+  children?: any;
 }) => {
-  const { label, checked, ...rest } = props;
+  const { checked, children, ...rest } = props;
   return (
     <div class={checkboxContainer} data-checked={checked} {...rest}>
-      <div class={scoped`checkbox`}>
-        <Icon class={scoped`icon`} name="check" />
-      </div>
-      {props.label && <div>{label}</div>}
+      {children}
     </div>
   );
 };
 
-export const createCheckboxHandler = (opts: {
+const Label = (props: { children: any }) => {
+  return <div>{props.children}</div>;
+};
+
+const Box = () => {
+  return (
+    <div class={scoped`checkbox`}>
+      <Icon class={scoped`icon`} name="check" />
+    </div>
+  );
+};
+
+const createHandler = (opts: {
   el: HTMLDivElement;
   onChange: (checked: boolean, el: HTMLElement) => void;
   signal: AbortSignal;
@@ -87,4 +96,11 @@ export const createCheckboxHandler = (opts: {
     },
     { signal: opts.signal },
   );
+};
+
+export const Checkbox = {
+  Root,
+  Label,
+  Box,
+  createHandler,
 };
