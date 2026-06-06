@@ -7,6 +7,7 @@ import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
+import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
 import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
@@ -69,6 +70,8 @@ const createAppPage = () => {
 
   let inboxDrawer: LazyResult<typeof createInboxDrawer> | null = null;
 
+  const appRouteSource = createTokenSource();
+
   router.createMatchListener<{ serverId: string; channelId: string }>(
     "/app/servers/:serverId/:channelId",
     async (res) => {
@@ -77,18 +80,30 @@ const createAppPage = () => {
         serverChannelPage?.destroy();
         serverChannelPage = null;
         if (inboxDrawer) return;
-        inboxDrawer = await createInboxDrawer();
+        const isStale = appRouteSource.capture();
+
+        const drawer = await createInboxDrawer();
+        if (isStale()) {
+          drawer.destroy();
+          return;
+        }
+        inboxDrawer = drawer;
         leftDrawer.replaceChildren(inboxDrawer.render());
         return;
       }
+
+      appRouteSource.invalidate();
 
       if (serverChannelPage) return;
       inboxDrawer?.destroy();
       inboxDrawer = null;
 
+      const isStale = appRouteSource.capture();
       const createServerChannelRoute = (
         await import("./createServerChannelRoute")
       ).default;
+
+      if (isStale()) return;
       serverChannelPage = createServerChannelRoute(leftDrawer);
     },
     { signal },

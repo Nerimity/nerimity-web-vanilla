@@ -1,6 +1,7 @@
 import "./i18n";
 import "./style.css";
 import type createAppPage from "./pages/app-page/AppPage";
+import { createTokenSource } from "./utils/createTokenSource";
 import { getLocalItem } from "./utils/localStorage";
 import { portalElement } from "./utils/portal";
 import { router, type MatchResult } from "./utils/router";
@@ -26,14 +27,15 @@ import { userAgent } from "./utils/userAgent";
     }
     let currentPage: ReturnType<typeof createAppPage> | undefined = undefined;
 
-    let generation = 0;
+    let pageSource = createTokenSource();
 
     const navigate = async (create?: typeof AppPage) => {
-      const gen = ++generation;
+      const isStale = pageSource.capture();
       currentPage?.destroy();
       app.replaceChildren();
-      currentPage = create ? (await create()).default() : undefined;
-      if (gen !== generation) return;
+      const newPage = create ? (await create()).default : undefined;
+      if (isStale()) return;
+      currentPage = newPage?.();
       currentPage?.render();
     };
     const handleEnter = (cb: () => void) => {
