@@ -136,7 +136,7 @@ export const createModal = (
     () => {
       handlePosition();
     },
-    { signal },
+    { signal, passive: true },
   );
 
   const handlePosition = () => {
