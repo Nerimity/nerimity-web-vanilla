@@ -20,7 +20,8 @@ const modalBackdrop = css`
   z-index: 1111111111111111;
 
   @media (max-width: ${`${mobileWidth}px`}) {
-    align-items: flex-end;
+    align-items: start;
+    overflow: auto;
   }
 `;
 const modalRoot = css`
@@ -32,8 +33,10 @@ const modalRoot = css`
   max-height: 80vh;
   overflow: hidden;
   @media (max-width: ${`${mobileWidth}px`}) {
+    flex-shrink: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+    max-height: initial;
     flex: 1;
   }
 `;
@@ -126,6 +129,43 @@ export const createModal = (
   const backdrop = (<div class={modalBackdrop}>{modal}</div>) as HTMLDivElement;
   const { signal } = abortController;
 
+  const isMobileWidth = () => window.innerWidth <= mobileWidth;
+
+  window.addEventListener(
+    "resize",
+    () => {
+      handlePosition();
+    },
+    { signal },
+  );
+
+  const handlePosition = () => {
+    if (!isMobileWidth()) {
+      modal.style.marginTop = "";
+      return;
+    }
+    const modalHeight = modal.getBoundingClientRect().height;
+    const windowHeight = window.innerHeight;
+
+    const targetVisibility = 50;
+
+    modal.style.marginTop = `${windowHeight}px`;
+
+    const percentTakingScreen = (modalHeight / windowHeight) * 100;
+
+    if (percentTakingScreen < targetVisibility) {
+      backdrop.scrollTo({ top: modalHeight, behavior: "smooth" });
+    } else {
+      const hiddenPercent = (100 - targetVisibility) / 100;
+      const hiddenAmount = modalHeight * hiddenPercent;
+
+      const scrollToTarget = modalHeight - hiddenAmount;
+
+      backdrop.scrollTo({ top: scrollToTarget, behavior: "smooth" });
+    }
+  };
+  requestAnimationFrame(handlePosition);
+
   modal.addEventListener(
     "click",
     (e) => {
@@ -139,12 +179,39 @@ export const createModal = (
     { signal },
   );
 
+  backdrop.addEventListener(
+    "scrollend",
+    () => {
+      const modalHeight = modal.getBoundingClientRect().height;
+      const currentScroll = backdrop.scrollTop;
+
+      const percentVisible = (currentScroll / modalHeight) * 100;
+
+      if (percentVisible <= 40) {
+        destroy(percentVisible === 0);
+      }
+    },
+    { signal },
+  );
   portalElement().appendChild(backdrop);
-  const destroy = () => {
-    abortController.abort();
-    backdrop.remove();
+
+  const destroy = (force?: boolean) => {
+    backdrop.scrollTo({ top: 0, behavior: "smooth" });
+
+    const handleScrollEnd = () => {
+      abortController.abort();
+      backdrop.remove();
+    };
+    if (!isMobileWidth() || force) {
+      handleScrollEnd();
+      return;
+    }
+
+    backdrop.addEventListener("scrollend", handleScrollEnd, { once: true });
   };
-  abortController.signal.addEventListener("abort", destroy, { once: true });
+  abortController.signal.addEventListener("abort", () => destroy(), {
+    once: true,
+  });
 
   return { destroy };
 };
