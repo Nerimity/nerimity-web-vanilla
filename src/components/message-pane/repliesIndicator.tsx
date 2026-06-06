@@ -145,8 +145,8 @@ export const createRepliesIndicator = (abortController: AbortController) => {
         <Checkbox.Root
           checked={getLocalItem("messageReplyShouldMention", true)!}
         >
-          <Checkbox.Label>{t`Mention`}</Checkbox.Label>
           <Checkbox.Box />
+          <Checkbox.Label>{t`Mention`}</Checkbox.Label>
         </Checkbox.Root>
       </div>
     </div>
