@@ -128,7 +128,7 @@ export const createModal = (
   const backdrop = (<div class={modalBackdrop}>{modal}</div>) as HTMLDivElement;
   const { signal } = abortController;
 
-  const isMobileWidth = () => window.innerWidth <= mobileWidth;
+  // const isMobileWidth = () => window.innerWidth <= mobileWidth;
 
   let Y = 0;
 
