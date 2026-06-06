@@ -21,7 +21,6 @@ const modalBackdrop = css`
 
   @media (max-width: ${`${mobileWidth}px`}) {
     align-items: start;
-    overflow: auto;
   }
 `;
 const modalRoot = css`
@@ -131,40 +130,53 @@ export const createModal = (
 
   const isMobileWidth = () => window.innerWidth <= mobileWidth;
 
-  window.addEventListener(
-    "resize",
-    () => {
-      handlePosition();
-    },
-    { signal, passive: true },
-  );
+  let Y = 0;
 
-  const handlePosition = () => {
-    if (!isMobileWidth()) {
-      modal.style.marginTop = "";
-      return;
-    }
-    const modalHeight = modal.getBoundingClientRect().height;
+  requestAnimationFrame(() => {
+    const modalHeight = modal.offsetHeight;
     const windowHeight = window.innerHeight;
+    Y = windowHeight;
+    modal.style.transform = `translateY(${Y}px)`;
 
     const targetVisibility = 50;
-
-    modal.style.marginTop = `${windowHeight}px`;
-
     const percentTakingScreen = (modalHeight / windowHeight) * 100;
 
     if (percentTakingScreen < targetVisibility) {
-      backdrop.scrollTo({ top: modalHeight, behavior: "smooth" });
+      Y = windowHeight - modalHeight;
     } else {
-      const hiddenPercent = (100 - targetVisibility) / 100;
-      const hiddenAmount = modalHeight * hiddenPercent;
-
-      const scrollToTarget = modalHeight - hiddenAmount;
-
-      backdrop.scrollTo({ top: scrollToTarget, behavior: "smooth" });
+      Y = windowHeight / 2;
     }
+
+    const anim = modal.animate(
+      { transform: `translateY(${Y}px)` },
+      {
+        duration: 200,
+        fill: "forwards",
+      },
+    );
+    anim.onfinish = () => {
+      anim.commitStyles();
+      anim.cancel();
+    };
+  });
+
+  const handleScroll = (event: WheelEvent) => {
+    Y = Y + event.deltaY;
+
+    const modalHeight = modal.offsetHeight;
+    const windowHeight = window.innerHeight;
+
+    if (Y < windowHeight - modalHeight) Y = windowHeight - modalHeight;
+    if (Y >= windowHeight) Y = windowHeight;
+
+    modal.style.transform = `translateY(${Y}px)`;
   };
-  requestAnimationFrame(handlePosition);
+
+  window.addEventListener("wheel", handleScroll, {
+    signal: abortController.signal,
+    passive: false,
+    capture: false,
+  });
 
   modal.addEventListener(
     "click",
@@ -179,35 +191,19 @@ export const createModal = (
     { signal },
   );
 
-  backdrop.addEventListener(
-    "scrollend",
-    () => {
-      const modalHeight = modal.getBoundingClientRect().height;
-      const currentScroll = backdrop.scrollTop;
-
-      const percentVisible = (currentScroll / modalHeight) * 100;
-
-      if (percentVisible <= 40) {
-        destroy(percentVisible === 0);
-      }
-    },
-    { signal },
-  );
   portalElement().appendChild(backdrop);
 
-  const destroy = (force?: boolean) => {
-    backdrop.scrollTo({ top: 0, behavior: "smooth" });
-
-    const handleScrollEnd = () => {
+  const destroy = () => {
+    modal.animate(
+      { transform: `translateY(${window.innerHeight}px)` },
+      {
+        duration: 200,
+        fill: "forwards",
+      },
+    ).onfinish = () => {
       abortController.abort();
       backdrop.remove();
     };
-    if (!isMobileWidth() || force) {
-      handleScrollEnd();
-      return;
-    }
-
-    backdrop.addEventListener("scrollend", handleScrollEnd, { once: true });
   };
   abortController.signal.addEventListener("abort", () => destroy(), {
     once: true,
