@@ -158,14 +158,18 @@ function createChannelStore() {
     storeEmitter.emit("message_property:replying", { replies });
   };
 
-  const removeReply = (channelId: string, messageId: string) => {
+  const removeReply = (channelId: string, messageId?: string) => {
     const property = getProperty(channelId, false);
     if (!property) return;
-    const replies = property.replyingMessages;
+    let replies = property.replyingMessages;
     if (!replies) return;
-    const index = replies.findIndex((m) => m.id === messageId);
-    if (index === -1) return;
-    replies.splice(index, 1);
+    if (messageId) {
+      const index = replies.findIndex((m) => m.id === messageId);
+      if (index === -1) return;
+      replies.splice(index, 1);
+    } else {
+      replies = [];
+    }
     setProperty(channelId, { replyingMessages: replies });
     storeEmitter.emit("message_property:replying", { replies });
   };

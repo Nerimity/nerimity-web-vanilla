@@ -1,4 +1,5 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
 import { channelStore } from "../../store/channelStore";
@@ -8,8 +9,10 @@ import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
+import { getLocalItem, setLocalItem } from "../../utils/localStorage";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
+import { Checkbox, createCheckboxHandler } from "../checkbox";
 import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
@@ -44,6 +47,7 @@ const repliesIndicator = css`
     display: flex;
     align-items: center;
     gap: 4px;
+    margin-right: 6px;
     .pill {
       border-radius: var(--radius-max);
       background: var(--gray-800);
@@ -51,6 +55,7 @@ const repliesIndicator = css`
       font-size: 10px;
       color: var(--gray-400);
       font-weight: 500;
+      margin-right: auto;
     }
     .icon {
       color: var(--primary-color);
@@ -137,6 +142,10 @@ export const createRepliesIndicator = (abortController: AbortController) => {
       <div class="status">
         <Icon class="icon" name="reply" />
         {countPill}
+        <Checkbox
+          label={t`Mention`}
+          checked={getLocalItem("messageReplyShouldMention", true)!}
+        />
       </div>
     </div>
   ) as HTMLDivElement;
@@ -177,6 +186,14 @@ export const createRepliesIndicator = (abortController: AbortController) => {
     },
     { signal },
   );
+
+  createCheckboxHandler({
+    el,
+    onChange: (checked) => {
+      setLocalItem("messageReplyShouldMention", checked);
+    },
+    signal,
+  });
 
   storeEmitter.on("message_property:replying", rerender, signal);
   storeEmitter.on("navigate:channelId", rerender, signal);

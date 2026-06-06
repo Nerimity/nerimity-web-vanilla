@@ -36,43 +36,47 @@ msgid "Friends"
 msgstr "Friends"
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:181
+#: src/components/message-pane/chatbar.tsx:185
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:186
+#: src/components/message-pane/chatbar.tsx:190
 msgid "Message {0}"
 msgstr "Message {0}"
 
-#: src/components/message-pane/deleteMessageModal.tsx:31
+#: src/components/message-pane/deleteMessageModal.tsx:38
 msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
-#: src/components/message-pane/deleteMessageModal.tsx:43
+#: src/components/message-pane/deleteMessageModal.tsx:50
 msgid "Delete Message"
 msgstr "Delete Message"
 
-#: src/components/message-pane/deleteMessageModal.tsx:49
+#: src/components/message-pane/deleteMessageModal.tsx:56
 msgid "Don't Delete"
 msgstr "Don't Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:56
-#: src/components/message-pane/deleteMessageModal.tsx:77
+#: src/components/message-pane/deleteMessageModal.tsx:63
+#: src/components/message-pane/deleteMessageModal.tsx:84
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:70
+#: src/components/message-pane/deleteMessageModal.tsx:77
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:178
+#: src/components/message-pane/messageItem.tsx:179
 msgid "New Messages"
 msgstr "New Messages"
 
-#: src/components/message-pane/messageItem.tsx:343
+#: src/components/message-pane/messageItem.tsx:344
 msgid "Message was deleted."
 msgstr "Message was deleted."
+
+#: src/components/message-pane/repliesIndicator.tsx:146
+msgid "Mention"
+msgstr "Mention"
 
 #. placeholder {0}: names.length
 #: src/components/message-pane/typingIndicator.tsx:154

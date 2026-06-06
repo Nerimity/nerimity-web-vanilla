@@ -113,6 +113,7 @@ export const createChatbar = () => {
     messageStore.sendMessage(channelStore.currentChannel()!.id, {
       content: value,
     });
+    channelStore.removeReply(channelStore.currentChannelId!);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {

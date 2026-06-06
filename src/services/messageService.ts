@@ -21,6 +21,8 @@ const postMessagesQueue = newQueue();
 interface PostMessageBody {
   content: string;
   socketId?: string;
+  replyToMessageIds?: string[];
+  mentionReplies?: boolean;
 }
 export const postMessage = async (channelId: string, body: PostMessageBody) => {
   return postMessagesQueue.add(() => {

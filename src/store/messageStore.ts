@@ -13,6 +13,7 @@ import {
   type RawUser,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { getLocalItem } from "../utils/localStorage";
 import { accountStore } from "./accountStore";
 import { channelStore } from "./channelStore";
 
@@ -141,6 +142,9 @@ function createMessageStore() {
     const existing = messages.get(channelId);
     if (!existing) return;
 
+    const property = channelStore.getProperty(channelId, false);
+    if (!property) return;
+
     const message = new Message({
       id: Date.now() + "" + Math.random(),
       content: opts.content,
@@ -148,6 +152,9 @@ function createMessageStore() {
       createdBy: accountStore.currentUser!,
       createdAt: Date.now(),
       type: MessageType.CONTENT,
+      replyMessages: property.replyingMessages?.map((m) => ({
+        replyToMessage: m,
+      })),
     });
     message.state = "sending";
     messages.set(channelId, [...existing, message]);
@@ -193,10 +200,24 @@ function createMessageStore() {
   const sendMessage = async (channelId: string, opts: SendMessageOpts) => {
     const localMessage = createLocalMessage(channelId, opts);
     if (!localMessage) return;
+
+    const replies = localMessage.replyMessages;
+
+    const replyToMessageIds = replies?.length
+      ? replies.map((m) => m.replyToMessage!.id)
+      : undefined;
+
+    const mentionReplies = replies?.length
+      ? !!getLocalItem("messageReplyShouldMention", true)
+      : undefined;
+
     const [result, error] = await postMessage(channelId, {
       content: opts.content,
       socketId: socket.socketId,
+      replyToMessageIds: replyToMessageIds,
+      mentionReplies: mentionReplies,
     });
+
     const channelMessages = messages.get(channelId);
     if (!channelMessages) return;
     const index = channelMessages.findIndex((m) => m.id === localMessage?.id);

@@ -1,12 +1,14 @@
 interface LocalStorageData {
   userToken: string;
+  messageReplyShouldMention: boolean;
 }
 
 export const getLocalItem = <T extends keyof LocalStorageData>(
   key: T,
+  defaultValue?: LocalStorageData[T],
 ): LocalStorageData[T] | null => {
   const value = localStorage.getItem(key);
-  if (value === null) return null;
+  if (value === null) return defaultValue ?? null;
   try {
     return JSON.parse(value) as LocalStorageData[T] | null;
   } catch {

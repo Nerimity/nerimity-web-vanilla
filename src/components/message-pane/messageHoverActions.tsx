@@ -124,11 +124,11 @@ export const createMessageHoverActions = (opts: {
     return messages?.findLast((m) => m.id === messageId);
   };
 
-  const handleDeleteMessage = () => {
+  const handleDeleteMessage = (skipConfirmation?: boolean) => {
     const message = getMessage();
     if (!message) return;
 
-    createDeleteMessageModal({ message });
+    createDeleteMessageModal({ message, skipConfirmation });
   };
 
   const handleEditMessage = () => {
@@ -150,7 +150,7 @@ export const createMessageHoverActions = (opts: {
       const button = target.closest(".button") as HTMLElement | null;
       const action = button?.dataset.action;
       if (action === "delete") {
-        handleDeleteMessage();
+        handleDeleteMessage(e.shiftKey);
       }
       if (action === "edit") {
         handleEditMessage();

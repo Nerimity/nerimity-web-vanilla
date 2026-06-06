@@ -19,7 +19,14 @@ const deleteMessageBody = css`
   }
 `;
 
-export const createDeleteMessageModal = (props: { message: Message }) => {
+export const createDeleteMessageModal = (props: {
+  message: Message;
+  skipConfirmation?: boolean;
+}) => {
+  if (props.skipConfirmation) {
+    deleteMessage(props.message.channelId, props.message.id);
+    return;
+  }
   const abortController = new AbortController();
   const { signal } = abortController;
 

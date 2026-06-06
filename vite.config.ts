@@ -20,6 +20,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "check",
         "reply",
         "wrap_text",
         "content_copy",
