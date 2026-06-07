@@ -3,6 +3,7 @@ import { css } from "@linaria/core";
 import { mobileWidth } from "../config";
 import { h } from "../h";
 import { scoped } from "../utils/css";
+import { createResizeObserver } from "../utils/observer";
 import { portalElement } from "../utils/portal";
 import { Button } from "./button";
 import { Icon } from "./icon";
@@ -124,6 +125,7 @@ export const createModal = (
   children: any,
   abortController: AbortController,
 ) => {
+  const isMobileWidth = () => window.innerWidth < mobileWidth;
   const modal = children() as HTMLElement;
   const backdrop = (<div class={modalBackdrop}>{modal}</div>) as HTMLDivElement;
   const { signal } = abortController;
@@ -135,6 +137,7 @@ export const createModal = (
   let lastTouchY = 0;
   let lastTouchTime = 0;
   let velocityY = 0;
+  let lastMobileWidth = isMobileWidth();
 
   window.addEventListener(
     "touchstart",
@@ -230,12 +233,15 @@ export const createModal = (
     }
   };
 
+  let lastWindowHeight = window.innerHeight;
   const initialPosition = () => {
+    if (!isMobileWidth()) return;
     const windowHeight = window.innerHeight;
     Y = windowHeight;
     modal.style.transform = `translateY(${Y}px)`;
 
     Y = initialY();
+    lastWindowHeight = windowHeight;
 
     const anim = modal.animate(
       { transform: `translateY(${Y}px)` },
@@ -253,17 +259,9 @@ export const createModal = (
   requestAnimationFrame(initialPosition);
 
   let wheelTimeout: number | null = null;
-  let lastWheelTime = 0;
-  let wheelVelocityY = 0;
 
   const handleScroll = (event: WheelEvent) => {
-    const currentTime = performance.now();
-    const timeDelta = currentTime - lastWheelTime;
-
-    if (timeDelta > 0) {
-      wheelVelocityY = event.deltaY / timeDelta;
-    }
-    lastWheelTime = currentTime;
+    if (!isMobileWidth()) return;
 
     Y = Y - event.deltaY;
 
@@ -281,15 +279,12 @@ export const createModal = (
     }
 
     wheelTimeout = window.setTimeout(() => {
+      const currentVisibleHeight = windowHeight - Y;
+
       const currentInitialY = initialY();
-      const velocityThreshold = 0.5;
-      const distanceThreshold = modalHeight * 0.6;
       const draggedDistance = Y - currentInitialY;
 
-      if (
-        wheelVelocityY > velocityThreshold ||
-        draggedDistance > distanceThreshold
-      ) {
+      if (currentVisibleHeight <= 0) {
         destroy();
       } else if (draggedDistance > 0) {
         Y = currentInitialY;
@@ -306,9 +301,43 @@ export const createModal = (
           anim.cancel();
         };
       }
-      wheelVelocityY = 0;
-    }, 150);
+    }, 200);
   };
+
+  const handleResize = () => {
+    if (lastMobileWidth !== isMobileWidth()) {
+      lastMobileWidth = isMobileWidth();
+      if (!lastMobileWidth) {
+        modal.style.transform = `initial`;
+      } else {
+        initialPosition();
+      }
+    }
+    if (!isMobileWidth()) return;
+    const windowHeight = window.innerHeight;
+
+    const distanceFromBottom = lastWindowHeight - Y;
+
+    Y = windowHeight - distanceFromBottom;
+
+    const modalHeight = modal.offsetHeight;
+    const minY = windowHeight - modalHeight;
+    if (Y < minY) Y = minY;
+    if (Y > windowHeight) Y = windowHeight;
+
+    modal.style.transform = `translateY(${Y}px)`;
+
+    lastWindowHeight = windowHeight;
+  };
+  setTimeout(() => {
+    createResizeObserver(modal, handleResize, { signal, defer: true });
+  }, 200);
+
+  window.addEventListener("resize", handleResize, {
+    signal: abortController.signal,
+    passive: true,
+    capture: false,
+  });
 
   window.addEventListener("wheel", handleScroll, {
     signal: abortController.signal,
