@@ -4,6 +4,7 @@ import { mobileWidth } from "../config";
 import { h } from "../h";
 import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
+import { portalElement } from "../utils/portal";
 import { userAgent } from "../utils/userAgent";
 
 let drawer: ReturnType<typeof createDrawer> | null = null;
@@ -344,6 +345,10 @@ function createDrawer() {
 
   const handleTouchStart = (event: TouchEvent) => {
     pauseTouches = currentMode === "desktop" ? true : false;
+    if (portalElement().children.length) {
+      pauseTouches = true;
+    }
+
     const touch = event.touches[0];
     if (!touch) return;
     content.style.transition = "";
