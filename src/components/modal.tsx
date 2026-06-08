@@ -267,6 +267,7 @@ export const createModal = (
   let lastTouchY = 0;
   let lastTouchTime = 0;
   let velocityY = 0;
+  let startedAtInitialPosition = false;
   let lastMobileWidth = isMobileWidth();
 
   let inertiaFrame: number | null = null;
@@ -289,6 +290,9 @@ export const createModal = (
       if (!touch) return;
       startY = touch.clientY;
       baseY = modalY;
+
+      const currentInitialY = initialY();
+      startedAtInitialPosition = Math.abs(modalY - currentInitialY) < 2;
 
       lastTouchY = touch.clientY;
       lastTouchTime = performance.now();
@@ -338,6 +342,7 @@ export const createModal = (
       const currentInitialY = initialY();
 
       const velocityThreshold = 0.02;
+      const closeVelocityThreshold = 0.7;
       const deceleration = 0.0035;
 
       const animateBackToInitial = () => {
@@ -357,6 +362,11 @@ export const createModal = (
 
       const releaseAtBottom = modalY >= windowHeight - 1;
       if (releaseAtBottom) {
+        destroy();
+        return;
+      }
+
+      if (startedAtInitialPosition && velocityY > closeVelocityThreshold) {
         destroy();
         return;
       }
