@@ -422,7 +422,6 @@ export const createMessageReactionHandler = (opts: {
   opts.signal.addEventListener(
     "abort",
     () => {
-      console.log("aborted");
       reactionItemFocusAnimator.destroy();
     },
     { once: true },
