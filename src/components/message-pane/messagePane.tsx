@@ -21,7 +21,7 @@ import { createChatbar } from "./chatbar";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
-import { MessageItem, updateMessageReaction } from "./messageItem";
+import { createMessageReactionHandler, MessageItem } from "./messageItem";
 import { getLastSeenMessage, shouldGroup } from "./utils";
 
 const messagePane = css`
@@ -354,15 +354,6 @@ const createMessagePane = () => {
   );
 
   storeEmitter.on(
-    "message:reaction_updated",
-    (event) => {
-      if (event.message.channelId !== channelStore.currentChannelId) return;
-      updateMessageReaction(logs, event.reaction, event.message);
-    },
-    signal,
-  );
-
-  storeEmitter.on(
     "message:updated",
     ({ message, index }) => {
       if (message.channelId !== channelStore.currentChannelId) return;
@@ -408,11 +399,9 @@ const createMessagePane = () => {
     { trigger: `.messageItem`, image: ".emoji" },
   ]);
 
+  createMessageReactionHandler({ logs, signal });
   const imageEmbedFocusAnimator = new FocusAnimator(logs, ".imageEmbed .image");
-  const reactionItemFocusAnimator = new FocusAnimator(
-    logs,
-    ".reactionItem img",
-  );
+
   scrollToBottom(true);
 
   const render = () => {
@@ -427,7 +416,6 @@ const createMessagePane = () => {
     imageEmbedResizer.destroy();
     imageEmbedFocusAnimator.destroy();
     hoverAnimator.destroy();
-    reactionItemFocusAnimator.destroy();
 
     chatbar.destroy();
     el.remove();

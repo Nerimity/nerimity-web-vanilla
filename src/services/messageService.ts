@@ -34,6 +34,43 @@ export const postMessage = async (channelId: string, body: PostMessageBody) => {
   });
 };
 
+interface AddReactionBody {
+  emojiId?: string;
+  name?: string;
+}
+export const addReaction = async (
+  channelId: string,
+  messageId: string,
+  body: AddReactionBody,
+) => {
+  return request<any>(
+    `/channels/${channelId}/messages/${messageId}/reactions`,
+    {
+      useToken: true,
+      method: "POST",
+      body,
+    },
+  );
+};
+interface RemoveReactionBody {
+  emojiId?: string;
+  name?: string;
+}
+export const removeReaction = async (
+  channelId: string,
+  messageId: string,
+  body: RemoveReactionBody,
+) => {
+  return request<any>(
+    `/channels/${channelId}/messages/${messageId}/reactions/remove`,
+    {
+      useToken: true,
+      method: "POST",
+      body,
+    },
+  );
+};
+
 export const patchEditMessage = async (
   channelId: string,
   messageId: string,

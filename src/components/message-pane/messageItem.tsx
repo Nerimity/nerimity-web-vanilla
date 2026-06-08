@@ -3,14 +3,21 @@ import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h, Fragment } from "../../h";
+import { addReaction, removeReaction } from "../../services/messageService";
 import { channelStore } from "../../store/channelStore";
-import type { Message, MessageReaction } from "../../store/messageStore";
+import {
+  messageStore,
+  type Message,
+  type MessageReaction,
+} from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import type { RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { scoped } from "../../utils/css";
 import { friendlyTimestamp, fullDate } from "../../utils/date";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { FocusAnimator } from "../../utils/FocusAnimator";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
@@ -357,7 +364,72 @@ const messageReactions = css`
   margin-top: 4px;
 `;
 
-export const updateMessageReaction = (
+export const createMessageReactionHandler = (opts: {
+  signal: AbortSignal;
+  logs: HTMLDivElement;
+}) => {
+  storeEmitter.on(
+    "message:reaction_updated",
+    (event) => {
+      if (event.message.channelId !== channelStore.currentChannelId) return;
+      updateMessageReaction(opts.logs, event.reaction, event.message);
+    },
+    opts.signal,
+  );
+
+  const reactionItemFocusAnimator = new FocusAnimator(
+    opts.logs,
+    ".reactionItem img",
+  );
+  opts.logs.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLElement;
+      const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+      const messageId = messageEl.dataset.messageId!;
+      if (!messageId) return;
+
+      const messages = messageStore.messages.get(
+        channelStore.currentChannelId!,
+      );
+      const message = messages?.find((m) => m.id === messageId);
+      if (!message) return;
+
+      const reactionEl = target.closest(
+        `.${messageReactions} .reactionItem`,
+      ) as HTMLElement | null;
+
+      const id = reactionEl?.dataset.reactionId;
+      if (!id) return;
+
+      const isUnicode = reactionEl?.dataset.uni;
+
+      const reaction = message.reactions?.find((r) => {
+        if (isUnicode) return r.name === id;
+        return r.emojiId === id;
+      });
+      if (!reaction) return;
+
+      (reaction.reacted ? removeReaction : addReaction)(
+        channelStore.currentChannelId!,
+        messageId,
+        isUnicode ? { name: id } : { emojiId: id, name: reaction?.name },
+      );
+    },
+    { signal: opts.signal },
+  );
+
+  opts.signal.addEventListener(
+    "abort",
+    () => {
+      console.log("aborted");
+      reactionItemFocusAnimator.destroy();
+    },
+    { once: true },
+  );
+};
+
+const updateMessageReaction = (
   logs: HTMLDivElement,
   reaction: MessageReaction,
   message: Message,
@@ -426,6 +498,7 @@ const ReactionItem = (props: { reaction: MessageReaction }) => {
       class={[reactionItem, "reactionItem"]}
       data-reaction-id={id}
       data-reacted={props.reaction.reacted}
+      data-uni={!props.reaction.emojiId}
     >
       <CdnIcon
         animate={document.hasFocus()}
