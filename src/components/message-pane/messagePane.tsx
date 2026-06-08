@@ -409,6 +409,10 @@ const createMessagePane = () => {
   ]);
 
   const imageEmbedFocusAnimator = new FocusAnimator(logs, ".imageEmbed .image");
+  const reactionItemFocusAnimator = new FocusAnimator(
+    logs,
+    ".reactionItem img",
+  );
   scrollToBottom(true);
 
   const render = () => {
@@ -423,6 +427,7 @@ const createMessagePane = () => {
     imageEmbedResizer.destroy();
     imageEmbedFocusAnimator.destroy();
     hoverAnimator.destroy();
+    reactionItemFocusAnimator.destroy();
 
     chatbar.destroy();
     el.remove();

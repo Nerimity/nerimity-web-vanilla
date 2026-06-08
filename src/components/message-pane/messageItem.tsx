@@ -423,11 +423,16 @@ const ReactionItem = (props: { reaction: MessageReaction }) => {
 
   return (
     <div
-      class={reactionItem}
+      class={[reactionItem, "reactionItem"]}
       data-reaction-id={id}
       data-reacted={props.reaction.reacted}
     >
-      <CdnIcon class="icon" reaction={props.reaction} size={16} />
+      <CdnIcon
+        animate={document.hasFocus()}
+        class="icon"
+        reaction={props.reaction}
+        size={16}
+      />
       <div class="count">{props.reaction.count}</div>
     </div>
   );

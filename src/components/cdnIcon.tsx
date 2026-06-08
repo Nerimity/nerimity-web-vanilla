@@ -32,6 +32,7 @@ interface CdnIconProps {
   reaction?: { name: string; emojiId: string; webp: boolean; gif: boolean };
   class?: string;
   size: number;
+  animate?: boolean;
 }
 
 const buildUrl = (props: CdnIconProps) => {
@@ -58,6 +59,7 @@ const buildUrl = (props: CdnIconProps) => {
   if (icon!.includes(".")) {
     const res = buildImageUrl(`emojis/${icon}`, {
       size: props.size + 8,
+      animate: props.animate,
     }) as unknown as [string, boolean, string | undefined];
     res.push(title);
     return res;
