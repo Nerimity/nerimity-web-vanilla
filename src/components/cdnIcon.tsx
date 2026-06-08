@@ -2,7 +2,7 @@ import { css } from "@linaria/core";
 
 import { h } from "../h";
 import { ChannelType } from "../Types";
-import { unicodeToTwemojiUrl } from "../utils/emojis";
+import { unicodeToShortcode, unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
 import { Icon } from "./icon";
 
@@ -18,7 +18,7 @@ const cdnIcon = css`
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
   .icon {
     font-size: var(--size);
@@ -29,27 +29,53 @@ interface CdnIconProps {
   channel?: { icon?: string; type: ChannelType };
   role?: { icon?: string };
   clan?: { icon?: string };
+  reaction?: { name: string; emojiId: string; webp: boolean; gif: boolean };
   class?: string;
   size: number;
 }
 
 const buildUrl = (props: CdnIconProps) => {
-  const icon = props.channel?.icon || props.role?.icon || props.clan?.icon;
-  if (!icon) return [null, false] as const;
+  let title: string | undefined = undefined;
+  let icon =
+    props.channel?.icon ||
+    props.role?.icon ||
+    props.clan?.icon ||
+    props.reaction?.name;
+
+  if (props.reaction?.emojiId) {
+    title = props.reaction.name;
+    const { emojiId, gif, webp } = props.reaction;
+    icon = emojiId;
+    if (webp || (!gif && !webp)) {
+      icon += `.webp${gif ? "#a" : ""}`;
+    } else if (gif) {
+      icon += ".gif";
+    }
+  }
+
+  if (!icon) return [null, false, null] as const;
 
   if (icon!.includes(".")) {
-    return buildImageUrl(`emojis/${icon}`, {
+    const res = buildImageUrl(`emojis/${icon}`, {
       size: props.size + 8,
-    });
+    }) as unknown as [string, boolean, string | undefined];
+    res.push(title);
+    return res;
   }
-  return [unicodeToTwemojiUrl(icon!), false] as const;
+
+  title = unicodeToShortcode[icon!];
+  return [unicodeToTwemojiUrl(icon!), false, title] as const;
 };
 
 export const CdnIcon = (props: CdnIconProps) => {
-  const [url, animated] = buildUrl(props);
+  const [url, animated, title] = buildUrl(props);
 
   return (
-    <div class={[cdnIcon, props.class]} style={{ "--size": props.size + "px" }}>
+    <div
+      class={[cdnIcon, props.class]}
+      style={{ "--size": props.size + "px" }}
+      title={title}
+    >
       {url ? (
         <img
           loading="lazy"

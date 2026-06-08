@@ -4,11 +4,16 @@ import {
   postMessage,
 } from "../services/messageService";
 import { socket } from "../services/socket";
+import type {
+  ReactionAddedPayload,
+  ReactionRemovedPayload,
+} from "../services/socketEvents";
 import {
   MessageType,
   type Attachment,
   type RawMessage,
   type RawMessageEmbed,
+  type RawMessageReaction,
   type RawReplyMessage,
   type RawUser,
 } from "../Types";
@@ -21,6 +26,25 @@ export const messageStore = createMessageStore();
 
 export type LocalAttachment = Attachment & { cached?: boolean };
 export type LocalEmbed = RawMessageEmbed & { cached?: boolean };
+
+export class MessageReaction {
+  name: string;
+  emojiId: string;
+  gif: boolean;
+  webp: boolean;
+  reacted: boolean;
+  count: number;
+
+  constructor(data: Omit<RawMessageReaction, "messageId" | "id">) {
+    this.name = data.name;
+    this.emojiId = data.emojiId;
+    this.gif = data.gif;
+    this.webp = data.webp;
+    this.reacted = data.reacted;
+    this.count = data.count;
+  }
+}
+
 export class Message {
   id: string;
   content: string;
@@ -35,6 +59,7 @@ export class Message {
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   editedAt?: number;
+  reactions?: MessageReaction[];
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -48,6 +73,7 @@ export class Message {
     this.replyMessages = data.replyMessages;
     this.type = data.type;
     this.editedAt = data.editedAt;
+    this.reactions = data.reactions?.map((r) => new MessageReaction(r));
   }
 }
 
@@ -235,10 +261,81 @@ function createMessageStore() {
     });
   };
 
+  const removeReaction = (removedReaction: ReactionRemovedPayload) => {
+    const channelMessages = messages.get(removedReaction.channelId);
+    if (!channelMessages) return;
+    const messageIndex = channelMessages.findLastIndex(
+      (m) => m.id === removedReaction.messageId,
+    );
+    if (messageIndex === -1) return;
+    const message = channelMessages[messageIndex]!;
+    if (!message) return;
+
+    const reactions = message.reactions;
+    if (!reactions) return;
+    let reaction = reactions.find((r) => {
+      if (removedReaction.emojiId) return r.emojiId === removedReaction.emojiId;
+      return r.name === removedReaction.name;
+    });
+    if (!reaction) return;
+
+    const removedByMe =
+      accountStore.currentUser?.id === removedReaction.reactionRemovedByUserId;
+    reaction.count = removedReaction.count;
+    if (removedByMe) reaction.reacted = false;
+
+    if (reaction.count === 0) {
+      const index = reactions.indexOf(reaction);
+      if (index !== -1) reactions.splice(index, 1);
+    }
+
+    storeEmitter.emit("message:reaction_updated", { message, reaction });
+  };
+
+  const addReaction = (addedReaction: ReactionAddedPayload) => {
+    const channelMessages = messages.get(addedReaction.channelId);
+    if (!channelMessages) return;
+    const messageIndex = channelMessages.findLastIndex(
+      (m) => m.id === addedReaction.messageId,
+    );
+    if (messageIndex === -1) return;
+    const message = channelMessages[messageIndex]!;
+    if (!message) return;
+
+    const reactions = message.reactions || [];
+    let reaction = reactions.find((r) => {
+      if (addedReaction.emojiId) return r.emojiId === addedReaction.emojiId;
+      return r.name === addedReaction.name;
+    });
+
+    const reactedByMe =
+      accountStore.currentUser?.id === addedReaction.reactedByUserId;
+
+    if (reaction) {
+      reaction.count = addedReaction.count;
+      if (reactedByMe) reaction.reacted = true;
+    } else {
+      reaction = new MessageReaction({
+        name: addedReaction.name,
+        emojiId: addedReaction.emojiId,
+        gif: addedReaction.gif,
+        webp: addedReaction.webp,
+        reacted: reactedByMe,
+        count: addedReaction.count,
+      });
+      reactions.push(reaction);
+    }
+
+    message.reactions = reactions;
+    storeEmitter.emit("message:reaction_updated", { message, reaction });
+  };
+
   return {
     messages,
     loadMessages,
     pushMessage,
+    addReaction,
+    removeReaction,
     deleteMessage,
     updateMessage,
     sendMessage,

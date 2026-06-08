@@ -74,8 +74,8 @@ live: https://vanilla.nerimity.com
 - [ ] `message:deleted_batch`
 - [ ] `message:mark_unread`
 
-- [ ] `message:reaction_added`
-- [ ] `message:reaction_removed`
+- [x] `message:reaction_added`
+- [x] `message:reaction_removed`
 
 - [ ] `message:button_clicked_callback`
 

@@ -1,9 +1,10 @@
 import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
+import morphdom from "morphdom";
 
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
-import type { Message } from "../../store/messageStore";
+import type { Message, MessageReaction } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import type { RawReplyMessage } from "../../Types";
@@ -30,7 +31,7 @@ const messageItem = css`
 
   &.force-hover,
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--gray-900);
   }
   &.sending {
     opacity: 0.6;
@@ -63,7 +64,7 @@ const messageItem = css`
   padding-top: 2px;
   padding-bottom: 2px;
   &.editing {
-    background-color: var(--gray-800);
+    background-color: var(--gray-900);
   }
   &.withDetails {
     margin-top: 8px;
@@ -223,6 +224,7 @@ export const MessageItem = (props: {
                 container={props.container}
               />
             </div>
+            <MessageReactions message={props.message} />
           </div>
         </div>
       </div>
@@ -343,6 +345,90 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
       ) : (
         <span class={`${replyMessage} deleted`}>{t`Message was deleted.`}</span>
       )}
+    </div>
+  );
+};
+
+const messageReactions = css`
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  user-select: none;
+  margin-top: 4px;
+`;
+
+export const updateMessageReaction = (
+  logs: HTMLDivElement,
+  reaction: MessageReaction,
+  message: Message,
+) => {
+  const reactionsEl = logs.querySelector(
+    `[data-message-id="${message.id}"] .${messageReactions}`,
+  );
+  if (!reactionsEl) return;
+
+  const id = reaction.emojiId || reaction.name;
+  const reactionEl = reactionsEl.querySelector(`[data-reaction-id="${id}"]`);
+
+  if (!reactionEl) {
+    if (reaction.count > 0)
+      reactionsEl.appendChild(<ReactionItem reaction={reaction} />);
+    return;
+  }
+
+  if (reaction.count === 0) reactionEl.remove();
+  else
+    morphdom(
+      reactionEl,
+      (<ReactionItem reaction={reaction} />) as unknown as HTMLElement,
+    );
+};
+
+const MessageReactions = (props: { message: Message }) => {
+  return (
+    <div class={messageReactions}>
+      {props.message.reactions?.map((reaction) => (
+        <ReactionItem reaction={reaction} />
+      ))}
+    </div>
+  );
+};
+
+const reactionItem = css`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+  padding-right: 8px;
+  border-radius: var(--radius-max);
+  background-color: var(--gray-800);
+  border: solid 1px var(--gray-800);
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  &:hover {
+    border: solid 1px var(--primary-color);
+  }
+  &[data-reacted="true"] {
+    border: solid 1px var(--primary-color);
+    color: var(--primary-color);
+  }
+  .icon {
+    background-color: transparent;
+  }
+`;
+
+const ReactionItem = (props: { reaction: MessageReaction }) => {
+  const id = props.reaction.emojiId || props.reaction.name;
+
+  return (
+    <div
+      class={reactionItem}
+      data-reaction-id={id}
+      data-reacted={props.reaction.reacted}
+    >
+      <CdnIcon class="icon" reaction={props.reaction} size={16} />
+      <div class="count">{props.reaction.count}</div>
     </div>
   );
 };

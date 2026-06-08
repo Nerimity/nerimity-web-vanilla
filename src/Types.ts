@@ -119,6 +119,18 @@ export interface RawMessage {
   embed?: RawMessageEmbed;
   replyMessages?: RawReplyMessage[];
   type: MessageType;
+  reactions?: RawMessageReaction[];
+}
+
+export interface RawMessageReaction {
+  id: string;
+  name: string;
+  emojiId: string;
+  gif: boolean;
+  webp: boolean;
+  messageId: string;
+  reacted: boolean;
+  count: number;
 }
 
 export interface PartialMessage {

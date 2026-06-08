@@ -74,6 +74,12 @@ export const socketEventHandler = (event: string, payload: any) => {
     case "server:channel_deleted":
       onServerChannelDeleted(payload);
       break;
+    case "message:reaction_added":
+      onMessageReactionAdded(payload);
+      break;
+    case "message:reaction_removed":
+      onMessageReactionRemoved(payload);
+      break;
     default:
       console.warn("Unhandled socket event:", event, payload);
   }
@@ -238,4 +244,32 @@ const onServerChannelDeleted = (payload: {
   channelId: string;
 }) => {
   channelStore.deleteChannel(payload.channelId, payload.serverId);
+};
+
+export interface ReactionAddedPayload {
+  reactedByUserId: string;
+  messageId: string;
+  channelId: string;
+  emojiId: string;
+  name: string;
+  gif: boolean;
+  webp: boolean;
+  count: number;
+}
+
+const onMessageReactionAdded = (payload: ReactionAddedPayload) => {
+  messageStore.addReaction(payload);
+};
+export interface ReactionRemovedPayload {
+  reactionRemovedByUserId: string;
+  messageId: string;
+  channelId: string;
+  emojiId: string;
+  name: string;
+  count: number;
+  gif: boolean;
+}
+
+const onMessageReactionRemoved = (payload: ReactionRemovedPayload) => {
+  messageStore.removeReaction(payload);
 };

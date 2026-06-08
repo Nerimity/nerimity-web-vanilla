@@ -21,7 +21,7 @@ import { createChatbar } from "./chatbar";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
-import { MessageItem } from "./messageItem";
+import { MessageItem, updateMessageReaction } from "./messageItem";
 import { getLastSeenMessage, shouldGroup } from "./utils";
 
 const messagePane = css`
@@ -349,6 +349,15 @@ const createMessagePane = () => {
     (state) => {
       if (!state) return;
       onBottomSkeletonIntersect(true);
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "message:reaction_updated",
+    (event) => {
+      if (event.message.channelId !== channelStore.currentChannelId) return;
+      updateMessageReaction(logs, event.reaction, event.message);
     },
     signal,
   );
