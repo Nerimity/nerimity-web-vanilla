@@ -5,6 +5,7 @@ import { Server, serverStore } from "../store/serverStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
+import { getRecentServerChannelId } from "../utils/recentServerChannels";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Item } from "./item";
@@ -85,7 +86,7 @@ const createServerItemHelper = () => {
         alert={notifications}
         selected={serverStore.currentServerId === server.id}
         title={server.name}
-        href={`/app/servers/${server.id}/${server.defaultChannelId}`}
+        href={`/app/servers/${server.id}/${getRecentServerChannelId(server.id)}`}
       >
         <Avatar size={42} server={server} imgClass="avatar" />
       </SidebarItem>
@@ -179,6 +180,14 @@ export const createSidebar = () => {
       homeEl.setAttribute("data-selected", match ? "true" : "false");
     },
     { signal },
+  );
+
+  storeEmitter.on(
+    "recent_server_update",
+    (event) => {
+      renderList({ id: event.serverId });
+    },
+    signal,
   );
 
   storeEmitter.on("server:update", renderList, signal);

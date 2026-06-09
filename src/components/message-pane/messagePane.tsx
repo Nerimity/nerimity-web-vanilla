@@ -15,6 +15,7 @@ import {
   createIntersectionObserver,
   createResizeObserver,
 } from "../../utils/observer";
+import { setRecentServerChannel } from "../../utils/recentServerChannels";
 import { Drawer } from "../drawer";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
@@ -262,6 +263,13 @@ const createMessagePane = () => {
   storeEmitter.on(
     "navigate:channelId",
     () => {
+      if (serverStore.currentServerId && channelStore.currentChannelId) {
+        setRecentServerChannel(
+          serverStore.currentServerId,
+          channelStore.currentChannelId,
+        );
+      }
+
       lastSeenMessage = null;
       const scrolledToBottom = isScrolledToBottom;
       const scrollTop = el.scrollTop;

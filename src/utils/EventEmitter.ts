@@ -31,6 +31,7 @@ type StoreEvents = {
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
   "server:member_update": { serverId: string; userId: string; isMe: boolean };
+  recent_server_update: { serverId: string; channelId: string };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();
