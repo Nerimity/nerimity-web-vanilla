@@ -10,3 +10,4 @@ minimumReleaseAgeExclude:
   - '@lingui/message-utils@6.2.0'
   - '@lingui/react@6.2.0'
   - '@lingui/vite-plugin@6.2.0'
+  - '@nerimity/nevula@0.15.1'

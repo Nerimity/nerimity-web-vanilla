@@ -17,7 +17,7 @@
   "dependencies": {
     "@linaria/core": "^7.0.0",
     "@lingui/core": "^6.2.0",
-    "@nerimity/nevula": "^0.15.0",
+    "@nerimity/nevula": "^0.15.1",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
     "fzstd": "^0.1.1",

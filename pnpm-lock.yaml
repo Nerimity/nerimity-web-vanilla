@@ -15,8 +15,8 @@ importers:
         specifier: ^6.2.0
         version: 6.2.0(babel-plugin-macros@3.1.0)
       '@nerimity/nevula':
-        specifier: ^0.15.0
-        version: 0.15.0
+        specifier: ^0.15.1
+        version: 0.15.1
       '@shikijs/langs':
         specifier: ^4.2.0
         version: 4.2.0
@@ -489,8 +489,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@nerimity/nevula@0.15.0':
-    resolution: {integrity: sha512-1fztSBR0Uxw5L1EUfTXT+fZNJO0P1ZKHR916PRV1LYHRg8iYsWRU4+CCRwJ153NNaD7iF4AiXdqK/s/nYXLgcw==}
+  '@nerimity/nevula@0.15.1':
+    resolution: {integrity: sha512-oWg/f0XQRSecO98BFoRdqXJSf0Xx+UMDdCJFNsS8j/H5H9xLMWGiMNDtP5fFhGLx85cz/oYY0PccL0icwVCtCw==}
 
   '@oxc-project/types@0.133.0':
     resolution: {integrity: sha512-KzkdCd6Uxqnf6l3HOw1xfatAlUURA0g14cvBYFyJ5SaNOQbOUvBr9PKArcPcrNIeRsBdgcUzOGrhKveVpvOIGA==}
@@ -2147,7 +2147,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.2
     optional: true
 
-  '@nerimity/nevula@0.15.0': {}
+  '@nerimity/nevula@0.15.1': {}
 
   '@oxc-project/types@0.133.0': {}
 
