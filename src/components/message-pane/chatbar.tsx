@@ -124,10 +124,6 @@ export const createChatbar = () => {
     if (event.key === "Escape") {
       const channelId = channelStore.currentChannelId!;
       channelStore.setEditingMessage(channelId, undefined);
-      channelStore.setProperty(channelId!, {
-        content: "",
-      });
-      syncValue();
 
       return;
     }
@@ -149,11 +145,7 @@ export const createChatbar = () => {
 
       if (!lastMessage) return;
 
-      channelStore.setProperty(channelId, {
-        content: lastMessage.content || "",
-      });
       channelStore.setEditingMessage(channelId, lastMessage);
-      syncValue();
       return;
     }
   };
@@ -208,6 +200,21 @@ export const createChatbar = () => {
 
       syncValue();
       updatePlaceholder();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message_property:replying",
+    () => {
+      input.focus();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message_property:editing",
+    () => {
+      syncValue();
+      input.focus();
     },
     signal,
   );

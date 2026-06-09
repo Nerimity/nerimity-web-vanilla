@@ -133,7 +133,10 @@ function createChannelStore() {
     const property = getProperty(channelId, false);
     const prevMessage = property?.editingMessage;
     if (prevMessage === message) return;
-    setProperty(channelId, { editingMessage: message });
+    setProperty(channelId, {
+      editingMessage: message,
+      ...(message ? { content: message?.content || "" } : {}),
+    });
 
     if (property?.replyingMessages?.length) {
       setProperty(channelId, { replyingMessages: [] });
