@@ -38,7 +38,7 @@ const messageItem = css`
 
   &.force-hover,
   &:hover {
-    background-color: var(--gray-900);
+    background-color: var(--gray-850);
   }
   &.sending {
     opacity: 0.6;
@@ -71,7 +71,7 @@ const messageItem = css`
   padding-top: 2px;
   padding-bottom: 2px;
   &.editing {
-    background-color: var(--gray-900);
+    background-color: var(--gray-850);
   }
   &.withDetails {
     margin-top: 8px;
