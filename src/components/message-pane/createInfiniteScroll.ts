@@ -79,7 +79,10 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     handleStillObserving();
   };
 
-  const onBottomSkeletonIntersect = async (loadNew?: boolean) => {
+  const onBottomSkeletonIntersect = async (
+    loadNew?: boolean,
+    force?: boolean,
+  ) => {
     skeletonsBottom.classList.toggle("hide", !shouldShowBottomSkel());
 
     const channelId = channelStore.currentChannelId;
@@ -95,7 +98,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     const messages = messageStore.messages.get(channelId);
     // if there are no messages, load them.
     if (loadNew) {
-      if (messages) {
+      if (messages && !force) {
         rerender({ useSavedTop: true, forceScrollDown: true });
         return setLoadingFalse();
       }
@@ -103,7 +106,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
         return setLoadingFalse();
       }
 
-      const newMessages = await messageStore.loadMessages(channelId);
+      const newMessages = await messageStore.loadMessages(channelId, { force });
       if (!newMessages) {
         return setLoadingFalse();
       }

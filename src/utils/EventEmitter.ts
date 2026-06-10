@@ -25,7 +25,8 @@ type StoreEvents = {
   "drawer:toggleRightDesktop": boolean;
   "drawer:rightDrawerAvailable": boolean;
   "mention:dm_update": MessageMention;
-  "channel:notify_update": { channelId?: string; serverId?: string };
+  "channel:notify_update": { channelId: string; serverId?: string };
+  "channel:scrolledToBottom": boolean;
   "inbox:open": Inbox;
   "channel:typing": { channelId: string; userId: string };
   "noti_settings:update": { channelId?: string; serverId?: string };

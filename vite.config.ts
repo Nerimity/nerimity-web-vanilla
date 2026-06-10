@@ -20,6 +20,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "keyboard_arrow_down",
         "check",
         "reply",
         "wrap_text",

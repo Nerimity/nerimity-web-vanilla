@@ -362,6 +362,9 @@ const messageReactions = css`
   flex-wrap: wrap;
   user-select: none;
   margin-top: 4px;
+  &.hide {
+    display: none;
+  }
 `;
 
 export const createMessageReactionHandler = (opts: {
@@ -438,6 +441,8 @@ const updateMessageReaction = (
   );
   if (!reactionsEl) return;
 
+  reactionsEl.classList.toggle("hide", !message.reactions?.length);
+
   const id = reaction.emojiId || reaction.name;
   const reactionEl = reactionsEl.querySelector(`[data-reaction-id="${id}"]`);
 
@@ -457,7 +462,7 @@ const updateMessageReaction = (
 
 const MessageReactions = (props: { message: Message }) => {
   return (
-    <div class={messageReactions}>
+    <div class={[messageReactions, !props.message.reactions?.length && "hide"]}>
       {props.message.reactions?.map((reaction) => (
         <ReactionItem reaction={reaction} />
       ))}

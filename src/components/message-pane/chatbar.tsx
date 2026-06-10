@@ -9,10 +9,12 @@ import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
+import { scoped } from "../../utils/css";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { Input } from "../input";
 import { createEditMessageIndicator } from "./editMessageIndicator";
+import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 
@@ -34,7 +36,7 @@ const chatbarContainer = css`
     display: flex;
     gap: 4px;
   }
-  .button {
+  .${scoped`button`} {
     width: 50px;
     padding: 6px 0;
     border-radius: var(--radius-4);
@@ -47,6 +49,12 @@ const chatbarContainer = css`
   }
 `;
 
+const chatInputContainer = css`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
 export const createChatbar = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -54,12 +62,13 @@ export const createChatbar = () => {
   const typingIndicator = createTypingIndicator(abortController);
   const editMessageIndicator = createEditMessageIndicator(signal);
   const repliesIndicator = createRepliesIndicator(abortController);
+  const jumpToPresent = createJumpToPresent({ signal });
 
   const sendButton = (
-    <Button class="button send" icon="send" hoverBorder />
+    <Button class={[scoped`button`, "send"]} icon="send" hoverBorder />
   ) as HTMLElement;
   const editButton = (
-    <Button class="button edit hide" icon="edit" hoverBorder />
+    <Button class={[scoped`button`, "edit", "hide"]} icon="edit" hoverBorder />
   ) as HTMLElement;
 
   const chatbar = (
@@ -67,15 +76,18 @@ export const createChatbar = () => {
       {typingIndicator.el}
       {editMessageIndicator}
       {repliesIndicator}
-      <Input
-        class="chatInput"
-        suffix={
-          <div class="buttons">
-            {sendButton}
-            {editButton}
-          </div>
-        }
-      />
+      <div class={chatInputContainer}>
+        {jumpToPresent}
+        <Input
+          class="chatInput"
+          suffix={
+            <div class="buttons">
+              {sendButton}
+              {editButton}
+            </div>
+          }
+        />
+      </div>
     </div>
   ) as unknown as HTMLElement;
   const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
@@ -227,5 +239,5 @@ export const createChatbar = () => {
     abortController.abort();
   };
 
-  return { render, destroy };
+  return { render, destroy, jumpToPresentButton: jumpToPresent };
 };

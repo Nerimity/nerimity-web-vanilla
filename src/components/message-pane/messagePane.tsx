@@ -114,9 +114,13 @@ const createMessagePane = () => {
   let isScrolledToBottom = false;
 
   const updateScrolledToBottom = () => {
+    const prev = isScrolledToBottom;
     isScrolledToBottom =
       el.scrollTop + el.clientHeight >=
       el.scrollHeight - SCROLLED_BOTTOM_THRESHOLD;
+    if (prev !== isScrolledToBottom) {
+      storeEmitter.emit("channel:scrolledToBottom", isScrolledToBottom);
+    }
   };
 
   el.addEventListener("scroll", updateScrolledToBottom, {
@@ -197,7 +201,6 @@ const createMessagePane = () => {
 
       markerChanged = lastSeenMessage !== lastLastSeenMessage;
     }
-    dismissNotification();
 
     reconcile({
       container: logs,
@@ -226,6 +229,9 @@ const createMessagePane = () => {
     skeletonsTop.classList.toggle(scoped`hide`, !shouldShowTopSkel());
     updateScrolledToBottom();
     restoreScrollPosition(opts);
+    requestAnimationFrame(() => {
+      dismissNotification();
+    });
   };
   const { onBottomSkeletonIntersect } = createInfiniteScroll({
     el,
@@ -418,6 +424,17 @@ const createMessagePane = () => {
     }
     return el;
   };
+
+  chatbar.jumpToPresentButton.addEventListener(
+    "click",
+    async () => {
+      if (channelStore.currentChannelProperty()?.canLoadBottom) {
+        await onBottomSkeletonIntersect(true, true);
+      }
+      el.scrollTop = el.scrollHeight;
+    },
+    { signal },
+  );
 
   const destroy = () => {
     abortController.abort();
