@@ -33,6 +33,7 @@ const JumpToPresentButton = () => {
   );
 };
 export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
+  let scrolledBottom = false;
   const el = (
     <div class={[jumpToPresent, "hide"]}>
       <JumpToPresentButton />
@@ -42,6 +43,7 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
   storeEmitter.on(
     "channel:scrolledToBottom",
     (isBottom) => {
+      scrolledBottom = isBottom;
       el.classList.toggle("hide", isBottom);
     },
     opts.signal,
@@ -52,6 +54,7 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
   storeEmitter.on(
     "mention:dm_update",
     (event) => {
+      if (!scrolledBottom) return;
       if (event.channelId !== channelStore.currentChannelId) return;
       updateButton();
     },
@@ -61,6 +64,7 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
   storeEmitter.on(
     "channel:notify_update",
     (event) => {
+      if (!scrolledBottom) return;
       if (event.channelId !== channelStore.currentChannelId) return;
       updateButton();
     },
