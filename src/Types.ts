@@ -69,6 +69,7 @@ export interface RawUser {
   avatar?: string;
   tag: string;
   profile?: Profile;
+  banner?: string;
 }
 
 export interface RawUserPresence {

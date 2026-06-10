@@ -2,6 +2,7 @@ import { css } from "@linaria/core";
 
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
+import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
@@ -127,6 +128,8 @@ const createAppPage = () => {
     },
     { signal },
   );
+
+  createMiniProfileHandler({ signal });
 
   const destroy = () => {
     abortController.abort();

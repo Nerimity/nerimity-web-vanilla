@@ -31,10 +31,10 @@ const createRouter = () => {
     };
   };
 
-  const match = (pattern: string) => {
+  const match = <P = {}>(pattern: string, pathname?: string) => {
     const pat = new URLPattern({ pathname: pattern });
-    const result = pat.exec({ pathname: location.pathname });
-    return result ? matchResult(result) : null;
+    const result = pat.exec({ pathname: pathname || location.pathname });
+    return result ? matchResult<P>(result) : null;
   };
   const namedGroups = (groups: Record<string, string | undefined>) =>
     Object.fromEntries(

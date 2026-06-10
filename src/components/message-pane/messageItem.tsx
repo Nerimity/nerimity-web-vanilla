@@ -21,6 +21,7 @@ import { FocusAnimator } from "../../utils/FocusAnimator";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
+import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { ImageEmbed } from "./imageEmbed";
@@ -204,7 +205,12 @@ export const MessageItem = (props: {
           <div class={scoped`messageBody`}>
             {!group && (
               <span class={scoped`details`}>
-                <GradientText class={scoped`username`} color={color}>
+                <GradientText
+                  tag={Link}
+                  href={`/app/profile/${creator.id}`}
+                  class={scoped`username`}
+                  color={color}
+                >
                   {name}
                 </GradientText>
                 {creator?.profile?.clan && (

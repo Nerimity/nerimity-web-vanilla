@@ -9,6 +9,7 @@ export class User {
   hexColor: string;
   tag: string;
   profile?: Profile;
+  banner?: string;
   constructor(data: RawUser) {
     this.id = data.id;
     this.username = data.username;
@@ -16,6 +17,7 @@ export class User {
     this.hexColor = data.hexColor;
     this.tag = data.tag;
     this.profile = data.profile;
+    this.banner = data.banner;
   }
 }
 
