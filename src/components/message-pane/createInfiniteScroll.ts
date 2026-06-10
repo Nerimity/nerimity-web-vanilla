@@ -53,11 +53,6 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     const firstMessageId = messages?.[0]?.id;
     if (!firstMessageId) return;
 
-    const anchorEl = logs.querySelector(
-      `[data-message-id="${firstMessageId}"]`,
-    ) as HTMLDivElement | null;
-    const anchorOffsetTop = anchorEl?.offsetTop ?? 0;
-
     channelStore.setProperty(channelId, { loading: true });
     const newMessages = await messageStore.loadMessages(channelId, {
       before: firstMessageId,
@@ -73,9 +68,16 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
       loading: false,
     });
 
+    const messageEls = logs.querySelectorAll(".messageItem");
+    const firstMessage = messageEls[0]!;
+    const lastMessageBottom = firstMessage.getBoundingClientRect().bottom;
+
     rerender({ preventScrollDown: true });
-    const newAnchorOffsetTop = anchorEl?.offsetTop ?? 0;
-    el.scrollTop += newAnchorOffsetTop - anchorOffsetTop;
+
+    const afterBottom = firstMessage.getBoundingClientRect().bottom;
+    const difference = afterBottom - lastMessageBottom!;
+    el.scrollTop = el.scrollTop + difference;
+
     handleStillObserving();
   };
 
