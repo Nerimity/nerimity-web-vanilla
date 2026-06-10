@@ -35,13 +35,18 @@ msgstr "Inbox"
 msgid "Friends"
 msgstr "Friends"
 
+#: src/components/message-pane/JumpToPresent.tsx:31
+#: src/components/message-pane/messageItem.tsx:187
+msgid "New Messages"
+msgstr "New Messages"
+
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:185
+#: src/components/message-pane/chatbar.tsx:189
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:190
+#: src/components/message-pane/chatbar.tsx:194
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -66,15 +71,11 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:179
-msgid "New Messages"
-msgstr "New Messages"
-
-#: src/components/message-pane/messageItem.tsx:344
+#: src/components/message-pane/messageItem.tsx:353
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/repliesIndicator.tsx:146
+#: src/components/message-pane/repliesIndicator.tsx:149
 msgid "Mention"
 msgstr "Mention"
 
