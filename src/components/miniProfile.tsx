@@ -1,6 +1,8 @@
 import { css } from "@linaria/core";
 
 import { h } from "../h";
+import { channelStore } from "../store/channelStore";
+import { messageStore } from "../store/messageStore";
 import { userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
 import { buildImageUrl } from "../utils/image";
@@ -127,17 +129,27 @@ const miniProfile = css`
 `;
 
 const MiniProfile = (props: { userId: string }) => {
-  const cachedUser = userStore.users.get(props.userId);
+  let localUser = userStore.users.get(props.userId);
+
+  if (!localUser) {
+    const channelId = channelStore.currentChannelId;
+    const messages = messageStore.messages.get(channelId!);
+    const message = messages?.find((m) => m.createdBy.id === props.userId);
+
+    if (message) {
+      localUser = message.createdBy;
+    }
+  }
 
   return (
     <div class={miniProfile}>
-      <Banner user={cachedUser!}></Banner>
+      <Banner user={localUser!}></Banner>
       <div class="overlayInfo">
-        <Avatar user={cachedUser} size={96} />
+        <Avatar user={localUser} size={96} />
       </div>
       <div class="section info">
-        {cachedUser?.username}
-        <span class="tag">:{cachedUser?.tag}</span>
+        {localUser?.username}
+        <span class="tag">:{localUser?.tag}</span>
         <UserPresence showOffline userId={props.userId} />
       </div>
     </div>
