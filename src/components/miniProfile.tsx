@@ -14,6 +14,7 @@ import { buildImageUrl } from "../utils/image";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
+import { Markup } from "./markup/markup";
 import { createModal, Modal } from "./modal";
 import { UserPresence } from "./userPresence";
 
@@ -154,6 +155,10 @@ const miniProfile = css`
     background-color: var(--gray-900);
     border-radius: var(--radius-4);
     padding: 8px;
+    .title {
+      color: var(--gray-400);
+      margin-bottom: 4px;
+    }
   }
 `;
 
@@ -210,6 +215,13 @@ const MiniProfile = (props: { userId: string }) => {
               icon={isSelf ? "book" : "mail"}
               label={isSelf ? t`Notes` : t`Message`}
             />
+          </div>
+        </div>
+
+        <div class="section about">
+          <div class="title">{t`About Me`}</div>
+          <div>
+            <Markup text={details?.profile?.bio || ""} />
           </div>
         </div>
       </>
