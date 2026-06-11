@@ -19,6 +19,7 @@ import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
 import { Drawer } from "./drawer";
 import { GradientText } from "./gradientText";
+import { Link } from "./link";
 import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
@@ -469,8 +470,9 @@ const memberItem = (cat: Categorized) => {
       convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
 
     return (
-      <div
-        class={memberItemContainer}
+      <Link
+        href={`/app/profile/${cat.member.userId}`}
+        class={[memberItemContainer, "memberItem"]}
         data-user-id={user?.id}
         data-role-id={cat.role.id}
       >
@@ -484,7 +486,7 @@ const memberItem = (cat: Categorized) => {
           </span>
           <UserPresence userId={cat.member.userId} />
         </div>
-      </div>
+      </Link>
     );
   } else {
     const role = cat.role;

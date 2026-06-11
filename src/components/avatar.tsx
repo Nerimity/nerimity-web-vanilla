@@ -6,6 +6,7 @@ import { buildImageUrl } from "../utils/image";
 const avatar = css`
   width: var(--size);
   height: var(--size);
+  user-select: none;
   .avatarInner {
     width: var(--size);
     height: var(--size);
@@ -29,7 +30,7 @@ interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string } | null;
   server?: { avatar?: string; name: string; hexColor: string } | null;
 
-  size: 12 | 14 | 16 | 24 | 28 | 32 | 40 | 42 | 48 | 64;
+  size: 12 | 14 | 16 | 24 | 28 | 32 | 40 | 42 | 48 | 64 | 72 | 80 | 96 | 128;
   imgClass?: string;
 }
 const buildUrl = (props: AvatarProps) => {

@@ -32,7 +32,19 @@ const modalRoot = css`
   border: solid 1px var(--gray-700);
   max-height: 80vh;
   overflow: hidden;
+
+  &.hasPos {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    translate: var(--anchor-x) var(--anchor-y);
+  }
+
   @media (max-width: ${`${mobileWidth}px`}) {
+    &.hasPos {
+      position: initial;
+      translate: initial;
+    }
     flex-shrink: 0;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
@@ -99,10 +111,52 @@ const footer = css`
   }
 `;
 
-const Root = (props: { children: any }) => {
+type ModalAnchor =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "center-left"
+  | "center"
+  | "center-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
+
+const Root = (props: {
+  children: any;
+  pos?: { x: string; y: string; anchor?: ModalAnchor };
+}) => {
+  const anchorOffsetX = () => {
+    const a = props.pos?.anchor ?? "top-left";
+    if (a === "top-center" || a === "bottom-center" || a === "center")
+      return "-50%";
+    if (a === "center-right" || a === "top-right" || a === "bottom-right")
+      return "-100%";
+    return "0%";
+  };
+  const anchorOffsetY = () => {
+    const a = props.pos?.anchor ?? "top-left";
+    if (a === "center-left" || a === "center-right" || a === "center")
+      return "-50%";
+    if (a === "bottom-left" || a === "bottom-center" || a === "bottom-right")
+      return "-100%";
+    return "0%";
+  };
   return (
     <div class={modalBackdrop}>
-      <div class={modalRoot}>{props.children}</div>
+      <div
+        class={[modalRoot, props.pos && "hasPos"]}
+        data-x={props.pos?.x}
+        data-y={props.pos?.y}
+        style={{
+          "--x": props.pos?.x,
+          "--y": props.pos?.y,
+          "--anchor-x": anchorOffsetX(),
+          "--anchor-y": anchorOffsetY(),
+        }}
+      >
+        {props.children}
+      </div>
     </div>
   );
 };
@@ -466,12 +520,30 @@ export const createModal = (
     }
 
     modalY = 0;
+
+    if (modal.classList.contains("hasPos")) {
+      clampPosition();
+      modal.style.opacity = "0";
+      const anim = modal.animate(
+        [
+          { transform: "translateY(20px)", opacity: 0 },
+          { transform: "translateY(0)", opacity: 1 },
+        ],
+        desktopModalAnimation,
+      );
+      anim.onfinish = () => {
+        modal.style.opacity = "";
+        modal.style.transform = "";
+        anim.cancel();
+      };
+      return;
+    }
+
     modal.style.transform = "translateY(-20px)";
     modal.style.opacity = "0";
-
     const anim = modal.animate(
       [
-        { transform: "translateY(-20px)", opacity: 0 },
+        { transform: "translateY(20px)", opacity: 0 },
         { transform: "translateY(0)", opacity: 1 },
       ],
       desktopModalAnimation,
@@ -528,7 +600,30 @@ export const createModal = (
     }, 200);
   };
 
+  const clampPosition = () => {
+    if (!modal.classList.contains("hasPos")) return;
+    const rect = modal.getBoundingClientRect();
+
+    const overflowLeft = Math.min(0, rect.left);
+    const overflowTop = Math.min(0, rect.top);
+    const overflowRight = Math.max(0, rect.right - window.innerWidth);
+    const overflowBottom = Math.max(0, rect.bottom - window.innerHeight);
+
+    const currentX = parseFloat(modal.style.getPropertyValue("--x")) || 0;
+    const currentY = parseFloat(modal.style.getPropertyValue("--y")) || 0;
+
+    modal.style.setProperty(
+      "--x",
+      `${currentX - overflowLeft - overflowRight}px`,
+    );
+    modal.style.setProperty(
+      "--y",
+      `${currentY - overflowTop - overflowBottom}px`,
+    );
+  };
   const handleResize = () => {
+    clampPosition();
+
     const currentMobile = isMobileWidth();
     if (lastMobileWidth !== currentMobile) {
       lastMobileWidth = currentMobile;
@@ -571,9 +666,26 @@ export const createModal = (
     capture: false,
   });
 
-  modal.addEventListener(
+  let downX = 0;
+  let downY = 0;
+  backdrop.addEventListener(
+    "mousedown",
+    (e) => {
+      downX = e.clientX;
+      downY = e.clientY;
+    },
+    { signal },
+  );
+
+  backdrop.addEventListener(
     "click",
     (e) => {
+      if (e.currentTarget === e.target) {
+        const movedX = Math.abs(e.clientX - downX);
+        const movedY = Math.abs(e.clientY - downY);
+        if (movedX > 10 || movedY > 10) return;
+        destroy();
+      }
       const target = e.target as HTMLElement;
       const isCloseButton = target.closest(`.${scoped`closeButton`}`);
       if (isCloseButton) {

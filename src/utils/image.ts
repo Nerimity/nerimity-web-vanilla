@@ -1,13 +1,14 @@
 import { cdnUrl } from "../config";
 
 export function buildImageUrl(
-  url: string,
+  url?: string,
   options: {
     size?: number;
     animate?: boolean;
     forceIsAnimated?: boolean;
   } = {},
 ) {
+  if (!url) return [null, false, null] as const;
   const { size, animate, forceIsAnimated } = options;
   const uri = new URL(`${cdnUrl}${url}`);
 

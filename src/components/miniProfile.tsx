@@ -14,9 +14,9 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
     "click",
     (e) => {
       if (e.target instanceof Element) {
-        const href = e.target
-          .closest("a[data-route]")
-          ?.attributes.getNamedItem("href")?.value;
+        const anchorEl = e.target.closest("a[data-route]") as HTMLAnchorElement;
+
+        const href = anchorEl?.attributes.getNamedItem("href")?.value;
 
         const isProfilePath = router.match<{ id: string }>(
           "/app/profile/:id",
@@ -24,25 +24,41 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
         );
 
         if (isProfilePath) {
-          console.log(isProfilePath);
           e.preventDefault();
           e.stopPropagation();
           createModal(
-            () => <MiniProfileModal userId={isProfilePath.params.id} />,
+            () => (
+              <MiniProfileModal
+                userId={isProfilePath.params.id}
+                triggerEl={anchorEl!}
+              />
+            ),
             new AbortController(),
           );
         }
-
-        console.log(href);
       }
     },
     { signal: opts.signal, capture: true },
   );
 };
 
-const MiniProfileModal = (props: { userId: string }) => {
+const MiniProfileModal = (props: {
+  userId: string;
+  triggerEl?: HTMLElement;
+}) => {
+  const rect = props.triggerEl?.getBoundingClientRect();
+
+  const memberItem = props.triggerEl?.classList.contains("memberItem");
+  console.log(memberItem);
+
   return (
-    <Modal.Root>
+    <Modal.Root
+      pos={{
+        x: `${rect?.left}px`,
+        y: `${rect?.top}px`,
+        anchor: memberItem ? "center-right" : "center-left",
+      }}
+    >
       <Modal.Body width="400px">
         <MiniProfile userId={props.userId} />
       </Modal.Body>
@@ -56,14 +72,14 @@ const banner = css`
   width: 100%;
   .${scoped`bannerImage`} {
     border-radius: var(--radius-4);
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  .${scoped`overlay`} {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.3);
+    background-color: var(--color);
+    filter: brightness(0.8);
   }
 `;
 
@@ -71,10 +87,16 @@ const Banner = (props: {
   user: { banner?: string; hexColor?: string };
   children?: any;
 }) => {
-  const [url] = buildImageUrl(props.user.banner!);
+  const [url] = buildImageUrl(props.user?.banner);
   return (
     <div class={banner}>
-      <img class={scoped`bannerImage`} src={url} />
+      {!url && (
+        <div
+          style={{ "--color": props.user?.hexColor }}
+          class={scoped`bannerImage`}
+        />
+      )}
+      {url && <img class={scoped`bannerImage`} src={url} />}
       <div class={scoped`overlay`}>{props.children}</div>
     </div>
   );
@@ -86,7 +108,7 @@ const miniProfile = css`
   gap: 8px;
   padding-top: 12px;
   .overlayInfo {
-    margin-top: -40px;
+    margin-top: -60px;
     margin-left: 10px;
     z-index: 111;
   }
@@ -111,12 +133,12 @@ const MiniProfile = (props: { userId: string }) => {
     <div class={miniProfile}>
       <Banner user={cachedUser!}></Banner>
       <div class="overlayInfo">
-        <Avatar user={cachedUser} size={64} />
+        <Avatar user={cachedUser} size={96} />
       </div>
       <div class="section info">
         {cachedUser?.username}
         <span class="tag">:{cachedUser?.tag}</span>
-        <UserPresence userId={props.userId} />
+        <UserPresence showOffline userId={props.userId} />
       </div>
     </div>
   );
