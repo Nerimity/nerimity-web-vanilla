@@ -22,7 +22,6 @@
     "@shikijs/themes": "^4.2.0",
     "fzstd": "^0.1.1",
     "idb": "^8.0.3",
-    "idiomorph": "^0.7.4",
     "morphdom": "^2.7.8",
     "shiki": "^4.2.0",
     "urlpattern-polyfill": "^10.1.0"
