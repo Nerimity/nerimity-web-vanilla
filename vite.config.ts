@@ -20,6 +20,9 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "article_person",
+        "book",
+        "mail",
         "keyboard_arrow_down",
         "check",
         "reply",

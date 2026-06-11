@@ -85,7 +85,7 @@ function getElements(parts: string[]): [string, string, string | undefined][] {
 }
 
 interface TransProps {
-  id: MessageId;
+  id?: MessageId;
   message?: string;
   values?: Record<string, string | number | Node>;
   components?: Record<string, Node | Node[]>;

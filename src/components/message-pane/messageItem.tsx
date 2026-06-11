@@ -200,13 +200,16 @@ export const MessageItem = (props: {
           {group ? (
             <div class={scoped`avatarPlaceholder`}></div>
           ) : (
-            <Avatar user={creator} size={40} />
+            <Link href={`/app/profile/${creator.id}`}>
+              <Avatar user={creator} size={40} />
+            </Link>
           )}
           <div class={scoped`messageBody`}>
             {!group && (
               <span class={scoped`details`}>
                 <GradientText
                   tag={Link}
+                  decoration
                   href={`/app/profile/${creator.id}`}
                   class={scoped`username`}
                   color={color}

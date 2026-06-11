@@ -10,6 +10,7 @@ export class User {
   tag: string;
   profile?: Profile;
   banner?: string;
+  bot?: boolean;
   constructor(data: RawUser) {
     this.id = data.id;
     this.username = data.username;
@@ -18,6 +19,7 @@ export class User {
     this.tag = data.tag;
     this.profile = data.profile;
     this.banner = data.banner;
+    this.bot = data.bot;
   }
 }
 

@@ -36,7 +36,7 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/message-pane/JumpToPresent.tsx:31
-#: src/components/message-pane/messageItem.tsx:187
+#: src/components/message-pane/messageItem.tsx:188
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -71,7 +71,7 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:353
+#: src/components/message-pane/messageItem.tsx:362
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -84,7 +84,27 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/serverMemberList.tsx:38
+#: src/components/miniProfile.tsx:177
+msgid "<0>{followers}</0> Followers"
+msgstr "<0>{followers}</0> Followers"
+
+#: src/components/miniProfile.tsx:184
+msgid "<0>{following}</0> Following"
+msgstr "<0>{following}</0> Following"
+
+#: src/components/miniProfile.tsx:192
+msgid "Full Profile"
+msgstr "Full Profile"
+
+#: src/components/miniProfile.tsx:193
+msgid "Notes"
+msgstr "Notes"
+
+#: src/components/miniProfile.tsx:193
+msgid "Message"
+msgstr "Message"
+
+#: src/components/serverMemberList.tsx:39
 #: src/store/userPresenceStore.ts:16
 msgid "Offline"
 msgstr "Offline"

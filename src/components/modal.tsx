@@ -51,6 +51,9 @@ const modalRoot = css`
     max-height: initial;
     flex: 1;
     padding-bottom: 64px;
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
   }
 `;
 const header = css`

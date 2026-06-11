@@ -1,6 +1,11 @@
 import { css } from "@linaria/core";
+import { t } from "@lingui/core/macro";
+import { Trans } from "@trans";
+import morphdom from "morphdom";
 
-import { h } from "../h";
+import { h, Fragment } from "../h";
+import { getUserDetails, type UserDetails } from "../services/userService";
+import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { messageStore } from "../store/messageStore";
 import { userStore } from "../store/userStore";
@@ -8,6 +13,7 @@ import { scoped } from "../utils/css";
 import { buildImageUrl } from "../utils/image";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
+import { Button } from "./button";
 import { createModal, Modal } from "./modal";
 import { UserPresence } from "./userPresence";
 
@@ -51,12 +57,11 @@ const MiniProfileModal = (props: {
   const rect = props.triggerEl?.getBoundingClientRect();
 
   const memberItem = props.triggerEl?.classList.contains("memberItem");
-  console.log(memberItem);
 
   return (
     <Modal.Root
       pos={{
-        x: `${rect?.left}px`,
+        x: `${memberItem ? rect?.left : rect?.right! + 10}px`,
         y: `${rect?.top}px`,
         anchor: memberItem ? "center-right" : "center-left",
       }}
@@ -119,9 +124,33 @@ const miniProfile = css`
     .tag {
       color: var(--gray-400);
     }
+    .buttons {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      .button {
+        flex: 1;
+        .icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .section .stats {
+    color: var(--gray-400);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    .full {
+      color: var(--gray-100);
+    }
   }
 
   .section {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     background-color: var(--gray-900);
     border-radius: var(--radius-4);
     padding: 8px;
@@ -129,7 +158,67 @@ const miniProfile = css`
 `;
 
 const MiniProfile = (props: { userId: string }) => {
+  const Content = () => {
+    const user = details?.user || localUser;
+
+    const followers = details?.user._count?.followers;
+    const following = details?.user._count?.following;
+
+    const hideFollowers = details?.hideFollowers;
+    const hideFollowing = details?.hideFollowing || user?.bot;
+    const showStats = details && (!hideFollowers || !hideFollowing);
+    const isSelf = props.userId === accountStore.currentUser?.id;
+
+    return (
+      <>
+        <Banner user={user!}></Banner>
+        <div class="overlayInfo">
+          <Avatar user={user} size={96} />
+        </div>
+        <div class="section info">
+          <span class="name">
+            {user?.username}
+            <span class="tag">:{user?.tag}</span>
+          </span>
+          <UserPresence showOffline userId={props.userId} />
+          {showStats && (
+            <div class="stats">
+              {!hideFollowers && (
+                <span class="stat">
+                  <Trans>
+                    <span class="full">{followers}</span> Followers
+                  </Trans>
+                </span>
+              )}
+              {!hideFollowing && (
+                <span class="stat">
+                  <Trans>
+                    <span class="full">{following}</span> Following
+                  </Trans>
+                </span>
+              )}
+            </div>
+          )}
+          <div class="buttons">
+            <Button
+              class="button"
+              icon="article_person"
+              label={t`Full Profile`}
+            />
+            <Button
+              class="button"
+              icon={isSelf ? "book" : "mail"}
+              label={isSelf ? t`Notes` : t`Message`}
+            />
+          </div>
+        </div>
+      </>
+    );
+  };
+  const miniProfileEl = (<div class={miniProfile}></div>) as HTMLDivElement;
+
   let localUser = userStore.users.get(props.userId);
+  let details: UserDetails | null = null;
 
   if (!localUser) {
     const channelId = channelStore.currentChannelId;
@@ -141,17 +230,33 @@ const MiniProfile = (props: { userId: string }) => {
     }
   }
 
-  return (
-    <div class={miniProfile}>
-      <Banner user={localUser!}></Banner>
-      <div class="overlayInfo">
-        <Avatar user={localUser} size={96} />
-      </div>
-      <div class="section info">
-        {localUser?.username}
-        <span class="tag">:{localUser?.tag}</span>
-        <UserPresence showOffline userId={props.userId} />
-      </div>
-    </div>
-  );
+  miniProfileEl.appendChild(<Content />);
+
+  const render = () => {
+    morphdom(
+      miniProfileEl,
+      <div class={miniProfile}>
+        <Content />
+      </div>,
+      {
+        childrenOnly: true,
+      },
+    );
+  };
+
+  getUserDetails({ userId: props.userId }).then(([newDetails]) => {
+    if (newDetails) {
+      if (newDetails.profile?.primaryColor) {
+        miniProfileEl.style.setProperty(
+          "--primary-color",
+          newDetails.profile?.primaryColor,
+        );
+      }
+      details = newDetails;
+      render();
+    }
+  });
+
+  render();
+  return miniProfileEl;
 };

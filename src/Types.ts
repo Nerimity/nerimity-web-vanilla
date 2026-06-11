@@ -70,6 +70,7 @@ export interface RawUser {
   tag: string;
   profile?: Profile;
   banner?: string;
+  bot?: boolean;
 }
 
 export interface RawUserPresence {
@@ -95,6 +96,11 @@ export interface RawInbox {
 
 export interface Profile {
   clan?: ServerClan;
+  bgColorOne?: string;
+  bgColorTwo?: string;
+  bio?: string;
+  font?: number;
+  primaryColor?: string;
 }
 
 export interface ServerClan {
