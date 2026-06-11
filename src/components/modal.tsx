@@ -653,9 +653,12 @@ export const createModal = (
 
     lastWindowHeight = windowHeight;
   };
-  setTimeout(() => {
-    createResizeObserver(modal, handleResize, { signal, defer: true });
-  }, 200);
+  setTimeout(
+    () => {
+      createResizeObserver(modal, handleResize, { signal, defer: true });
+    },
+    isMobileWidth() ? 200 : 0, // delay needed for mobile or else it doesn't animate
+  );
 
   window.addEventListener("resize", handleResize, {
     signal: abortController.signal,
