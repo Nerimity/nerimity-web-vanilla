@@ -24,14 +24,11 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
 
   leftDrawer.replaceChildren(inboxDrawer.render());
 
-  const destroy = () => {
-    abortController.abort();
-    inboxDrawer.destroy();
-  };
-
+  let miniProfileAbortController = new AbortController();
   const renderRightDrawer = () => {
+    miniProfileAbortController.abort();
+    miniProfileAbortController = new AbortController();
     if (!accountStore.authenticated) return;
-    console.log("rerender");
     const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
 
     const recipientId = inbox?.recipientId;
@@ -39,6 +36,8 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
 
     drawer.rightDrawer.replaceChildren(
       <MiniProfile
+        animationMode="hover"
+        signal={miniProfileAbortController.signal}
         class={[miniProfileDrawer, "scrollbarHover"]}
         userId={recipientId}
       />,
@@ -62,6 +61,12 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
     },
     signal,
   );
+
+  const destroy = () => {
+    miniProfileAbortController.abort();
+    abortController.abort();
+    inboxDrawer.destroy();
+  };
 
   return { destroy };
 };

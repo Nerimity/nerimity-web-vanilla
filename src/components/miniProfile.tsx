@@ -10,6 +10,8 @@ import { channelStore } from "../store/channelStore";
 import { messageStore } from "../store/messageStore";
 import { userStore } from "../store/userStore";
 import { scoped } from "../utils/css";
+import { FocusAnimator } from "../utils/FocusAnimator";
+import { HoverAnimator } from "../utils/HoverAnimator";
 import { buildImageUrl } from "../utils/image";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
@@ -27,6 +29,8 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
 
         const href = anchorEl?.attributes.getNamedItem("href")?.value;
 
+        const modalAbortController = new AbortController();
+
         const isProfilePath = router.match<{ id: string }>(
           "/app/profile/:id",
           href,
@@ -40,9 +44,10 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
               <MiniProfileModal
                 userId={isProfilePath.params.id}
                 triggerEl={anchorEl!}
+                signal={modalAbortController.signal}
               />
             ),
-            new AbortController(),
+            modalAbortController,
           );
         }
       }
@@ -54,6 +59,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
 const MiniProfileModal = (props: {
   userId: string;
   triggerEl?: HTMLElement;
+  signal: AbortSignal;
 }) => {
   const rect = props.triggerEl?.getBoundingClientRect();
 
@@ -68,7 +74,11 @@ const MiniProfileModal = (props: {
       }}
     >
       <Modal.Body width="400px">
-        <MiniProfile userId={props.userId} />
+        <MiniProfile
+          animationMode="focus"
+          signal={props.signal}
+          userId={props.userId}
+        />
       </Modal.Body>
     </Modal.Root>
   );
@@ -94,8 +104,11 @@ const banner = css`
 const Banner = (props: {
   user: { banner?: string; hexColor?: string };
   children?: any;
+  initialAnimate?: boolean;
 }) => {
-  const [url] = buildImageUrl(props.user?.banner);
+  const [url, animated] = buildImageUrl(props.user?.banner, {
+    animate: props.initialAnimate,
+  });
   return (
     <div class={banner}>
       {!url && (
@@ -104,7 +117,13 @@ const Banner = (props: {
           class={scoped`bannerImage`}
         />
       )}
-      {url && <img class={scoped`bannerImage`} src={url} />}
+      {url && (
+        <img
+          {...(animated && { "data-img-anim": "" })}
+          class={scoped`bannerImage`}
+          src={url}
+        />
+      )}
       <div class={scoped`overlay`}>{props.children}</div>
     </div>
   );
@@ -173,6 +192,8 @@ let cached: UserDetailsCache | null = null;
 export const MiniProfile = (props: {
   userId: string;
   class?: string | string[];
+  signal: AbortSignal;
+  animationMode: "hover" | "focus";
 }) => {
   const Content = () => {
     const user = details?.user || localUser;
@@ -187,7 +208,12 @@ export const MiniProfile = (props: {
 
     return (
       <>
-        <Banner user={user!}></Banner>
+        <Banner
+          initialAnimate={
+            props.animationMode === "focus" && document.hasFocus()
+          }
+          user={user!}
+        ></Banner>
         <div class="overlayInfo">
           <Avatar user={user} size={96} />
         </div>
@@ -282,6 +308,21 @@ export const MiniProfile = (props: {
       },
     );
   };
+
+  const focusAnimator =
+    props.animationMode === "focus"
+      ? new FocusAnimator(miniProfileEl, "img")
+      : new HoverAnimator(miniProfileEl, [
+          { image: "img", trigger: `.${miniProfile}` },
+        ]);
+
+  props.signal?.addEventListener(
+    "abort",
+    () => {
+      focusAnimator.destroy();
+    },
+    { once: true },
+  );
 
   if (cached?.userId !== props.userId) {
     getUserDetails({ userId: props.userId }).then(([newDetails]) => {
