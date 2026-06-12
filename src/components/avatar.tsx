@@ -36,7 +36,7 @@ interface AvatarProps {
 const buildUrl = (props: AvatarProps) => {
   const avatar = props.user?.avatar || props.server?.avatar;
   if (!avatar) return [undefined, false] as const;
-  return buildImageUrl(avatar, { size: props.size + 8 });
+  return buildImageUrl(avatar, { size: props.size * 2 });
 };
 
 const hexColor = (props: AvatarProps) =>
