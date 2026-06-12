@@ -20,7 +20,7 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
   const { signal } = abortController;
 
   const inboxDrawer = createInboxDrawer();
-  const drawer = Drawer();
+  let drawer = Drawer();
 
   leftDrawer.replaceChildren(inboxDrawer.render());
 
@@ -64,8 +64,11 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
 
   const destroy = () => {
     miniProfileAbortController.abort();
+    drawer.rightDrawer.replaceChildren();
     abortController.abort();
     inboxDrawer.destroy();
+    (leftDrawer as any) = null;
+    (drawer as any) = null;
   };
 
   return { destroy };
