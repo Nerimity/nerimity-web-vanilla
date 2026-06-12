@@ -162,7 +162,18 @@ const miniProfile = css`
   }
 `;
 
-const MiniProfile = (props: { userId: string }) => {
+interface UserDetailsCache {
+  cachedAt: number;
+  userId: string;
+  details: UserDetails;
+}
+
+let cached: UserDetailsCache | null = null;
+
+export const MiniProfile = (props: {
+  userId: string;
+  class?: string | string[];
+}) => {
   const Content = () => {
     const user = details?.user || localUser;
 
@@ -227,10 +238,20 @@ const MiniProfile = (props: { userId: string }) => {
       </>
     );
   };
-  const miniProfileEl = (<div class={miniProfile}></div>) as HTMLDivElement;
+  const miniProfileEl = (
+    <div class={[miniProfile, props.class]}></div>
+  ) as HTMLDivElement;
 
   let localUser = userStore.users.get(props.userId);
   let details: UserDetails | null = null;
+
+  if (cached?.userId === props.userId) {
+    if (cached.cachedAt + 60 * 1000 > Date.now()) {
+      details = cached.details;
+    } else {
+      cached = null;
+    }
+  }
 
   if (!localUser) {
     const channelId = channelStore.currentChannelId;
@@ -245,6 +266,12 @@ const MiniProfile = (props: { userId: string }) => {
   miniProfileEl.appendChild(<Content />);
 
   const render = () => {
+    if (details?.profile?.primaryColor) {
+      miniProfileEl.style.setProperty(
+        "--primary-color",
+        details.profile.primaryColor,
+      );
+    }
     morphdom(
       miniProfileEl,
       <div class={miniProfile}>
@@ -256,18 +283,20 @@ const MiniProfile = (props: { userId: string }) => {
     );
   };
 
-  getUserDetails({ userId: props.userId }).then(([newDetails]) => {
-    if (newDetails) {
-      if (newDetails.profile?.primaryColor) {
-        miniProfileEl.style.setProperty(
-          "--primary-color",
-          newDetails.profile?.primaryColor,
-        );
+  if (cached?.userId !== props.userId) {
+    getUserDetails({ userId: props.userId }).then(([newDetails]) => {
+      if (newDetails) {
+        cached = {
+          cachedAt: Date.now(),
+          details: newDetails,
+          userId: props.userId,
+        };
+
+        details = newDetails;
+        render();
       }
-      details = newDetails;
-      render();
-    }
-  });
+    });
+  }
 
   render();
   return miniProfileEl;

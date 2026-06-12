@@ -12,13 +12,12 @@ import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
 import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
+import type createInboxChannelRoute from "./createInboxChannelRoute";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
 const createMessagePane = lazy(
   () => import("../../components/message-pane/messagePane"),
 );
-
-const createInboxDrawer = lazy(() => import("../../components/inboxDrawer"));
 
 const leftDrawerInner = css`
   display: flex;
@@ -69,7 +68,8 @@ const createAppPage = () => {
   let serverChannelPage: ReturnType<typeof createServerChannelRoute> | null =
     null;
 
-  let inboxDrawer: LazyResult<typeof createInboxDrawer> | null = null;
+  let inboxChannelPage: ReturnType<typeof createInboxChannelRoute> | null =
+    null;
 
   const appRouteSource = createTokenSource();
 
@@ -80,24 +80,23 @@ const createAppPage = () => {
       if (!res) {
         serverChannelPage?.destroy();
         serverChannelPage = null;
-        if (inboxDrawer) return;
+        if (inboxChannelPage) return;
         const isStale = appRouteSource.capture();
 
-        const drawer = await createInboxDrawer();
-        if (isStale()) {
-          drawer.destroy();
-          return;
-        }
-        inboxDrawer = drawer;
-        leftDrawer.replaceChildren(inboxDrawer.render());
+        const createInboxChannelRoute = (
+          await import("./createInboxChannelRoute")
+        ).default;
+
+        if (isStale()) return;
+        inboxChannelPage = createInboxChannelRoute(leftDrawer);
         return;
       }
 
       appRouteSource.invalidate();
 
       if (serverChannelPage) return;
-      inboxDrawer?.destroy();
-      inboxDrawer = null;
+      inboxChannelPage?.destroy();
+      inboxChannelPage = null;
 
       const isStale = appRouteSource.capture();
       const createServerChannelRoute = (
@@ -139,7 +138,7 @@ const createAppPage = () => {
     messagePane?.destroy();
     serverChannelPage?.destroy();
     serverChannelPage = null;
-    inboxDrawer?.destroy();
+    inboxChannelPage?.destroy();
     Drawer().destroy();
 
     (leftDrawer as any) = null;
