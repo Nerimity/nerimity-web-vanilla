@@ -12,7 +12,7 @@ import { MessageType } from "../../Types";
 import { scoped } from "../../utils/css";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
-import { Input } from "../input";
+import { createTextareaHeightHandler, Input } from "../input";
 import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
@@ -30,6 +30,13 @@ const chatbarContainer = css`
   padding-top: 0;
   z-index: 9999999999999;
   .chatInput {
+    .inputInnerContainer {
+      align-items: flex-end;
+    }
+    .input {
+      max-height: 30vh;
+      align-self: center;
+    }
   }
   .buttons {
     margin: 4px;
@@ -79,6 +86,7 @@ export const createChatbar = () => {
       <div class={chatInputContainer}>
         {jumpToPresent}
         <Input
+          type="textarea"
           class="chatInput"
           suffix={
             <div class="buttons">
@@ -90,7 +98,9 @@ export const createChatbar = () => {
       </div>
     </div>
   ) as unknown as HTMLElement;
-  const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
+  const input = chatbar.querySelector(
+    ".chatInput .input",
+  ) as HTMLTextAreaElement;
 
   let lastInputAt = 0;
   const handleInput = () => {
@@ -130,7 +140,9 @@ export const createChatbar = () => {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
+      if (event.shiftKey) return;
       sendMessage();
+      event.preventDefault();
       return;
     }
     if (event.key === "Escape") {
@@ -142,7 +154,7 @@ export const createChatbar = () => {
     if (event.key === "ArrowUp") {
       const channelId = channelStore.currentChannelId!;
       const property = channelStore.currentChannelProperty();
-      if (property?.content.trim()) {
+      if (property?.content) {
         return;
       }
       event.preventDefault();
@@ -166,6 +178,7 @@ export const createChatbar = () => {
   input.addEventListener("input", handleInput, { signal });
 
   sendButton.addEventListener("click", sendMessage, { signal });
+  const textHeight = createTextareaHeightHandler({ textarea: input, signal });
 
   const render = () => {
     updatePlaceholder();
@@ -173,7 +186,6 @@ export const createChatbar = () => {
   };
 
   const updatePlaceholder = () => {
-    const input = chatbar.querySelector(".chatInput input") as HTMLInputElement;
     const channel = channelStore.currentChannel();
     const authenticated = accountStore.authenticated;
 
@@ -212,6 +224,7 @@ export const createChatbar = () => {
 
       syncValue();
       updatePlaceholder();
+      textHeight.adjust();
     },
     signal,
   );

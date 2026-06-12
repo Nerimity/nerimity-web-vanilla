@@ -1,6 +1,8 @@
 import { css } from "@linaria/core";
 
+import { Dynamic } from "../dynamic";
 import { h } from "../h";
+import { createResizeObserver } from "../utils/observer";
 
 const inputContainer = css`
   display: flex;
@@ -19,13 +21,14 @@ const inputContainer = css`
       border-bottom-color: var(--primary-color);
     }
   }
-  input {
+  .input {
     padding: 8px;
     color: var(--text-color);
     outline: none;
     border: none;
     background: transparent;
     width: 100%;
+    resize: none;
   }
 `;
 
@@ -34,7 +37,7 @@ interface InputProps {
   prefix?: any;
   suffix?: any;
   label?: any;
-  type?: "text" | "password";
+  type?: "text" | "password" | "textarea";
   autocomplete?: "current-password" | "email";
 }
 export const Input = (props: InputProps) => {
@@ -43,9 +46,32 @@ export const Input = (props: InputProps) => {
       {props.label && <div class="label">{props.label}</div>}
       <div class="inputInnerContainer">
         {props.prefix}
-        <input type={props.type || "text"} autocomplete={props.autocomplete} />
+        <Dynamic
+          class="input"
+          component={props.type === "textarea" ? "textarea" : "input"}
+          type={props.type || "text"}
+          autocomplete={props.autocomplete}
+        />
         {props.suffix}
       </div>
     </div>
   );
+};
+
+export const createTextareaHeightHandler = (opts: {
+  textarea: HTMLTextAreaElement;
+  signal: AbortSignal;
+}) => {
+  const textarea = opts.textarea;
+
+  const adjust = () => {
+    textarea.style.height = "34px";
+    textarea.style.height = textarea.scrollHeight + "px";
+  };
+
+  requestAnimationFrame(adjust);
+
+  createResizeObserver(textarea, adjust, { signal: opts.signal });
+  opts.textarea.addEventListener("input", adjust, { signal: opts.signal });
+  return { adjust };
 };
