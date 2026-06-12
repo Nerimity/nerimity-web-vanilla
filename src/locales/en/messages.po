@@ -84,25 +84,29 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:177
+#: src/components/miniProfile.tsx:204
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:184
+#: src/components/miniProfile.tsx:211
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:192
+#: src/components/miniProfile.tsx:222
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:193
+#: src/components/miniProfile.tsx:227
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:193
+#: src/components/miniProfile.tsx:227
 msgid "Message"
 msgstr "Message"
+
+#: src/components/miniProfile.tsx:233
+msgid "About Me"
+msgstr "About Me"
 
 #: src/components/serverMemberList.tsx:39
 #: src/store/userPresenceStore.ts:16
