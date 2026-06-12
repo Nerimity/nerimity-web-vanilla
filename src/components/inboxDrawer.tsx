@@ -393,7 +393,7 @@ const createInboxDrawer = () => {
   let inboxList: ReturnType<typeof createInboxList> | null = createInboxList();
   let friendList: ReturnType<typeof createFriendsList> | null = null;
 
-  const tabsEl = (
+  let tabsEl = (
     <div class={tabs}>
       <TabItem name={t`Inbox`} icon="inbox" selected />
       <TabItem name={t`Friends`} icon="diversity_1" />
@@ -549,6 +549,13 @@ const createInboxDrawer = () => {
     abortController.abort();
     hoverAnimator.destroy();
     containerEl?.remove();
+    inboxList?.inboxListEl.remove();
+    friendList?.inboxListEl.remove();
+    tabsEl.remove();
+    (containerEl as any) = null;
+    (tabsEl as any) = null;
+    inboxList = null;
+    friendList = null;
   };
 
   return {

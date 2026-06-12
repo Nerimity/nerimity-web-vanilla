@@ -144,5 +144,7 @@ export class HoverAnimator {
 
   destroy() {
     this.controller.abort();
+    this.hoveredStates.clear();
+    (this.container as any) = null;
   }
 }

@@ -149,9 +149,9 @@ export const createSidebar = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
-  const serverListEl = (<div class="serverList"></div>) as HTMLElement;
+  let serverListEl = (<div class="serverList"></div>) as HTMLElement;
 
-  const homeEl = (
+  let homeEl = (
     <SidebarItem class={homeItem} title="Home" href="/app">
       <div class="logoContainer">
         <LogoMono />
@@ -261,10 +261,12 @@ export const createSidebar = () => {
     hoverAnimator?.destroy();
 
     serverListEl.remove();
+    (serverListEl as any) = null;
 
     containerEl?.remove();
     containerEl = null;
     hoverAnimator = null;
+    (homeEl as any) = null;
   };
 
   return {

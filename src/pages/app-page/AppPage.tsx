@@ -49,8 +49,8 @@ const createAppPage = () => {
 
   let messagePane: LazyResult<typeof createMessagePane> | null = null;
 
-  const leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
-  const content = (<div class={contentInner}></div>) as HTMLElement;
+  let leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
+  let content = (<div class={contentInner}></div>) as HTMLElement;
 
   Drawer().leftDrawer.replaceChildren(
     <>
@@ -141,6 +141,9 @@ const createAppPage = () => {
     serverChannelPage = null;
     inboxDrawer?.destroy();
     Drawer().destroy();
+
+    (leftDrawer as any) = null;
+    (content as any) = null;
   };
 
   const render = () => {};

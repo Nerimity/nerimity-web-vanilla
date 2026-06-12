@@ -134,11 +134,11 @@ export const createAppHeader = () => {
     <Button icon="side_navigation" class="button" />
   ) as HTMLButtonElement;
 
-  const rightDrawerButton = (
+  let rightDrawerButton = (
     <Button icon="info" class="button" />
   ) as HTMLButtonElement;
 
-  const container = (
+  let container = (
     <header class={header}>
       <div class="backdrop"></div>
       {leftDrawerButton}
@@ -219,6 +219,8 @@ export const createAppHeader = () => {
   const destroy = () => {
     abortController.abort();
     container.remove();
+    (rightDrawerButton as any) = null;
+    (container as any) = null;
   };
   return { render, destroy };
 };
