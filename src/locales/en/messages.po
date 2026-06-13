@@ -36,17 +36,49 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/message-pane/JumpToPresent.tsx:31
-#: src/components/message-pane/messageItem.tsx:188
+#: src/components/message-pane/messageItem.tsx:184
 msgid "New Messages"
 msgstr "New Messages"
 
+#: src/components/message-pane/SystemMessage.tsx:91
+msgid "{username} has been added."
+msgstr "{username} has been added."
+
+#: src/components/message-pane/SystemMessage.tsx:93
+msgid "{username} has joined."
+msgstr "{username} has joined."
+
+#: src/components/message-pane/SystemMessage.tsx:100
+msgid "{username} has left."
+msgstr "{username} has left."
+
+#: src/components/message-pane/SystemMessage.tsx:107
+msgid "{username} has been kicked."
+msgstr "{username} has been kicked."
+
+#: src/components/message-pane/SystemMessage.tsx:114
+msgid "{username} has been banned."
+msgstr "{username} has been banned."
+
+#: src/components/message-pane/SystemMessage.tsx:121
+msgid "{username} started a call."
+msgstr "{username} started a call."
+
+#: src/components/message-pane/SystemMessage.tsx:128
+msgid "{username} bumped the server."
+msgstr "{username} bumped the server."
+
+#: src/components/message-pane/SystemMessage.tsx:135
+msgid "{username} pinned a message."
+msgstr "{username} pinned a message."
+
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:189
+#: src/components/message-pane/chatbar.tsx:201
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:194
+#: src/components/message-pane/chatbar.tsx:206
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -71,7 +103,7 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:362
+#: src/components/message-pane/messageItem.tsx:366
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -84,27 +116,27 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:204
+#: src/components/miniProfile.tsx:230
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:211
+#: src/components/miniProfile.tsx:237
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:222
+#: src/components/miniProfile.tsx:248
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:227
+#: src/components/miniProfile.tsx:253
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:227
+#: src/components/miniProfile.tsx:253
 msgid "Message"
 msgstr "Message"
 
-#: src/components/miniProfile.tsx:233
+#: src/components/miniProfile.tsx:259
 msgid "About Me"
 msgstr "About Me"
 

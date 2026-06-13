@@ -20,6 +20,11 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "logout",
+        "block",
+        "call",
+        "trending_up",
+        "keep",
         "article_person",
         "book",
         "mail",

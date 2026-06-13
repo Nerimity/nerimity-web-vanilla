@@ -2,6 +2,7 @@ import { accountStore } from "../../store/accountStore";
 
 import { type Message } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
+import { MessageType } from "../../Types";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -9,6 +10,8 @@ export const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (message.replyMessages?.length) return false;
   const diff = message.createdAt - prev.createdAt;
   if (diff > 5 * 60 * 1000) return false;
+  if (prev.type !== MessageType.CONTENT) return false;
+  if (message.type !== MessageType.CONTENT) return false;
   return true;
 };
 

@@ -1,23 +1,15 @@
 import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
-import morphdom from "morphdom";
 
 import { h, Fragment } from "../../h";
-import { addReaction, removeReaction } from "../../services/messageService";
 import { channelStore } from "../../store/channelStore";
-import {
-  messageStore,
-  type Message,
-  type MessageReaction,
-} from "../../store/messageStore";
+import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
-import type { RawReplyMessage } from "../../Types";
+import { MessageType, type RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { scoped } from "../../utils/css";
 import { friendlyTimestamp, fullDate } from "../../utils/date";
-import { storeEmitter } from "../../utils/EventEmitter";
-import { FocusAnimator } from "../../utils/FocusAnimator";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
@@ -25,6 +17,8 @@ import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { ImageEmbed } from "./imageEmbed";
+import { MessageReactions } from "./MessageReactions";
+import { SystemMessage } from "./SystemMessage";
 import { isNewDay, shouldGroup } from "./utils";
 
 const messageItem = css`
@@ -182,6 +176,8 @@ export const MessageItem = (props: {
   const hasMessageReplies = !!props.message.replyMessages?.length;
   const editing = channelProperty?.editingMessage?.id === props.message.id;
 
+  const isContentMessage = props.message.type === MessageType.CONTENT;
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
@@ -195,54 +191,62 @@ export const MessageItem = (props: {
           editing && "editing",
         ]}
       >
-        {hasMessageReplies && <MessageReplies message={props.message} />}
-        <div class={[scoped`messageContainer`, "messageContainer"]}>
-          {group ? (
-            <div class={scoped`avatarPlaceholder`}></div>
-          ) : (
-            <Link href={`/app/profile/${creator.id}`}>
-              <Avatar user={creator} size={40} />
-            </Link>
-          )}
-          <div class={scoped`messageBody`}>
-            {!group && (
-              <span class={scoped`details`}>
-                <GradientText
-                  tag={Link}
-                  decoration
-                  href={`/app/profile/${creator.id}`}
-                  class={scoped`username`}
-                  color={color}
-                >
-                  {name}
-                </GradientText>
-                {creator?.profile?.clan && (
-                  <ServerClanItem clan={creator.profile.clan} />
-                )}
-                {topRole?.icon && (
-                  <CdnIcon
-                    class={scoped`roleIcon`}
-                    role={{ icon: topRole.icon }}
-                    size={14}
-                  />
-                )}
-                <span class={scoped`timestamp`}>
-                  {friendlyTimestamp(props.message.createdAt)}
-                </span>
-              </span>
-            )}
-            <div class={scoped`content`}>
-              {!isImageEmbedOnly && (
-                <Markup text={props.message.content} message={props.message} />
+        {!isContentMessage && <SystemMessage message={props.message} />}
+        {isContentMessage && (
+          <>
+            {hasMessageReplies && <MessageReplies message={props.message} />}
+            <div class={[scoped`messageContainer`, "messageContainer"]}>
+              {group ? (
+                <div class={scoped`avatarPlaceholder`}></div>
+              ) : (
+                <Link href={`/app/profile/${creator.id}`}>
+                  <Avatar user={creator} size={40} />
+                </Link>
               )}
-              <MessageEmbeds
-                message={props.message}
-                container={props.container}
-              />
+              <div class={scoped`messageBody`}>
+                {!group && (
+                  <span class={scoped`details`}>
+                    <GradientText
+                      tag={Link}
+                      decoration
+                      href={`/app/profile/${creator.id}`}
+                      class={scoped`username`}
+                      color={color}
+                    >
+                      {name}
+                    </GradientText>
+                    {creator?.profile?.clan && (
+                      <ServerClanItem clan={creator.profile.clan} />
+                    )}
+                    {topRole?.icon && (
+                      <CdnIcon
+                        class={scoped`roleIcon`}
+                        role={{ icon: topRole.icon }}
+                        size={14}
+                      />
+                    )}
+                    <span class={scoped`timestamp`}>
+                      {friendlyTimestamp(props.message.createdAt)}
+                    </span>
+                  </span>
+                )}
+                <div class={scoped`content`}>
+                  {!isImageEmbedOnly && (
+                    <Markup
+                      text={props.message.content}
+                      message={props.message}
+                    />
+                  )}
+                  <MessageEmbeds
+                    message={props.message}
+                    container={props.container}
+                  />
+                </div>
+                <MessageReactions message={props.message} />
+              </div>
             </div>
-            <MessageReactions message={props.message} />
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -361,165 +365,6 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
       ) : (
         <span class={`${replyMessage} deleted`}>{t`Message was deleted.`}</span>
       )}
-    </div>
-  );
-};
-
-const messageReactions = css`
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  user-select: none;
-  margin-top: 4px;
-  &.hide {
-    display: none;
-  }
-`;
-
-export const createMessageReactionHandler = (opts: {
-  signal: AbortSignal;
-  logs: HTMLDivElement;
-}) => {
-  storeEmitter.on(
-    "message:reaction_updated",
-    (event) => {
-      if (event.message.channelId !== channelStore.currentChannelId) return;
-      updateMessageReaction(opts.logs, event.reaction, event.message);
-    },
-    opts.signal,
-  );
-
-  const reactionItemFocusAnimator = new FocusAnimator(
-    opts.logs,
-    ".reactionItem img",
-  );
-  opts.logs.addEventListener(
-    "click",
-    (event) => {
-      const target = event.target as HTMLElement;
-      const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
-      const messageId = messageEl.dataset.messageId!;
-      if (!messageId) return;
-
-      const messages = messageStore.messages.get(
-        channelStore.currentChannelId!,
-      );
-      const message = messages?.find((m) => m.id === messageId);
-      if (!message) return;
-
-      const reactionEl = target.closest(
-        `.${messageReactions} .reactionItem`,
-      ) as HTMLElement | null;
-
-      const id = reactionEl?.dataset.reactionId;
-      if (!id) return;
-
-      const isUnicode = reactionEl?.dataset.uni;
-
-      const reaction = message.reactions?.find((r) => {
-        if (isUnicode) return r.name === id;
-        return r.emojiId === id;
-      });
-      if (!reaction) return;
-
-      (reaction.reacted ? removeReaction : addReaction)(
-        channelStore.currentChannelId!,
-        messageId,
-        isUnicode ? { name: id } : { emojiId: id, name: reaction?.name },
-      );
-    },
-    { signal: opts.signal },
-  );
-
-  opts.signal.addEventListener(
-    "abort",
-    () => {
-      reactionItemFocusAnimator.destroy();
-    },
-    { once: true },
-  );
-};
-
-const updateMessageReaction = (
-  logs: HTMLDivElement,
-  reaction: MessageReaction,
-  message: Message,
-) => {
-  const reactionsEl = logs.querySelector(
-    `[data-message-id="${message.id}"] .${messageReactions}`,
-  );
-  if (!reactionsEl) return;
-
-  reactionsEl.classList.toggle("hide", !message.reactions?.length);
-
-  const id = reaction.emojiId || reaction.name;
-  const reactionEl = reactionsEl.querySelector(`[data-reaction-id="${id}"]`);
-
-  if (!reactionEl) {
-    if (reaction.count > 0)
-      reactionsEl.appendChild(<ReactionItem reaction={reaction} />);
-    return;
-  }
-
-  if (reaction.count === 0) reactionEl.remove();
-  else
-    morphdom(
-      reactionEl,
-      (<ReactionItem reaction={reaction} />) as unknown as HTMLElement,
-    );
-};
-
-const MessageReactions = (props: { message: Message }) => {
-  return (
-    <div class={[messageReactions, !props.message.reactions?.length && "hide"]}>
-      {props.message.reactions?.map((reaction) => (
-        <ReactionItem reaction={reaction} />
-      ))}
-    </div>
-  );
-};
-
-const reactionItem = css`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 4px;
-  padding-right: 8px;
-  border-radius: var(--radius-max);
-  background-color: var(--gray-800);
-  border: solid 1px var(--gray-800);
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-  &:hover {
-    border: solid 1px var(--primary-color);
-  }
-  &[data-reacted="true"] {
-    border: solid 1px var(--primary-color);
-    color: var(--primary-color);
-  }
-  .icon {
-    background-color: transparent;
-  }
-`;
-
-const ReactionItem = (props: { reaction: MessageReaction }) => {
-  const id = props.reaction.emojiId || props.reaction.name;
-
-  return (
-    <div
-      class={[reactionItem, "reactionItem"]}
-      data-reaction-id={id}
-      data-reacted={props.reaction.reacted}
-      data-uni={!props.reaction.emojiId}
-    >
-      <CdnIcon
-        animate={document.hasFocus()}
-        class="icon"
-        reaction={props.reaction}
-        size={16}
-      />
-      <div class="count">{props.reaction.count}</div>
     </div>
   );
 };

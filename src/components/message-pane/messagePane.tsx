@@ -22,7 +22,8 @@ import { createChatbar } from "./chatbar";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
-import { createMessageReactionHandler, MessageItem } from "./messageItem";
+import { MessageItem } from "./messageItem";
+import { createMessageReactionHandler } from "./MessageReactions";
 import { getLastSeenMessage, shouldGroup } from "./utils";
 
 const messagePane = css`
