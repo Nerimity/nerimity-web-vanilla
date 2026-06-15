@@ -20,6 +20,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "upload_file",
         "logout",
         "block",
         "call",

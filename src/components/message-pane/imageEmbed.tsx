@@ -1,6 +1,7 @@
 import { css } from "@linaria/core";
 
 import { h } from "../../h";
+import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment, LocalEmbed } from "../../store/messageStore";
 import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { throttle } from "../../utils/throttle";
@@ -33,15 +34,21 @@ const imageContainer = css`
 export const ImageEmbed = (props: {
   attachment?: LocalAttachment;
   embed?: LocalEmbed;
+  attachmentProperty?: AttachmentProperty;
   container: HTMLDivElement;
 }) => {
-  const item = props.embed || props.attachment!;
+  const item = props.embed || props.attachment;
   const width = props.attachment
     ? props.attachment.width
-    : props.embed?.imageWidth!;
+    : props.attachmentProperty
+      ? props.attachmentProperty.image?.width
+      : props.embed?.imageWidth!;
+
   const height = props.attachment
     ? props.attachment.height
-    : props.embed?.imageHeight!;
+    : props.attachmentProperty
+      ? props.attachmentProperty.image?.height
+      : props.embed?.imageHeight!;
 
   let src = props.attachment?.path!;
   if (props.embed?.imageUrl) {
@@ -54,14 +61,14 @@ export const ImageEmbed = (props: {
     src = `proxy/${encodeURIComponent(src)}/embed.webp`;
   }
 
-  const cached = item.cached;
+  const cached = item?.cached;
   const [url, animated] = buildImageUrl(src, {
     animate: document.hasFocus(),
     forceIsAnimated: props.embed?.animated,
   });
   const img = (
     <img
-      src={url}
+      src={props.attachmentProperty ? props.attachmentProperty.image?.src : url}
       {...(animated && { "data-img-anim": "" })}
       loading="lazy"
       class={"image"}
@@ -77,7 +84,9 @@ export const ImageEmbed = (props: {
     : ((<Skeleton class="skeleton" />) as HTMLDivElement);
   img.onload = !cached
     ? () => {
-        item.cached = true;
+        if (item) {
+          item.cached = true;
+        }
         skeleton?.remove();
         img.classList.add("loaded");
         img.onload = null;

@@ -52,8 +52,6 @@ export const createEditMessageIndicator = (signal: AbortSignal) => {
     </div>
   ) as HTMLDivElement;
 
-  signal.addEventListener("abort", () => {}, { once: true });
-
   const rerender = () => {
     const currentChannelId = channelStore.currentChannelId;
     const channelProperty = channelStore.getProperty(currentChannelId!);

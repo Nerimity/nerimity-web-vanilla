@@ -5,7 +5,9 @@ import {
   type ChannelPermissions,
   type RawChannel,
 } from "../Types";
+import { createTokenSource } from "../utils/createTokenSource";
 import { storeEmitter } from "../utils/EventEmitter";
+import { fileToDimensions, isImage, isMoreThan12MB } from "../utils/file";
 import { ManualMemo } from "../utils/memo";
 import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
@@ -39,6 +41,16 @@ export class Channel {
   }
 }
 
+export interface AttachmentProperty {
+  file: File;
+
+  image?: {
+    width: number;
+    height: number;
+    src: string;
+  };
+}
+
 interface ChannelProperty {
   content: string;
   canLoadTop: boolean;
@@ -47,6 +59,7 @@ interface ChannelProperty {
   scrollTop?: number;
   editingMessage?: Message;
   replyingMessages?: Message[];
+  attachment?: AttachmentProperty;
 }
 
 function createChannelStore() {
@@ -142,6 +155,7 @@ function createChannelStore() {
       setProperty(channelId, { replyingMessages: [] });
       storeEmitter.emit("message_property:replying", { replies: [] });
     }
+    updateAttachment(channelId);
 
     storeEmitter.emit("message_property:editing", { message, prevMessage });
   };
@@ -156,6 +170,8 @@ function createChannelStore() {
       setProperty(channelId, { editingMessage: undefined });
       storeEmitter.emit("message_property:editing", { message: undefined });
     }
+    updateAttachment(channelId);
+
     replies.push(message!);
     setProperty(channelId, { replyingMessages: replies });
     storeEmitter.emit("message_property:replying", { replies });
@@ -175,6 +191,37 @@ function createChannelStore() {
     }
     setProperty(channelId, { replyingMessages: replies });
     storeEmitter.emit("message_property:replying", { replies });
+  };
+
+  const updateAttachmentToken = createTokenSource();
+  const updateAttachment = async (channelId: string, file?: File) => {
+    const isStale = updateAttachmentToken.capture();
+    const property = getProperty(channelId, false);
+    if (!property) return;
+    let attachment: AttachmentProperty | undefined = property.attachment;
+    if (!file) {
+      if (!property.attachment) return;
+      attachment = undefined;
+      setProperty(channelId, { attachment });
+    } else {
+      const image = isImage(file) && !isMoreThan12MB(file);
+      removeReply(channelId);
+      setEditingMessage(channelId);
+      attachment = { file };
+      if (image) {
+        const { image } = await fileToDimensions(file);
+        if (isStale()) return;
+        attachment.image = {
+          width: image.width,
+          height: image.height,
+          src: image.src,
+        };
+      }
+      setProperty(channelId, {
+        attachment,
+      });
+    }
+    storeEmitter.emit("message_property:attachment", { attachment });
   };
 
   const setProperty = (
@@ -311,5 +358,6 @@ function createChannelStore() {
     dismissNotification,
     deleteChannel,
     updatePermissions,
+    updateAttachment,
   };
 }

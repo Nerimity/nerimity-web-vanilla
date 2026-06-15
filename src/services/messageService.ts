@@ -23,6 +23,7 @@ interface PostMessageBody {
   socketId?: string;
   replyToMessageIds?: string[];
   mentionReplies?: boolean;
+  nerimityCdnFileId?: string;
 }
 export const postMessage = async (channelId: string, body: PostMessageBody) => {
   return postMessagesQueue.add(() => {

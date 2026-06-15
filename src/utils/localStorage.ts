@@ -2,6 +2,11 @@ interface LocalStorageData {
   userToken: string;
   messageReplyShouldMention: boolean;
   recentServerChannels: [string, string][];
+  cdnToken: {
+    token: string;
+    channelId?: string;
+    createdAt: number;
+  }[];
 }
 
 export const getLocalItem = <T extends keyof LocalStorageData>(

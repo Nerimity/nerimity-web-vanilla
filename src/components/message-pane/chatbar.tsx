@@ -13,6 +13,7 @@ import { scoped } from "../../utils/css";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { createTextareaHeightHandler, Input } from "../input";
+import { createAttachmentIndicator } from "./attachmentIndicator";
 import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
@@ -68,6 +69,7 @@ export const createChatbar = () => {
 
   const typingIndicator = createTypingIndicator(abortController);
   const editMessageIndicator = createEditMessageIndicator(signal);
+  const attachmentIndicator = createAttachmentIndicator(signal);
   const repliesIndicator = createRepliesIndicator(abortController);
   const jumpToPresent = createJumpToPresent({ signal });
 
@@ -83,6 +85,7 @@ export const createChatbar = () => {
       {typingIndicator.el}
       {editMessageIndicator}
       {repliesIndicator}
+      {attachmentIndicator}
       <div class={chatInputContainer}>
         {jumpToPresent}
         <Input
@@ -118,7 +121,8 @@ export const createChatbar = () => {
     const property = channelStore.currentChannelProperty()!;
     input.focus();
     const value = input.value.trim();
-    if (!value) return;
+    const hasAttachment = property.attachment;
+    if (!value && !hasAttachment) return;
     property.content = "";
     input.value = "";
 
@@ -136,6 +140,7 @@ export const createChatbar = () => {
       content: value,
     });
     channelStore.removeReply(channelStore.currentChannelId!);
+    channelStore.updateAttachment(channelStore.currentChannelId!);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -147,7 +152,9 @@ export const createChatbar = () => {
     }
     if (event.key === "Escape") {
       const channelId = channelStore.currentChannelId!;
-      channelStore.setEditingMessage(channelId, undefined);
+      channelStore.setEditingMessage(channelId);
+      channelStore.removeReply(channelId);
+      channelStore.updateAttachment(channelId);
 
       return;
     }
@@ -246,6 +253,7 @@ export const createChatbar = () => {
 
   storeEmitter.on("ws:authStateUpdate", updatePlaceholder, signal);
   storeEmitter.on("ws:connectStateUpdate", updatePlaceholder, signal);
+  createFileClipboardHandler({ signal });
 
   const destroy = () => {
     chatbar.remove();
@@ -253,4 +261,16 @@ export const createChatbar = () => {
   };
 
   return { render, destroy, jumpToPresentButton: jumpToPresent };
+};
+
+const createFileClipboardHandler = (opts: { signal: AbortSignal }) => {
+  document.addEventListener(
+    "paste",
+    (event) => {
+      const file = event.clipboardData?.files[0];
+      if (!file) return;
+      channelStore.updateAttachment(channelStore.currentChannelId!, file);
+    },
+    { signal: opts.signal },
+  );
 };

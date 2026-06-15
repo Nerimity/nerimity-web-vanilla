@@ -265,11 +265,16 @@ const MessageEmbeds = (props: {
     props.message.embed?.type == "image" &&
     props.message.embed?.imageHeight != null;
 
-  if (imageAttachment || imageEmbed) {
+  if (
+    imageAttachment ||
+    imageEmbed ||
+    props.message.attachmentProperty?.image
+  ) {
     return (
       <ImageEmbed
         attachment={attachment}
         embed={props.message.embed}
+        attachmentProperty={props.message.attachmentProperty}
         container={props.container}
       />
     );

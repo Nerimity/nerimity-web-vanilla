@@ -1,3 +1,4 @@
+import type { AttachmentProperty } from "../store/channelStore";
 import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
@@ -19,6 +20,7 @@ type StoreEvents = {
   "message:updated": { message: Message; index: number };
   "message_property:editing": { message?: Message; prevMessage?: Message };
   "message_property:replying": { replies: Message[] };
+  "message_property:attachment": { attachment: AttachmentProperty | undefined };
   "message:reaction_updated": { reaction: MessageReaction; message: Message };
   "drawer:pageVisible": number;
   "drawer:modeChange": "mobile" | "desktop";

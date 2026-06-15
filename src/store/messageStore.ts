@@ -1,8 +1,10 @@
+import { nerimityCDNUploadRequest } from "../services/cdnService";
 import {
   fetchMessages,
   patchEditMessage,
   postMessage,
 } from "../services/messageService";
+
 import { socket } from "../services/socket";
 import type {
   ReactionAddedPayload,
@@ -20,7 +22,7 @@ import {
 import { storeEmitter } from "../utils/EventEmitter";
 import { getLocalItem } from "../utils/localStorage";
 import { accountStore } from "./accountStore";
-import { channelStore } from "./channelStore";
+import { channelStore, type AttachmentProperty } from "./channelStore";
 
 export const messageStore = createMessageStore();
 
@@ -45,6 +47,7 @@ export class MessageReaction {
   }
 }
 
+type MessageState = "sending" | "error";
 export class Message {
   id: string;
   content: string;
@@ -52,8 +55,9 @@ export class Message {
   channelId: string;
   createdAt: number;
   mentions: RawUser[];
-  state?: "sending" | "error";
+  state?: MessageState;
   tempId?: string;
+  attachmentProperty?: AttachmentProperty;
   attachments: LocalAttachment[];
   embed?: LocalEmbed;
   replyMessages?: RawReplyMessage[];
@@ -184,6 +188,7 @@ function createMessageStore() {
       })),
     });
     message.state = "sending";
+    message.attachmentProperty = property.attachment;
     messages.set(channelId, [...existing, message]);
     storeEmitter.emit("message:created", message);
     return message;
@@ -210,12 +215,11 @@ function createMessageStore() {
       content,
     );
 
-    messageIndex = messages.findLastIndex((m) => m.id === messageId);
     if (error) {
-      message.state = "error";
-      storeEmitter.emit("message:updated", { message, index: messageIndex });
+      setMessageState(channelId, messageId, "error");
       return;
     }
+    messageIndex = messages.findLastIndex((m) => m.id === messageId);
     const newMessage = new Message(result);
     messages[messageIndex] = newMessage;
     storeEmitter.emit("message:updated", {
@@ -238,28 +242,62 @@ function createMessageStore() {
       ? !!getLocalItem("messageReplyShouldMention", true)
       : undefined;
 
+    const attachment = localMessage.attachmentProperty;
+
+    let attachmentFileId: string | undefined;
+    if (attachment) {
+      const [res, error] = await nerimityCDNUploadRequest({
+        file: attachment.file,
+        type: "attachments",
+        groupId: channelId,
+
+        channelId,
+      });
+      if (error) {
+        console.log(error);
+        setMessageState(channelId, localMessage.id, "error");
+        return;
+      }
+      attachmentFileId = res!.fileId;
+    }
+
     const [result, error] = await postMessage(channelId, {
       content: opts.content,
       socketId: socket.socketId,
       replyToMessageIds: replyToMessageIds,
       mentionReplies: mentionReplies,
+      nerimityCdnFileId: attachmentFileId,
     });
 
+    if (error) {
+      setMessageState(channelId, localMessage.id, "error");
+      return;
+    }
     const channelMessages = messages.get(channelId);
     if (!channelMessages) return;
     const index = channelMessages.findIndex((m) => m.id === localMessage?.id);
     if (index === -1) return;
-    if (error) {
-      localMessage.state = "error";
-      storeEmitter.emit("message:updated", { message: localMessage, index });
-      return;
-    }
     channelMessages[index] = new Message(result);
     channelMessages[index].tempId = localMessage.id;
     storeEmitter.emit("message:updated", {
       message: channelMessages[index],
       index,
     });
+  };
+
+  const setMessageState = (
+    channelId: string,
+    messageId: string,
+    state: MessageState,
+  ) => {
+    const channelMessages = messages.get(channelId);
+    if (!channelMessages) return;
+    const index = channelMessages.findLastIndex((m) => m.id === messageId);
+    if (index === -1) return;
+    const message = channelMessages[index]!;
+    message.state = state;
+    storeEmitter.emit("message:updated", { message, index });
+    return;
   };
 
   const removeReaction = (removedReaction: ReactionRemovedPayload) => {
