@@ -262,7 +262,7 @@ function createMessageStore() {
     }
 
     const [result, error] = await postMessage(channelId, {
-      content: opts.content,
+      content: opts.content.trim() || undefined,
       socketId: socket.socketId,
       replyToMessageIds: replyToMessageIds,
       mentionReplies: mentionReplies,

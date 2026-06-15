@@ -19,7 +19,7 @@ export const fetchMessages = async (
 const postMessagesQueue = newQueue();
 
 interface PostMessageBody {
-  content: string;
+  content?: string;
   socketId?: string;
   replyToMessageIds?: string[];
   mentionReplies?: boolean;
