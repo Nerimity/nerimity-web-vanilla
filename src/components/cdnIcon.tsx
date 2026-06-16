@@ -11,7 +11,7 @@ interface CdnIconProps {
   role?: { icon?: string };
   clan?: { icon?: string };
   reaction?: { name: string; emojiId: string; webp: boolean; gif: boolean };
-  class?: string;
+  class?: string | (string | boolean | undefined)[];
   size: number;
   animate?: boolean;
 }

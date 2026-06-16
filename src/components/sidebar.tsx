@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -12,48 +10,7 @@ import { Item } from "./item";
 import { LogoMono } from "./LogoMono";
 import { NotificationPill } from "./NotificationPill";
 
-const sidebarItem = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  flex-shrink: 0;
-  width: 64px;
-  height: 50px;
-  .notify-pill {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-  }
-`;
-
-const homeItem = css`
-  margin-top: 4px;
-  &:hover {
-    .logoContainer {
-      background-color: var(--gray-700);
-    }
-  }
-  .logoContainer {
-    corner-shape: squircle;
-    border-radius: var(--radius-max);
-    transition: background-color 0.2s;
-    background-color: var(--gray-800);
-    width: 42px;
-    height: 42px;
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .logo {
-    width: 42px;
-    height: 42px;
-  }
-  &[data-selected="true"] {
-    .logoContainer {
-      background-color: var(--primary-color);
-    }
-  }
-`;
+import style from "./sidebar.module.css";
 
 const SidebarItem = (props: {
   title?: string;
@@ -66,10 +23,14 @@ const SidebarItem = (props: {
 }) => {
   const { children, class: className, ...rest } = props;
   return (
-    <Item.Base class={[sidebarItem, className]} {...rest} alert={!!props.alert}>
+    <Item.Base
+      class={[style.sidebarItem, className]}
+      {...rest}
+      alert={!!props.alert}
+    >
       {children}
       {typeof props.alert === "number" && props.alert > 0 && (
-        <NotificationPill class="notify-pill" count={props.alert} />
+        <NotificationPill class={style.notifyPill} count={props.alert} />
       )}
     </Item.Base>
   );
@@ -116,44 +77,16 @@ const createServerItemHelper = () => {
 
 const serverItemHelper = createServerItemHelper();
 
-const sidebar = css`
-  display: flex;
-
-  align-items: center;
-  flex-direction: column;
-  flex-shrink: 0;
-  width: 76px;
-  height: 100%;
-  background-color: var(--sidebar-bg);
-
-  .scrollable {
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    overflow: auto;
-  }
-  .serverList {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 2px;
-    border-top: solid 1px var(--gray-700);
-    margin-top: 4px;
-    margin-bottom: 4px;
-    padding-top: 4px;
-  }
-`;
-
 export const createSidebar = () => {
   let containerEl: HTMLElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
-  let serverListEl = (<div class="serverList"></div>) as HTMLElement;
+  let serverListEl = (<div class={style.serverList}></div>) as HTMLElement;
 
   let homeEl = (
-    <SidebarItem class={homeItem} title="Home" href="/app">
-      <div class="logoContainer">
+    <SidebarItem class={style.homeItem} title="Home" href="/app">
+      <div class={style.logoContainer}>
         <LogoMono />
       </div>
     </SidebarItem>
@@ -242,15 +175,15 @@ export const createSidebar = () => {
 
   const render = () => {
     containerEl = (
-      <div class={sidebar}>
-        <div class="scrollable">
+      <div class={style.sidebar}>
+        <div class={style.scrollable}>
           {homeEl}
           {serverListEl}
         </div>
       </div>
     ) as HTMLElement;
     hoverAnimator = new HoverAnimator(serverListEl, [
-      { trigger: `.${sidebarItem}`, image: "img.avatar" },
+      { trigger: `.${style.sidebarItem}`, image: "img.avatar" },
     ]);
     renderList();
     return containerEl;

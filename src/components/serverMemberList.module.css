@@ -1,0 +1,60 @@
+.memberListContainer {
+  --padding-right: 2px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 6px;
+}
+
+.memberItemContainer {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  flex-shrink: 0;
+  height: 44px;
+  padding: 6px 6px;
+  gap: 8px;
+
+  &:hover {
+    border-radius: var(--radius-8);
+    background-color: var(--gray-800);
+  }
+
+  .memberInfo {
+    display: inline-flex;
+    overflow: hidden;
+    align-items: center;
+    flex: 1;
+    gap: 4px;
+  }
+
+  .memberName {
+    overflow: hidden;
+    flex-shrink: 1;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .info {
+    display: flex;
+    overflow: hidden;
+    flex: 1;
+    flex-direction: column;
+  }
+}
+
+.roleItemContainer {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  margin-right: 10px;
+  margin-left: 10px;
+  gap: 8px;
+  .roleName {
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+}

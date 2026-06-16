@@ -1,0 +1,12 @@
+.pill {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: var(--radius-max);
+  background: var(--alert-color);
+  font-size: 12px;
+  font-weight: bold;
+}

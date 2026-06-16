@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
@@ -23,6 +22,8 @@ import { Link } from "./link";
 import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
+
+import style from "./ServerMemberList.module.css";
 
 const CategoryType = {
   role: 0,
@@ -105,15 +106,6 @@ const roleOrder = () => {
   return { sorted, order };
 };
 
-const memberListContainer = css`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100%;
-  width: 100%;
-  --padding-right: 2px;
-  padding-left: 6px;
-`;
 export const createServerMemberList = () => {
   let containerEl: HTMLDivElement | null = null;
   let hoverAnimator: HoverAnimator | null = null;
@@ -374,13 +366,13 @@ export const createServerMemberList = () => {
 
   const render = () => {
     containerEl = (
-      <div class={[memberListContainer, "scrollbarHover"]}></div>
+      <div class={[style.memberListContainer, "scrollbarHover"]}></div>
     ) as unknown as HTMLDivElement;
 
     hoverAnimator = new HoverAnimator(containerEl, [
-      { trigger: `.${memberItemContainer}`, image: ".clanIcon img" },
+      { trigger: `.${style.memberItemContainer}`, image: ".clanIcon img" },
       {
-        trigger: `.${memberItemContainer}`,
+        trigger: `.${style.memberItemContainer}`,
         image: "img.avatar",
         crossAnimate: {
           attr: "data-role-id",
@@ -388,7 +380,7 @@ export const createServerMemberList = () => {
           target: "img",
         },
       },
-      { trigger: `.${roleItemContainer}`, image: "img" },
+      { trigger: `.${style.roleItemContainer}`, image: "img" },
     ]);
 
     renderList();
@@ -411,56 +403,6 @@ export const createServerMemberList = () => {
   };
 };
 
-const memberItemContainer = css`
-  display: flex;
-  overflow: hidden;
-  align-items: center;
-  flex-shrink: 0;
-  height: 44px;
-  padding: 6px 6px;
-  gap: 8px;
-
-  &:hover {
-    background-color: var(--gray-800);
-    border-radius: var(--radius-8);
-  }
-
-  .memberInfo {
-    display: inline-flex;
-    gap: 4px;
-    overflow: hidden;
-    flex: 1;
-    align-items: center;
-  }
-
-  .memberName {
-    font-weight: 500;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-    line-height: 1.25;
-  }
-  .info {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: hidden;
-  }
-`;
-
-const roleItemContainer = css`
-  display: flex;
-  gap: 8px;
-  height: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
-  align-items: center;
-  .roleName {
-    color: var(--text-muted);
-    font-size: 14px;
-  }
-`;
 const memberItem = (cat: Categorized) => {
   if (cat.type === CategoryType.member) {
     const user = userStore.users.get(cat.member.userId);
@@ -472,14 +414,14 @@ const memberItem = (cat: Categorized) => {
     return (
       <Link
         href={`/app/profile/${cat.member.userId}`}
-        class={[memberItemContainer, "memberItem"]}
+        class={[style.memberItemContainer, "memberItem"]}
         data-user-id={user?.id}
         data-role-id={cat.role.id}
       >
         <Avatar size={32} user={user!} imgClass="avatar" />
-        <div class="info">
-          <span class="memberInfo">
-            <GradientText color={color} class="memberName">
+        <div class={style.info}>
+          <span class={style.memberInfo}>
+            <GradientText color={color} class={style.memberName}>
               {cat.member.nickname || user?.username}
             </GradientText>
             {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
@@ -492,9 +434,9 @@ const memberItem = (cat: Categorized) => {
     const role = cat.role;
 
     return (
-      <div class={roleItemContainer} data-role-header-id={role.id}>
+      <div class={style.roleItemContainer} data-role-header-id={role.id}>
         {role.icon ? <CdnIcon role={role} size={14} /> : null}
-        <span class="roleName">
+        <span class={style.roleName}>
           {role?.name} - {cat.count}
         </span>
       </div>

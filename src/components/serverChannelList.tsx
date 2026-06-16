@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { h, Fragment } from "../h";
 import { channelStore, type Channel } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
@@ -12,16 +10,7 @@ import { Drawer } from "./drawer";
 import { Item } from "./item";
 import { NotificationPill } from "./NotificationPill";
 
-const serverChannelList = css`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
-  height: 100%;
-  gap: 2px;
-  padding-left: 6px;
-  --padding-right: 2px;
-  flex: 1;
-`;
+import style from "./serverChannelList.module.css";
 
 export const createServerChannelList = () => {
   let containerEl: HTMLElement | null = null;
@@ -93,11 +82,11 @@ export const createServerChannelList = () => {
 
   const render = () => {
     containerEl = (
-      <div class={[serverChannelList, "scrollbarHover"]}></div>
+      <div class={[style.serverChannelList, "scrollbarHover"]}></div>
     ) as unknown as HTMLElement;
     hoverAnimator = new HoverAnimator(containerEl, [
       {
-        trigger: `.${channelItem}:not(.categoryItem)`,
+        trigger: `.${style.channelItem}:not(.${style.categoryItem})`,
         image: ".channelIcon img",
         crossAnimate: {
           attr: "data-category-id",
@@ -105,14 +94,14 @@ export const createServerChannelList = () => {
           target: "img",
         },
       },
-      { trigger: `.categoryItem`, image: ".channelIcon img" },
+      { trigger: `.${style.categoryItem}`, image: ".channelIcon img" },
     ]);
 
     containerEl.addEventListener(
       "click",
       (e) => {
         const target = e.target as HTMLElement;
-        if (target.closest(`.${channelItem}`)) {
+        if (target.closest(`.${style.channelItem}`)) {
           Drawer().updatePage({ page: 1 });
         }
       },
@@ -137,25 +126,6 @@ export const createServerChannelList = () => {
   };
 };
 
-const channelItem = css`
-  padding: 6px 6px;
-  border-radius: var(--radius-8);
-
-  .itemLabel {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .categoryLabel {
-    color: var(--text-color);
-  }
-
-  &.categoryItem {
-    margin-bottom: 2px;
-    margin-top: 16px;
-  }
-`;
 const createChannelItemHelper = () => {
   const create = (channel: Channel) => {
     const isCategory = channel.type === ChannelType.CATEGORY;
@@ -164,7 +134,7 @@ const createChannelItemHelper = () => {
 
     return (
       <Item.Base
-        class={[channelItem, isCategory && "categoryItem"]}
+        class={[style.channelItem, isCategory && style.categoryItem]}
         data-channel-id={channel.id}
         title={channel.name}
         href={
@@ -184,7 +154,7 @@ const createChannelItemHelper = () => {
             channel={channel}
           />
           <Item.Label
-            class={["itemLabel", isCategory && "categoryLabel"]}
+            class={[style.itemLabel, isCategory && style.categoryLabel]}
             size={isCategory ? 12 : 14}
           >
             {channel.name}
@@ -199,7 +169,7 @@ const createChannelItemHelper = () => {
 
   const updateSelected = (container: HTMLElement, channelId: string) => {
     const selected = container.querySelector(
-      `.${channelItem}[data-selected="true"]`,
+      `.${style.channelItem}[data-selected="true"]`,
     );
 
     if (selected) {
@@ -207,7 +177,7 @@ const createChannelItemHelper = () => {
     }
 
     const item = container.querySelector(
-      `.${channelItem}[data-channel-id="${channelId}"]`,
+      `.${style.channelItem}[data-channel-id="${channelId}"]`,
     );
 
     item?.setAttribute("data-selected", "true");

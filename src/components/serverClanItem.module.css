@@ -1,0 +1,19 @@
+.clanItem {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 4px;
+  border-radius: var(--radius-5);
+  background-color: var(--gray-700);
+  gap: 2px;
+  .clanName {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .clanIcon {
+    padding: 2px;
+    background-color: transparent;
+    img {
+      border-radius: var(--radius-4);
+    }
+  }
+}

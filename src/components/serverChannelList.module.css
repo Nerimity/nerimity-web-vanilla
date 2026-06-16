@@ -1,0 +1,30 @@
+.serverChannelList {
+  --padding-right: 2px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  flex-shrink: 0;
+  height: 100%;
+  padding-left: 6px;
+  gap: 2px;
+}
+
+.channelItem {
+  padding: 6px 6px;
+  border-radius: var(--radius-8);
+
+  &.categoryItem {
+    margin-top: 16px;
+    margin-bottom: 2px;
+  }
+
+  .itemLabel {
+    overflow: hidden;
+    flex: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .categoryLabel {
+    color: var(--text-color);
+  }
+}

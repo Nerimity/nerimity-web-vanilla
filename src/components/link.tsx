@@ -1,22 +1,6 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 
-const link = css`
-  color: inherit;
-  cursor: pointer;
-  text-decoration: none;
-  &:hover {
-    text-decoration: none;
-  }
-
-  &.decoration {
-    color: var(--primary-color);
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
+import style from "./link.module.css";
 
 type LinkProps = Partial<Omit<HTMLAnchorElement, keyof HTMLElement>> & {
   children?: any;
@@ -31,7 +15,7 @@ export const Link = (props: LinkProps) => {
   return (
     <a
       {...rest}
-      class={[link, decoration && "decoration", props.class]}
+      class={[style.link, decoration && style.decoration, props.class]}
       data-route
     >
       {children}
