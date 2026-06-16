@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
@@ -9,7 +8,6 @@ import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
-import { scoped } from "../../utils/css";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 import { createTextareaHeightHandler, Input } from "../input";
@@ -19,49 +17,7 @@ import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 
-const chatbarContainer = css`
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 8px;
-  padding-top: 0;
-  z-index: 9999999999999;
-  .chatInput {
-    .inputInnerContainer {
-      align-items: flex-end;
-    }
-    .input {
-      max-height: 30vh;
-      align-self: center;
-    }
-  }
-  .buttons {
-    margin: 4px;
-    display: flex;
-    gap: 4px;
-  }
-  .${scoped`button`} {
-    width: 50px;
-    padding: 6px 0;
-    border-radius: var(--radius-4);
-    .icon {
-      font-size: 20px;
-    }
-    &.hide {
-      display: none;
-    }
-  }
-`;
-
-const chatInputContainer = css`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-`;
+import style from "./chatbar.module.css";
 
 export const createChatbar = () => {
   const abortController = new AbortController();
@@ -74,25 +30,29 @@ export const createChatbar = () => {
   const jumpToPresent = createJumpToPresent({ signal });
 
   const sendButton = (
-    <Button class={[scoped`button`, "send"]} icon="send" hoverBorder />
+    <Button class={[style.button!, "send"]} icon="send" hoverBorder />
   ) as HTMLElement;
   const editButton = (
-    <Button class={[scoped`button`, "edit", "hide"]} icon="edit" hoverBorder />
+    <Button
+      class={[style.button!, "edit", style.hide!]}
+      icon="edit"
+      hoverBorder
+    />
   ) as HTMLElement;
 
   const chatbar = (
-    <div class={chatbarContainer}>
+    <div class={style.chatbarContainer}>
       {typingIndicator.el}
       {editMessageIndicator}
       {repliesIndicator}
       {attachmentIndicator}
-      <div class={chatInputContainer}>
+      <div class={style.chatInputContainer}>
         {jumpToPresent}
         <Input
           type="textarea"
-          class="chatInput"
+          class={style.chatInput}
           suffix={
-            <div class="buttons">
+            <div class={style.buttons}>
               {sendButton}
               {editButton}
             </div>
@@ -102,7 +62,7 @@ export const createChatbar = () => {
     </div>
   ) as unknown as HTMLElement;
   const input = chatbar.querySelector(
-    ".chatInput .input",
+    `.${style.chatInput} .input`,
   ) as HTMLTextAreaElement;
 
   let lastInputAt = 0;
@@ -220,8 +180,8 @@ export const createChatbar = () => {
 
     const isEditing = !!property.editingMessage;
 
-    sendButton.classList.toggle("hide", isEditing);
-    editButton.classList.toggle("hide", !isEditing);
+    sendButton.classList.toggle(style.hide!, isEditing);
+    editButton.classList.toggle(style.hide!, !isEditing);
   };
 
   storeEmitter.on(

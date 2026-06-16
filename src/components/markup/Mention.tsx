@@ -32,7 +32,6 @@ export const Mention = (props: MentionProps) => {
 
   const color = convertShorthandToLinearGradient(props.role?.hexColor);
 
-  console.log(style.icon);
   return h(
     url ? Link : "span",
     { class: style.mention, href: url },
