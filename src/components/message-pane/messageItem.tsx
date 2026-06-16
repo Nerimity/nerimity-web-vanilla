@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
@@ -8,7 +7,6 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { MessageType, type RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
-import { scoped } from "../../utils/css";
 import { friendlyTimestamp, fullDate } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
@@ -21,121 +19,13 @@ import { MessageReactions } from "./MessageReactions";
 import { SystemMessage } from "./SystemMessage";
 import { isNewDay, shouldGroup } from "./utils";
 
-const messageItem = css`
-  display: flex;
-  flex-direction: column;
-  padding-left: 4px;
-  margin-left: 4px;
-  margin-right: 4px;
-  flex-shrink: 0;
-  border-radius: var(--radius-6);
-  overflow: hidden;
-
-  &.force-hover,
-  &:hover {
-    background-color: var(--gray-850);
-  }
-  &.sending {
-    opacity: 0.6;
-  }
-  &.error {
-    color: var(--alert-color);
-  }
-  .${scoped`messageContainer`} {
-    display: flex;
-    gap: 10px;
-  }
-
-  .${scoped`details`} {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    overflow: hidden;
-    margin-bottom: 2px;
-    .${scoped`timestamp`} {
-      font-size: 12px;
-      color: var(--gray-400);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .${scoped`roleIcon`} {
-      padding: 0;
-      background-color: transparent;
-    }
-  }
-  padding-top: 2px;
-  padding-bottom: 2px;
-  &.editing {
-    background-color: var(--gray-850);
-  }
-  &.withDetails {
-    margin-top: 8px;
-  }
-  .${scoped`username`} {
-    font-weight: 500;
-    overflow: hidden;
-    min-width: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-    line-height: 1.25;
-  }
-  .${scoped`avatarPlaceholder`} {
-    width: 40px;
-    flex-shrink: 0;
-    height: 1px;
-  }
-  .${scoped`content`} {
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .${scoped`messageBody`} {
-    min-width: 0;
-    overflow: hidden;
-    width: 100%;
-  }
-`;
-
-const marker = css`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 8px;
-  margin-left: 14px;
-
-  &[data-alert="true"] {
-    .line {
-      background: linear-gradient(to left, transparent, var(--alert-color));
-    }
-    span {
-      color: var(--alert-color);
-    }
-  }
-
-  span {
-    border-radius: 99px;
-    color: var(--gray-500);
-    white-space: nowrap;
-    flex-shrink: 0;
-    font-weight: bold;
-  }
-
-  .line {
-    flex: 1;
-    height: 1px;
-
-    background: linear-gradient(to left, transparent, var(--gray-700));
-  }
-`;
+import style from "./messageItem.module.css";
 
 const Marker = (props: { alert?: boolean; label?: string }) => {
   return (
-    <div class={marker} data-alert={props.alert}>
+    <div class={style.marker} data-alert={props.alert}>
       <span>{props.label}</span>
-      <div class="line" />
+      <div class={style.line} />
     </div>
   );
 };
@@ -185,32 +75,32 @@ export const MessageItem = (props: {
       <div
         class={[
           "messageItem",
-          messageItem,
-          !group && "withDetails",
+          style.messageItem,
+          !group && style.withDetails,
           props.message.state,
-          editing && "editing",
+          editing && style.editing,
         ]}
       >
         {!isContentMessage && <SystemMessage message={props.message} />}
         {isContentMessage && (
           <>
             {hasMessageReplies && <MessageReplies message={props.message} />}
-            <div class={[scoped`messageContainer`, "messageContainer"]}>
+            <div class={[style.messageContainer, "messageContainer"]}>
               {group ? (
-                <div class={scoped`avatarPlaceholder`}></div>
+                <div class={style.avatarPlaceholder}></div>
               ) : (
                 <Link href={`/app/profile/${creator.id}`}>
                   <Avatar user={creator} size={40} />
                 </Link>
               )}
-              <div class={scoped`messageBody`}>
+              <div class={style.messageBody}>
                 {!group && (
-                  <span class={scoped`details`}>
+                  <span class={style.details}>
                     <GradientText
                       tag={Link}
                       decoration
                       href={`/app/profile/${creator.id}`}
-                      class={scoped`username`}
+                      class={style.username}
                       color={color}
                     >
                       {name}
@@ -220,17 +110,17 @@ export const MessageItem = (props: {
                     )}
                     {topRole?.icon && (
                       <CdnIcon
-                        class={scoped`roleIcon`}
+                        class={style.roleIcon}
                         role={{ icon: topRole.icon }}
                         size={14}
                       />
                     )}
-                    <span class={scoped`timestamp`}>
+                    <span class={style.timestamp}>
                       {friendlyTimestamp(props.message.createdAt)}
                     </span>
                   </span>
                 )}
-                <div class={scoped`content`}>
+                <div class={style.content}>
                   {!isImageEmbedOnly && (
                     <Markup
                       text={props.message.content}
@@ -282,41 +172,12 @@ const MessageEmbeds = (props: {
   return null;
 };
 
-const messageReplies = css`
-  display: flex;
-  margin-bottom: 8px;
-  .${scoped`arc`} {
-    width: 50px;
-    flex-shrink: 0;
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 8px;
-      left: 20px;
-      width: 20px;
-      height: calc(100% - 8px);
-      border-left: 2.5px solid var(--gray-600);
-      border-top: 2.5px solid var(--gray-600);
-      border-top-left-radius: 6px;
-    }
-  }
-  .${scoped`replies`} {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-    overflow: hidden;
-    flex: 1;
-  }
-`;
-
 const MessageReplies = (props: { message: Message }) => {
   const replies = props.message.replyMessages!;
   return (
-    <div class={messageReplies}>
-      <div class={scoped`arc`}></div>
-      <div class={scoped`replies`}>
+    <div class={style.messageReplies}>
+      <div class={style.arc}></div>
+      <div class={style.replies}>
         {replies.map((reply) => (
           <ReplyMessage message={reply} />
         ))}
@@ -324,28 +185,6 @@ const MessageReplies = (props: { message: Message }) => {
     </div>
   );
 };
-
-const replyMessage = css`
-  display: flex;
-  gap: 4px;
-  min-width: 0;
-  overflow: hidden;
-  .${scoped`username`} {
-    font-weight: 500;
-    opacity: 0.8;
-    flex-shrink: 0;
-  }
-  &.deleted {
-    opacity: 0.4;
-  }
-  .${scoped`content`} {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`;
 
 const ReplyMessage = (props: { message: RawReplyMessage }) => {
   const message = props.message.replyToMessage;
@@ -359,16 +198,18 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
     convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
 
   return (
-    <div class={replyMessage}>
+    <div class={style.replyMessage}>
       {message ? (
         <>
-          <GradientText class={scoped`username`} color={color}>
+          <GradientText class={style.username} color={color}>
             {creator.username}
           </GradientText>
-          <span class={scoped`content`}>{message?.content}</span>
+          <span class={style.content}>{message?.content}</span>
         </>
       ) : (
-        <span class={`${replyMessage} deleted`}>{t`Message was deleted.`}</span>
+        <span
+          class={`${style.replyMessage} ${style.deleted}`}
+        >{t`Message was deleted.`}</span>
       )}
     </div>
   );

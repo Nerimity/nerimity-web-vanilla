@@ -2,6 +2,7 @@ import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
+import { mobileWidth } from "../../config";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";
@@ -110,6 +111,17 @@ const createAppPage = () => {
   );
 
   createMiniProfileHandler({ signal });
+
+  const handleResize = () => {
+    if (window.innerWidth < mobileWidth) {
+      document.body.classList.add("mobileWidth");
+    } else {
+      document.body.classList.remove("mobileWidth");
+    }
+  };
+  handleResize();
+
+  window.addEventListener("resize", handleResize, { signal });
 
   const destroy = () => {
     abortController.abort();

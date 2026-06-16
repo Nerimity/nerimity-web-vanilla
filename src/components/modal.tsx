@@ -1,118 +1,11 @@
-import { css } from "@linaria/core";
-
 import { mobileWidth } from "../config";
 import { h } from "../h";
-import { scoped } from "../utils/css";
 import { createResizeObserver } from "../utils/observer";
 import { portalElement } from "../utils/portal";
 import { Button } from "./button";
 import { Icon } from "./icon";
 
-const modalBackdrop = css`
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1111111111111111;
-
-  @media (max-width: ${`${mobileWidth}px`}) {
-    align-items: start;
-  }
-`;
-const modalRoot = css`
-  display: flex;
-  flex-direction: column;
-  background: var(--background);
-  border-radius: var(--radius-8);
-  border: solid 1px var(--gray-700);
-  max-height: 80vh;
-  overflow: hidden;
-
-  &.hasPos {
-    position: absolute;
-    top: var(--y);
-    left: var(--x);
-    translate: var(--anchor-x) var(--anchor-y);
-  }
-
-  @media (max-width: ${`${mobileWidth}px`}) {
-    &.hasPos {
-      position: initial;
-      translate: initial;
-    }
-    flex-shrink: 0;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    max-height: initial;
-    flex: 1;
-    padding-bottom: 64px;
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-  }
-`;
-const header = css`
-  display: flex;
-  align-items: center;
-  padding: 8px 10px;
-  gap: 8px;
-  color: var(--primary-color);
-  .label {
-    flex: 1;
-  }
-  .${scoped`closeButton`} {
-    padding: 0px;
-  }
-  &[data-alert="true"] {
-    color: var(--alert-color);
-  }
-`;
-
-const body = css`
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  margin-left: 12px;
-  margin-right: 8px;
-  @media (min-width: ${`${mobileWidth}px`}) {
-    width: var(--width);
-  }
-  @media (max-width: ${`${mobileWidth}px`}) {
-    flex: 1;
-    width: initial;
-  }
-`;
-
-const footer = css`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 8px 10px;
-  gap: 8px;
-  @media (max-width: ${`${mobileWidth}px`}) {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 10px;
-    background: var(--background);
-    z-index: 1111111111111112;
-    .button {
-      flex: 1;
-    }
-  }
-  .button {
-    .icon {
-      font-size: 18px;
-    }
-  }
-`;
+import style from "./modal.module.css";
 
 type ModalAnchor =
   | "top-left"
@@ -146,9 +39,9 @@ const Root = (props: {
     return "0%";
   };
   return (
-    <div class={modalBackdrop}>
+    <div class={style.modalBackdrop}>
       <div
-        class={[modalRoot, props.pos && "hasPos"]}
+        class={[style.modalRoot, props.pos && style.hasPos]}
         data-x={props.pos?.x}
         data-y={props.pos?.y}
         style={{
@@ -165,23 +58,26 @@ const Root = (props: {
 };
 const Header = (props: { label: string; icon?: string; alert?: boolean }) => {
   return (
-    <div class={header} data-alert={props.alert}>
-      {props.icon && <Icon class="icon" name={props.icon} />}
-      <span class="label">{props.label}</span>
-      <Button class={scoped`closeButton`} icon="close" hoverBorder alert />
+    <div class={style.header} data-alert={props.alert}>
+      {props.icon && <Icon class={style.icon} name={props.icon} />}
+      <span class={style.label}>{props.label}</span>
+      <Button class={style.closeButton} icon="close" hoverBorder alert />
     </div>
   );
 };
 const Body = (props: { children?: any; width?: string }) => {
   return (
-    <div class={[body, "scrollbarHover"]} style={{ "--width": props.width }}>
+    <div
+      class={[style.body, "scrollbarHover"]}
+      style={{ "--width": props.width }}
+    >
       {props.children}
     </div>
   );
 };
 
 const Footer = (props: { children: any }) => {
-  return <div class={footer}>{props.children}</div>;
+  return <div class={style.footer}>{props.children}</div>;
 };
 
 export const Modal = {
@@ -197,8 +93,10 @@ export const createModal = (
 ) => {
   const isMobileWidth = () => window.innerWidth < mobileWidth;
   const root = children() as HTMLElement;
-  const modal = root.querySelector(`.${modalRoot}`) as HTMLDivElement;
-  const footerElement = root.querySelector(`.${footer}`) as HTMLDivElement;
+  const modal = root.querySelector(`.${style.modalRoot}`) as HTMLDivElement;
+  const footerElement = root.querySelector(
+    `.${style.footer}`,
+  ) as HTMLDivElement;
   const backdrop = root;
   const { signal } = abortController;
 
@@ -693,7 +591,7 @@ export const createModal = (
         destroy();
       }
       const target = e.target as HTMLElement;
-      const isCloseButton = target.closest(`.${scoped`closeButton`}`);
+      const isCloseButton = target.closest(`.${style.closeButton}`);
       if (isCloseButton) {
         destroy();
         return;

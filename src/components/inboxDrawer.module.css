@@ -1,0 +1,77 @@
+.inboxList {
+  display: flex;
+  flex-direction: column;
+  margin-left: 4px;
+  gap: 4px;
+  .friendsTitle {
+    margin-left: 8px;
+    color: var(--text-muted);
+    font-size: 14px;
+    &.hide {
+      display: none;
+    }
+  }
+}
+
+.tabs {
+  display: flex;
+  margin: 8px 4px;
+  margin-bottom: 12px;
+  margin-left: 8px;
+  gap: 4px;
+}
+
+.inboxItem {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding-right: 8px;
+  padding-left: 12px;
+  border-radius: var(--radius-8);
+  gap: 8px;
+  .info {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    font-size: 14px;
+    > div {
+      overflow: hidden;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  .pill {
+    margin-left: auto;
+  }
+}
+
+.tabItem {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  padding: 6px 8px;
+  border: solid 1px var(--gray-700);
+  border-radius: var(--radius-max);
+  color: var(--gray-300);
+  background: var(--gray-900);
+  cursor: pointer;
+  transition: 0.1s;
+  text-align: center;
+  font-size: 14px;
+  gap: 6px;
+  &:hover {
+    border-color: var(--gray-600);
+    color: white;
+    background: var(--gray-800);
+  }
+  &[data-selected="true"] {
+    border-color: var(--primary-color);
+    color: white;
+    background: var(--primary-dark);
+  }
+  .icon {
+    font-size: 16px;
+  }
+}

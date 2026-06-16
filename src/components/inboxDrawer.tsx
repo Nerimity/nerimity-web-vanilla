@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
@@ -11,7 +10,6 @@ import {
 } from "../store/messageMentionStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
-import { scoped } from "../utils/css";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
@@ -24,89 +22,13 @@ import { Item } from "./item";
 import { NotificationPill } from "./NotificationPill";
 import { UserPresence as UserPresenceItem } from "./userPresence";
 
-const inboxList = css`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-left: 4px;
-  .friendsTitle {
-    margin-left: 8px;
-    color: var(--text-muted);
-    font-size: 14px;
-    &.hide {
-      display: none;
-    }
-  }
-`;
-
-const tabs = css`
-  display: flex;
-  gap: 4px;
-  margin: 8px 4px;
-  margin-left: 8px;
-  margin-bottom: 12px;
-`;
-
-const inboxItem = css`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding-left: 12px;
-  padding-right: 8px;
-  border-radius: var(--radius-8);
-  .${scoped`info`} {
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-    overflow: hidden;
-    > div {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      line-height: 1.25;
-    }
-  }
-  .pill {
-    margin-left: auto;
-  }
-`;
-
-const tabItem = css`
-  display: flex;
-  flex: 1;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  color: var(--gray-300);
-  font-size: 14px;
-  background: var(--gray-900);
-  border: solid 1px var(--gray-700);
-  border-radius: var(--radius-max);
-  padding: 6px 8px;
-  cursor: pointer;
-  transition: 0.1s;
-  .icon {
-    font-size: 16px;
-  }
-  &:hover {
-    background: var(--gray-800);
-    border-color: var(--gray-600);
-    color: white;
-  }
-  &[data-selected="true"] {
-    background: var(--primary-dark);
-    color: white;
-    border-color: var(--primary-color);
-  }
-`;
+import style from "./inboxDrawer.module.css";
 
 const TabItem = (props: { name: string; icon: string; selected?: boolean }) => {
   return (
-    <button class={tabItem} data-selected={props.selected}>
-      <Icon class="icon" name={props.icon} />
-      <span class="name">{props.name}</span>
+    <button class={style.tabItem} data-selected={props.selected}>
+      <Icon class={style.icon} name={props.icon} />
+      <span class={style.name}>{props.name}</span>
     </button>
   );
 };
@@ -126,17 +48,17 @@ const UserItem = (props: {
     <Item.Base
       selected={channelStore.currentChannelId === channelId}
       href={channelId && `/app/inbox/${channelId}`}
-      class={inboxItem}
+      class={style.inboxItem}
       data-channel-id={channelId || props.inbox?.channelId}
       data-user-id={props.user.id}
       alert={!!count}
     >
       <Avatar user={props.user} size={28} />
-      <div class={scoped`info`}>
-        <div class={scoped`username`}>{props.user?.username}</div>
+      <div class={style.info}>
+        <div class={style.username}>{props.user?.username}</div>
         <UserPresenceItem userId={props.user.id} />
       </div>
-      {count && <NotificationPill class="pill" count={count} />}
+      {count && <NotificationPill class={style.pill} count={count} />}
     </Item.Base>
   );
 };
@@ -176,7 +98,7 @@ type InboxItem =
       count?: number;
     };
 const createInboxList = () => {
-  const inboxListEl = (<div class={inboxList}></div>) as HTMLElement;
+  const inboxListEl = (<div class={style.inboxList}></div>) as HTMLElement;
 
   const sorted = new ManualMemo(() => {
     let items: InboxItem[] = [];
@@ -266,13 +188,13 @@ interface FriendItem {
   count?: number;
 }
 const createFriendsList = () => {
-  const onlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
-  const offlineTitle = (<div class="friendsTitle"></div>) as HTMLElement;
+  const onlineTitle = (<div class={style.friendsTitle}></div>) as HTMLElement;
+  const offlineTitle = (<div class={style.friendsTitle}></div>) as HTMLElement;
 
   const onlineListEl = (<div></div>) as HTMLElement;
   const offlineListEl = (<div></div>) as HTMLElement;
   const friendListEl = (
-    <div class={inboxList}>
+    <div class={style.inboxList}>
       {onlineTitle}
       {onlineListEl}
       {offlineTitle}
@@ -333,8 +255,8 @@ const createFriendsList = () => {
   const rerender = (forceRerenderId?: string | boolean) => {
     const online = categorizedFriends.value().online;
     const offline = categorizedFriends.value().offline;
-    onlineTitle.classList.toggle("hide", online.length === 0);
-    offlineTitle.classList.toggle("hide", offline.length === 0);
+    onlineTitle.classList.toggle(style.hide!, online.length === 0);
+    offlineTitle.classList.toggle(style.hide!, offline.length === 0);
     onlineTitle.textContent = t`Online - ${online.length}`;
     offlineTitle.textContent = t`Offline - ${offline.length}`;
     reconcile({
@@ -394,7 +316,7 @@ const createInboxDrawer = () => {
   let friendList: ReturnType<typeof createFriendsList> | null = null;
 
   let tabsEl = (
-    <div class={tabs}>
+    <div class={style.tabs}>
       <TabItem name={t`Inbox`} icon="inbox" selected />
       <TabItem name={t`Friends`} icon="diversity_1" />
     </div>
@@ -428,7 +350,7 @@ const createInboxDrawer = () => {
 
   const hoverAnimator = new HoverAnimator(containerEl, [
     {
-      trigger: `.${inboxItem}`,
+      trigger: `.${style.inboxItem}`,
       image: ".avatar img",
     },
   ]);
@@ -437,7 +359,7 @@ const createInboxDrawer = () => {
     "click",
     (e) => {
       const target = e.target as HTMLElement;
-      const tabItemEl = target.closest(`.${tabItem}`);
+      const tabItemEl = target.closest(`.${style.tabItem}`);
       const elements = tabsEl.children;
       if (!tabItemEl) return;
 
@@ -470,7 +392,7 @@ const createInboxDrawer = () => {
     "click",
     (e) => {
       const target = e.target as HTMLElement;
-      const item = target.closest(`.${inboxItem}`) as HTMLElement;
+      const item = target.closest(`.${style.inboxItem}`) as HTMLElement;
       if (item) {
         Drawer().updatePage({ page: 1 });
         const channelId = item.dataset.channelId;
