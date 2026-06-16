@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
@@ -13,16 +12,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { CdnIcon } from "../cdnIcon";
 
-const messageReactions = css`
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-  user-select: none;
-  margin-top: 4px;
-  &.hide {
-    display: none;
-  }
-`;
+import style from "./MessageReactions.module.css";
 
 export const createMessageReactionHandler = (opts: {
   signal: AbortSignal;
@@ -56,7 +46,7 @@ export const createMessageReactionHandler = (opts: {
       if (!message) return;
 
       const reactionEl = target.closest(
-        `.${messageReactions} .reactionItem`,
+        `.${style.messageReactions} .reactionItem`,
       ) as HTMLElement | null;
 
       const id = reactionEl?.dataset.reactionId;
@@ -94,11 +84,11 @@ const updateMessageReaction = (
   message: Message,
 ) => {
   const reactionsEl = logs.querySelector(
-    `[data-message-id="${message.id}"] .${messageReactions}`,
+    `[data-message-id="${message.id}"] .${style.messageReactions}`,
   );
   if (!reactionsEl) return;
 
-  reactionsEl.classList.toggle("hide", !message.reactions?.length);
+  reactionsEl.classList.toggle(style.hide!, !message.reactions?.length);
 
   const id = reaction.emojiId || reaction.name;
   const reactionEl = reactionsEl.querySelector(`[data-reaction-id="${id}"]`);
@@ -119,7 +109,12 @@ const updateMessageReaction = (
 
 export const MessageReactions = (props: { message: Message }) => {
   return (
-    <div class={[messageReactions, !props.message.reactions?.length && "hide"]}>
+    <div
+      class={[
+        style.messageReactions,
+        !props.message.reactions?.length && style.hide,
+      ]}
+    >
       {props.message.reactions?.map((reaction) => (
         <ReactionItem reaction={reaction} />
       ))}
@@ -127,43 +122,19 @@ export const MessageReactions = (props: { message: Message }) => {
   );
 };
 
-const reactionItem = css`
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 0 4px;
-  padding-right: 8px;
-  border-radius: var(--radius-max);
-  background-color: var(--gray-800);
-  border: solid 1px var(--gray-800);
-  font-size: 12px;
-  cursor: pointer;
-  transition: 0.2s;
-  &:hover {
-    border: solid 1px var(--primary-color);
-  }
-  &[data-reacted="true"] {
-    border: solid 1px var(--primary-color);
-    color: var(--primary-color);
-  }
-  .icon {
-    background-color: transparent;
-  }
-`;
-
 const ReactionItem = (props: { reaction: MessageReaction }) => {
   const id = props.reaction.emojiId || props.reaction.name;
 
   return (
     <div
-      class={[reactionItem, "reactionItem"]}
+      class={[style.reactionItem, "reactionItem"]}
       data-reaction-id={id}
       data-reacted={props.reaction.reacted}
       data-uni={!props.reaction.emojiId}
     >
       <CdnIcon
         animate={document.hasFocus()}
-        class="icon"
+        class={style.icon}
         reaction={props.reaction}
         size={16}
       />

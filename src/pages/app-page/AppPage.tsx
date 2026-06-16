@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
 import { createMiniProfileHandler } from "../../components/miniProfile";
@@ -15,27 +13,10 @@ import { router } from "../../utils/router";
 import type createInboxChannelRoute from "./createInboxChannelRoute";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
+import style from "./AppPage.module.css";
 const createMessagePane = lazy(
   () => import("../../components/message-pane/messagePane"),
 );
-
-const leftDrawerInner = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  overflow: hidden;
-`;
-
-const contentInner = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  overflow: hidden;
-`;
 
 const createAppPage = () => {
   lazyLoadEmojis();
@@ -48,8 +29,8 @@ const createAppPage = () => {
 
   let messagePane: LazyResult<typeof createMessagePane> | null = null;
 
-  let leftDrawer = (<div class={leftDrawerInner}></div>) as HTMLElement;
-  let content = (<div class={contentInner}></div>) as HTMLElement;
+  let leftDrawer = (<div class={style.leftDrawerInner}></div>) as HTMLElement;
+  let content = (<div class={style.contentInner}></div>) as HTMLElement;
 
   Drawer().leftDrawer.replaceChildren(
     <>

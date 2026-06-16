@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { Button } from "../components/button";
@@ -8,51 +7,12 @@ import { postLogin } from "../services/authService";
 import { setLocalItem } from "../utils/localStorage";
 import { router } from "../utils/router";
 
-const loginPage = css`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  width: 100%;
-  overflow: auto;
-  .container {
-    display: flex;
-    flex-direction: column;
-    max-width: 256px;
-    width: 100%;
-    padding-left: 8px;
-    padding: 8px;
-  }
-  .inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 8px;
-    margin-top: 18px;
-  }
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary-color);
-  }
-  .error {
-    display: none;
-    color: var(--alert-color);
-    font-size: 14px;
-  }
-  .loginButton {
-    margin-top: 8px;
-    .icon {
-      font-size: 18px;
-    }
-  }
-`;
+import style from "./LoginPage.module.css";
 
 const createLoginPage = () => {
   const app = document.getElementById("app")!;
   const form = (
-    <form class="inputs">
+    <form class={style.inputs}>
       <Input class="emailInput" label={t`Email`} autocomplete="email" />
       <Input
         class="passwordInput"
@@ -60,15 +20,15 @@ const createLoginPage = () => {
         type="password"
         autocomplete="current-password"
       />
-      <div class="error"></div>
-      <Button class="loginButton" icon="login" label={t`Login`} primary />
+      <div class={style.error}></div>
+      <Button class={style.loginButton} icon="login" label={t`Login`} primary />
     </form>
   ) as unknown as HTMLFormElement;
 
   const contentPane = (
-    <div class={loginPage}>
-      <div class="container">
-        <div class="title">{t`Login to continue`}</div>
+    <div class={style.loginPage}>
+      <div class={style.container}>
+        <div class={style.title}>{t`Login to continue`}</div>
         {form}
       </div>
     </div>
@@ -78,7 +38,7 @@ const createLoginPage = () => {
 
   let loggingIn = false;
 
-  const loginButton = contentPane.querySelector(".loginButton")!;
+  const loginButton = contentPane.querySelector(`.${style.loginButton}`)!;
   const loginText = loginButton.querySelector(".label")!;
   const emailInput = contentPane.querySelector(
     ".emailInput input",
@@ -86,7 +46,7 @@ const createLoginPage = () => {
   const passwordInput = contentPane.querySelector(
     ".passwordInput input",
   )! as HTMLInputElement;
-  const error = contentPane.querySelector(".error")! as HTMLDivElement;
+  const error = contentPane.querySelector(`.${style.error}`)! as HTMLDivElement;
 
   const resetError = () => {
     error.textContent = "";

@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { Drawer } from "../../components/drawer";
 import createInboxDrawer from "../../components/inboxDrawer";
 import { MiniProfile } from "../../components/miniProfile";
@@ -9,11 +7,7 @@ import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 
-const miniProfileDrawer = css`
-  width: 100%;
-  margin-left: 4px;
-  padding-top: 6px;
-`;
+import style from "./createInboxChannelRoute.module.css";
 
 const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
   const abortController = new AbortController();
@@ -38,7 +32,7 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
       <MiniProfile
         animationMode="hover"
         signal={miniProfileAbortController.signal}
-        class={[miniProfileDrawer, "scrollbarHover"]}
+        class={[style.miniProfileDrawer!, "scrollbarHover"]}
         userId={recipientId}
       />,
     );

@@ -1,0 +1,34 @@
+.messageReactions {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  user-select: none;
+  gap: 4px;
+  &.hide {
+    display: none;
+  }
+}
+
+.reactionItem {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  padding-right: 8px;
+  border: solid 1px var(--gray-800);
+  border-radius: var(--radius-max);
+  background-color: var(--gray-800);
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 12px;
+  gap: 4px;
+  &:hover {
+    border: solid 1px var(--primary-color);
+  }
+  &[data-reacted="true"] {
+    border: solid 1px var(--primary-color);
+    color: var(--primary-color);
+  }
+  .icon {
+    background-color: transparent;
+  }
+}

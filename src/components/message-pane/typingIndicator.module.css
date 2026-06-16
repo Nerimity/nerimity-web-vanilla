@@ -1,0 +1,43 @@
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  align-self: start;
+  height: 22px;
+  padding: 2px;
+  padding-right: 8px;
+  margin-top: 4px;
+  border: solid 1px var(--gray-600);
+  border-radius: var(--radius-max);
+  color: var(--text-color);
+  background: var(--gray-900);
+  font-size: 12px;
+  gap: 4px;
+
+  &.hide {
+    visibility: hidden;
+  }
+  .icon {
+    color: var(--gray-400);
+    font-size: 16px;
+  }
+
+  .usernames {
+    color: var(--gray-400);
+    b {
+      color: var(--text-color);
+    }
+  }
+  .avatars {
+    display: flex;
+
+    .avatar {
+      margin-left: -6px;
+      border-radius: 50%;
+      outline: 2px solid var(--gray-900);
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+}

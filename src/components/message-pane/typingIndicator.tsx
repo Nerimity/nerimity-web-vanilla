@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
@@ -9,63 +8,20 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { Avatar } from "../avatar";
 import { Icon } from "../icon";
 
+import style from "./typingIndicator.module.css";
 interface TypingUser {
   user: User;
   timestamp: number;
 }
 
-const typingIndicator = css`
-  display: flex;
-  gap: 4px;
-  border-radius: var(--radius-max);
-  background: var(--gray-900);
-  border: solid 1px var(--gray-600);
-  margin-top: 4px;
-  padding: 2px;
-  padding-right: 8px;
-  color: var(--text-color);
-  align-self: start;
-  align-items: center;
-  font-size: 12px;
-  height: 22px;
-  .icon {
-    color: var(--gray-400);
-    font-size: 16px;
-  }
-
-  .usernames {
-    color: var(--gray-400);
-    b {
-      color: var(--text-color);
-    }
-  }
-
-  &.hide {
-    visibility: hidden;
-  }
-  .avatars {
-    display: flex;
-
-    .avatar {
-      margin-left: -6px;
-      outline: 2px solid var(--gray-900);
-      border-radius: 50%;
-
-      &:first-child {
-        margin-left: 0;
-      }
-    }
-  }
-`;
-
 export const createTypingIndicator = (abortController: AbortController) => {
   const { signal } = abortController;
-  const usernamesEl = (<div class="usernames"></div>) as HTMLDivElement;
-  const avatarsEl = (<div class="avatars"></div>) as HTMLDivElement;
+  const usernamesEl = (<div class={style.usernames}></div>) as HTMLDivElement;
+  const avatarsEl = (<div class={style.avatars}></div>) as HTMLDivElement;
   let timeout: NodeJS.Timeout | null = null;
   const el = (
-    <div class={[typingIndicator, "hide"]}>
-      <Icon class="icon" name="pending" outlined />
+    <div class={[style.typingIndicator, style.hide]}>
+      <Icon class={style.icon} name="pending" outlined />
       {avatarsEl}
       {usernamesEl}
     </div>
@@ -107,10 +63,10 @@ export const createTypingIndicator = (abortController: AbortController) => {
     if (!typingUsers.size) {
       usernamesEl.replaceChildren();
       avatarsEl.replaceChildren();
-      el.classList.add("hide");
+      el.classList.add(style.hide!);
       return;
     }
-    el.classList.remove("hide");
+    el.classList.remove(style.hide!);
 
     const values = [...typingUsers.values()];
     const usernames = formatNames(values.map((u) => u.user.username))!;

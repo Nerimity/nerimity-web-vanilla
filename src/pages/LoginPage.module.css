@@ -1,0 +1,40 @@
+.loginPage {
+  display: flex;
+  overflow: auto;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 256px;
+    padding: 8px;
+    padding-left: 8px;
+  }
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    gap: 8px;
+  }
+  .title {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: bold;
+  }
+  .error {
+    display: none;
+    color: var(--alert-color);
+    font-size: 14px;
+  }
+  .loginButton {
+    margin-top: 8px;
+    .icon {
+      font-size: 18px;
+    }
+  }
+}

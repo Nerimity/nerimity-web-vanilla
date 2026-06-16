@@ -1,20 +1,11 @@
-import { css } from "@linaria/core";
-
 import { Button } from "../components/button";
 import { h } from "../h";
 
-const homeContainer = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  gap: 8px;
-`;
-
+import style from "./HomePage.module.css";
 const createHomePage = () => {
   const app = document.getElementById("app")!;
   const content = (
-    <div class={homeContainer}>
+    <div class={style.homeContainer}>
       <Button label="App" primary href="/app" />
       <Button href="/login" label="Login" />
     </div>
