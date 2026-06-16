@@ -1,9 +1,9 @@
-import { css } from "@linaria/core";
-
 import { Dynamic } from "../dynamic";
 import { h } from "../h";
 import { Icon } from "./icon";
 import { Link } from "./link";
+
+import style from "./button.module.css";
 
 interface ButtonProps {
   icon?: string;
@@ -15,66 +15,7 @@ interface ButtonProps {
   alert?: boolean;
   [key: string]: any;
 }
-const button = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  border: solid 1px var(--gray-700);
-  border-radius: var(--radius-6);
-  padding: 8px;
-  gap: 8px;
-  cursor: pointer;
-  transition: 0.2s;
-  background-color: var(--gray-900);
-  .label {
-    color: var(--primary-color);
-  }
-  .icon {
-    color: var(--primary-color);
-  }
-  &:hover {
-    background-color: var(--gray-800);
-  }
-  &.hoverBorder {
-    border-color: transparent;
-    background-color: transparent;
-    &:hover {
-      background-color: var(--gray-900);
-      border-color: var(--gray-700);
-    }
-  }
-  &.primary {
-    background-color: var(--primary-color);
-    border: none;
-    .label {
-      color: var(--text-color);
-    }
-    .icon {
-      color: var(--text-color);
-    }
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-  &.alert {
-    &.primary {
-      background-color: var(--alert-color);
-      .label {
-        color: var(--text-color);
-      }
-      .icon {
-        color: var(--text-color);
-      }
-    }
-    .label {
-      color: var(--alert-color);
-    }
-    .icon {
-      color: var(--alert-color);
-    }
-  }
-`;
+
 export const Button = (props: ButtonProps) => {
   const {
     hoverBorder,
@@ -89,16 +30,16 @@ export const Button = (props: ButtonProps) => {
     <Dynamic
       component={rest.href ? Link : "button"}
       class={[
-        button,
+        style.button,
         className,
-        hoverBorder && "hoverBorder",
-        primary && "primary",
-        alert && "alert",
+        hoverBorder && style.hoverBorder,
+        primary && style.primary,
+        alert && style.alert,
       ]}
       {...rest}
     >
-      {icon && <Icon class="icon" name={icon} />}
-      {label && <div class="label">{label}</div>}
+      {icon && <Icon class={style.icon} name={icon} />}
+      {label && <div class={[style.label, "label"]}>{label}</div>}
     </Dynamic>
   );
 };
