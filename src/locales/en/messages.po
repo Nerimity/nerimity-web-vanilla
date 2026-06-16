@@ -13,156 +13,156 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/appHeader.tsx:64
+#: src/components/appHeader.tsx:28
 msgid "Home"
 msgstr "Home"
 
 #. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:338
+#: src/components/inboxDrawer.tsx:260
 msgid "Online - {0}"
 msgstr "Online - {0}"
 
 #. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:339
+#: src/components/inboxDrawer.tsx:261
 msgid "Offline - {0}"
 msgstr "Offline - {0}"
 
-#: src/components/inboxDrawer.tsx:398
+#: src/components/inboxDrawer.tsx:320
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:399
+#: src/components/inboxDrawer.tsx:321
 msgid "Friends"
 msgstr "Friends"
 
-#: src/components/message-pane/JumpToPresent.tsx:31
-#: src/components/message-pane/messageItem.tsx:184
+#: src/components/message-pane/JumpToPresent.tsx:23
+#: src/components/message-pane/messageItem.tsx:74
 msgid "New Messages"
 msgstr "New Messages"
 
-#: src/components/message-pane/SystemMessage.tsx:91
+#: src/components/message-pane/SystemMessage.tsx:30
 msgid "{username} has been added."
 msgstr "{username} has been added."
 
-#: src/components/message-pane/SystemMessage.tsx:93
+#: src/components/message-pane/SystemMessage.tsx:32
 msgid "{username} has joined."
 msgstr "{username} has joined."
 
-#: src/components/message-pane/SystemMessage.tsx:100
+#: src/components/message-pane/SystemMessage.tsx:39
 msgid "{username} has left."
 msgstr "{username} has left."
 
-#: src/components/message-pane/SystemMessage.tsx:107
+#: src/components/message-pane/SystemMessage.tsx:46
 msgid "{username} has been kicked."
 msgstr "{username} has been kicked."
 
-#: src/components/message-pane/SystemMessage.tsx:114
+#: src/components/message-pane/SystemMessage.tsx:53
 msgid "{username} has been banned."
 msgstr "{username} has been banned."
 
-#: src/components/message-pane/SystemMessage.tsx:121
+#: src/components/message-pane/SystemMessage.tsx:60
 msgid "{username} started a call."
 msgstr "{username} started a call."
 
-#: src/components/message-pane/SystemMessage.tsx:128
+#: src/components/message-pane/SystemMessage.tsx:67
 msgid "{username} bumped the server."
 msgstr "{username} bumped the server."
 
-#: src/components/message-pane/SystemMessage.tsx:135
+#: src/components/message-pane/SystemMessage.tsx:74
 msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:201
+#: src/components/message-pane/chatbar.tsx:168
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:206
+#: src/components/message-pane/chatbar.tsx:173
 msgid "Message {0}"
 msgstr "Message {0}"
 
-#: src/components/message-pane/deleteMessageModal.tsx:38
+#: src/components/message-pane/deleteMessageModal.tsx:28
 msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
-#: src/components/message-pane/deleteMessageModal.tsx:50
+#: src/components/message-pane/deleteMessageModal.tsx:40
 msgid "Delete Message"
 msgstr "Delete Message"
 
-#: src/components/message-pane/deleteMessageModal.tsx:56
+#: src/components/message-pane/deleteMessageModal.tsx:46
 msgid "Don't Delete"
 msgstr "Don't Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:63
-#: src/components/message-pane/deleteMessageModal.tsx:84
+#: src/components/message-pane/deleteMessageModal.tsx:53
+#: src/components/message-pane/deleteMessageModal.tsx:74
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:77
+#: src/components/message-pane/deleteMessageModal.tsx:67
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:366
+#: src/components/message-pane/messageItem.tsx:212
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/repliesIndicator.tsx:149
+#: src/components/message-pane/repliesIndicator.tsx:74
 msgid "Mention"
 msgstr "Mention"
 
 #. placeholder {0}: names.length
-#: src/components/message-pane/typingIndicator.tsx:154
+#: src/components/message-pane/typingIndicator.tsx:110
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:230
+#: src/components/miniProfile.tsx:161
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:237
+#: src/components/miniProfile.tsx:168
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:248
+#: src/components/miniProfile.tsx:179
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:253
+#: src/components/miniProfile.tsx:184
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:253
+#: src/components/miniProfile.tsx:184
 msgid "Message"
 msgstr "Message"
 
-#: src/components/miniProfile.tsx:259
+#: src/components/miniProfile.tsx:190
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/serverMemberList.tsx:39
+#: src/components/serverMemberList.tsx:40
 #: src/store/userPresenceStore.ts:16
 msgid "Offline"
 msgstr "Offline"
 
-#: src/pages/LoginPage.tsx:56
+#: src/pages/LoginPage.tsx:16
 msgid "Email"
 msgstr "Email"
 
-#: src/pages/LoginPage.tsx:59
+#: src/pages/LoginPage.tsx:19
 msgid "Password"
 msgstr "Password"
 
-#: src/pages/LoginPage.tsx:64
-#: src/pages/LoginPage.tsx:99
+#: src/pages/LoginPage.tsx:24
+#: src/pages/LoginPage.tsx:59
 msgid "Login"
 msgstr "Login"
 
-#: src/pages/LoginPage.tsx:71
+#: src/pages/LoginPage.tsx:31
 msgid "Login to continue"
 msgstr "Login to continue"
 
-#: src/pages/LoginPage.tsx:107
+#: src/pages/LoginPage.tsx:67
 msgid "Logging in..."
 msgstr "Logging in..."
 
