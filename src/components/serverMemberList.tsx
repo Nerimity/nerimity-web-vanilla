@@ -23,7 +23,7 @@ import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 import { createVirtualList } from "./virtualList";
 
-import style from "./ServerMemberList.module.css";
+import style from "./serverMemberList.module.css";
 
 const CategoryType = {
   role: 0,
