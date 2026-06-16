@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { h } from "../../h";
 import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment, LocalEmbed } from "../../store/messageStore";
@@ -7,45 +5,8 @@ import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { throttle } from "../../utils/throttle";
 import { Skeleton } from "../skeleton";
 
-const imageContainer = css`
-  width: var(--width);
-  height: var(--height);
-  border-radius: var(--radius-8);
-  overflow: hidden;
-  position: relative;
-  .image {
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    &.loaded {
-      opacity: 1;
-    }
-  }
-  .skeleton {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-  }
-  .uploadProgressContainer {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2px;
-    padding-left: 8px;
-    padding-right: 8px;
-    font-size: 12px;
-    border-radius: var(--radius-max);
-    background: var(--gray-800);
-    border: solid 1px var(--gray-500);
-  }
-`;
+import style from "./imageEmbed.module.css";
+
 export const ImageEmbed = (props: {
   attachment?: LocalAttachment;
   embed?: LocalEmbed;
@@ -86,24 +47,24 @@ export const ImageEmbed = (props: {
       src={props.attachmentProperty ? props.attachmentProperty.image?.src : url}
       {...(animated && { "data-img-anim": "" })}
       loading="lazy"
-      class={"image"}
+      class={style.image}
     />
   ) as HTMLImageElement;
-  if (cached) img.classList.add("loaded");
+  if (cached) img.classList.add(style.loaded!);
   const maxWidth = clamp(props.container.clientWidth - 70, 600);
 
   const maxHeight = Math.max(props.container.clientHeight / 2, 200);
 
   const skeleton = cached
     ? null
-    : ((<Skeleton class="skeleton" />) as HTMLDivElement);
+    : ((<Skeleton class={style.skeleton} />) as HTMLDivElement);
   img.onload = !cached
     ? () => {
         if (item) {
           item.cached = true;
         }
         skeleton?.remove();
-        img.classList.add("loaded");
+        img.classList.add(style.loaded!);
         img.onload = null;
       }
     : null;
@@ -120,13 +81,15 @@ export const ImageEmbed = (props: {
 
   return (
     <div
-      class={[imageContainer, "imageEmbed"]}
+      class={[style.imageContainer, "imageEmbed"]}
       data-width={width}
       data-height={height}
       style={{ "--width": dims.width + "px", "--height": dims.height + "px" }}
     >
       {showUploadProgress && (
-        <div class="uploadProgressContainer">Uploading...</div>
+        <div class={[style.uploadProgressContainer, "uploadProgressContainer"]}>
+          Uploading...
+        </div>
       )}
       {skeleton}
       {img}
@@ -136,7 +99,7 @@ export const ImageEmbed = (props: {
 
 export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
   const onResize = throttle(() => {
-    const imageEmbeds = logElement.querySelectorAll(`.${imageContainer}`);
+    const imageEmbeds = logElement.querySelectorAll(`.${style.imageContainer}`);
     const maxWidth = clamp(logElement.clientWidth - 70, 600);
     const maxHeight = Math.max(logElement.clientHeight / 2, 200);
 

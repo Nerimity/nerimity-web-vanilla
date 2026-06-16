@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
@@ -8,16 +7,7 @@ import { Button } from "../button";
 import { createModal, Modal } from "../modal";
 import { MessageItem } from "./messageItem";
 
-const deleteMessageBody = css`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  .messageItem {
-    background: var(--gray-900);
-    margin: 0;
-  }
-`;
+import style from "./deleteMessageModal.module.css";
 
 export const createDeleteMessageModal = (props: {
   message: Message;
@@ -34,7 +24,7 @@ export const createDeleteMessageModal = (props: {
 
   requestAnimationFrame(() => {
     body.replaceChildren(
-      <div class={deleteMessageBody}>
+      <div class={style.deleteMessageBody}>
         {t`Are you sure you want to delete this message?`}
         <MessageItem
           hideNewDayMarker

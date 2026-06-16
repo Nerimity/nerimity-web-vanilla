@@ -1,0 +1,8 @@
+.jumpToPresent {
+  position: absolute;
+  top: -48px;
+  right: 0;
+  &.hide {
+    display: none;
+  }
+}

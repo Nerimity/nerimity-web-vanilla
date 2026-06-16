@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
@@ -10,43 +9,7 @@ import { friendlyTimestamp } from "../../utils/date";
 import { Button } from "../button";
 import { createDeleteMessageModal } from "./deleteMessageModal";
 
-const hoverActionContainer = css`
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  background: var(--gray-900);
-  border: solid 1px var(--gray-700);
-  height: 34px;
-  z-index: 999999999;
-  border-radius: var(--radius-max);
-  padding-right: 2px;
-  padding-left: 2px;
-  right: 10px;
-
-  &.hide {
-    display: none;
-  }
-  .timestamp {
-    margin-left: 8px;
-    margin-right: 4px;
-    color: var(--gray-400);
-    font-size: 12px;
-  }
-  .button {
-    border: none;
-    border-radius: var(--radius-max);
-    flex-shrink: 0;
-    padding: 5px;
-    &:hover {
-      background: var(--gray-800);
-    }
-    > .icon {
-      font-size: 18px;
-    }
-  }
-`;
+import style from "./messageHoverActions.module.css";
 
 const HoverActions = (props: {
   messageId?: string;
@@ -66,16 +29,28 @@ const HoverActions = (props: {
   };
 
   return (
-    <div class={[hoverActionContainer, "hide"]}>
+    <div class={[style.hoverActionContainer, style.hide]}>
       {grouped && (
-        <span class="timestamp">{friendlyTimestamp(message?.createdAt!)}</span>
-      )}
-      <Button class="button" data-action="reply" icon="reply" hoverBorder />
-      {canEdit() && (
-        <Button class="button" data-action="edit" icon="edit" hoverBorder />
+        <span class={style.timestamp}>
+          {friendlyTimestamp(message?.createdAt!)}
+        </span>
       )}
       <Button
-        class="button"
+        class={style.button}
+        data-action="reply"
+        icon="reply"
+        hoverBorder
+      />
+      {canEdit() && (
+        <Button
+          class={style.button}
+          data-action="edit"
+          icon="edit"
+          hoverBorder
+        />
+      )}
+      <Button
+        class={style.button}
         data-action="delete"
         icon="delete"
         alert
@@ -105,7 +80,7 @@ export const createMessageHoverActions = (opts: {
       hoverActionEl,
       <HoverActions messageId={messageId} messageElement={parentElement} />,
     );
-    hoverActionEl.classList.toggle("hide", false);
+    hoverActionEl.classList.toggle(style.hide!, false);
 
     hoverActionEl.style.top = `${messageEl.offsetTop - 20}px`;
   };
@@ -115,7 +90,7 @@ export const createMessageHoverActions = (opts: {
       hoverTimeout = null;
     }
     hoveredMessageItem?.classList.remove("force-hover");
-    hoverActionEl.classList.toggle("hide", true);
+    hoverActionEl.classList.toggle(style.hide!, true);
   };
 
   const getMessage = () => {
@@ -147,7 +122,7 @@ export const createMessageHoverActions = (opts: {
     "click",
     (e) => {
       const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = target.closest(`.${style.button}`) as HTMLElement | null;
       const action = button?.dataset.action;
       if (action === "delete") {
         handleDeleteMessage(e.shiftKey);

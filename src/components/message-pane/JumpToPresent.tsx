@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
@@ -7,14 +6,7 @@ import { messageMentionStore } from "../../store/messageMentionStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
 
-const jumpToPresent = css`
-  position: absolute;
-  top: -48px;
-  right: 0;
-  &.hide {
-    display: none;
-  }
-`;
+import style from "./JumpToPresent.module.css";
 
 const JumpToPresentButton = () => {
   const channelId = channelStore.currentChannelId!;
@@ -35,7 +27,7 @@ const JumpToPresentButton = () => {
 export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
   let scrolledBottom = false;
   const el = (
-    <div class={[jumpToPresent, "hide"]}>
+    <div class={[style.jumpToPresent, style.hide]}>
       <JumpToPresentButton />
     </div>
   ) as HTMLElement;
@@ -44,7 +36,7 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
     "channel:scrolledToBottom",
     (isBottom) => {
       scrolledBottom = isBottom;
-      el.classList.toggle("hide", isBottom);
+      el.classList.toggle(style.hide!, isBottom);
     },
     opts.signal,
   );
