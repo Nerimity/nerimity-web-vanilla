@@ -1,7 +1,7 @@
-import { css } from "@linaria/core";
-
 import { Dynamic } from "../dynamic";
 import { h } from "../h";
+
+import style from "./gradientText.module.css";
 
 type GradientTextProps = Partial<Omit<HTMLSpanElement, keyof HTMLElement>> & {
   children?: any;
@@ -11,13 +11,6 @@ type GradientTextProps = Partial<Omit<HTMLSpanElement, keyof HTMLElement>> & {
   tag?: keyof HTMLElementTagNameMap | any;
 };
 
-const container = css`
-  background: var(--color, var(--text-color));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-`;
-
 export const GradientText = (props: GradientTextProps) => {
   const { children, color, tag, ...rest } = props;
 
@@ -25,7 +18,7 @@ export const GradientText = (props: GradientTextProps) => {
     <Dynamic
       component={tag || "span"}
       {...rest}
-      class={[container, props.class]}
+      class={[style.container, props.class]}
       style={{ "--color": color }}
     >
       {children}

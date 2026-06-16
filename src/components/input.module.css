@@ -1,0 +1,27 @@
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  .inputInnerContainer {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    border: solid 1px var(--gray-700);
+    border-radius: var(--radius-6);
+
+    background-color: var(--input-background-color);
+    transition: 0.2s border-bottom-color;
+    &:has(input:focus) {
+      border-bottom-color: var(--primary-color);
+    }
+  }
+  .input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    outline: none;
+    color: var(--text-color);
+    background: transparent;
+    resize: none;
+  }
+}
