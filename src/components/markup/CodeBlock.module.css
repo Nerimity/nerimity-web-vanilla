@@ -1,0 +1,36 @@
+.codeblock {
+  overflow: hidden;
+  margin-right: 2px;
+  border: 1px solid var(--gray-700);
+  border-radius: var(--radius-4);
+  background-color: var(--gray-900);
+  &.nowrap {
+    :global .highlighter {
+      overflow: auto;
+    }
+    pre {
+      white-space: pre;
+    }
+  }
+  .details {
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    .lang {
+      color: var(--gray-400);
+      font-size: 12px;
+    }
+    .buttons {
+      display: flex;
+      margin-left: auto;
+      gap: 4px;
+    }
+    .button {
+      padding: 4px;
+      border-radius: var(--radius-3);
+      :global .icon {
+        font-size: 16px;
+      }
+    }
+  }
+}

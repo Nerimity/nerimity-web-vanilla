@@ -1,0 +1,98 @@
+.drawerContainer {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex: 1;
+
+  &[data-mode="desktop"] .leftDrawer {
+
+    width: 300px;
+    transition: width 0.2s;
+    &.hide {
+      width: 0;
+    }
+    .leftDrawerInner {
+      width: 300px;
+    }
+  }
+  &[data-mode="desktop"] .rightDrawer {
+
+    width: 260px;
+    transition: width 0.2s;
+    &.hide {
+      width: 0;
+    }
+    .rightDrawerInner {
+      width: 260px;
+    }
+  }
+
+  &[data-mode="mobile"] .innerDrawer {
+    flex: 1;
+  }
+
+  &[data-mode="mobile"] .leftDrawer {
+    right: 50px;
+    left: 0;
+  }
+  &[data-mode="mobile"] .rightDrawer {
+    right: 0;
+    left: 50px;
+  }
+
+  &[data-mode="mobile"] .leftDrawer,
+  &[data-mode="mobile"] .rightDrawer {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+  }
+  &[data-mode="mobile"] .content {
+    position: relative;
+    z-index: 111111111;
+    background: var(--background);
+  }
+  .content {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    flex: 1;
+    flex-direction: column;
+
+    .contentInner {
+      display: flex;
+      overflow: hidden;
+      flex: 1;
+      flex-direction: column;
+    }
+  }
+
+  .leftDrawer,
+  .rightDrawer {
+    display: flex;
+    overflow: hidden;
+    background-color: var(--drawer-bg);
+  }
+
+  .innerDrawer {
+    display: flex;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .overlay {
+    position: absolute;
+    z-index: 1111111111;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-color: var(--background);
+    transition: 0.2s;
+    pointer-events: none;
+    &.visible {
+      opacity: 0.8;
+      pointer-events: all;
+    }
+  }
+}
