@@ -1,0 +1,60 @@
+.systemMessage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  .details {
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 0;
+    column-gap: 4px;
+    &:nth-child(1) {
+      color: var(--gray-200);
+    }
+  }
+
+  .timestamp {
+    flex-shrink: 0;
+    color: var(--gray-400);
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  .username {
+    overflow: hidden;
+    flex-shrink: 1;
+    min-width: 0;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  .usernameContainer {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
+    gap: 4px;
+  }
+
+  .avatarContainer {
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .messageBody {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    .icon {
+      color: var(--icon-color);
+      font-size: 14px;
+    }
+  }
+}

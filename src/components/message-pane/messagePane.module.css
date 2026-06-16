@@ -1,0 +1,25 @@
+.messagePane {
+  --padding-right: 0;
+  --mobile-padding-right: 0;
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-top: 56px;
+
+  .logs {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100%;
+  }
+  .bottomSentinel {
+    flex-shrink: 0;
+    height: 1px;
+  }
+  .hide {
+    display: none;
+  }
+}

@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { Trans } from "@trans";
 
 import { h } from "../../h";
@@ -6,7 +5,6 @@ import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { convertShorthandToLinearGradient } from "../../utils/color";
-import { scoped } from "../../utils/css";
 import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
@@ -14,66 +12,7 @@ import { Icon } from "../icon";
 import { Link } from "../link";
 import { MessageReactions } from "./MessageReactions";
 
-const systemMessage = css`
-  display: flex;
-  gap: 6px;
-  align-items: center;
-
-  .${scoped`details`} {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    column-gap: 4px;
-    min-width: 0;
-    flex-wrap: wrap;
-    &:nth-child(1) {
-      color: var(--gray-200);
-    }
-  }
-
-  .${scoped`timestamp`} {
-    font-size: 12px;
-    color: var(--gray-400);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .${scoped`username`} {
-    font-weight: 500;
-    overflow: hidden;
-    min-width: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    flex-shrink: 1;
-    line-height: 1.25;
-  }
-
-  .${scoped`usernameContainer`} {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    min-width: 0;
-    flex-shrink: 1;
-  }
-
-  .avatarContainer {
-    align-self: flex-start;
-    margin-top: 2px;
-  }
-
-  .${scoped`messageBody`} {
-    min-width: 0;
-    overflow: hidden;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    .${scoped`icon`} {
-      color: var(--icon-color);
-      font-size: 14px;
-    }
-  }
-`;
+import style from "./SystemMessage.module.css";
 
 interface MessageTypeDetails {
   color: string;
@@ -158,15 +97,15 @@ export const SystemMessage = (props: { message: Message }) => {
 
   const usernameEl = (
     <span
-      class={scoped`usernameContainer`}
+      class={style.usernameContainer}
       style={{ "--icon-color": type.color }}
     >
-      <Icon name={type.icon} class={scoped`icon`} />
+      <Icon name={type.icon} class={style.icon} />
       <GradientText
         tag={Link}
         decoration
         href={`/app/profile/${creator.id}`}
-        class={scoped`username`}
+        class={style.username}
         color={color}
       >
         {name}
@@ -175,16 +114,16 @@ export const SystemMessage = (props: { message: Message }) => {
   );
 
   return (
-    <div class={systemMessage}>
-      <Link class="avatarContainer" href={`/app/profile/${creator.id}`}>
+    <div class={style.systemMessage}>
+      <Link class={style.avatarContainer} href={`/app/profile/${creator.id}`}>
         <Avatar user={creator} size={32} />
       </Link>
 
-      <div class={scoped`messageBody`}>
-        <span class={scoped`details`}>
+      <div class={style.messageBody}>
+        <span class={style.details}>
           <type.Message bot={creator.bot} username={usernameEl} />
         </span>
-        <div class={scoped`timestamp`}>
+        <div class={style.timestamp}>
           {friendlyTimestamp(props.message.createdAt)}
         </div>
         <MessageReactions message={props.message} />

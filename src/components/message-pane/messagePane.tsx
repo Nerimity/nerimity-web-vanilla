@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
@@ -6,7 +5,6 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
-import { scoped } from "../../utils/css";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -26,31 +24,7 @@ import { MessageItem } from "./messageItem";
 import { createMessageReactionHandler } from "./MessageReactions";
 import { getLastSeenMessage, shouldGroup } from "./utils";
 
-const messagePane = css`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  --padding-right: 0;
-  --mobile-padding-right: 0;
-  padding-top: 56px;
-  position: relative;
-
-  .${scoped`logs`} {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    flex: 1;
-  }
-  .${scoped`bottomSentinel`} {
-    height: 1px;
-    flex-shrink: 0;
-  }
-  .${scoped`hide`} {
-    display: none;
-  }
-`;
+import style from "./messagePane.module.css";
 
 const SCROLLED_BOTTOM_THRESHOLD = 50;
 
@@ -58,7 +32,7 @@ const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   const chatbar = createChatbar();
-  const logs = (<div class={scoped`logs`}></div>) as unknown as HTMLDivElement;
+  const logs = (<div class={style.logs}></div>) as unknown as HTMLDivElement;
 
   const getChannelProperty = () => {
     return channelStore.currentChannelProperty();
@@ -78,7 +52,7 @@ const createMessagePane = () => {
   };
 
   const skeletonsTop = (
-    <div class={[shouldShowTopSkel() ? "" : scoped`hide`]}>
+    <div class={[shouldShowTopSkel() ? "" : style.hide]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
       ))}
@@ -86,7 +60,7 @@ const createMessagePane = () => {
   ) as HTMLDivElement;
 
   const skeletonsBottom = (
-    <div class={[shouldShowBottomSkel() ? "" : scoped`hide`]}>
+    <div class={[shouldShowBottomSkel() ? "" : style.hide]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
       ))}
@@ -94,13 +68,13 @@ const createMessagePane = () => {
   ) as HTMLDivElement;
 
   const bottomSentinel = (
-    <div class={scoped`bottomSentinel`} />
+    <div class={style.bottomSentinel} />
   ) as HTMLDivElement;
 
   const chatbarEl = chatbar.render();
 
   const el = (
-    <div class={[messagePane, "scrollbarHover"]}>
+    <div class={[style.messagePane, "scrollbarHover"]}>
       {skeletonsTop}
       {logs}
       {skeletonsBottom}
@@ -189,7 +163,7 @@ const createMessagePane = () => {
   let lastSeenMessage: Message | null = null;
 
   const rerender = async (opts?: RerenderOpts) => {
-    skeletonsBottom.classList.toggle(scoped`hide`, !shouldShowBottomSkel());
+    skeletonsBottom.classList.toggle(style.hide!, !shouldShowBottomSkel());
 
     const channelId = channelStore.currentChannelId;
     if (!channelId) return;
@@ -236,7 +210,7 @@ const createMessagePane = () => {
       },
     });
 
-    skeletonsTop.classList.toggle(scoped`hide`, !shouldShowTopSkel());
+    skeletonsTop.classList.toggle(style.hide!, !shouldShowTopSkel());
     updateScrolledToBottom();
     restoreScrollPosition(opts);
     requestAnimationFrame(() => {
@@ -299,7 +273,7 @@ const createMessagePane = () => {
       previousChannelId = channelStore.currentChannelId;
 
       logs.replaceChildren();
-      skeletonsBottom.classList.toggle(scoped`hide`, !shouldShowBottomSkel());
+      skeletonsBottom.classList.toggle(style.hide!, !shouldShowBottomSkel());
       scrollToBottom(true);
       onBottomSkeletonIntersect(true);
     },

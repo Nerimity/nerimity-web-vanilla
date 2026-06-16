@@ -69,13 +69,13 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     });
 
     const messageEls = logs.querySelectorAll(".messageItem");
-    const firstMessage = messageEls[0]!;
-    const lastMessageBottom = firstMessage.getBoundingClientRect().bottom;
+    const firstMessage = messageEls[0]?.parentElement!;
+    const firstMessageBottom = firstMessage.getBoundingClientRect().bottom;
 
     rerender({ preventScrollDown: true });
 
     const afterBottom = firstMessage.getBoundingClientRect().bottom;
-    const difference = afterBottom - lastMessageBottom!;
+    const difference = afterBottom - firstMessageBottom!;
     el.scrollTop = el.scrollTop + difference;
 
     handleStillObserving();
