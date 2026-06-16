@@ -35,6 +35,7 @@ export const Button = (props: ButtonProps) => {
         hoverBorder && style.hoverBorder,
         primary && style.primary,
         alert && style.alert,
+        "button",
       ]}
       {...rest}
     >

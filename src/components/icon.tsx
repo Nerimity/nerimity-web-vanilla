@@ -6,7 +6,12 @@ export const Icon = (props: {
 }) => {
   return (
     <span
-      class={["material-symbols-rounded", props.outlined && "o", props.class]}
+      class={[
+        "material-symbols-rounded",
+        props.outlined && "o",
+        "icon",
+        props.class,
+      ]}
     >
       {props.name}
     </span>

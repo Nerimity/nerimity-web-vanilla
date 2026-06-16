@@ -1,29 +1,10 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 import { ChannelType } from "../Types";
 import { unicodeToShortcode, unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";
 import { Icon } from "./icon";
 
-const cdnIcon = css`
-  display: flex;
-  width: var(--size);
-  height: var(--size);
-  box-sizing: content-box;
-  padding: 4px;
-  border-radius: var(--radius-4);
-  background-color: var(--gray-800);
-  flex-shrink: 0;
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-  .icon {
-    font-size: var(--size);
-  }
-`;
+import style from "./cdnIcon.module.css";
 
 interface CdnIconProps {
   channel?: { icon?: string; type: ChannelType };
@@ -74,7 +55,7 @@ export const CdnIcon = (props: CdnIconProps) => {
 
   return (
     <div
-      class={[cdnIcon, props.class]}
+      class={[style.cdnIcon, props.class]}
       style={{ "--size": props.size + "px" }}
       title={title}
     >
@@ -87,7 +68,7 @@ export const CdnIcon = (props: CdnIconProps) => {
         />
       ) : props.channel ? (
         <Icon
-          class="icon"
+          class={style.icon}
           name={
             props.channel?.type === ChannelType.CATEGORY ? "segment" : "tag"
           }
