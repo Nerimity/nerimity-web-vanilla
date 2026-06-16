@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import {
   addTextSpans,
   parseMarkup,
@@ -19,49 +18,7 @@ import { CodeBlock } from "./CodeBlock";
 import { Emoji } from "./Emoji";
 import { Mention } from "./Mention";
 
-const markup = css`
-  line-height: 1.3;
-  white-space: pre-wrap;
-
-  .edit {
-    font-size: 12px;
-    margin-left: 4px;
-    color: var(--gray-500);
-  }
-
-  .heading {
-    margin-top: 4px;
-    margin-bottom: 4px;
-  }
-
-  .bold {
-    font-weight: bold;
-  }
-
-  .italic {
-    font-style: italic;
-  }
-
-  .strikethrough {
-    text-decoration: line-through;
-  }
-
-  .underline {
-    text-decoration: underline;
-  }
-
-  .gradient {
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .emojiPlace {
-    width: 1.572em;
-    height: 1.572em;
-    cursor: pointer;
-    vertical-align: -0.4em;
-  }
-`;
+import style from "./markup.module.css";
 
 export interface Props {
   text: string;
@@ -215,7 +172,7 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
 
       return (
         <span
-          class="gradient"
+          class={style.gradient}
           style={{
             "background-image": `linear-gradient(0.25turn, ${colors.replaceAll("-", ",")})`,
           }}
@@ -305,7 +262,9 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     case "strikethrough": {
       // todo: style folding when there's no before/after for dom memory usage optimization
       // if(beforeSpan.start === beforeSpan.end && afterSpan.start === afterSpan.end) {}
-      return <span class={entity.type}>{transformEntities(entity, ctx)}</span>;
+      return (
+        <span class={style[entity.type]}>{transformEntities(entity, ctx)}</span>
+      );
     }
     case "emoji_name": {
       const name = sliceText(ctx, entity.innerSpan, { countText: false });
@@ -336,7 +295,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       if (ctx.props().inline) {
         return <span>{text}</span>;
       }
-      return h(`h${level}`, { class: "heading" }, <>{text}</>);
+      return h(`h${level}`, { class: style.heading }, <>{text}</>);
     }
     case "custom": {
       return transformCustomEntity(entity, ctx);
@@ -367,9 +326,9 @@ export function Markup(props: Props) {
     !ctx.props().inline && ctx.emojiCount <= 5 && ctx.textCount === 0;
 
   return (
-    <span class={[markup, props.class, largeEmoji() && "largeEmoji"]}>
+    <span class={[style.markup, props.class, largeEmoji() && "largeEmoji"]}>
       {output}
-      {props.message?.editedAt ? <Icon class="edit" name="edit" /> : null}
+      {props.message?.editedAt ? <Icon class={style.edit} name="edit" /> : null}
     </span>
   );
 }

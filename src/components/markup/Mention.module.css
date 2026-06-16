@@ -1,0 +1,36 @@
+.mention {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  padding: 2px 4px;
+  padding-right: 6px;
+  border-radius: var(--radius-max);
+  color: var(--primary-color);
+  background: var(--markup-mention-background-color);
+  vertical-align: middle;
+  text-decoration: none;
+
+  gap: 4px;
+
+  &:hover {
+    background: var(--markup-mention-background-color-hover);
+  }
+  &a {
+    cursor: pointer;
+  }
+
+  .roleText {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+    gap: 4px;
+  }
+  .icon {
+    opacity: 0.8;
+    color: var(--text-color);
+    font-size: 16px;
+    &.role {
+      opacity: 1;
+    }
+  }
+}

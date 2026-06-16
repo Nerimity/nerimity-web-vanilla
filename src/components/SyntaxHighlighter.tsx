@@ -1,18 +1,6 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 
-const highlighter = css`
-  display: block;
-  word-break: break-word;
-  width: 100%;
-  padding: 6px;
-
-  pre {
-    white-space: pre-wrap;
-    margin: 0;
-  }
-`;
+import style from "./SyntaxHighlighter.module.css";
 
 let counter = 0;
 
@@ -20,7 +8,7 @@ export function SyntaxHighlighter(props: { code: string; lang?: string }) {
   const id = `codeblock-${counter++}`;
 
   const el = (
-    <code id={id} class={[highlighter, "highlighter"]}>
+    <code id={id} class={[style.highlighter, "highlighter"]}>
       {props.code}
     </code>
   ) as HTMLElement;

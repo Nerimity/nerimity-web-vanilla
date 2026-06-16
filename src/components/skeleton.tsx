@@ -1,67 +1,20 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 
-const skeletonItem = css`
-  display: flex;
-  gap: 10px;
-  padding: 4px;
-  margin-top: 10px;
-  align-items: center;
-  @keyframes shimmer {
-    0% {
-      opacity: 0.4;
-    }
-    50% {
-      opacity: 0.8;
-    }
-    100% {
-      opacity: 0.4;
-    }
-  }
-  animation: shimmer 1.5s ease-in-out infinite;
-
-  .avatarSkeleton {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--gray-700);
-    flex-shrink: 0;
-  }
-
-  .lines {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-  }
-
-  .line {
-    height: 12px;
-    border-radius: 4px;
-    background: var(--gray-700);
-  }
-
-  &.raw {
-    padding: 0;
-    margin-top: 0;
-    background: var(--gray-700);
-  }
-  &.message {
-    padding: 4px 8px;
-  }
-`;
+import style from "./skeleton.module.css";
 
 export const MessageSkeleton = (props: { wide?: boolean }) => (
-  <div class={[skeletonItem, "message"]}>
-    <div class="avatarSkeleton" />
-    <div class="lines">
-      <div class="line" style={{ width: "120px" }} />
-      <div class="line" style={{ width: props.wide ? "80%" : "50%" }} />
+  <div class={[style.skeletonItem, "message"]}>
+    <div class={style.avatarSkeleton} />
+    <div class={style.lines}>
+      <div class={style.line} style={{ width: "120px" }} />
+      <div class={style.line} style={{ width: props.wide ? "80%" : "50%" }} />
     </div>
   </div>
 );
 
 export const Skeleton = (props: { class?: string; style?: any }) => (
-  <div class={[skeletonItem, "raw", props.class]} style={props.style} />
+  <div
+    class={[style.skeletonItem, style.raw, props.class]}
+    style={props.style}
+  />
 );

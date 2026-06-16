@@ -1,11 +1,11 @@
-import { css } from "@linaria/core";
-
 import { h, Fragment } from "../../h";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Link } from "../link";
+
+import style from "./mention.module.css";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
@@ -14,43 +14,6 @@ interface MentionProps {
   label?: string;
   icon?: string;
 }
-
-const mention = css`
-  display: inline-flex;
-  vertical-align: middle;
-
-  gap: 4px;
-  align-items: center;
-  padding: 2px 4px;
-  padding-right: 6px;
-  border-radius: var(--radius-max);
-  background: var(--markup-mention-background-color);
-  color: var(--primary-color);
-  text-decoration: none;
-  line-height: 0;
-  &a {
-    cursor: pointer;
-  }
-
-  &:hover {
-    background: var(--markup-mention-background-color-hover);
-  }
-
-  .roleText {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-    font-weight: 500;
-  }
-  .icon {
-    opacity: 0.8;
-    font-size: 16px;
-    color: var(--text-color);
-    &.role {
-      opacity: 1;
-    }
-  }
-`;
 
 export const Mention = (props: MentionProps) => {
   const text =
@@ -69,15 +32,16 @@ export const Mention = (props: MentionProps) => {
 
   const color = convertShorthandToLinearGradient(props.role?.hexColor);
 
+  console.log(style.icon);
   return h(
     url ? Link : "span",
-    { class: mention, href: url },
+    { class: style.mention, href: url },
     <>
       {props.user && <Avatar user={props.user} size={16} />}
-      {props.icon && <Icon name={props.icon} class="icon" />}
+      {props.icon && <Icon name={props.icon} class={style.icon} />}
       {color ? (
-        <GradientText color={color} class="text roleText">
-          <Icon name="alternate_email" class="icon role" />
+        <GradientText color={color} class={["text", style.roleText]}>
+          <Icon name="alternate_email" class={[style.icon, style.role]} />
           {text}
         </GradientText>
       ) : (

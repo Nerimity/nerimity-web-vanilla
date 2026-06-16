@@ -1,5 +1,3 @@
-import { css } from "@linaria/core";
-
 import { h } from "../h";
 import {
   UserPresenceDetails,
@@ -7,24 +5,7 @@ import {
 } from "../store/userPresenceStore";
 import { Markup } from "./markup/markup";
 
-const userPresence = css`
-  display: flex;
-  align-items: center;
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
-  .text {
-    margin-left: 4px;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-`;
+import style from "./userPresence.module.css";
 
 export const UserPresence = (props: {
   userId: string;
@@ -43,12 +24,12 @@ export const UserPresence = (props: {
   }
 
   return (
-    <span class={userPresence}>
+    <span class={style.userPresence}>
       <div
-        class="dot"
+        class={style.dot}
         style={{ background: `var(--status-${status.id})` }}
       ></div>
-      <Markup class="text" text={label} inline />
+      <Markup class={style.text} text={label} inline />
     </span>
   );
 };

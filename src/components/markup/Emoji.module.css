@@ -1,0 +1,7 @@
+.emoji {
+  width: 1.572em;
+  height: 1.572em;
+  cursor: pointer;
+  vertical-align: -0.4em;
+  object-fit: contain;
+}

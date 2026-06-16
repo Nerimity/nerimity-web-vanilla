@@ -1,16 +1,8 @@
-import { css } from "@linaria/core";
-
 import { h } from "../../h";
 import { unicodeToTwemojiUrl } from "../../utils/emojis";
 import { buildImageUrl } from "../../utils/image";
 
-const emoji = css`
-  width: 1.572em;
-  height: 1.572em;
-  cursor: pointer;
-  vertical-align: -0.4em;
-  object-fit: contain;
-`;
+import style from "./Emoji.module.css";
 
 interface CdnIconProps {
   icon: string;
@@ -35,7 +27,7 @@ export const Emoji = (props: CdnIconProps) => {
       loading="lazy"
       title={props.title}
       src={url}
-      class={[emoji, "emoji"]}
+      class={[style.emoji, "emoji"]}
       alt=""
       data-img-anim={animated}
     />
