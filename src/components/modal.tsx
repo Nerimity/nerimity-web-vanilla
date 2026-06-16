@@ -422,7 +422,7 @@ export const createModal = (
 
     modalY = 0;
 
-    if (modal.classList.contains("hasPos")) {
+    if (modal.classList.contains(style.hasPos!)) {
       clampPosition();
       modal.style.opacity = "0";
       const anim = modal.animate(
@@ -502,7 +502,7 @@ export const createModal = (
   };
 
   const clampPosition = () => {
-    if (!modal.classList.contains("hasPos")) return;
+    if (!modal.classList.contains(style.hasPos!)) return;
     const rect = modal.getBoundingClientRect();
 
     const overflowLeft = Math.min(0, rect.left);
