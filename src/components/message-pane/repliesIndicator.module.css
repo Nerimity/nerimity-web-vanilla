@@ -1,0 +1,80 @@
+.repliesIndicator {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  max-width: 100%;
+  min-height: 22px;
+  padding: 2px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  margin-top: 4px;
+  border: solid 1px var(--gray-600);
+  border-radius: var(--radius-10);
+  color: var(--text-color);
+  background: var(--gray-900);
+  font-size: 14px;
+  gap: 6px;
+
+  &.hide {
+    display: none;
+  }
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    margin-right: 6px;
+    gap: 4px;
+    .pill {
+      padding: 2px 4px;
+      margin-right: auto;
+      border-radius: var(--radius-max);
+      color: var(--gray-400);
+      background: var(--gray-800);
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .icon {
+      margin-left: 4px;
+      color: var(--primary-color);
+      font-size: 16px;
+    }
+  }
+}
+
+.messageItem {
+  display: flex;
+  align-items: center;
+  padding-right: 2px;
+  padding-left: 4px;
+  gap: 4px;
+  .content {
+    display: flex;
+    overflow: hidden;
+    margin-right: 2px;
+    gap: 4px;
+  }
+
+  .username {
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+  .message {
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .deleteButton {
+    padding: 4px;
+    margin-left: auto;
+    :global .icon {
+      font-size: 12px;
+    }
+  }
+}

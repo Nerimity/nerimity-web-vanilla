@@ -39,7 +39,7 @@ export const Button = (props: ButtonProps) => {
       ]}
       {...rest}
     >
-      {icon && <Icon class={style.icon} name={icon} />}
+      {icon && <Icon class={[style.icon, "icon"]} name={icon} />}
       {label && <div class={[style.label, "label"]}>{label}</div>}
     </Dynamic>
   );
