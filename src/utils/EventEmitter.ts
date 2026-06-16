@@ -34,6 +34,12 @@ type StoreEvents = {
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
   "server:member_update": { serverId: string; userId: string; isMe: boolean };
+  "attachment:upload_progress": {
+    messageId?: string;
+    channelId?: string;
+    progress: number;
+    speed?: string;
+  };
   recent_server_update: { serverId: string; channelId: string };
 };
 

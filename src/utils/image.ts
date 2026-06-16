@@ -28,8 +28,8 @@ export function buildImageUrl(
 }
 
 type Dimensions = {
-  width: string;
-  height: string;
+  width: number;
+  height: number;
 };
 
 interface ConstrainParams {
@@ -57,5 +57,5 @@ export function constrainDimensions({
     width = height * ratio;
   }
 
-  return { width: width + "px", height: height + "px" };
+  return { width: width, height: height };
 }

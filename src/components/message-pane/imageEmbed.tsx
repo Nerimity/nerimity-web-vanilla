@@ -15,7 +15,7 @@ const imageContainer = css`
   position: relative;
   .image {
     opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -29,6 +29,21 @@ const imageContainer = css`
     height: 100%;
     position: absolute;
     inset: 0;
+  }
+  .uploadProgressContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 12px;
+    border-radius: var(--radius-max);
+    background: var(--gray-800);
+    border: solid 1px var(--gray-500);
   }
 `;
 export const ImageEmbed = (props: {
@@ -100,13 +115,19 @@ export const ImageEmbed = (props: {
     maxHeight,
   });
 
+  const showUploadProgress =
+    props.attachmentProperty && dims.height > 30 && dims.width > 160;
+
   return (
     <div
       class={[imageContainer, "imageEmbed"]}
       data-width={width}
       data-height={height}
-      style={{ "--width": dims.width, "--height": dims.height }}
+      style={{ "--width": dims.width + "px", "--height": dims.height + "px" }}
     >
+      {showUploadProgress && (
+        <div class="uploadProgressContainer">Uploading...</div>
+      )}
       {skeleton}
       {img}
     </div>
@@ -132,8 +153,8 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
         maxHeight,
       });
 
-      embedEl.style.setProperty("--width", dims.width);
-      embedEl.style.setProperty("--height", dims.height);
+      embedEl.style.setProperty("--width", dims.width + "px");
+      embedEl.style.setProperty("--height", dims.height + "px");
     }
   }, 20);
 

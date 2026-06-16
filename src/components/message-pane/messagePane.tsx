@@ -143,16 +143,25 @@ const createMessagePane = () => {
       `[data-message-id="${message.tempId || message.id}"]`,
     ) as HTMLDivElement | null;
     if (!messageEl) return;
-    morphdom(
-      messageEl,
-      (
-        <MessageItem
-          container={el}
-          message={message}
-          prevMessage={messages?.[index - 1]}
-        />
-      ) as unknown as HTMLElement,
-    );
+
+    const newMessageEl = (
+      <MessageItem
+        container={el}
+        message={message}
+        prevMessage={messages?.[index - 1]}
+      />
+    ) as HTMLElement;
+
+    const createdByMe = message.createdBy.id === accountStore.currentUser?.id;
+    // this is done like this to fix uploading image attachment causes it to not load the image.
+    if (createdByMe) {
+      if (message.tempId) {
+        messageEl.replaceWith(newMessageEl);
+        return;
+      }
+    }
+
+    morphdom(messageEl, newMessageEl);
   };
 
   type RerenderOpts = {
@@ -436,6 +445,7 @@ const createMessagePane = () => {
     },
     { signal },
   );
+  createAttachmentProgressHandler(signal, el);
 
   const destroy = () => {
     abortController.abort();
@@ -452,3 +462,22 @@ const createMessagePane = () => {
 };
 
 export default createMessagePane;
+
+const createAttachmentProgressHandler = (
+  signal: AbortSignal,
+  el: HTMLElement,
+) => {
+  storeEmitter.on(
+    "attachment:upload_progress",
+    (event) => {
+      const uploadContainer = el.querySelector(
+        `[data-message-id="${event.messageId}"] .uploadProgressContainer`,
+      );
+      if (!uploadContainer) return;
+      uploadContainer.replaceChildren(
+        `Uploading ${event.progress}% (${event.speed})`,
+      );
+    },
+    signal,
+  );
+};

@@ -245,12 +245,21 @@ function createMessageStore() {
     const attachment = localMessage.attachmentProperty;
 
     let attachmentFileId: string | undefined;
+
+    const onUploadProgress = (progress: number, speed?: string) => {
+      storeEmitter.emit("attachment:upload_progress", {
+        messageId: localMessage.id,
+        channelId,
+        progress,
+        speed,
+      });
+    };
     if (attachment) {
       const [res, error] = await nerimityCDNUploadRequest({
         file: attachment.file,
         type: "attachments",
         groupId: channelId,
-
+        onUploadProgress,
         channelId,
       });
       if (error) {
