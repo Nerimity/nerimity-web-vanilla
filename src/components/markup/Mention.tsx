@@ -5,7 +5,7 @@ import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Link } from "../link";
 
-import style from "./mention.module.css";
+import style from "./Mention.module.css";
 
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
