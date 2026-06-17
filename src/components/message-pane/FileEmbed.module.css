@@ -1,0 +1,78 @@
+.content {
+  display: flex;
+
+  transition: 0.2s;
+  font-size: 14px;
+  gap: 6px;
+  .icon {
+    padding-right: 4px;
+    padding-left: 6px;
+    margin-top: 6px;
+    color: var(--gray-200);
+    font-size: 24px;
+  }
+  .sub {
+    display: flex;
+    flex-wrap: wrap;
+    color: var(--gray-400);
+    font-size: 12px;
+    column-gap: 4px;
+  }
+
+  .expires {
+    display: flex;
+    align-items: center;
+    color: var(--warn-color);
+    gap: 2px;
+    &[data-expired="true"] {
+      color: var(--alert-color);
+    }
+    .expiresIcon {
+      font-size: 14px;
+    }
+  }
+  .button {
+    align-self: start;
+    flex-shrink: 0;
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 12px;
+    text-decoration: none;
+    &:hover {
+      background-color: var(--gray-700);
+    }
+  }
+}
+
+.fileEmbed {
+  padding: 6px;
+  border-radius: var(--radius-8);
+  background-color: var(--gray-800);
+  place-self: start;
+}
+
+.progressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  .progressDetails {
+    display: flex;
+    justify-content: space-between;
+    opacity: 0.6;
+    font-size: 12px;
+  }
+  .progressBar {
+    border-radius: var(--radius-max);
+    background-color: var(--gray-700);
+    .bar {
+      width: 0%;
+      height: 4px;
+      border-radius: var(--radius-max);
+      background-color: var(--primary-color);
+    }
+  }
+}

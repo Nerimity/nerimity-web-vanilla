@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+
 // hh:mm | Yesterday at hh:mm | dd/mm/yyyy at hh:mm
 export function friendlyTimestamp(timestamp: number): string {
   const date = new Date(timestamp);
@@ -42,3 +44,14 @@ export function fullDate(timestamp: number): string {
     year: "numeric",
   });
 }
+
+export const formatExpiry = (expiresAt: number): string => {
+  const ms = expiresAt - Date.now();
+  if (ms <= 0) return t`Expired`;
+
+  const minutes = Math.floor(ms / 1000 / 60);
+  if (minutes < 60) return t`Expires in ${minutes}m`;
+
+  const hours = Math.floor(minutes / 60);
+  return t`Expires in ${hours}h`;
+};

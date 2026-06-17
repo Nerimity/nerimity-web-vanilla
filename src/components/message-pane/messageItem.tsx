@@ -14,6 +14,7 @@ import { GradientText } from "../gradientText";
 import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
+import { FileEmbed } from "./FileEmbed";
 import { ImageEmbed } from "./imageEmbed";
 import { MessageReactions } from "./MessageReactions";
 import { SystemMessage } from "./SystemMessage";
@@ -151,20 +152,29 @@ const MessageEmbeds = (props: {
     attachment?.width != undefined &&
     attachment?.mime?.startsWith("image/") == true;
 
+  const attachmentProperty = props.message.attachmentProperty;
+
   const imageEmbed =
     props.message.embed?.type == "image" &&
     props.message.embed?.imageHeight != null;
 
   if (
-    imageAttachment ||
-    imageEmbed ||
-    props.message.attachmentProperty?.image
-  ) {
+    (attachment && !imageAttachment) ||
+    (attachmentProperty && !attachmentProperty.image)
+  )
+    return (
+      <FileEmbed
+        attachment={attachment}
+        attachmentProperty={attachmentProperty}
+      />
+    );
+
+  if (imageAttachment || imageEmbed || attachmentProperty?.image) {
     return (
       <ImageEmbed
         attachment={attachment}
         embed={props.message.embed}
-        attachmentProperty={props.message.attachmentProperty}
+        attachmentProperty={attachmentProperty}
         container={props.container}
       />
     );

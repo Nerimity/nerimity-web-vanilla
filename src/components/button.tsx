@@ -13,12 +13,14 @@ interface ButtonProps {
   primary?: boolean;
   href?: string;
   alert?: boolean;
+  component?: any;
   [key: string]: any;
 }
 
 export const Button = (props: ButtonProps) => {
   const {
     hoverBorder,
+    component,
     alert,
     primary,
     label,
@@ -28,7 +30,7 @@ export const Button = (props: ButtonProps) => {
   } = props;
   return (
     <Dynamic
-      component={rest.href ? Link : "button"}
+      component={component || (rest.href ? Link : "button")}
       class={[
         style.button,
         className,

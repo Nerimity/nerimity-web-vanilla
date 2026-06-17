@@ -175,6 +175,8 @@ export interface Attachment {
 
   width?: number;
   height?: number;
+  filesize?: number;
+  expireAt?: number;
 }
 
 export interface RawMessageMention {

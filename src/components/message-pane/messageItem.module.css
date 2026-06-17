@@ -14,10 +14,11 @@
   &:hover {
     background-color: var(--gray-850);
   }
-  &.sending {
+
+  &:global(.sending) {
     opacity: 0.6;
   }
-  &.error {
+  &:global(.error) {
     color: var(--alert-color);
   }
   &.editing {

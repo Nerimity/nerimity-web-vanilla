@@ -444,11 +444,35 @@ const createAttachmentProgressHandler = (
   storeEmitter.on(
     "attachment:upload_progress",
     (event) => {
-      const uploadContainer = el.querySelector(
+      const uploadFileContainer = el.querySelector(
+        `[data-message-id="${event.messageId}"] .progressContainer`,
+      );
+
+      if (uploadFileContainer) {
+        const bar = uploadFileContainer.querySelector(".bar") as HTMLDivElement;
+        if (!bar) return;
+
+        const percent = uploadFileContainer.querySelector(
+          ".percent",
+        ) as HTMLDivElement;
+        if (!percent) return;
+
+        const speed = uploadFileContainer.querySelector(
+          ".speed",
+        ) as HTMLDivElement;
+        if (!speed) return;
+
+        bar.style.width = `${event.progress}%`;
+        percent.textContent = `${event.progress}%`;
+        speed.textContent = `${event.speed}`;
+        return;
+      }
+
+      const uploadImageContainer = el.querySelector(
         `[data-message-id="${event.messageId}"] .uploadProgressContainer`,
       );
-      if (!uploadContainer) return;
-      uploadContainer.replaceChildren(
+      if (!uploadImageContainer) return;
+      uploadImageContainer.replaceChildren(
         `Uploading ${event.progress}% (${event.speed})`,
       );
     },
