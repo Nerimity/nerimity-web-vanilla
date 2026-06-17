@@ -36,7 +36,7 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/message-pane/JumpToPresent.tsx:23
-#: src/components/message-pane/messageItem.tsx:74
+#: src/components/message-pane/messageItem.tsx:75
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -103,7 +103,7 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:212
+#: src/components/message-pane/messageItem.tsx:222
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -193,3 +193,15 @@ msgstr "Away from keyboard"
 #: src/store/userPresenceStore.ts:32
 msgid "Do not disturb"
 msgstr "Do not disturb"
+
+#: src/utils/date.ts:50
+msgid "Expired"
+msgstr "Expired"
+
+#: src/utils/date.ts:53
+msgid "Expires in {minutes}m"
+msgstr "Expires in {minutes}m"
+
+#: src/utils/date.ts:56
+msgid "Expires in {hours}h"
+msgstr "Expires in {hours}h"
