@@ -15,7 +15,7 @@
     "lingui:compile": "lingui compile"
   },
   "dependencies": {
-    "@lingui/core": "^6.3.0",
+    "@lingui/core": "^6.4.0",
     "@nerimity/nevula": "^0.15.1",
     "@shikijs/langs": "^4.2.0",
     "@shikijs/themes": "^4.2.0",
@@ -26,10 +26,10 @@
     "urlpattern-polyfill": "^10.1.0"
   },
   "devDependencies": {
-    "@lingui/cli": "^6.3.0",
-    "@lingui/conf": "^6.3.0",
-    "@lingui/react": "^6.3.0",
-    "@lingui/vite-plugin": "^6.3.0",
+    "@lingui/cli": "^6.4.0",
+    "@lingui/conf": "^6.4.0",
+    "@lingui/react": "^6.4.0",
+    "@lingui/vite-plugin": "^6.4.0",
     "@rolldown/plugin-babel": "^0.2.3",
     "oxfmt": "^0.55.0",
     "oxlint": "^1.70.0",
