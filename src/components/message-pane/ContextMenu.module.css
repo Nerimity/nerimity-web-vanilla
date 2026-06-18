@@ -1,0 +1,48 @@
+:global(body.mobileWidth) {
+  .item {
+    padding: 4px;
+  }
+}
+
+.contextMenu {
+  padding: 4px;
+  opacity: 0;
+  animation: show 0.2s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  border-radius: var(--radius-6);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--gray-850);
+  }
+  &[data-alert="true"] {
+    color: var(--alert-color);
+    .icon {
+      color: var(--alert-color);
+    }
+  }
+
+  .icon {
+    padding: 4px;
+    color: var(--gray-300);
+    font-size: 16px;
+  }
+}

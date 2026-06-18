@@ -6,7 +6,6 @@
     flex: 1;
     flex-shrink: 0;
     max-height: initial;
-    padding-bottom: 64px;
     border-right: none;
     border-bottom: none;
     border-left: none;
@@ -15,6 +14,9 @@
     &.hasPos {
       position: initial;
       translate: initial;
+    }
+    &.hasFooter {
+      padding-bottom: 64px;
     }
   }
   .body {

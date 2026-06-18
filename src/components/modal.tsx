@@ -106,6 +106,10 @@ export const createModal = (
     footerOriginalParent.insertBefore(footerPlaceholder, footerElement);
   }
 
+  if (footerElement) {
+    modal.classList.add(style.hasFooter!);
+  }
+
   const moveFooterToBackdrop = () => {
     if (!footerElement || footerElement.parentElement === backdrop) return;
     backdrop.appendChild(footerElement);

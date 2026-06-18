@@ -9,6 +9,7 @@ import { messageStore } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { userAgent } from "../../utils/userAgent";
 import { Button } from "../button";
 import { createFileInput } from "../FileInput";
 import { createTextareaHeightHandler, Input } from "../input";
@@ -145,6 +146,7 @@ export const createChatbar = () => {
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
+      if (userAgent.mobile) return;
       if (event.shiftKey) return;
       sendMessage();
       event.preventDefault();

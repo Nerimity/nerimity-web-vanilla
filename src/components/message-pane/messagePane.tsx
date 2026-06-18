@@ -15,8 +15,10 @@ import {
 } from "../../utils/observer";
 import { setRecentServerChannel } from "../../utils/recentServerChannels";
 import { Drawer } from "../drawer";
+import { createModal } from "../modal";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
+import { ContextMenu } from "./ContextMenu";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
@@ -420,6 +422,7 @@ const createMessagePane = () => {
     { signal },
   );
   createAttachmentProgressHandler(signal, el);
+  createMessageContextMenuHandler({ el, signal });
 
   const destroy = () => {
     abortController.abort();
@@ -480,5 +483,48 @@ const createAttachmentProgressHandler = (
       );
     },
     signal,
+  );
+};
+
+const createMessageContextMenuHandler = (opts: {
+  el: HTMLElement;
+  signal: AbortSignal;
+}) => {
+  opts.el.addEventListener("contextmenu", (event) => {
+    const target = event.target as HTMLElement;
+    const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+    const messageId = messageEl.dataset?.messageId!;
+
+    const abortController = new AbortController();
+
+    if (!messageId) return;
+    event.preventDefault();
+    event.stopPropagation();
+
+    createModal(
+      () => (
+        <MessageContextMenu x={`${event.clientX}px`} y={`${event.clientY}px`} />
+      ),
+      abortController,
+    );
+  });
+};
+
+const MessageContextMenu = (props: { x: string; y: string }) => {
+  return (
+    <ContextMenu.Root pos={{ x: props.x, y: props.y }}>
+      <ContextMenu.Item>
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>Copy</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item>
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>Paste</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item alert>
+        <ContextMenu.Icon name="delete" />
+        <ContextMenu.Label>Delete</ContextMenu.Label>
+      </ContextMenu.Item>
+    </ContextMenu.Root>
   );
 };
