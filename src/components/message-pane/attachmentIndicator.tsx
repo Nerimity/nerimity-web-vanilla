@@ -7,7 +7,7 @@ import { Icon } from "../icon";
 import style from "./attachmentIndicator.module.css";
 
 export const createAttachmentIndicator = (signal: AbortSignal) => {
-  const container = (
+  let container = (
     <div class={[style.attachmentIndicator, style.hide]}></div>
   ) as HTMLDivElement;
 
@@ -39,6 +39,15 @@ export const createAttachmentIndicator = (signal: AbortSignal) => {
   storeEmitter.on("message_property:attachment", rerender, signal);
   storeEmitter.on("navigate:channelId", rerender, signal);
   rerender();
+
+  signal.addEventListener(
+    "abort",
+    () => {
+      container.remove();
+      (container as any) = null;
+    },
+    { once: true },
+  );
 
   return container;
 };

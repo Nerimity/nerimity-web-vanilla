@@ -26,7 +26,7 @@ const JumpToPresentButton = () => {
 };
 export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
   let scrolledBottom = false;
-  const el = (
+  let el = (
     <div class={[style.jumpToPresent, style.hide]}>
       <JumpToPresentButton />
     </div>
@@ -63,6 +63,15 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
     opts.signal,
   );
   storeEmitter.on("navigate:channelId", updateButton, opts.signal);
+
+  opts.signal.addEventListener(
+    "abort",
+    () => {
+      el.remove();
+      (el as any) = null;
+    },
+    { once: true },
+  );
 
   return el;
 };

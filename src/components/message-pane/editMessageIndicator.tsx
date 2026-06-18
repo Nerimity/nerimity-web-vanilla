@@ -8,8 +8,8 @@ import { Markup } from "../markup/markup";
 import style from "./editMessageIndicator.module.css";
 
 export const createEditMessageIndicator = (signal: AbortSignal) => {
-  const textEl = (<div class={style.text}></div>) as HTMLDivElement;
-  const editMessageContainer = (
+  let textEl = (<div class={style.text}></div>) as HTMLDivElement;
+  let editMessageContainer = (
     <div class={[style.editMessageIndicator, style.hide]}>
       <Icon class={style.icon} name="edit" />
       {textEl}
@@ -41,6 +41,17 @@ export const createEditMessageIndicator = (signal: AbortSignal) => {
   storeEmitter.on("message_property:editing", rerender, signal);
   storeEmitter.on("navigate:channelId", rerender, signal);
   rerender();
+
+  signal.addEventListener(
+    "abort",
+    () => {
+      textEl.remove();
+      editMessageContainer.remove();
+      (textEl as any) = null;
+      (editMessageContainer as any) = null;
+    },
+    { once: true },
+  );
 
   return editMessageContainer;
 };

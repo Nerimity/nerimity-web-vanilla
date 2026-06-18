@@ -16,10 +16,10 @@ interface TypingUser {
 
 export const createTypingIndicator = (abortController: AbortController) => {
   const { signal } = abortController;
-  const usernamesEl = (<div class={style.usernames}></div>) as HTMLDivElement;
-  const avatarsEl = (<div class={style.avatars}></div>) as HTMLDivElement;
+  let usernamesEl = (<div class={style.usernames}></div>) as HTMLDivElement;
+  let avatarsEl = (<div class={style.avatars}></div>) as HTMLDivElement;
   let timeout: NodeJS.Timeout | null = null;
-  const el = (
+  let el = (
     <div class={[style.typingIndicator, style.hide]}>
       <Icon class={style.icon} name="pending" outlined />
       {avatarsEl}
@@ -97,6 +97,14 @@ export const createTypingIndicator = (abortController: AbortController) => {
   signal.addEventListener("abort", () => {
     if (timeout) clearTimeout(timeout);
     timeout = null;
+
+    usernamesEl.remove();
+    avatarsEl.remove();
+    el.remove();
+
+    (usernamesEl as any) = null;
+    (avatarsEl as any) = null;
+    (el as any) = null;
   });
 
   return {

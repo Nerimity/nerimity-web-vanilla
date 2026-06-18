@@ -27,13 +27,13 @@ export const createChatbar = () => {
   const typingIndicator = createTypingIndicator(abortController);
   const editMessageIndicator = createEditMessageIndicator(signal);
   const attachmentIndicator = createAttachmentIndicator(signal);
-  const repliesIndicator = createRepliesIndicator(abortController);
+  let repliesIndicator = createRepliesIndicator(abortController);
   const jumpToPresent = createJumpToPresent({ signal });
 
-  const sendButton = (
+  let sendButton = (
     <Button class={[style.button!, "send"]} icon="send" hoverBorder />
   ) as HTMLElement;
-  const editButton = (
+  let editButton = (
     <Button
       class={[style.button!, "edit", style.hide!]}
       icon="edit"
@@ -41,10 +41,10 @@ export const createChatbar = () => {
     />
   ) as HTMLElement;
 
-  const attachButton = (
+  let attachButton = (
     <Button class={[style.button!, "attach"]} icon="attach_file" hoverBorder />
   ) as HTMLElement;
-  const cancelButton = (
+  let cancelButton = (
     <Button
       class={[style.button!, "cancel", style.hide!]}
       icon="close"
@@ -73,7 +73,7 @@ export const createChatbar = () => {
   const handleAttachClick = () => {
     fileInput.trigger();
   };
-  const chatbar = (
+  let chatbar = (
     <div class={style.chatbarContainer}>
       {typingIndicator.el}
       {editMessageIndicator}
@@ -83,6 +83,7 @@ export const createChatbar = () => {
         {jumpToPresent}
         <Input
           type="textarea"
+          id="message-input"
           class={style.chatInput}
           prefix={
             <div class={style.buttons}>
@@ -100,7 +101,7 @@ export const createChatbar = () => {
       </div>
     </div>
   ) as unknown as HTMLElement;
-  const input = chatbar.querySelector(
+  let input = chatbar.querySelector(
     `.${style.chatInput} .input`,
   ) as HTMLTextAreaElement;
 
@@ -281,8 +282,20 @@ export const createChatbar = () => {
   createFileClipboardHandler({ signal });
 
   const destroy = () => {
-    chatbar.remove();
     abortController.abort();
+
+    chatbar.remove();
+    sendButton.remove();
+    editButton.remove();
+    attachButton.remove();
+    cancelButton.remove();
+    input.remove();
+    (chatbar as any) = null;
+    (sendButton as any) = null;
+    (editButton as any) = null;
+    (attachButton as any) = null;
+    (cancelButton as any) = null;
+    (input as any) = null;
   };
 
   return { render, destroy, jumpToPresentButton: jumpToPresent };

@@ -221,7 +221,6 @@ function createChannelStore() {
         attachment,
       });
     }
-    console.log(attachment);
     storeEmitter.emit("message_property:attachment", { attachment });
   };
 

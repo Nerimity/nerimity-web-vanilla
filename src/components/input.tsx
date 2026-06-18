@@ -11,6 +11,7 @@ interface InputProps {
   label?: any;
   type?: "text" | "password" | "textarea";
   autocomplete?: "current-password" | "email";
+  id?: string;
 }
 export const Input = (props: InputProps) => {
   return (
@@ -19,6 +20,7 @@ export const Input = (props: InputProps) => {
       <div class={style.inputInnerContainer}>
         {props.prefix}
         <Dynamic
+          id={props.id}
           class={["input", style.input]}
           component={props.type === "textarea" ? "textarea" : "input"}
           type={props.type || "text"}
@@ -34,16 +36,14 @@ export const createTextareaHeightHandler = (opts: {
   textarea: HTMLTextAreaElement;
   signal: AbortSignal;
 }) => {
-  const textarea = opts.textarea;
-
   const adjust = () => {
-    textarea.style.height = "34px";
-    textarea.style.height = textarea.scrollHeight + "px";
+    opts.textarea.style.height = "34px";
+    opts.textarea.style.height = opts.textarea.scrollHeight + "px";
   };
 
   requestAnimationFrame(adjust);
 
-  createResizeObserver(textarea, adjust, { signal: opts.signal });
+  createResizeObserver(opts.textarea, adjust, { signal: opts.signal });
   opts.textarea.addEventListener("input", adjust, { signal: opts.signal });
   return { adjust };
 };

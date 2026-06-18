@@ -66,7 +66,7 @@ export const createMessageHoverActions = (opts: {
 }) => {
   let hoveredMessageItem: HTMLDivElement | null = null;
 
-  const hoverActionEl = (<HoverActions />) as HTMLDivElement;
+  let hoverActionEl = (<HoverActions />) as HTMLDivElement;
 
   let hoverTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -210,8 +210,14 @@ export const createMessageHoverActions = (opts: {
     () => {
       if (hoverTimeout) clearTimeout(hoverTimeout);
       hoverActionEl.remove();
+      (hoverActionEl as any) = null;
+      hoveredMessageItem = null;
     },
     { once: true },
   );
-  return { hoverActionEl };
+  return {
+    get hoverActionEl() {
+      return hoverActionEl;
+    },
+  };
 };

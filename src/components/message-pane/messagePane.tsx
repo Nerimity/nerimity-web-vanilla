@@ -31,7 +31,7 @@ const SCROLLED_BOTTOM_THRESHOLD = 50;
 const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
-  const chatbar = createChatbar();
+  let chatbar = createChatbar();
   const logs = (<div class={style.logs}></div>) as unknown as HTMLDivElement;
 
   const getChannelProperty = () => {
@@ -71,7 +71,7 @@ const createMessagePane = () => {
     <div class={style.bottomSentinel} />
   ) as HTMLDivElement;
 
-  const chatbarEl = chatbar.render();
+  let chatbarEl = chatbar.render();
 
   const el = (
     <div class={[style.messagePane, "scrollbarHover"]}>
@@ -430,6 +430,9 @@ const createMessagePane = () => {
     chatbar.destroy();
     el.remove();
     logs.remove();
+    chatbarEl.remove();
+    (chatbar as any) = null;
+    (chatbarEl as any) = null;
   };
 
   return { render, destroy };

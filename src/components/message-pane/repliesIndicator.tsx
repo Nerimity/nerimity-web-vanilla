@@ -59,9 +59,9 @@ const MessageItem = (props: { message: Message }) => {
 
 export const createRepliesIndicator = (abortController: AbortController) => {
   const { signal } = abortController;
-  const listEl = (<div class={style.list}></div>) as HTMLDivElement;
-  const countPill = (<div class={style.pill}></div>) as HTMLDivElement;
-  const el = (
+  let listEl = (<div class={style.list}></div>) as HTMLDivElement;
+  let countPill = (<div class={style.pill}></div>) as HTMLDivElement;
+  let el = (
     <div class={[style.repliesIndicator, style.hide]}>
       {listEl}
       <div class={style.status}>
@@ -127,7 +127,14 @@ export const createRepliesIndicator = (abortController: AbortController) => {
   storeEmitter.on("message_property:replying", rerender, signal);
   storeEmitter.on("navigate:channelId", rerender, signal);
 
-  signal.addEventListener("abort", () => {});
+  signal.addEventListener("abort", () => {
+    listEl.remove();
+    countPill.remove();
+    el.remove();
+    (listEl as any) = null;
+    (countPill as any) = null;
+    (el as any) = null;
+  });
 
   return el;
 };
