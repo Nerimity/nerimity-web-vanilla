@@ -155,7 +155,9 @@ function createChannelStore() {
       setProperty(channelId, { replyingMessages: [] });
       storeEmitter.emit("message_property:replying", { replies: [] });
     }
-    updateAttachment(channelId);
+    if (message) {
+      updateAttachment(channelId);
+    }
 
     storeEmitter.emit("message_property:editing", { message, prevMessage });
   };
@@ -170,7 +172,6 @@ function createChannelStore() {
       setProperty(channelId, { editingMessage: undefined });
       storeEmitter.emit("message_property:editing", { message: undefined });
     }
-    updateAttachment(channelId);
 
     replies.push(message!);
     setProperty(channelId, { replyingMessages: replies });
@@ -205,7 +206,6 @@ function createChannelStore() {
       setProperty(channelId, { attachment });
     } else {
       const image = isImage(file) && !isMoreThan12MB(file);
-      removeReply(channelId);
       setEditingMessage(channelId);
       attachment = { file };
       if (image) {
@@ -221,6 +221,7 @@ function createChannelStore() {
         attachment,
       });
     }
+    console.log(attachment);
     storeEmitter.emit("message_property:attachment", { attachment });
   };
 

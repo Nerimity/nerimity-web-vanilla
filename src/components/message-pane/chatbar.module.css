@@ -20,13 +20,19 @@
   }
   .buttons {
     display: flex;
+    align-self: end;
     margin: 4px;
     gap: 4px;
   }
   .button {
-    width: 50px;
+    width: 36px;
     padding: 6px 0;
     border-radius: var(--radius-4);
+
+    &:global(.send),
+    &:global(.edit) {
+      width: 50px;
+    }
     &.hide {
       display: none;
     }

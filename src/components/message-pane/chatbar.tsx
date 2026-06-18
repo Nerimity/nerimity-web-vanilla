@@ -10,6 +10,7 @@ import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../button";
+import { createFileInput } from "../FileInput";
 import { createTextareaHeightHandler, Input } from "../input";
 import { createAttachmentIndicator } from "./attachmentIndicator";
 import { createEditMessageIndicator } from "./editMessageIndicator";
@@ -40,17 +41,55 @@ export const createChatbar = () => {
     />
   ) as HTMLElement;
 
+  const attachButton = (
+    <Button class={[style.button!, "attach"]} icon="attach_file" hoverBorder />
+  ) as HTMLElement;
+  const cancelButton = (
+    <Button
+      class={[style.button!, "cancel", style.hide!]}
+      icon="close"
+      alert
+      hoverBorder
+    />
+  ) as HTMLElement;
+
+  const updateCancelButton = () => {
+    let shouldShowCancel = false;
+    const property = channelStore.currentChannelProperty()!;
+    if (property.attachment) shouldShowCancel = true;
+    if (property.editingMessage) shouldShowCancel = true;
+    if (property.replyingMessages?.length) shouldShowCancel = true;
+
+    cancelButton.classList.toggle(style.hide!, !shouldShowCancel);
+    attachButton.classList.toggle(style.hide!, shouldShowCancel);
+  };
+  updateCancelButton();
+
+  const handleFileInput = (file?: File) => {
+    channelStore.updateAttachment(channelStore.currentChannelId!, file);
+  };
+
+  const fileInput = createFileInput({ signal, onChange: handleFileInput });
+  const handleAttachClick = () => {
+    fileInput.trigger();
+  };
   const chatbar = (
     <div class={style.chatbarContainer}>
       {typingIndicator.el}
       {editMessageIndicator}
-      {repliesIndicator}
       {attachmentIndicator}
+      {repliesIndicator}
       <div class={style.chatInputContainer}>
         {jumpToPresent}
         <Input
           type="textarea"
           class={style.chatInput}
+          prefix={
+            <div class={style.buttons}>
+              {attachButton}
+              {cancelButton}
+            </div>
+          }
           suffix={
             <div class={style.buttons}>
               {sendButton}
@@ -111,10 +150,7 @@ export const createChatbar = () => {
       return;
     }
     if (event.key === "Escape") {
-      const channelId = channelStore.currentChannelId!;
-      channelStore.setEditingMessage(channelId);
-      channelStore.removeReply(channelId);
-      channelStore.updateAttachment(channelId);
+      handleCancelClick();
 
       return;
     }
@@ -141,10 +177,28 @@ export const createChatbar = () => {
     }
   };
 
+  const handleCancelClick = () => {
+    const property = channelStore.currentChannelProperty()!;
+    if (property.attachment) {
+      channelStore.updateAttachment(channelStore.currentChannelId!);
+      return;
+    }
+    if (property.editingMessage) {
+      channelStore.setEditingMessage(channelStore.currentChannelId!);
+      return;
+    }
+    if (property.replyingMessages?.length) {
+      channelStore.removeReply(channelStore.currentChannelId!);
+      return;
+    }
+  };
+
   input.addEventListener("keydown", handleKeyDown, { signal });
   input.addEventListener("input", handleInput, { signal });
 
+  cancelButton.addEventListener("click", handleCancelClick, { signal });
   sendButton.addEventListener("click", sendMessage, { signal });
+  attachButton.addEventListener("click", handleAttachClick, { signal });
   const textHeight = createTextareaHeightHandler({ textarea: input, signal });
 
   const render = () => {
@@ -192,6 +246,15 @@ export const createChatbar = () => {
       syncValue();
       updatePlaceholder();
       textHeight.adjust();
+      updateCancelButton();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "message_property:attachment",
+    () => {
+      input.focus();
+      updateCancelButton();
     },
     signal,
   );
@@ -199,6 +262,7 @@ export const createChatbar = () => {
     "message_property:replying",
     () => {
       input.focus();
+      updateCancelButton();
     },
     signal,
   );
@@ -207,6 +271,7 @@ export const createChatbar = () => {
     () => {
       syncValue();
       input.focus();
+      updateCancelButton();
     },
     signal,
   );
