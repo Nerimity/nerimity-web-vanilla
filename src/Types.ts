@@ -51,6 +51,13 @@ export interface ChannelPermissions {
   roleId: string;
 }
 
+export interface RawServerFolder {
+  id: string;
+  serverIds: string[];
+  color: string;
+  name: string;
+}
+
 export interface RawServer {
   id: string;
   name: string;

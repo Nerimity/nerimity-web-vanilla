@@ -1,16 +1,22 @@
 import { t } from "@lingui/core/macro";
-import type { RawUser, RawUserNotificationSettings } from "../Types";
+
+import type { RawServerFolder, RawUserNotificationSettings } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
-import { User } from "./userStore";
-import { serverStore } from "./serverStore";
 import { channelStore } from "./channelStore";
+import { serverStore } from "./serverStore";
+import { User } from "./userStore";
 
 export const accountStore = createAccountStore();
+
+type CurrentUser = User & {
+  orderedServerIds: string[];
+  serverFolders: RawServerFolder[];
+};
 
 function createAccountStore() {
   let connected = false;
   let authenticated = false;
-  let currentUser: User | null = null;
+  let currentUser: CurrentUser | null = null;
   let notificationSettings = new Map<string, RawUserNotificationSettings>();
 
   const setNotificationSettings = (
@@ -66,8 +72,8 @@ function createAccountStore() {
     };
   };
 
-  const setCurrentUser = (user: RawUser) => {
-    currentUser = new User(user);
+  const setCurrentUser = (user: CurrentUser) => {
+    currentUser = user;
   };
 
   const setAuthenticated = (newAuthenticated: boolean) => {
