@@ -4,10 +4,16 @@ import { Modal } from "../modal";
 
 import style from "./ContextMenu.module.css";
 
-const Root = (props: { children: any; pos: { x: string; y: string } }) => {
+const Root = (props: {
+  children: any;
+  pos: { x: string; y: string };
+  id?: string;
+}) => {
   return (
     <Modal.Root pos={props.pos}>
-      <div class={style.contextMenu}>{props.children}</div>
+      <div class={style.contextMenu} id={props.id}>
+        {props.children}
+      </div>
     </Modal.Root>
   );
 };
@@ -19,12 +25,20 @@ const ItemLabel = (props: { children: any }) => {
   return <div class={style.label}>{props.children}</div>;
 };
 
-const Item = (props: { children: any; alert?: boolean }) => {
+const Item = (props: { children: any; alert?: boolean; id?: string }) => {
   return (
-    <div class={style.item} data-alert={props.alert}>
+    <div
+      class={[style.item, "ctx-item"]}
+      data-alert={props.alert}
+      id={props.id}
+    >
       {props.children}
     </div>
   );
+};
+
+const Separator = () => {
+  return <div class={style.separator} />;
 };
 
 export const ContextMenu = {
@@ -32,4 +46,5 @@ export const ContextMenu = {
   Icon: ItemIcon,
   Item,
   Label: ItemLabel,
+  Separator,
 };

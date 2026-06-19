@@ -73,12 +73,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:168
+#: src/components/message-pane/chatbar.tsx:225
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:173
+#: src/components/message-pane/chatbar.tsx:230
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -87,6 +87,7 @@ msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
 #: src/components/message-pane/deleteMessageModal.tsx:40
+#: src/components/message-pane/messagePane.tsx:571
 msgid "Delete Message"
 msgstr "Delete Message"
 
@@ -107,12 +108,28 @@ msgstr "Deleting..."
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
+#: src/components/message-pane/messagePane.tsx:563
+msgid "Edit Message"
+msgstr "Edit Message"
+
+#: src/components/message-pane/messagePane.tsx:567
+msgid "Reply Message"
+msgstr "Reply Message"
+
+#: src/components/message-pane/messagePane.tsx:576
+msgid "Copy Content"
+msgstr "Copy Content"
+
+#: src/components/message-pane/messagePane.tsx:580
+msgid "Copy ID"
+msgstr "Copy ID"
+
 #: src/components/message-pane/repliesIndicator.tsx:74
 msgid "Mention"
 msgstr "Mention"
 
 #. placeholder {0}: names.length
-#: src/components/message-pane/typingIndicator.tsx:110
+#: src/components/message-pane/typingIndicator.tsx:118
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 

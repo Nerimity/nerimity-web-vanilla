@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
@@ -13,6 +14,7 @@ import {
   createIntersectionObserver,
   createResizeObserver,
 } from "../../utils/observer";
+import { portalElement } from "../../utils/portal";
 import { setRecentServerChannel } from "../../utils/recentServerChannels";
 import { Drawer } from "../drawer";
 import { createModal } from "../modal";
@@ -20,6 +22,7 @@ import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
 import { ContextMenu } from "./ContextMenu";
 import { createInfiniteScroll } from "./createInfiniteScroll";
+import { createDeleteMessageModal } from "./deleteMessageModal";
 import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
 import { MessageItem } from "./messageItem";
@@ -493,6 +496,7 @@ const createMessageContextMenuHandler = (opts: {
   opts.el.addEventListener("contextmenu", (event) => {
     const target = event.target as HTMLElement;
     const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+    if (!messageEl) return;
     const messageId = messageEl.dataset?.messageId!;
 
     const abortController = new AbortController();
@@ -500,6 +504,47 @@ const createMessageContextMenuHandler = (opts: {
     if (!messageId) return;
     event.preventDefault();
     event.stopPropagation();
+
+    const message = messageStore.messages
+      .get(channelStore.currentChannelId!)
+      ?.find((m) => m.id === messageId);
+    if (!message) return;
+
+    portalElement().addEventListener(
+      "click",
+      (event) => {
+        abortController.abort();
+        const target = event.target as HTMLElement;
+        const item = target.closest(".ctx-item");
+        const id = item?.id;
+        switch (id) {
+          case "delete":
+            createDeleteMessageModal({
+              message,
+              skipConfirmation: event.shiftKey,
+            });
+            break;
+          case "edit":
+            channelStore.setEditingMessage(
+              channelStore.currentChannelId!,
+              message,
+            );
+            break;
+          case "copy":
+            navigator.clipboard.writeText(message.content);
+            break;
+          case "copy_id":
+            navigator.clipboard.writeText(message.id);
+            break;
+          case "reply":
+            channelStore.addReply(channelStore.currentChannelId!, message);
+            break;
+          default:
+            break;
+        }
+      },
+      { signal: abortController.signal },
+    );
 
     createModal(
       () => (
@@ -512,18 +557,27 @@ const createMessageContextMenuHandler = (opts: {
 
 const MessageContextMenu = (props: { x: string; y: string }) => {
   return (
-    <ContextMenu.Root pos={{ x: props.x, y: props.y }}>
-      <ContextMenu.Item>
-        <ContextMenu.Icon name="content_copy" />
-        <ContextMenu.Label>Copy</ContextMenu.Label>
+    <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
+      <ContextMenu.Item id="edit">
+        <ContextMenu.Icon name="edit" />
+        <ContextMenu.Label>{t`Edit Message`}</ContextMenu.Label>
       </ContextMenu.Item>
-      <ContextMenu.Item>
-        <ContextMenu.Icon name="content_copy" />
-        <ContextMenu.Label>Paste</ContextMenu.Label>
+      <ContextMenu.Item id="reply">
+        <ContextMenu.Icon name="reply" />
+        <ContextMenu.Label>{t`Reply Message`}</ContextMenu.Label>
       </ContextMenu.Item>
-      <ContextMenu.Item alert>
+      <ContextMenu.Item alert id="delete">
         <ContextMenu.Icon name="delete" />
-        <ContextMenu.Label>Delete</ContextMenu.Label>
+        <ContextMenu.Label>{t`Delete Message`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Separator />
+      <ContextMenu.Item id="copy">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy Content`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item id="copy_id">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy ID`}</ContextMenu.Label>
       </ContextMenu.Item>
     </ContextMenu.Root>
   );
