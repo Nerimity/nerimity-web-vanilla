@@ -287,7 +287,9 @@ function createServerStore() {
         type: "f" as const,
       })) || [];
 
-    const folderServerIds = new Set(folders.flatMap((f) => f.serverIds));
+    const serverIdToFolderId = new Map(
+      folders.flatMap((f) => f.serverIds.map((s) => [s, f.id])),
+    );
 
     const orderedServerIds = accountStore.currentUser?.orderedServerIds || [];
     const orderMap = new Map(orderedServerIds.map((id, i) => [id, i]));
@@ -297,16 +299,21 @@ function createServerStore() {
       .map((s) => ({
         ...s,
         type: "s" as const,
-        isInFolder: folderServerIds.has(s.id!),
+        isInFolder: serverIdToFolderId.has(s.id!),
       }));
 
     const serversAndFolders = [...folders, ...sortedServers];
 
-    return serversAndFolders.sort((a, b) => {
+    const sorted = serversAndFolders.sort((a, b) => {
       const aPos = orderMap.get(a.id!) ?? -1;
       const bPos = orderMap.get(b.id!) ?? 1;
       return aPos - bPos;
     });
+
+    return {
+      servers: sorted,
+      serverIdToFolderId,
+    };
   };
 
   return {

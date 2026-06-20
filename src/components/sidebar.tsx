@@ -1,6 +1,7 @@
 import morphdom from "morphdom";
 
 import { h } from "../h";
+import { accountStore } from "../store/accountStore";
 import { Server, serverStore } from "../store/serverStore";
 import type { RawServerFolder } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -111,19 +112,52 @@ const updateServerItemSelectedState = (
   container: HTMLElement,
   serverId?: string | null,
 ) => {
-  const selected = container.querySelector(`.serverItem[data-selected="true"]`);
+  const selectedEls = container.querySelectorAll(
+    `.serverItem[data-selected="true"], .${style.folderItem}[data-selected="true"]`,
+  );
 
-  if (selected) {
-    selected.setAttribute("data-selected", "false");
-  }
+  selectedEls.forEach((el) => el.removeAttribute("data-selected"));
 
   if (!serverId) return;
+
+  const folderId = serverStore
+    .orderedServers()
+    .serverIdToFolderId.get(serverId);
+  if (folderId) {
+    const folderItem = container.querySelector(
+      `[data-server-id="${folderId}"]`,
+    );
+    folderItem?.setAttribute("data-selected", "true");
+  }
 
   const item = container.querySelector(`[data-server-id="${serverId}"].item`);
   item?.setAttribute("data-selected", "true");
 };
 
+const rerenderFolder = (folderId: string) => {
+  console.log("rerender");
+  const folder = accountStore.currentUser?.serverFolders.find(
+    (f) => f.id === folderId,
+  );
+  console.log(folder);
+  if (!folder) return;
+  const container = document.querySelector(
+    `.${style.folderItem}[data-server-id="${folder.id}"]`,
+  );
+  if (!container) return;
+  morphdom(container, <FolderItem folder={folder} />);
+};
+
 const rerenderServerItem = (serverId: string) => {
+  console.log("uwu");
+
+  const folderId = serverStore
+    .orderedServers()
+    .serverIdToFolderId.get(serverId);
+  if (folderId) {
+    rerenderFolder(folderId);
+  }
+
   const serverEl = document.querySelector(
     `.serverItem[data-server-id="${serverId}"]`,
   );
@@ -151,7 +185,9 @@ export const createSidebar = () => {
   const renderList = (opts?: { id?: string; forceRecreate?: boolean }) => {
     const servers = serverStore
       .orderedServers()
-      .filter((s) => (s.type === "s" && !s.isInFolder) || s.type === "f");
+      .servers.filter(
+        (s) => (s.type === "s" && !s.isInFolder) || s.type === "f",
+      );
     reconcile({
       container: serverListEl,
       dataAttr: "server-id",
