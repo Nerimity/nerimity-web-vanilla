@@ -7,7 +7,22 @@ interface AvatarProps {
   user?: { avatar?: string; username: string; hexColor: string } | null;
   server?: { avatar?: string; name: string; hexColor: string } | null;
 
-  size: 12 | 14 | 16 | 24 | 28 | 32 | 40 | 42 | 48 | 64 | 72 | 80 | 96 | 128;
+  size:
+    | 12
+    | 14
+    | 16
+    | 24
+    | 26
+    | 28
+    | 32
+    | 40
+    | 42
+    | 48
+    | 64
+    | 72
+    | 80
+    | 96
+    | 128;
   imgClass?: string;
 }
 const buildUrl = (props: AvatarProps) => {

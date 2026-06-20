@@ -34,10 +34,76 @@
   justify-content: center;
   width: 64px;
   height: 50px;
+  &:before {
+    z-index: 11111;
+    width: 3px;
+  }
   .notifyPill {
     position: absolute;
     top: 6px;
     right: 6px;
+  }
+}
+
+.folderItem {
+  height: initial;
+  min-height: 64px;
+  padding: 0;
+  border-radius: var(--radius-16);
+  user-select: none;
+
+  &:after {
+    position: absolute;
+    opacity: 0.2;
+    background: var(--color);
+    content: "";
+    inset: 0;
+  }
+
+  && {
+    &:hover {
+      background-color: unset;
+    }
+  }
+  &[data-opened="true"],
+  &[data-opened="true"] .folderPreview {
+    border-radius: var(--radius-8);
+  }
+  &[data-opened="true"]:before {
+    display: none;
+  }
+
+  .folderPreview {
+    position: absolute;
+    z-index: 111;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 64px;
+    border-radius: var(--radius-16);
+    inset: 0;
+    gap: 4px;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .folderIcon {
+      color: var(--color);
+    }
+    .placeholder {
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .folderServerList {
+    position: relative;
+    z-index: 1111;
+    display: flex;
+    flex-direction: column;
+    margin-top: 68px;
+    gap: 2px;
   }
 }
 

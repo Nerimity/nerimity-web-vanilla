@@ -97,6 +97,9 @@ const onAuthenticated = (payload: any) => {
   messageMentionStore.setMentions(payload.messageMentions);
   accountStore.setCurrentUser(payload.user);
   friendStore.setFriends(payload.friends);
+
+  channelStore.notificationsMemo.rerun();
+  serverStore.notificationsMemo.rerun();
   accountStore.setAuthenticated(true);
 };
 

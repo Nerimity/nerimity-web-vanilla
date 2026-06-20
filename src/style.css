@@ -7,7 +7,7 @@
   --primary-dark: #0b1a33;
   --alert-color: #eb5c5c;
   --warn-color: #f1750f;
-  --item-bg: var(--gray-800);
+  --item-bg: rgba(255, 255, 255, 0.1);
 
   --input-background-color: black;
 
@@ -36,6 +36,7 @@
   --radius-6: 6px;
   --radius-8: 8px;
   --radius-10: 10px;
+  --radius-16: 16px;
 
   --status-offline: #adadad;
   --status-online: #78e380;

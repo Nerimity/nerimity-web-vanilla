@@ -1,22 +1,28 @@
+import morphdom from "morphdom";
+
 import { h } from "../h";
 import { Server, serverStore } from "../store/serverStore";
+import type { RawServerFolder } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
 import { getRecentServerChannelId } from "../utils/recentServerChannels";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
+import { Icon } from "./icon";
 import { Item } from "./item";
 import { LogoMono } from "./LogoMono";
 import { NotificationPill } from "./NotificationPill";
 
 import style from "./sidebar.module.css";
 
+const openedFolderIds = new Set<string>(["1786346124886585344"]);
+
 const SidebarItem = (props: {
   title?: string;
-  href: string;
+  href?: string;
   selected?: boolean;
-  children?: JSX.Element;
+  children?: any;
   class?: string;
   alert?: boolean | number;
   [key: string]: any;
@@ -36,46 +42,96 @@ const SidebarItem = (props: {
   );
 };
 
-const createServerItemHelper = () => {
-  const create = (server: Server) => {
-    const notifications = serverStore.notificationsMemo.value()[server.id];
+const ServerItem = ({ server }: { server: Server }) => {
+  const notifications = serverStore.notificationsMemo.value()[server.id];
 
-    return (
-      <SidebarItem
-        class="serverItem"
-        data-server-id={server.id}
-        alert={notifications}
-        selected={serverStore.currentServerId === server.id}
-        title={server.name}
-        href={`/app/servers/${server.id}/${getRecentServerChannelId(server.id)}`}
-      >
-        <Avatar size={42} server={server} imgClass="avatar" />
-      </SidebarItem>
-    );
-  };
-
-  const updateSelected = (container: HTMLElement, serverId?: string | null) => {
-    const selected = container.querySelector(
-      `.serverItem[data-selected="true"]`,
-    );
-
-    if (selected) {
-      selected.setAttribute("data-selected", "false");
-    }
-
-    if (!serverId) return;
-
-    const item = container.querySelector(`[data-server-id="${serverId}"].item`);
-    item?.setAttribute("data-selected", "true");
-  };
-
-  return {
-    create,
-    updateSelected,
-  };
+  return (
+    <SidebarItem
+      class="serverItem"
+      data-server-id={server.id}
+      alert={notifications}
+      selected={serverStore.currentServerId === server.id}
+      title={server.name}
+      href={`/app/servers/${server.id}/${getRecentServerChannelId(server.id)}`}
+    >
+      <Avatar size={42} server={server} imgClass="avatar" />
+    </SidebarItem>
+  );
 };
 
-const serverItemHelper = createServerItemHelper();
+const FolderItem = ({ folder }: { folder: RawServerFolder }) => {
+  const notifications = serverStore.notificationsMemo.value();
+  const hasNotifications = !!folder.serverIds.find((id) => notifications[id]);
+
+  const arr = Array(4).fill(undefined);
+
+  const opened = openedFolderIds.has(folder.id);
+
+  const selectedServer = folder.serverIds.includes(
+    serverStore.currentServerId!,
+  );
+
+  return (
+    <SidebarItem
+      class={style.folderItem}
+      data-server-id={folder.id}
+      alert={hasNotifications}
+      title={folder.name}
+      style={{ "--color": folder.color }}
+      selected={!opened && selectedServer}
+      data-opened={opened}
+    >
+      <div class={style.folderPreview}>
+        {!opened ? (
+          arr.map((_, i) => {
+            const id = folder.serverIds[i];
+            if (!id) return <div class={style.placeholder} />;
+            const server = serverStore.servers.get(id);
+            if (!server) return null;
+            return <Avatar size={24} server={server} imgClass="avatar" />;
+          })
+        ) : (
+          <Icon name="folder_open" class={style.folderIcon} />
+        )}
+      </div>
+      {opened && (
+        <div class={style.folderServerList}>
+          {folder.serverIds.map((id) => {
+            const server = serverStore.servers.get(id);
+            if (!server) return null;
+            return <ServerItem server={server} />;
+          })}
+        </div>
+      )}
+    </SidebarItem>
+  );
+};
+
+const updateServerItemSelectedState = (
+  container: HTMLElement,
+  serverId?: string | null,
+) => {
+  const selected = container.querySelector(`.serverItem[data-selected="true"]`);
+
+  if (selected) {
+    selected.setAttribute("data-selected", "false");
+  }
+
+  if (!serverId) return;
+
+  const item = container.querySelector(`[data-server-id="${serverId}"].item`);
+  item?.setAttribute("data-selected", "true");
+};
+
+const rerenderServerItem = (serverId: string) => {
+  const serverEl = document.querySelector(
+    `.serverItem[data-server-id="${serverId}"]`,
+  );
+  if (!serverEl) return;
+  const server = serverStore.servers.get(serverId);
+  if (!server) return;
+  morphdom(serverEl, <ServerItem server={server} />);
+};
 
 export const createSidebar = () => {
   let containerEl: HTMLElement | null = null;
@@ -93,13 +149,20 @@ export const createSidebar = () => {
   ) as HTMLElement;
 
   const renderList = (opts?: { id?: string; forceRecreate?: boolean }) => {
-    const servers = [...serverStore.servers.values()];
+    const servers = serverStore
+      .orderedServers()
+      .filter((s) => (s.type === "s" && !s.isInFolder) || s.type === "f");
     reconcile({
       container: serverListEl,
       dataAttr: "server-id",
       values: servers,
       valueId: "id",
-      create: serverItemHelper.create,
+      create: (item) =>
+        item.type === "s" ? (
+          <ServerItem server={item} />
+        ) : (
+          <FolderItem folder={item} />
+        ),
       shouldRecreate(_, item) {
         if (opts?.forceRecreate) return true;
         return opts?.id === item.id;
@@ -128,7 +191,7 @@ export const createSidebar = () => {
     "channel:notify_update",
     (event) => {
       if (!event.serverId) return;
-      renderList({ id: event.serverId });
+      rerenderServerItem(event.serverId);
     },
     signal,
   );
@@ -137,7 +200,7 @@ export const createSidebar = () => {
     "server:member_update",
     (event) => {
       if (!event.isMe) return;
-      renderList({ id: event.serverId });
+      rerenderServerItem(event.serverId);
     },
     signal,
   );
@@ -145,7 +208,7 @@ export const createSidebar = () => {
     "server:update_role",
     (event) => {
       if (!event.hasRole) return;
-      renderList({ id: event.serverId });
+      rerenderServerItem(event.serverId);
     },
     signal,
   );
@@ -168,7 +231,7 @@ export const createSidebar = () => {
     "navigate:serverId",
     () => {
       if (!containerEl) return;
-      serverItemHelper.updateSelected(containerEl, serverStore.currentServerId);
+      updateServerItemSelectedState(containerEl, serverStore.currentServerId);
     },
     signal,
   );
@@ -188,6 +251,27 @@ export const createSidebar = () => {
     renderList();
     return containerEl;
   };
+
+  const handleFolderClick = (folderId: string) => {
+    const opened = openedFolderIds.has(folderId);
+    if (opened) openedFolderIds.delete(folderId);
+    else openedFolderIds.add(folderId);
+    renderList({ id: folderId });
+  };
+
+  serverListEl.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLElement;
+      const folder = target.closest(
+        `.${style.folderPreview}`,
+      ) as HTMLElement | null;
+      if (folder) {
+        handleFolderClick(folder.parentElement!.dataset.serverId!);
+      }
+    },
+    { signal },
+  );
 
   const destroy = () => {
     abortController.abort();

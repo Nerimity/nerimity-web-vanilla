@@ -36,21 +36,20 @@ export const createMessageReactionHandler = (opts: {
     (event) => {
       const target = event.target as HTMLElement;
       const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
-      const messageId = messageEl.dataset.messageId!;
+      const messageId = messageEl?.dataset.messageId!;
       if (!messageId) return;
-
-      const messages = messageStore.messages.get(
-        channelStore.currentChannelId!,
-      );
-      const message = messages?.find((m) => m.id === messageId);
-      if (!message) return;
-
       const reactionEl = target.closest(
         `.${style.messageReactions} .reactionItem`,
       ) as HTMLElement | null;
 
       const id = reactionEl?.dataset.reactionId;
       if (!id) return;
+
+      const messages = messageStore.messages.get(
+        channelStore.currentChannelId!,
+      );
+      const message = messages?.find((m) => m.id === messageId);
+      if (!message) return;
 
       const isUnicode = reactionEl?.dataset.uni;
 

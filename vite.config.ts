@@ -17,6 +17,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "folder_open",
         "attach_file",
         "download",
         "schedule",

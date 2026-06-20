@@ -1,5 +1,10 @@
 import { socket } from "../services/socket";
-import { ChannelType, NotificationMode, type RawServer } from "../Types";
+import {
+  ChannelType,
+  NotificationMode,
+  type RawServer,
+  type RawServerFolder,
+} from "../Types";
 import { hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
 import { debounce } from "../utils/debounce";
@@ -11,6 +16,10 @@ import { Channel, channelStore } from "./channelStore";
 import { serverMemberStore, type ServerMember } from "./serverMemberStore";
 import { ServerRole, serverRoleStore } from "./serverRoleStore";
 
+export type ServerOrFolder =
+  | (Server & { type: "s" })
+  | (RawServerFolder & { type: "f" });
+
 export const serverStore = createServerStore();
 
 export class Server {
@@ -21,6 +30,7 @@ export class Server {
   defaultChannelId: string;
   defaultRoleId: string;
   createdById: string;
+  createdAt: number;
   /**
    * @description if true, server members are not loaded yet.
    */
@@ -33,6 +43,7 @@ export class Server {
     this.defaultChannelId = data.defaultChannelId;
     this.defaultRoleId = data.defaultRoleId;
     this.createdById = data.createdById;
+    this.createdAt = data.createdAt;
   }
 }
 
@@ -268,8 +279,39 @@ function createServerStore() {
     return result;
   });
 
+  const orderedServers = () => {
+    const folders =
+      accountStore.currentUser?.serverFolders.map((f) => ({
+        ...f,
+        serverIds: f.serverIds.filter((s) => serverStore.servers.has(s)),
+        type: "f" as const,
+      })) || [];
+
+    const folderServerIds = new Set(folders.flatMap((f) => f.serverIds));
+
+    const orderedServerIds = accountStore.currentUser?.orderedServerIds || [];
+    const orderMap = new Map(orderedServerIds.map((id, i) => [id, i]));
+
+    const sortedServers = [...serverStore.servers.values()]
+      .sort((a, b) => a.createdAt - b.createdAt)
+      .map((s) => ({
+        ...s,
+        type: "s" as const,
+        isInFolder: folderServerIds.has(s.id!),
+      }));
+
+    const serversAndFolders = [...folders, ...sortedServers];
+
+    return serversAndFolders.sort((a, b) => {
+      const aPos = orderMap.get(a.id!) ?? -1;
+      const bPos = orderMap.get(b.id!) ?? 1;
+      return aPos - bPos;
+    });
+  };
+
   return {
     servers,
+    orderedServers,
     setServers,
     get currentServerId() {
       return currentServerId;
