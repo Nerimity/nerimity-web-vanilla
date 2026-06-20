@@ -135,11 +135,9 @@ const updateServerItemSelectedState = (
 };
 
 const rerenderFolder = (folderId: string) => {
-  console.log("rerender");
   const folder = accountStore.currentUser?.serverFolders.find(
     (f) => f.id === folderId,
   );
-  console.log(folder);
   if (!folder) return;
   const container = document.querySelector(
     `.${style.folderItem}[data-server-id="${folder.id}"]`,
@@ -149,8 +147,6 @@ const rerenderFolder = (folderId: string) => {
 };
 
 const rerenderServerItem = (serverId: string) => {
-  console.log("uwu");
-
   const folderId = serverStore
     .orderedServers()
     .serverIdToFolderId.get(serverId);
