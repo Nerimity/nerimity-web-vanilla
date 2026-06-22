@@ -9,7 +9,8 @@ interface OGEmbedProps {
 }
 
 const getOrigSrc = (embed: RawMessageEmbed) => {
-  const rawUrl = embed.imageUrl!;
+  const rawUrl = embed.imageUrl;
+  if (!rawUrl) return null;
   if (rawUrl.startsWith("https://") || rawUrl.startsWith("http://"))
     return rawUrl;
   return `https://${embed.domain}/${rawUrl}`;
@@ -18,7 +19,9 @@ const getOrigSrc = (embed: RawMessageEmbed) => {
 export const OGEmbed = (props: OGEmbedProps) => {
   const embed = props.embed;
   const origImgSrc = getOrigSrc(embed);
-  const proxyImgSrc = `${cdnUrl}proxy/${encodeURIComponent(origImgSrc)}/embed.webp`;
+  const proxyImgSrc = !origImgSrc
+    ? null
+    : `${cdnUrl}proxy/${encodeURIComponent(origImgSrc)}/embed.webp`;
   const largeImage = embed.largeImage;
 
   return (
