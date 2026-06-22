@@ -41,7 +41,7 @@ const Root = (props: {
   return (
     <div class={style.modalBackdrop}>
       <div
-        class={[style.modalRoot, props.pos && style.hasPos]}
+        class={[style.modalRoot, "modalRoot", props.pos && style.hasPos]}
         data-x={props.pos?.x}
         data-y={props.pos?.y}
         style={{
@@ -68,7 +68,7 @@ const Header = (props: { label: string; icon?: string; alert?: boolean }) => {
 const Body = (props: { children?: any; width?: string }) => {
   return (
     <div
-      class={[style.body, "scrollbarHover"]}
+      class={[style.body, "modalBody", "scrollbarHover"]}
       style={{ "--width": props.width }}
     >
       {props.children}

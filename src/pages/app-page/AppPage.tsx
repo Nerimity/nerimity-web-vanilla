@@ -115,8 +115,10 @@ const createAppPage = () => {
   const handleResize = () => {
     if (window.innerWidth < mobileWidth) {
       document.body.classList.add("mobileWidth");
+      document.body.classList.remove("desktopWidth");
     } else {
       document.body.classList.remove("mobileWidth");
+      document.body.classList.add("desktopWidth");
     }
   };
   handleResize();

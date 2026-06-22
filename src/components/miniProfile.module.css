@@ -1,7 +1,33 @@
+:global(.mobileWidth) {
+  .miniProfile {
+    overflow: initial;
+  }
+}
+
+:global(#portal .modalRoot .modalBody.scrollbarHover, ) {
+  &:has(.miniProfile) {
+    padding: 0;
+    margin: 0;
+    overflow-y: hidden;
+  }
+}
+
+:global(.desktopWidth .modalRoot) {
+  &:has(.miniProfile) {
+    max-height: 90vh;
+  }
+}
+
+:global(.modalRoot) {
+  .miniProfile {
+    overflow: hidden;
+  }
+}
+
 .miniProfile {
+  padding-bottom: 4px;
   display: flex;
   flex-direction: column;
-  padding-top: 12px;
   gap: 8px;
   .overlayInfo {
     z-index: 111;
@@ -37,6 +63,9 @@
   }
 
   .section {
+    margin-left: 4px;
+    margin-right: 4px;
+
     display: flex;
     flex-direction: column;
     padding: 8px;

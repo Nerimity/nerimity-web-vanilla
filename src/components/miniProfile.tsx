@@ -186,7 +186,7 @@ export const MiniProfile = (props: {
           </div>
         </div>
 
-        <div class={style.section}>
+        <div class={[style.section, "scrollbarHover"]}>
           <div class={style.title}>{t`About Me`}</div>
           <div>
             <Markup text={details?.profile?.bio || ""} />
@@ -229,6 +229,13 @@ export const MiniProfile = (props: {
         details.profile.primaryColor,
       );
     }
+
+    const colorOne = details?.profile?.bgColorOne || "#000000";
+    const colorTwo = details?.profile?.bgColorTwo || "#000000";
+
+    const bg = `linear-gradient(180deg, ${colorOne}, ${colorTwo})`;
+    miniProfileEl.style.background = bg;
+
     morphdom(
       miniProfileEl,
       <div class={style.miniProfile}>
