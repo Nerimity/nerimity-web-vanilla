@@ -153,7 +153,7 @@ export const MiniProfile = (props: {
             {user?.username}
             <span class={style.tag}>:{user?.tag}</span>
           </span>
-          <UserPresence showOffline userId={props.userId} />
+          <UserPresence showOffline userId={props.userId} hideActivity />
           {showStats && (
             <div class={style.stats}>
               {!hideFollowers && (

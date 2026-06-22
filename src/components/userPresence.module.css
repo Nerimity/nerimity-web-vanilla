@@ -6,6 +6,12 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    background: var(--color);
+  }
+
+  .icon {
+    color: var(--color);
+    font-size: 12px;
   }
 
   .text {

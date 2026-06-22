@@ -1,5 +1,5 @@
 import { t } from "@lingui/core/macro";
-import type { RawUserPresence } from "../Types";
+import type { RawUserActivity, RawUserPresence } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 
 export const UserPresenceType = {
@@ -39,11 +39,13 @@ export class UserPresence {
   userId: string;
   status: (typeof UserPresenceType)[keyof typeof UserPresenceType];
   custom?: string;
+  activities?: RawUserActivity[];
   constructor(data: RawUserPresence) {
     this.userId = data.userId;
     this.status =
       data.status as (typeof UserPresenceType)[keyof typeof UserPresenceType];
     this.custom = data.custom;
+    this.activities = data.activities;
   }
 }
 

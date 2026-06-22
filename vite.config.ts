@@ -17,6 +17,10 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "terminal",
+        "music_note",
+        "movie",
+        "gamepad",
         "folder_open",
         "attach_file",
         "download",

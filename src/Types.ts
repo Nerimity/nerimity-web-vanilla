@@ -85,6 +85,22 @@ export interface RawUserPresence {
   status: number;
   userId: string;
   custom?: string;
+  activities?: RawUserActivity[];
+}
+
+export interface RawUserActivity {
+  action: string;
+  name: string;
+  startedAt: number;
+  endsAt?: number;
+  speed?: number;
+  updatedAt?: number;
+
+  imgSrc?: string;
+  title?: string;
+  subtitle?: string;
+  link?: string;
+  emoji?: string;
 }
 
 export interface RawInbox {
