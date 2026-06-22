@@ -183,13 +183,24 @@ export interface RawReplyMessage {
 }
 
 export interface RawMessageEmbed {
-  type?: "image";
-  animated?: boolean;
-  imageMime?: string;
-  imageWidth?: number;
-  imageHeight?: number;
+  title?: string;
+  type?: string;
+  description?: string;
+  url: string;
+  origUrl?: string;
   imageUrl?: string;
-  domain?: string;
+  imageWidth?: number;
+  animated?: boolean;
+  imageHeight?: number;
+  imageMime?: string;
+
+  video?: boolean;
+  largeImage?: boolean;
+
+  // for youtube
+  uploadDate: string;
+  channelName: string;
+  domain: string;
 }
 
 export interface Attachment {

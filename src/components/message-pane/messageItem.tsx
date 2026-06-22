@@ -17,6 +17,7 @@ import { ServerClanItem } from "../serverClanItem";
 import { FileEmbed } from "./FileEmbed";
 import { ImageEmbed } from "./imageEmbed";
 import { MessageReactions } from "./MessageReactions";
+import { OGEmbed } from "./OGEmbed";
 import { SystemMessage } from "./SystemMessage";
 import { isNewDay, shouldGroup } from "./utils";
 
@@ -148,15 +149,16 @@ const MessageEmbeds = (props: {
   container: HTMLDivElement;
 }) => {
   const attachment = props.message.attachments[0];
+
+  const embed = props.message.embed;
+
   const imageAttachment =
     attachment?.width != undefined &&
     attachment?.mime?.startsWith("image/") == true;
 
   const attachmentProperty = props.message.attachmentProperty;
 
-  const imageEmbed =
-    props.message.embed?.type == "image" &&
-    props.message.embed?.imageHeight != null;
+  const imageEmbed = embed?.type == "image" && embed?.imageHeight != null;
 
   if (
     (attachment && !imageAttachment) ||
@@ -173,11 +175,14 @@ const MessageEmbeds = (props: {
     return (
       <ImageEmbed
         attachment={attachment}
-        embed={props.message.embed}
+        embed={embed}
         attachmentProperty={attachmentProperty}
         container={props.container}
       />
     );
+  }
+  if (embed && embed?.type !== "image") {
+    return <OGEmbed embed={embed} container={props.container} />;
   }
   return null;
 };

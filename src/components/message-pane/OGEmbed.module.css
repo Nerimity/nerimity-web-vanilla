@@ -1,0 +1,48 @@
+.ogEmbed {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  padding: 6px;
+  border-radius: var(--radius-8);
+  background-color: var(--gray-800);
+  place-self: start;
+  gap: 6px;
+}
+.details {
+  display: flex;
+  gap: 8px;
+}
+.smallImage {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-4);
+  object-fit: cover;
+}
+.largeImage {
+  width: 100%;
+  max-height: 500px;
+  border-radius: var(--radius-4);
+}
+
+.detailsInner {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.title {
+  padding-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.description {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.2;
+  color: var(--gray-200);
+  font-size: 12px;
+
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  -webkit-box-orient: vertical;
+}

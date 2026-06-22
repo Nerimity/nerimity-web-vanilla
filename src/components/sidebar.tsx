@@ -17,7 +17,7 @@ import { NotificationPill } from "./NotificationPill";
 
 import style from "./sidebar.module.css";
 
-const openedFolderIds = new Set<string>(["1786346124886585344"]);
+const openedFolderIds = new Set<string>();
 
 const SidebarItem = (props: {
   title?: string;
