@@ -67,18 +67,9 @@
 }
 
 .description {
-  overflow: hidden;
   flex: 1;
   min-height: 0;
   line-height: 1.2;
   color: var(--gray-200);
   font-size: 12px;
-  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-
-  [data-has-large-image="true"] & {
-    overflow: visible;
-    -webkit-mask-image: none;
-    mask-image: none;
-  }
 }
