@@ -157,16 +157,16 @@ export const MiniProfile = (props: {
           {showStats && (
             <div class={style.stats}>
               {!hideFollowers && (
-                <span class="stat">
+                <span class={style.stat}>
                   <Trans>
-                    <span class="full">{followers}</span> Followers
+                    <span class={style.full}>{followers}</span> Followers
                   </Trans>
                 </span>
               )}
               {!hideFollowing && (
-                <span class="stat">
+                <span class={style.stat}>
                   <Trans>
-                    <span class="full">{following}</span> Following
+                    <span class={style.full}>{following}</span> Following
                   </Trans>
                 </span>
               )}
