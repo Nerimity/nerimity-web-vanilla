@@ -11,3 +11,4 @@ minimumReleaseAgeExclude:
   - '@lingui/react@6.2.0'
   - '@lingui/vite-plugin@6.2.0'
   - '@nerimity/nevula@0.15.1'
+  - vite@8.1.0
