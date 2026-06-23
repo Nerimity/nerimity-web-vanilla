@@ -22,14 +22,23 @@ export const OGEmbed = (props: OGEmbedProps) => {
 
   const largeImage = embed.largeImage;
 
+  if (!largeImage) {
+    embed.imageWidth = 100;
+    embed.imageHeight = 100;
+  }
+
   return (
-    <div class={style.ogEmbed} data-has-large-image={largeImage}>
+    <div
+      class={style.ogEmbed}
+      data-has-large-image={largeImage}
+      style={{ "--theme-color": embed.themeColor }}
+    >
       <div class={style.details}>
         {!largeImage && origImgSrc && (
           <ImageEmbed
             class={style.smallImage}
             maxWidth={100}
-            embed={{ ...props.embed, imageWidth: 100, imageHeight: 100 }}
+            embed={props.embed}
             container={props.container}
           />
         )}
@@ -50,7 +59,8 @@ export const OGEmbed = (props: OGEmbedProps) => {
       {largeImage && origImgSrc && (
         <ImageEmbed
           class={style.largeImage}
-          maxWidth={488}
+          maxWidth={478}
+          horizPadding={84}
           embed={props.embed}
           container={props.container}
         />

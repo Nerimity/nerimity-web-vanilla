@@ -1,7 +1,7 @@
 .jumpToPresent {
   position: absolute;
-  top: -48px;
-  right: 0;
+  top: -16px;
+  right: 8px;
   &.hide {
     display: none;
   }

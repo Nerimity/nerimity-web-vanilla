@@ -1,12 +1,25 @@
 .ogEmbed {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 500px;
   padding: 6px;
+  padding-left: 16px;
   border-radius: var(--radius-8);
   background-color: var(--gray-800);
   place-self: start;
   gap: 6px;
+
+  &:before {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 6px;
+    width: 4px;
+    border-radius: var(--radius-max);
+    background-color: var(--theme-color, var(--gray-700));
+    content: "";
+  }
 }
 .smallImage {
   align-self: flex-start;

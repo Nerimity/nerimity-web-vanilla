@@ -76,12 +76,12 @@ export const createChatbar = () => {
   };
   let chatbar = (
     <div class={style.chatbarContainer}>
+      {jumpToPresent}
       {typingIndicator.el}
       {editMessageIndicator}
       {attachmentIndicator}
       {repliesIndicator}
       <div class={style.chatInputContainer}>
-        {jumpToPresent}
         <Input
           type="textarea"
           id="message-input"

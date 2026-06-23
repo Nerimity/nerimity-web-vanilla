@@ -193,6 +193,7 @@ export interface RawMessageEmbed {
   animated?: boolean;
   imageHeight?: number;
   imageMime?: string;
+  themeColor?: string;
 
   video?: boolean;
   largeImage?: boolean;
