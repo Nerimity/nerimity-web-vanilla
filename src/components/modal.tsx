@@ -18,6 +18,15 @@ type ModalAnchor =
   | "bottom-center"
   | "bottom-right";
 
+const modalStack: Array<{ destroy: () => void }> = [];
+const pushModal = (entry: { destroy: () => void }) => modalStack.push(entry);
+const popModal = (entry: { destroy: () => void }) => {
+  const idx = modalStack.lastIndexOf(entry);
+  if (idx !== -1) modalStack.splice(idx, 1);
+};
+const isTopModal = (entry: { destroy: () => void }) =>
+  modalStack[modalStack.length - 1] === entry;
+
 const Root = (props: {
   children: any;
   pos?: { x: string; y: string; anchor?: ModalAnchor };
@@ -239,10 +248,13 @@ export const createModal = (
     }
   };
 
+  const stackEntry = { destroy: () => {} };
+  pushModal(stackEntry);
+
   window.addEventListener(
     "touchstart",
     (event) => {
-      if (!isMobileWidth()) return;
+      if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       cancelInertia();
 
       const touch = event.touches[0];
@@ -263,7 +275,7 @@ export const createModal = (
   window.addEventListener(
     "touchmove",
     (event) => {
-      if (!isMobileWidth()) return;
+      if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       const touch = event.touches[0];
       if (!touch) return;
 
@@ -294,7 +306,7 @@ export const createModal = (
   window.addEventListener(
     "touchend",
     () => {
-      if (!isMobileWidth()) return;
+      if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       const windowHeight = window.innerHeight;
       const modalHeight = modal.offsetHeight;
       const minY = windowHeight - modalHeight;
@@ -463,7 +475,7 @@ export const createModal = (
   let wheelTimeout: number | null = null;
 
   const handleScroll = (event: WheelEvent) => {
-    if (!isMobileWidth()) return;
+    if (!isMobileWidth() || !isTopModal(stackEntry)) return;
     cancelInertia();
 
     modalY = modalY - event.deltaY;
@@ -559,7 +571,7 @@ export const createModal = (
     () => {
       createResizeObserver(modal, handleResize, { signal, defer: true });
     },
-    isMobileWidth() ? 200 : 0, // delay needed for mobile or else it doesn't animate
+    isMobileWidth() ? 200 : 0,
   );
 
   window.addEventListener("resize", handleResize, {
@@ -607,13 +619,18 @@ export const createModal = (
   updateFooterPosition();
   portalElement().appendChild(backdrop);
 
+  let destroyed = false;
   const destroy = () => {
+    if (destroyed) return;
+    destroyed = true;
+
     if (wheelTimeout) {
       clearTimeout(wheelTimeout);
       wheelTimeout = null;
     }
     cancelInertia();
     restoreFooter();
+    popModal(stackEntry);
 
     backdrop.animate(
       { background: "rgba(0, 0, 0, 0)" },
@@ -652,6 +669,9 @@ export const createModal = (
       backdrop.remove();
     };
   };
+
+  stackEntry.destroy = destroy;
+
   abortController.signal.addEventListener("abort", () => destroy(), {
     once: true,
   });
