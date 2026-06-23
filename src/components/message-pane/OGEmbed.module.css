@@ -30,6 +30,7 @@
 .detailsInner {
   display: flex;
   overflow: hidden;
+  align-items: start;
   flex: 1;
   flex-direction: column;
   min-width: 0;
