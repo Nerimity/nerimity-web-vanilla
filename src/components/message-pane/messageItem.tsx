@@ -216,10 +216,15 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
     <div class={style.replyMessage}>
       {message ? (
         <>
+          <Avatar user={creator} size={14} />
           <GradientText class={style.username} color={color}>
             {creator.username}
           </GradientText>
-          <span class={style.content}>{message?.content}</span>
+          <Markup
+            class={style.content}
+            text={message.content || "Attachment"}
+            inline
+          />
         </>
       ) : (
         <span
