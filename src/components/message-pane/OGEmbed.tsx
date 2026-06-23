@@ -1,6 +1,6 @@
-import { cdnUrl } from "../../config";
 import { h } from "../../h";
 import type { RawMessageEmbed } from "../../Types";
+import { ImageEmbed } from "./imageEmbed";
 
 import style from "./OGEmbed.module.css";
 interface OGEmbedProps {
@@ -19,16 +19,19 @@ const getOrigSrc = (embed: RawMessageEmbed) => {
 export const OGEmbed = (props: OGEmbedProps) => {
   const embed = props.embed;
   const origImgSrc = getOrigSrc(embed);
-  const proxyImgSrc = !origImgSrc
-    ? null
-    : `${cdnUrl}proxy/${encodeURIComponent(origImgSrc)}/embed.webp`;
+
   const largeImage = embed.largeImage;
 
   return (
-    <div class={style.ogEmbed}>
+    <div class={style.ogEmbed} data-has-large-image={largeImage}>
       <div class={style.details}>
         {!largeImage && origImgSrc && (
-          <img class={style.smallImage} src={proxyImgSrc} loading="lazy" />
+          <ImageEmbed
+            class={style.smallImage}
+            maxWidth={100}
+            embed={{ ...props.embed, imageWidth: 100, imageHeight: 100 }}
+            container={props.container}
+          />
         )}
         <div class={style.detailsInner}>
           <a
@@ -45,7 +48,12 @@ export const OGEmbed = (props: OGEmbedProps) => {
         </div>
       </div>
       {largeImage && origImgSrc && (
-        <img class={style.largeImage} src={proxyImgSrc} loading="lazy" />
+        <ImageEmbed
+          class={style.largeImage}
+          maxWidth={488}
+          embed={props.embed}
+          container={props.container}
+        />
       )}
     </div>
   );

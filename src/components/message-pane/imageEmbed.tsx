@@ -12,6 +12,8 @@ export const ImageEmbed = (props: {
   embed?: LocalEmbed;
   attachmentProperty?: AttachmentProperty;
   container: HTMLDivElement;
+  maxWidth?: number;
+  class?: string;
 }) => {
   const item = props.embed || props.attachment;
   const width = props.attachment
@@ -51,7 +53,10 @@ export const ImageEmbed = (props: {
     />
   ) as HTMLImageElement;
   if (cached) img.classList.add(style.loaded!);
-  const maxWidth = clamp(props.container.clientWidth - 70, 600);
+  const maxWidth = clamp(
+    props.container.clientWidth - 70,
+    props.maxWidth || 600,
+  );
 
   const maxHeight = Math.max(props.container.clientHeight / 2, 200);
 
@@ -81,7 +86,8 @@ export const ImageEmbed = (props: {
 
   return (
     <div
-      class={[style.imageContainer, "imageEmbed"]}
+      data-max-width={props.maxWidth}
+      class={[style.imageContainer, props.class, "imageEmbed"]}
       data-width={width}
       data-height={height}
       style={{ "--width": dims.width + "px", "--height": dims.height + "px" }}
@@ -100,11 +106,14 @@ export const ImageEmbed = (props: {
 export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
   const onResize = throttle(() => {
     const imageEmbeds = logElement.querySelectorAll(`.${style.imageContainer}`);
-    const maxWidth = clamp(logElement.clientWidth - 70, 600);
+    let maxWidth = clamp(logElement.clientWidth - 70, 600);
     const maxHeight = Math.max(logElement.clientHeight / 2, 200);
 
     for (let i = 0; i < imageEmbeds.length; i++) {
       const embedEl = imageEmbeds[i] as HTMLDivElement;
+      const maxWidthOverride = parseInt(embedEl.dataset.maxWidth!);
+      if (maxWidthOverride)
+        maxWidth = clamp(logElement.clientWidth - 70, maxWidthOverride);
 
       const imgWidth = parseInt(embedEl.dataset.width!);
       const imgHeight = parseInt(embedEl.dataset.height!);

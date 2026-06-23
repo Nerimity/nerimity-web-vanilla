@@ -1,6 +1,7 @@
 .imageContainer {
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
   width: var(--width);
   height: var(--height);
   border-radius: var(--radius-8);
