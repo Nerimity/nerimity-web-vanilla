@@ -6,6 +6,7 @@ import { h, Fragment } from "../h";
 import { getUserDetails, type UserDetails } from "../services/userService";
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
+import { inboxStore } from "../store/inboxStore";
 import { messageStore } from "../store/messageStore";
 import { userStore } from "../store/userStore";
 import { FocusAnimator } from "../utils/FocusAnimator";
@@ -44,7 +45,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
               <MiniProfileModal
                 userId={isProfilePath.params.id}
                 triggerEl={anchorEl!}
-                signal={modalAbortController.signal}
+                abort={modalAbortController}
               />
             ),
             modalAbortController,
@@ -59,7 +60,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
 const MiniProfileModal = (props: {
   userId: string;
   triggerEl?: HTMLElement;
-  signal: AbortSignal;
+  abort: AbortController;
 }) => {
   const rect = props.triggerEl?.getBoundingClientRect();
 
@@ -76,7 +77,7 @@ const MiniProfileModal = (props: {
       <Modal.Body width="400px">
         <MiniProfile
           animationMode="focus"
-          signal={props.signal}
+          abort={props.abort}
           userId={props.userId}
         />
       </Modal.Body>
@@ -123,7 +124,7 @@ let cached: UserDetailsCache | null = null;
 export const MiniProfile = (props: {
   userId: string;
   class?: string | string[];
-  signal: AbortSignal;
+  abort: AbortController;
   animationMode: "hover" | "focus";
 }) => {
   const Content = () => {
@@ -136,6 +137,8 @@ export const MiniProfile = (props: {
     const hideFollowing = details?.hideFollowing || user?.bot;
     const showStats = details && (!hideFollowers || !hideFollowing);
     const isSelf = props.userId === accountStore.currentUser?.id;
+    const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
+    const isCurrentChannel = inbox?.recipientId === props.userId;
 
     return (
       <>
@@ -178,11 +181,14 @@ export const MiniProfile = (props: {
               icon="article_person"
               label={t`Full Profile`}
             />
-            <Button
-              class={style.button}
-              icon={isSelf ? "book" : "mail"}
-              label={isSelf ? t`Notes` : t`Message`}
-            />
+            {!isCurrentChannel && (
+              <Button
+                class={style.button}
+                icon={isSelf ? "book" : "mail"}
+                data-action="message"
+                label={isSelf ? t`Notes` : t`Message`}
+              />
+            )}
           </div>
         </div>
 
@@ -254,7 +260,7 @@ export const MiniProfile = (props: {
           { image: "img", trigger: `.${style.miniProfile}` },
         ]);
 
-  props.signal?.addEventListener(
+  props.abort.signal?.addEventListener(
     "abort",
     () => {
       focusAnimator.destroy();
@@ -276,6 +282,32 @@ export const MiniProfile = (props: {
       }
     });
   }
+
+  let dmOpening = false;
+  const openChannel = async (userId: string) => {
+    if (dmOpening) return;
+    dmOpening = true;
+    const inbox = await inboxStore.loadInbox(userId).finally(() => {
+      dmOpening = false;
+    });
+    if (!inbox) return;
+    router.navigate(`/app/inbox/${inbox.channelId}`);
+  };
+
+  miniProfileEl.addEventListener(
+    "click",
+    (e) => {
+      if (e.target instanceof Element) {
+        const button = e.target.closest(`.${style.button}`) as HTMLElement;
+        if (!button) return;
+        if (button.dataset.action === "message") {
+          openChannel(props.userId);
+          props.abort.abort();
+        }
+      }
+    },
+    { once: true },
+  );
 
   render();
   return miniProfileEl;

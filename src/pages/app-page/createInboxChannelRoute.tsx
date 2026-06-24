@@ -31,7 +31,7 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
     drawer.rightDrawer.replaceChildren(
       <MiniProfile
         animationMode="hover"
-        signal={miniProfileAbortController.signal}
+        abort={miniProfileAbortController}
         class={style.miniProfileDrawer}
         userId={recipientId}
       />,
