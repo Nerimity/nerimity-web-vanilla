@@ -5,12 +5,14 @@ import { channelStore } from "../../store/channelStore";
 import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
+import { userStore } from "../../store/userStore";
 import { MessageType, type RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
 import { friendlyTimestamp, fullDate } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
+import { Icon } from "../icon";
 import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
@@ -19,7 +21,7 @@ import { ImageEmbed } from "./imageEmbed";
 import { MessageReactions } from "./MessageReactions";
 import { OGEmbed } from "./OGEmbed";
 import { SystemMessage } from "./SystemMessage";
-import { isNewDay, shouldGroup } from "./utils";
+import { isNewDay, isNewUser, shouldGroup } from "./utils";
 
 import style from "./messageItem.module.css";
 
@@ -40,6 +42,7 @@ export const MessageItem = (props: {
   hideNewDayMarker?: boolean;
 }) => {
   const creator = props.message.createdBy;
+  const cachedCreator = userStore.users.get(creator.id);
 
   const channelProperty = channelStore.currentChannelProperty();
   const newDay =
@@ -110,6 +113,13 @@ export const MessageItem = (props: {
                     >
                       {name}
                     </GradientText>
+                    {isNewUser(cachedCreator) && (
+                      <Icon
+                        class={style.newUserIcon}
+                        name="deceased"
+                        title={t`New to Nerimity`}
+                      />
+                    )}
                     {creator?.profile?.clan && (
                       <ServerClanItem clan={creator.profile.clan} />
                     )}

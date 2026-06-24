@@ -16,12 +16,14 @@ export class ServerMember {
   roleIds: string[];
   serverId: string;
   nickname?: string;
+  joinedAt: number;
   constructor(data: RawServerMember) {
     this.id = data.id;
     this.roleIds = data.roleIds;
     this.serverId = data.serverId;
     this.userId = data.userId;
     this.nickname = data.nickname;
+    this.joinedAt = data.joinedAt;
   }
 }
 

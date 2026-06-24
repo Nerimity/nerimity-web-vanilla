@@ -11,6 +11,7 @@ export class User {
   profile?: Profile;
   banner?: string;
   bot?: boolean;
+  joinedAt: number;
   constructor(data: RawUser) {
     this.id = data.id;
     this.username = data.username;
@@ -20,6 +21,7 @@ export class User {
     this.profile = data.profile;
     this.banner = data.banner;
     this.bot = data.bot;
+    this.joinedAt = data.joinedAt;
   }
 }
 

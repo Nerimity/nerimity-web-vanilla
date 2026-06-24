@@ -2,6 +2,7 @@ import { accountStore } from "../../store/accountStore";
 
 import { type Message } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
+import type { User } from "../../store/userStore";
 import { MessageType } from "../../Types";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
@@ -34,4 +35,11 @@ export const getLastSeenMessage = (channelId: string, messages: Message[]) => {
     return m.createdAt - lastSeenAt >= 0;
   });
   return message || null;
+};
+
+export const isNewUser = (user?: User) => {
+  const createdAt = user?.joinedAt;
+  if (!createdAt) return false;
+  const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  return createdAt > sevenDaysAgo;
 };

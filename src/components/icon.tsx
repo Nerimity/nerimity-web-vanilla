@@ -3,17 +3,15 @@ export const Icon = (props: {
   name: string;
   outlined?: boolean;
   class?: string | (string | boolean | undefined)[];
+  [key: string]: any;
 }) => {
+  const { name, outlined, ...rest } = props;
   return (
     <span
-      class={[
-        "material-symbols-rounded",
-        props.outlined && "o",
-        "icon",
-        props.class,
-      ]}
+      {...rest}
+      class={["material-symbols-rounded", outlined && "o", "icon", props.class]}
     >
-      {props.name}
+      {name}
     </span>
   );
 };

@@ -17,6 +17,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "deceased",
         "open_in_new",
         "warning",
         "terminal",

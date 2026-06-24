@@ -8,7 +8,10 @@ import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { inboxStore } from "../store/inboxStore";
 import { messageStore } from "../store/messageStore";
+import { serverMemberStore } from "../store/serverMemberStore";
+import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
+import { friendlyTimestamp } from "../utils/date";
 import { FocusAnimator } from "../utils/FocusAnimator";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { buildImageUrl } from "../utils/image";
@@ -140,6 +143,12 @@ export const MiniProfile = (props: {
     const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
     const isCurrentChannel = inbox?.recipientId === props.userId;
 
+    const server = serverStore.servers.get(serverStore.currentServerId!);
+
+    const member = serverMemberStore.serverMembers
+      .get(server?.id!)
+      ?.get(props.userId);
+
     return (
       <>
         <Banner
@@ -193,6 +202,20 @@ export const MiniProfile = (props: {
         </div>
 
         <div class={[style.section, "scrollbarHover"]}>
+          <div class={style.title}>{t`Joined`}</div>
+          <div class={style.joined}>
+            <div class={style.joinedContainer}>
+              <img class={style.logo} src="/logo.png" />
+              <div>{friendlyTimestamp(user?.joinedAt || 0)}</div>
+            </div>
+            {member && (
+              <div class={style.joinedContainer}>
+                <Avatar server={server} size={14} />
+                <div>{friendlyTimestamp(member?.joinedAt || 0)}</div>
+              </div>
+            )}
+          </div>
+
           <div class={style.title}>{t`About Me`}</div>
           <div>
             <Markup text={details?.profile?.bio || ""} />

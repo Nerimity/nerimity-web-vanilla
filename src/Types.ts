@@ -14,6 +14,7 @@ export interface RawServerMember {
   roleIds: string[];
   user: RawUser;
   nickname?: string;
+  joinedAt: number;
 }
 
 export interface RawServerRole {
@@ -79,6 +80,7 @@ export interface RawUser {
   profile?: Profile;
   banner?: string;
   bot?: boolean;
+  joinedAt: number;
 }
 
 export interface RawUserPresence {
