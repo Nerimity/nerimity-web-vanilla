@@ -9,7 +9,7 @@ import style from "./LinkWarnModal.module.css";
 export const LinkWarnModal = (props: { url: string }) => {
   return (
     <Modal.Root>
-      <Modal.Header alert label={t`External Link`} icon="warning" />
+      <Modal.Header alert label={t`External link`} icon="warning" />
       <Modal.Body maxWidth="500px">
         <div class={style.body}>
           <div>{t`You are about to visit an external link.`}</div>

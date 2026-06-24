@@ -13,6 +13,22 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/LinkWarnModal.tsx:12
+msgid "External link"
+msgstr "External link"
+
+#: src/components/LinkWarnModal.tsx:15
+msgid "You are about to visit an external link."
+msgstr "You are about to visit an external link."
+
+#: src/components/LinkWarnModal.tsx:20
+msgid "Don't visit"
+msgstr "Don't visit"
+
+#: src/components/LinkWarnModal.tsx:22
+msgid "Visit site"
+msgstr "Visit site"
+
 #: src/components/appHeader.tsx:28
 msgid "Home"
 msgstr "Home"
@@ -36,7 +52,7 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/message-pane/JumpToPresent.tsx:23
-#: src/components/message-pane/messageItem.tsx:75
+#: src/components/message-pane/messageItem.tsx:76
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -104,7 +120,7 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:222
+#: src/components/message-pane/messageItem.tsx:232
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -183,15 +199,15 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/store/accountStore.ts:84
+#: src/store/accountStore.ts:90
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:87
+#: src/store/accountStore.ts:93
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:89
+#: src/store/accountStore.ts:95
 msgid "Connected!"
 msgstr "Connected!"
 
