@@ -17,6 +17,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "open_in_new",
+        "warning",
         "terminal",
         "music_note",
         "movie",

@@ -1,5 +1,6 @@
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
+import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { mobileWidth } from "../../config";
@@ -124,6 +125,7 @@ const createAppPage = () => {
   handleResize();
 
   window.addEventListener("resize", handleResize, { signal });
+  handleDangerLink(signal);
 
   const destroy = () => {
     abortController.abort();

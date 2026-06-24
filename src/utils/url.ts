@@ -9,3 +9,10 @@ export const safeDecodeURIComponent = (val: string) => {
 
 export const getFilenameFromPath = (path: string | undefined): string =>
   path?.split("/").at(-1)!;
+
+export const addHttps = (url: string) => {
+  if (!/^https?:\/\//i.test(url)) {
+    return `https://${url}`;
+  }
+  return url;
+};

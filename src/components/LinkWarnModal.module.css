@@ -1,0 +1,12 @@
+.url {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--primary-color);
+  background-color: var(--gray-850);
+  word-break: break-all;
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

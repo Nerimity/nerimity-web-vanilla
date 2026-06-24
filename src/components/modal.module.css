@@ -38,6 +38,12 @@
   }
 }
 
+:global(.desktopWidth) {
+  .body {
+    max-width: var(--max-width);
+  }
+}
+
 .modalBackdrop {
   position: fixed;
   z-index: 1111111111111111;
@@ -88,6 +94,7 @@
   overflow: auto;
   flex-direction: column;
   width: var(--width);
+
   margin-right: 8px;
   margin-left: 12px;
 }

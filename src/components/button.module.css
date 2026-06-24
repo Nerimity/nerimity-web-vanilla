@@ -12,7 +12,9 @@
   gap: 8px;
   &:hover {
     background-color: var(--gray-800);
+    text-decoration: none;
   }
+
   &.hoverBorder {
     border-color: transparent;
     background-color: transparent;
@@ -56,5 +58,6 @@
   }
   .icon {
     color: var(--primary-color);
+    font-size: 18px;
   }
 }

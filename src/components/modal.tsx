@@ -74,11 +74,11 @@ const Header = (props: { label: string; icon?: string; alert?: boolean }) => {
     </div>
   );
 };
-const Body = (props: { children?: any; width?: string }) => {
+const Body = (props: { children?: any; width?: string; maxWidth?: string }) => {
   return (
     <div
       class={[style.body, "modalBody", "scrollbarHover"]}
-      style={{ "--width": props.width }}
+      style={{ "--width": props.width, "--max-width": props.maxWidth }}
     >
       {props.children}
     </div>

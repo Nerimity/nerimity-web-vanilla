@@ -16,6 +16,7 @@ import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
 import { Icon } from "../icon";
 import { CodeBlock } from "./CodeBlock";
 import { Emoji } from "./Emoji";
+import { MarkupLink } from "./MarkupLink";
 import { Mention } from "./Mention";
 
 import style from "./markup.module.css";
@@ -129,7 +130,7 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
 
       if (url && text) {
         ctx.textCount += text.length;
-        return <span>link</span>;
+        return <MarkupLink name={text} url={url} />;
       }
       break;
     }
@@ -209,7 +210,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     }
     case "link": {
       const url = sliceText(ctx, entity.innerSpan);
-      return <a href={url}>{transformEntities(entity, ctx)}</a>;
+      return <MarkupLink name={url} url={url} />;
     }
     case "code": {
       return <code class={entity.type}>{transformEntities(entity, ctx)}</code>;
@@ -252,9 +253,9 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     }
     case "named_link": {
       const name = entity.params.name;
-      // const url = entity.params.url;
+      const url = entity.params.url;
       ctx.textCount += name.length;
-      return <a href="#">{name}</a>;
+      return <MarkupLink name={name} url={url} />;
     }
     case "bold":
     case "italic":
