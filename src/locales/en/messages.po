@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/LinkWarnModal.tsx:12
+#: src/components/LinkWarnModal.tsx:14
 msgid "External link"
 msgstr "External link"
 
-#: src/components/LinkWarnModal.tsx:15
+#: src/components/LinkWarnModal.tsx:17
 msgid "You are about to visit an external link."
 msgstr "You are about to visit an external link."
 
-#: src/components/LinkWarnModal.tsx:20
+#: src/components/LinkWarnModal.tsx:22
 msgid "Don't visit"
 msgstr "Don't visit"
 
-#: src/components/LinkWarnModal.tsx:22
+#: src/components/LinkWarnModal.tsx:25
 msgid "Visit site"
 msgstr "Visit site"
 
@@ -52,7 +52,7 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/message-pane/JumpToPresent.tsx:23
-#: src/components/message-pane/messageItem.tsx:76
+#: src/components/message-pane/messageItem.tsx:81
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -120,7 +120,11 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:232
+#: src/components/message-pane/messageItem.tsx:120
+msgid "New to Nerimity"
+msgstr "New to Nerimity"
+
+#: src/components/message-pane/messageItem.tsx:245
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -149,27 +153,31 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:161
+#: src/components/miniProfile.tsx:173
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:168
+#: src/components/miniProfile.tsx:180
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:179
+#: src/components/miniProfile.tsx:191
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:184
+#: src/components/miniProfile.tsx:198
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:184
+#: src/components/miniProfile.tsx:198
 msgid "Message"
 msgstr "Message"
 
-#: src/components/miniProfile.tsx:190
+#: src/components/miniProfile.tsx:205
+msgid "Joined"
+msgstr "Joined"
+
+#: src/components/miniProfile.tsx:219
 msgid "About Me"
 msgstr "About Me"
 
