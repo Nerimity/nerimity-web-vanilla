@@ -1,7 +1,6 @@
 import { h } from "../../h";
 import { addHttps } from "../../utils/url";
-import { LinkWarnModal } from "../LinkWarnModal";
-import { createModal } from "../modal";
+import { createLinkWarnModal } from "../LinkWarnModal";
 
 interface MarkupLink {
   name: string;
@@ -28,8 +27,7 @@ export const handleDangerLink = (signal: AbortSignal) => {
           e.preventDefault();
           e.stopPropagation();
           const url = anchorEl.href;
-          const abortController = new AbortController();
-          createModal(() => <LinkWarnModal url={url} />, abortController);
+          createLinkWarnModal(url);
         }
       }
     },
