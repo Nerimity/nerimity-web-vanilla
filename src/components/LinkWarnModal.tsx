@@ -38,7 +38,8 @@ export const createLinkWarnModal = (url: string) => {
     "click",
     (event) => {
       const target = event.target as HTMLElement;
-      if (target.dataset.button) return;
+      const button = target.closest(`[data-button]`) as HTMLElement;
+      if (!button?.dataset?.button) return;
       abortController.abort();
     },
     { signal: abortController.signal },
