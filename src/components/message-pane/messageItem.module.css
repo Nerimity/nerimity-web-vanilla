@@ -21,6 +21,18 @@
   &:global(.error) {
     color: var(--alert-color);
   }
+
+  &.someoneMentioned {
+    background: linear-gradient(
+      90deg,
+      #f003 0%,
+      #ffa50033 20%,
+      #ff03 40%,
+      #0f03 60%,
+      #00f3 80%,
+      #88008233 100%
+    );
+  }
   &.editing {
     background-color: var(--gray-850);
   }

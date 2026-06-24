@@ -70,6 +70,8 @@ export const MessageItem = (props: {
 
   const isContentMessage = props.message.type === MessageType.CONTENT;
 
+  const someoneMentioned = props.message.content?.includes("[@:s]");
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
@@ -81,6 +83,7 @@ export const MessageItem = (props: {
           !group && style.withDetails,
           props.message.state,
           editing && style.editing,
+          someoneMentioned && style.someoneMentioned,
         ]}
       >
         {!isContentMessage && <SystemMessage message={props.message} />}

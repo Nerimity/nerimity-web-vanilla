@@ -101,7 +101,12 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
       }
       if (everyoneOrSomeone) {
         ctx.textCount += expr.length;
-        return <Mention label={expr} />;
+        return (
+          <Mention
+            icon="alternate_email"
+            label={expr === "e" ? "everyone" : "someone"}
+          />
+        );
       }
 
       break;
