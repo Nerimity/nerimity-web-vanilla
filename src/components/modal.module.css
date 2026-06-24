@@ -62,7 +62,7 @@
   flex-direction: column;
   max-height: 80vh;
   border: solid 1px var(--gray-700);
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-14);
   background: var(--background);
 
   &.hasPos {
@@ -103,7 +103,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 8px 10px;
+  padding: 10px;
   gap: 8px;
 
   .button {
