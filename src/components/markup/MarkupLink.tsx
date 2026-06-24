@@ -5,13 +5,14 @@ import { createLinkWarnModal } from "../LinkWarnModal";
 interface MarkupLink {
   name: string;
   url: string;
+  class?: string;
 }
 
 export const MarkupLink = (props: MarkupLink) => {
   const safeUrl = addHttps(props.url);
   const warn = props.name !== safeUrl;
   return (
-    <a href={safeUrl} target="_blank" data-warn={warn}>
+    <a href={safeUrl} class={props.class} target="_blank" data-warn={warn}>
       {props.name}
     </a>
   );

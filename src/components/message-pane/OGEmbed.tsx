@@ -1,5 +1,6 @@
 import { h } from "../../h";
 import type { RawMessageEmbed } from "../../Types";
+import { MarkupLink } from "../markup/MarkupLink";
 import { ImageEmbed } from "./imageEmbed";
 
 import style from "./OGEmbed.module.css";
@@ -43,16 +44,7 @@ export const OGEmbed = (props: OGEmbedProps) => {
           />
         )}
         <div class={style.detailsInner}>
-          <a
-            decoration
-            class={style.title}
-            href={embed.url || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {embed.title}
-          </a>
-
+          <MarkupLink class={style.title} name={embed.title!} url={embed.url} />
           <div class={style.description}>{embed.description}</div>
         </div>
       </div>
