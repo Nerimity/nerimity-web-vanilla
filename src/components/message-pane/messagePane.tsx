@@ -593,7 +593,7 @@ const handleBlockedMessageClick = (opts: {
   opts.el.addEventListener("click", (event) => {
     const target = event.target as HTMLElement;
     const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
-    const messageId = messageEl.dataset?.messageId!;
+    const messageId = messageEl?.dataset?.messageId!;
     if (!messageId) return;
     const isBlocked = messageEl.querySelector(`[data-blocked="true"]`);
     if (!isBlocked) return;
