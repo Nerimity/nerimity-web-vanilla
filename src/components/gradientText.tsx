@@ -7,7 +7,7 @@ type GradientTextProps = Partial<Omit<HTMLSpanElement, keyof HTMLElement>> & {
   children?: any;
   [key: string]: any;
   class?: string | (string | boolean | undefined)[];
-  color?: string;
+  color?: string | null;
   tag?: keyof HTMLElementTagNameMap | any;
 };
 

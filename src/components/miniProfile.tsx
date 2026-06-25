@@ -9,8 +9,10 @@ import { channelStore } from "../store/channelStore";
 import { inboxStore } from "../store/inboxStore";
 import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
+import type { ServerRole } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
+import { convertShorthandToLinearGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
 import { FocusAnimator } from "../utils/FocusAnimator";
 import { HoverAnimator } from "../utils/HoverAnimator";
@@ -18,8 +20,11 @@ import { buildImageUrl } from "../utils/image";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
+import { CdnIcon } from "./cdnIcon";
+import { GradientText } from "./gradientText";
 import { Markup } from "./markup/markup";
 import { createModal, Modal } from "./modal";
+import { ServerClanItem } from "./serverClanItem";
 import { UserPresence } from "./userPresence";
 
 import style from "./miniProfile.module.css";
@@ -149,6 +154,12 @@ export const MiniProfile = (props: {
       .get(server?.id!)
       ?.get(props.userId);
 
+    const serverRoles = serverStore.currentServerSortedRoles.value();
+
+    const roles = serverRoles.filter((role) =>
+      member?.roleIds.includes(role.id),
+    );
+
     return (
       <>
         <Banner
@@ -161,9 +172,14 @@ export const MiniProfile = (props: {
           <Avatar user={user} size={96} />
         </div>
         <div class={[style.section, style.info]}>
-          <span class="name">
-            {user?.username}
-            <span class={style.tag}>:{user?.tag}</span>
+          <span class={style.name}>
+            <span>
+              {user?.username}
+              <span class={style.tag}>:{user?.tag}</span>
+            </span>
+            {details?.profile?.clan && (
+              <ServerClanItem clan={details.profile.clan} />
+            )}
           </span>
           <UserPresence showOffline userId={props.userId} hideActivity />
           {showStats && (
@@ -202,6 +218,13 @@ export const MiniProfile = (props: {
         </div>
 
         <div class={[style.section, "scrollbarHover"]}>
+          <div class={style.title}>{t`Roles`}</div>
+          <div class={style.roles}>
+            {roles?.map((role) => (
+              <RoleItem role={role} />
+            ))}
+            <AddRoleItem />
+          </div>
           <div class={style.title}>{t`Joined`}</div>
           <div class={style.joined}>
             <div class={style.joinedContainer}>
@@ -274,9 +297,17 @@ export const MiniProfile = (props: {
         childrenOnly: true,
       },
     );
+
+    focusAnimator.destroy();
+    focusAnimator =
+      props.animationMode === "focus"
+        ? new FocusAnimator(miniProfileEl, "img")
+        : new HoverAnimator(miniProfileEl, [
+            { image: "img", trigger: `.${style.miniProfile}` },
+          ]);
   };
 
-  const focusAnimator =
+  let focusAnimator =
     props.animationMode === "focus"
       ? new FocusAnimator(miniProfileEl, "img")
       : new HoverAnimator(miniProfileEl, [
@@ -334,4 +365,22 @@ export const MiniProfile = (props: {
 
   render();
   return miniProfileEl;
+};
+
+const RoleItem = (props: { role: ServerRole }) => {
+  const color = convertShorthandToLinearGradient(props.role.hexColor);
+
+  return (
+    <div class={style.role}>
+      {props.role.icon && (
+        <CdnIcon role={props.role} size={18} class={style.icon} />
+      )}
+      <GradientText color={color} class={style.roleText}>
+        {props.role.name}
+      </GradientText>
+    </div>
+  );
+};
+const AddRoleItem = () => {
+  return <div class={[style.role, style.addRole]}>+</div>;
 };

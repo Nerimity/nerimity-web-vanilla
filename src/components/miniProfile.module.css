@@ -36,6 +36,10 @@
   }
 
   .section.info {
+    .name {
+      display: flex;
+      gap: 6px;
+    }
     .tag {
       color: var(--gray-400);
     }
@@ -112,5 +116,37 @@
     display: flex;
     align-items: center;
     gap: 4px;
+  }
+}
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  .role {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 4px;
+    padding-right: 6px;
+    border-radius: var(--radius-max);
+    background-color: var(--gray-800);
+    gap: 4px;
+    &.addRole {
+      width: 27px;
+      height: 27px;
+      padding: 0;
+      color: var(--gray-400);
+      cursor: pointer;
+      &:hover {
+        color: var(--text-color);
+        background-color: var(--gray-700);
+      }
+    }
+    .icon {
+      overflow: hidden;
+      padding: 0;
+      border-radius: var(--radius-max);
+    }
   }
 }
