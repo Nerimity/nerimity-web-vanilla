@@ -1,11 +1,19 @@
 export interface RawFriend {
   id: string;
-  status: number;
+  status: FriendStatus;
   userId: string;
   recipientId: string;
   createdAt: number;
   recipient: RawUser;
 }
+
+export const FriendStatus = {
+  SENT: 0,
+  PENDING: 1,
+  FRIENDS: 2,
+  BLOCKED: 3,
+};
+export type FriendStatus = (typeof FriendStatus)[keyof typeof FriendStatus];
 
 export interface RawServerMember {
   id: string;

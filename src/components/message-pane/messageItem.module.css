@@ -182,3 +182,14 @@
     color: var(--success-color);
   }
 }
+
+.blocked {
+  margin-left: 60px;
+  color: var(--gray-400);
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  &:hover {
+    color: var(--text-color);
+  }
+}

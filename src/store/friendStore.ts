@@ -1,4 +1,4 @@
-import type { RawFriend } from "../Types";
+import { FriendStatus, type RawFriend } from "../Types";
 import { userStore } from "./userStore";
 
 export const friendStore = createFriendStore();
@@ -28,5 +28,8 @@ function createFriendStore() {
     }
   };
 
-  return { friends, setFriends };
+  const isFriendBlocked = (userId: string) =>
+    friends.get(userId)?.status === FriendStatus.BLOCKED;
+
+  return { friends, setFriends, isFriendBlocked };
 }

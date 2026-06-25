@@ -48,6 +48,7 @@ export class MessageReaction {
 }
 
 type MessageState = "sending" | "error";
+
 export class Message {
   id: string;
   content: string;
@@ -64,6 +65,7 @@ export class Message {
   type: MessageType;
   editedAt?: number;
   reactions?: MessageReaction[];
+  showBlocked?: boolean;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -145,6 +147,7 @@ function createMessageStore() {
     const messageIndex = channelMessages.findIndex((m) => m.id === messageId);
     if (messageIndex === -1) return;
     const existing = channelMessages[messageIndex]!;
+    const showBlocked = existing.showBlocked;
     const message = new Message({
       id: existing.id,
       channelId: existing.channelId,
@@ -159,6 +162,7 @@ function createMessageStore() {
       editedAt: rawMessage.editedAt ?? existing.editedAt,
       ...rawMessage,
     });
+    message.showBlocked = showBlocked;
     message.state = undefined;
     channelMessages[messageIndex] = message;
     messages.set(channelId, channelMessages);

@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { h, Fragment } from "../../h";
 import { channelStore } from "../../store/channelStore";
+import { friendStore } from "../../store/friendStore";
 import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
@@ -75,84 +76,94 @@ export const MessageItem = (props: {
 
   const someoneMentioned = props.message.content?.includes("[@:s]");
 
+  const isFriendBlocked =
+    !props.message.showBlocked && friendStore.isFriendBlocked(creator.id);
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
       {props.newMarker && <Marker alert label={t`New Messages`} />}
-      <div
-        class={[
-          "messageItem",
-          style.messageItem,
-          !group && style.withDetails,
-          props.message.state,
-          editing && style.editing,
-          someoneMentioned && style.someoneMentioned,
-        ]}
-      >
-        {!isContentMessage && <SystemMessage message={props.message} />}
-        {isContentMessage && (
-          <>
-            {hasMessageReplies && <MessageReplies message={props.message} />}
-            <div class={[style.messageContainer, "messageContainer"]}>
-              {group ? (
-                <div class={style.avatarPlaceholder}></div>
-              ) : (
-                <Link href={`/app/profile/${creator.id}`}>
-                  <Avatar user={creator} size={40} />
-                </Link>
-              )}
-              <div class={style.messageBody}>
-                {!group && (
-                  <span class={style.details}>
-                    <GradientText
-                      tag={Link}
-                      decoration
-                      href={`/app/profile/${creator.id}`}
-                      class={style.username}
-                      color={color}
-                    >
-                      {name}
-                    </GradientText>
-                    {isNewUser(cachedCreator) && (
-                      <Icon
-                        class={style.newUserIcon}
-                        name="deceased"
-                        title={t`New to Nerimity`}
-                      />
-                    )}
-                    {creator?.profile?.clan && (
-                      <ServerClanItem clan={creator.profile.clan} />
-                    )}
-                    {topRole?.icon && (
-                      <CdnIcon
-                        class={style.roleIcon}
-                        role={{ icon: topRole.icon }}
-                        size={14}
-                      />
-                    )}
-                    <span class={style.timestamp}>
-                      {friendlyTimestamp(props.message.createdAt)}
-                    </span>
-                  </span>
+      {isFriendBlocked && (
+        <div class={style.blocked} data-blocked>
+          You have blocked this user. Click to show.
+        </div>
+      )}
+      {!isFriendBlocked && (
+        <div
+          class={[
+            "messageItem",
+            style.messageItem,
+            !group && style.withDetails,
+            props.message.state,
+            editing && style.editing,
+            someoneMentioned && style.someoneMentioned,
+          ]}
+        >
+          {!isContentMessage && <SystemMessage message={props.message} />}
+          {isContentMessage && (
+            <>
+              {hasMessageReplies && <MessageReplies message={props.message} />}
+              <div class={[style.messageContainer, "messageContainer"]}>
+                {group ? (
+                  <div class={style.avatarPlaceholder}></div>
+                ) : (
+                  <Link href={`/app/profile/${creator.id}`}>
+                    <Avatar user={creator} size={40} />
+                  </Link>
                 )}
-                <div class={style.content}>
-                  {!isImageEmbedOnly && (
-                    <Markup
-                      text={props.message.content}
-                      message={props.message}
-                    />
+                <div class={style.messageBody}>
+                  {!group && (
+                    <span class={style.details}>
+                      <GradientText
+                        tag={Link}
+                        decoration
+                        href={`/app/profile/${creator.id}`}
+                        class={style.username}
+                        color={color}
+                      >
+                        {name}
+                      </GradientText>
+                      {isNewUser(cachedCreator) && (
+                        <Icon
+                          class={style.newUserIcon}
+                          name="deceased"
+                          title={t`New to Nerimity`}
+                        />
+                      )}
+                      {creator?.profile?.clan && (
+                        <ServerClanItem clan={creator.profile.clan} />
+                      )}
+                      {topRole?.icon && (
+                        <CdnIcon
+                          class={style.roleIcon}
+                          role={{ icon: topRole.icon }}
+                          size={14}
+                        />
+                      )}
+                      <span class={style.timestamp}>
+                        {friendlyTimestamp(props.message.createdAt)}
+                      </span>
+                    </span>
                   )}
-                  <MessageEmbeds
-                    message={props.message}
-                    container={props.container}
-                  />
+                  <div class={style.content}>
+                    {!isImageEmbedOnly && (
+                      <Markup
+                        text={props.message.content}
+                        message={props.message}
+                      />
+                    )}
+                    <MessageEmbeds
+                      message={props.message}
+                      container={props.container}
+                    />
+                  </div>
+                  <MessageReactions message={props.message} />
                 </div>
-                <MessageReactions message={props.message} />
               </div>
-            </div>
-          </>
-        )}
-      </div>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };

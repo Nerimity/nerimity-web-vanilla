@@ -10,6 +10,7 @@ import {
 } from "../store/messageMentionStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
+import { FriendStatus } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
@@ -244,6 +245,7 @@ const createFriendsList = () => {
 
     for (let i = 0; i < friends.length; i++) {
       const friend = friends[i]!;
+      if (friend.friend.status !== FriendStatus.FRIENDS) continue;
       const presence = userPresenceStore.presences.get(friend.userId);
       if (presence?.status) online.push(friend);
       else offline.push(friend);

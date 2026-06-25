@@ -427,6 +427,8 @@ const createMessagePane = () => {
   createAttachmentProgressHandler(signal, el);
   createMessageContextMenuHandler({ el, signal });
 
+  handleBlockedMessageClick({ el, signal, updateMessage });
+
   const destroy = () => {
     abortController.abort();
     imageEmbedResizer.destroy();
@@ -581,4 +583,26 @@ const MessageContextMenu = (props: { x: string; y: string }) => {
       </ContextMenu.Item>
     </ContextMenu.Root>
   );
+};
+
+const handleBlockedMessageClick = (opts: {
+  el: HTMLElement;
+  signal: AbortSignal;
+  updateMessage: (message: Message, index: number) => void;
+}) => {
+  opts.el.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+    const messageId = messageEl.dataset?.messageId!;
+    if (!messageId) return;
+    const isBlocked = messageEl.querySelector(`[data-blocked="true"]`);
+    if (!isBlocked) return;
+
+    const messages = messageStore.messages.get(channelStore.currentChannelId!);
+    const messageIndex = messages?.findIndex((m) => m.id === messageId) ?? -1;
+    const message = messages?.[messageIndex];
+    if (!message) return;
+    message.showBlocked = true;
+    opts.updateMessage(message, messageIndex);
+  });
 };
