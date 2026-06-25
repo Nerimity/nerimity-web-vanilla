@@ -218,13 +218,17 @@ export const MiniProfile = (props: {
         </div>
 
         <div class={[style.section, "scrollbarHover"]}>
-          <div class={style.title}>{t`Roles`}</div>
-          <div class={style.roles}>
-            {roles?.map((role) => (
-              <RoleItem role={role} />
-            ))}
-            <AddRoleItem />
-          </div>
+          {server && (
+            <>
+              <div class={style.title}>{t`Roles`}</div>
+              <div class={style.roles}>
+                {roles?.map((role) => (
+                  <RoleItem role={role} />
+                ))}
+                <AddRoleItem />
+              </div>
+            </>
+          )}
           <div class={style.title}>{t`Joined`}</div>
           <div class={style.joined}>
             <div class={style.joinedContainer}>
