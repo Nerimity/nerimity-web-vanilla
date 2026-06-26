@@ -18,6 +18,7 @@ import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { ServerClanItem } from "../serverClanItem";
 import { FileEmbed } from "./FileEmbed";
+import { HtmlEmbed } from "./HtmlEmbed";
 import { ImageEmbed } from "./imageEmbed";
 import { MessageReactions } from "./MessageReactions";
 import { OGEmbed } from "./OGEmbed";
@@ -86,6 +87,8 @@ export const MessageItem = (props: {
     member,
     server,
   });
+
+  const htmlEmbed = props.message.decompressHtmlEmbed();
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
@@ -161,6 +164,7 @@ export const MessageItem = (props: {
                         message={props.message}
                       />
                     )}
+                    {htmlEmbed && <HtmlEmbed htmlEmbed={htmlEmbed} />}
                     <MessageEmbeds
                       message={props.message}
                       container={props.container}

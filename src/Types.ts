@@ -165,11 +165,18 @@ export interface RawMessage {
   mentions?: RawUser[];
   attachments?: Attachment[];
   embed?: RawMessageEmbed;
+  htmlEmbed?: string;
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   reactions?: RawMessageReaction[];
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
+}
+
+export interface HtmlNode {
+  tag: string;
+  attributes: Record<string, string> | null;
+  content: (HtmlNode | string)[];
 }
 
 export interface RawMessageReaction {

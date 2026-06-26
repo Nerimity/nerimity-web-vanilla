@@ -13,6 +13,7 @@ import type {
 import {
   MessageType,
   type Attachment,
+  type HtmlNode,
   type RawMessage,
   type RawMessageEmbed,
   type RawMessageReaction,
@@ -22,6 +23,7 @@ import {
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { getLocalItem } from "../utils/localStorage";
+import { unzipJson } from "../utils/zlib";
 import { accountStore } from "./accountStore";
 import { channelStore, type AttachmentProperty } from "./channelStore";
 
@@ -69,6 +71,7 @@ export class Message {
   showBlocked?: boolean;
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
+  htmlEmbed?: string;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -85,6 +88,11 @@ export class Message {
     this.reactions = data.reactions?.map((r) => new MessageReaction(r));
     this.quotedMessages = data.quotedMessages || [];
     this.roleMentions = data.roleMentions || [];
+    this.htmlEmbed = data.htmlEmbed;
+  }
+  decompressHtmlEmbed() {
+    if (!this.htmlEmbed) return;
+    return unzipJson(this.htmlEmbed) as HtmlNode[] | HtmlNode;
   }
 }
 
@@ -168,6 +176,7 @@ function createMessageStore() {
       reactions: rawMessage.reactions,
       quotedMessages: rawMessage.quotedMessages ?? existing.quotedMessages,
       roleMentions: rawMessage.roleMentions ?? existing.roleMentions,
+      htmlEmbed: rawMessage.htmlEmbed ?? existing.htmlEmbed,
 
       ...rawMessage,
     });
