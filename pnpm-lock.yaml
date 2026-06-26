@@ -35,9 +35,6 @@ importers:
       urlpattern-polyfill:
         specifier: ^10.1.0
         version: 10.1.0
-      uzip:
-        specifier: ^0.20201231.0
-        version: 0.20201231.0
     devDependencies:
       '@lingui/cli':
         specifier: ^6.4.0
@@ -54,9 +51,6 @@ importers:
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@7.29.7)(rolldown@1.1.2)(vite@8.1.0(@types/node@26.0.0)(jiti@2.7.0))
-      '@types/uzip':
-        specifier: ^0.20201231.2
-        version: 0.20201231.2
       oxfmt:
         specifier: ^0.56.0
         version: 0.56.0
@@ -830,9 +824,6 @@ packages:
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
 
-  '@types/uzip@0.20201231.2':
-    resolution: {integrity: sha512-l8n/uaJDoxv2hMMWKCaq6l/umbCZjq6CMr8z2wuteB7lKoIwHrIlMZ3AwAuc+olmOK1AobfvK1PPfr5wl7lkWQ==}
-
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
 
@@ -1393,9 +1384,6 @@ packages:
 
   urlpattern-polyfill@10.1.0:
     resolution: {integrity: sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==}
-
-  uzip@0.20201231.0:
-    resolution: {integrity: sha512-OZeJfZP+R0z9D6TmBgLq2LHzSSptGMGDGigGiEe0pr8UBe/7fdflgHlHBNDASTXB5jnFuxHpNaJywSg8YFeGng==}
 
   vfile-message@4.0.3:
     resolution: {integrity: sha512-QTHzsGd1EhbZs4AsQ20JX1rC3cOlt/IWJruk893DfLRr57lcnOeMaWG4K0JrRta4mIJZKth2Au3mM3u03/JWKw==}
@@ -2037,8 +2025,6 @@ snapshots:
 
   '@types/unist@3.0.3': {}
 
-  '@types/uzip@0.20201231.2': {}
-
   '@types/yargs-parser@21.0.3': {}
 
   '@types/yargs@17.0.35':
@@ -2583,8 +2569,6 @@ snapshots:
       picocolors: 1.1.1
 
   urlpattern-polyfill@10.1.0: {}
-
-  uzip@0.20201231.0: {}
 
   vfile-message@4.0.3:
     dependencies:

@@ -23,8 +23,7 @@
     "idb": "^8.0.3",
     "morphdom": "^2.7.8",
     "shiki": "^4.2.0",
-    "urlpattern-polyfill": "^10.1.0",
-    "uzip": "^0.20201231.0"
+    "urlpattern-polyfill": "^10.1.0"
   },
   "devDependencies": {
     "@lingui/cli": "^6.4.0",
@@ -32,7 +31,6 @@
     "@lingui/react": "^6.4.0",
     "@lingui/vite-plugin": "^6.4.0",
     "@rolldown/plugin-babel": "^0.2.3",
-    "@types/uzip": "^0.20201231.2",
     "oxfmt": "^0.56.0",
     "oxlint": "^1.71.0",
     "typescript": "~6.0.3",

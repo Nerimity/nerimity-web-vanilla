@@ -88,7 +88,7 @@ export const MessageItem = (props: {
     server,
   });
 
-  const htmlEmbed = props.message.decompressHtmlEmbed();
+  const htmlEmbed = props.message.htmlEmbed;
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>

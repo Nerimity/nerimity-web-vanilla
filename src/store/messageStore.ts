@@ -13,7 +13,6 @@ import type {
 import {
   MessageType,
   type Attachment,
-  type HtmlNode,
   type RawMessage,
   type RawMessageEmbed,
   type RawMessageReaction,
@@ -23,7 +22,6 @@ import {
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { getLocalItem } from "../utils/localStorage";
-import { unzipJson } from "../utils/zlib";
 import { accountStore } from "./accountStore";
 import { channelStore, type AttachmentProperty } from "./channelStore";
 
@@ -89,10 +87,6 @@ export class Message {
     this.quotedMessages = data.quotedMessages || [];
     this.roleMentions = data.roleMentions || [];
     this.htmlEmbed = data.htmlEmbed;
-  }
-  decompressHtmlEmbed() {
-    if (!this.htmlEmbed) return;
-    return unzipJson(this.htmlEmbed) as HtmlNode[] | HtmlNode;
   }
 }
 
