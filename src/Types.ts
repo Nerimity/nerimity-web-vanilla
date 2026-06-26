@@ -165,7 +165,7 @@ export interface RawMessage {
   mentions?: RawUser[];
   attachments?: Attachment[];
   embed?: RawMessageEmbed;
-  htmlEmbed?: string;
+  htmlEmbed?: HtmlNode | HtmlNode[];
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   reactions?: RawMessageReaction[];

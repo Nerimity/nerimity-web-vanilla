@@ -13,6 +13,7 @@ import type {
 import {
   MessageType,
   type Attachment,
+  type HtmlNode,
   type RawMessage,
   type RawMessageEmbed,
   type RawMessageReaction,
@@ -69,7 +70,7 @@ export class Message {
   showBlocked?: boolean;
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
-  htmlEmbed?: string;
+  htmlEmbed?: HtmlNode | HtmlNode[];
 
   constructor(data: RawMessage) {
     this.id = data.id;
