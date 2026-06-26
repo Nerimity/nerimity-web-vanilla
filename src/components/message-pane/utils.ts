@@ -1,9 +1,14 @@
 import { accountStore } from "../../store/accountStore";
 
 import { type Message } from "../../store/messageStore";
-import { serverStore } from "../../store/serverStore";
+import {
+  serverMemberStore,
+  type ServerMember,
+} from "../../store/serverMemberStore";
+import { Server, serverStore } from "../../store/serverStore";
 import type { User } from "../../store/userStore";
 import { MessageType } from "../../Types";
+import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
   if (!prev) return false;
@@ -42,4 +47,56 @@ export const isNewUser = (user?: User) => {
   if (!createdAt) return false;
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
   return createdAt > sevenDaysAgo;
+};
+
+export const isMentioned = (opts: {
+  message: Message;
+  server?: Server;
+  member?: ServerMember;
+}) => {
+  const { message, member, server } = opts;
+
+  const currentUserId = accountStore.currentUser?.id;
+  const currentMember = server && serverMemberStore.currentMember(server.id);
+
+  const authorPerms =
+    server && member
+      ? serverMemberStore.createPermChecker(member.serverId, member.userId)
+      : null;
+
+  const isEveryoneMentioned = message.content?.includes("[@:e]");
+  if (isEveryoneMentioned) {
+    if (!member) return true;
+    const hasEveryonePerm = authorPerms?.hasPermission(
+      RolePermissionFlag.mentionEveryone.bit,
+    );
+    if (hasEveryonePerm) return true;
+  }
+
+  const isQuoted = message.quotedMessages?.find(
+    (m) => m.createdBy?.id === currentUserId,
+  );
+  if (isQuoted) return true;
+
+  const isReplied = message.replyMessages?.find(
+    (m) => m.replyToMessage?.createdBy?.id === currentUserId,
+  );
+  if (isReplied) return true;
+
+  if (currentMember && member) {
+    const roleMentioned = message.roleMentions.find(
+      (r) =>
+        r.id !== server?.defaultRoleId && currentMember.roleIds.includes(r.id),
+    );
+    if (roleMentioned) {
+      const hasMentionRolePerms = authorPerms?.hasPermission(
+        RolePermissionFlag.mentionRoles.bit,
+      );
+      if (hasMentionRolePerms) return true;
+    }
+  }
+
+  const isMentioned = message.mentions?.find((u) => u.id === currentUserId);
+
+  return !!isMentioned;
 };

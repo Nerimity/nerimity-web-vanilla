@@ -84,6 +84,34 @@ function createServerMemberStore() {
     storeEmitter.emit("server:member_update", { serverId, userId, isMe });
   };
 
+  const createPermChecker = (serverId: string, userId: string) => {
+    const members = serverMembers.get(serverId);
+    const member = members?.get(userId);
+    const server = serverStore.servers.get(serverId);
+
+    if (!members || !member || !server) {
+      return { hasPermission: () => false, isOwner: false };
+    }
+
+    const isOwner = server.createdById === userId;
+
+    let combinedPermissions = 0;
+
+    const roles = serverRoleStore.roles.get(serverId);
+
+    for (let i = 0; i < member.roleIds.length; i++) {
+      const role = roles?.get(member.roleIds[i]!);
+      if (role) combinedPermissions |= role.permissions;
+    }
+
+    const defaultRole = roles?.get(server.defaultRoleId!);
+    if (defaultRole) combinedPermissions |= defaultRole.permissions;
+
+    return {
+      hasPermission: (permission: number) =>
+        isOwner || hasBit(combinedPermissions, permission),
+    };
+  };
   const hasPermission = (
     serverId: string,
     userId: string,
@@ -118,9 +146,14 @@ function createServerMemberStore() {
     return members.get(userId);
   };
 
+  const currentMember = (serverId: string) =>
+    serverMemberStore.getMember(serverId, accountStore.currentUser?.id!);
+
   return {
     serverMembers,
+    currentMember,
     setServerMembers,
+    createPermChecker,
     hasPermission,
     getMember,
     updateMember,

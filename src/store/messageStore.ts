@@ -17,6 +17,7 @@ import {
   type RawMessageEmbed,
   type RawMessageReaction,
   type RawReplyMessage,
+  type RawServerRole,
   type RawUser,
 } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -66,6 +67,8 @@ export class Message {
   editedAt?: number;
   reactions?: MessageReaction[];
   showBlocked?: boolean;
+  quotedMessages: Partial<RawMessage>[];
+  roleMentions: RawServerRole[];
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -80,6 +83,8 @@ export class Message {
     this.type = data.type;
     this.editedAt = data.editedAt;
     this.reactions = data.reactions?.map((r) => new MessageReaction(r));
+    this.quotedMessages = data.quotedMessages || [];
+    this.roleMentions = data.roleMentions || [];
   }
 }
 
@@ -160,6 +165,10 @@ function createMessageStore() {
       replyMessages: rawMessage.replyMessages,
       type: existing.type,
       editedAt: rawMessage.editedAt ?? existing.editedAt,
+      reactions: rawMessage.reactions,
+      quotedMessages: rawMessage.quotedMessages ?? existing.quotedMessages,
+      roleMentions: rawMessage.roleMentions ?? existing.roleMentions,
+
       ...rawMessage,
     });
     message.showBlocked = showBlocked;
@@ -187,6 +196,8 @@ function createMessageStore() {
       createdBy: accountStore.currentUser!,
       createdAt: Date.now(),
       type: MessageType.CONTENT,
+      quotedMessages: [],
+      roleMentions: [],
       replyMessages: property.replyingMessages?.map((m) => ({
         replyToMessage: m,
       })),

@@ -168,6 +168,8 @@ export interface RawMessage {
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   reactions?: RawMessageReaction[];
+  quotedMessages: Partial<RawMessage>[];
+  roleMentions: RawServerRole[];
 }
 
 export interface RawMessageReaction {

@@ -22,7 +22,7 @@ import { ImageEmbed } from "./imageEmbed";
 import { MessageReactions } from "./MessageReactions";
 import { OGEmbed } from "./OGEmbed";
 import { SystemMessage } from "./SystemMessage";
-import { isNewDay, isNewUser, shouldGroup } from "./utils";
+import { isMentioned, isNewDay, isNewUser, shouldGroup } from "./utils";
 
 import style from "./messageItem.module.css";
 
@@ -55,6 +55,8 @@ export const MessageItem = (props: {
     props.prevMessage &&
     shouldGroup(props.message, props.prevMessage);
 
+  const server = serverStore.servers.get(serverStore.currentServerId!);
+
   const member = serverMemberStore.serverMembers
     .get(serverStore.currentServerId!)
     ?.get(creator.id);
@@ -79,6 +81,12 @@ export const MessageItem = (props: {
   const isFriendBlocked =
     !props.message.showBlocked && friendStore.isFriendBlocked(creator.id);
 
+  const mentioned = isMentioned({
+    message: props.message,
+    member,
+    server,
+  });
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
@@ -97,6 +105,7 @@ export const MessageItem = (props: {
             props.message.state,
             editing && style.editing,
             someoneMentioned && style.someoneMentioned,
+            !someoneMentioned && mentioned && style.mentioned,
           ]}
         >
           {!isContentMessage && <SystemMessage message={props.message} />}
