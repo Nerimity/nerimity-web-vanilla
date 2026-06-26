@@ -1,7 +1,7 @@
-import * as fzstd from "fzstd";
+import { decompress } from "fzstd";
 
 const decompressString = (input: Uint8Array) => {
-  return fzstd.decompress(input);
+  return decompress(input);
 };
 
 export const decompressObject = <T>(input: Uint8Array) => {
