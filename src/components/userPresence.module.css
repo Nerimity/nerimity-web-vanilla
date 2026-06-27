@@ -20,6 +20,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 12px;
+    .action {
+      color: var(--gray-300);
+    }
   }
   .count {
     color: var(--gray-400);

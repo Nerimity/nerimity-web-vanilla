@@ -8,19 +8,20 @@ interface CdnIconProps {
   icon: string;
   class?: string;
   title?: string;
+  size?: number;
 }
 
-const buildUrl = (props: CdnIconProps) => {
+export const buildEmojiUrl = (props: CdnIconProps) => {
   if (props.icon.includes(".")) {
     return buildImageUrl(`emojis/${props.icon}`, {
-      size: 28,
+      size: props.size || 28,
     });
   }
   return [unicodeToTwemojiUrl(props.icon!), false] as const;
 };
 
 export const Emoji = (props: CdnIconProps) => {
-  const [url, animated] = buildUrl(props);
+  const [url, animated] = buildEmojiUrl(props);
 
   return (
     <img

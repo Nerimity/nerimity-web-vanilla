@@ -1,0 +1,34 @@
+.userActivity {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.richActivity {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: var(--radius-10);
+  background-color: var(--gray-800);
+  gap: 6px;
+
+  .activityImage {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-4);
+    object-fit: contain;
+    &[data-video="true"] {
+      width: initial;
+      background-color: black;
+      object-fit: cover;
+      aspect-ratio: 16/9;
+    }
+  }
+  .richDetails {
+    .subtitle {
+      color: var(--gray-400);
+      font-size: 12px;
+    }
+  }
+}

@@ -11,6 +11,7 @@ import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
 import type { ServerRole } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
+import { userPresenceStore } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
@@ -25,6 +26,7 @@ import { GradientText } from "./gradientText";
 import { Markup } from "./markup/markup";
 import { createModal, Modal } from "./modal";
 import { ServerClanItem } from "./serverClanItem";
+import { UserActivity } from "./UserActivity";
 import { UserPresence } from "./userPresence";
 
 import style from "./miniProfile.module.css";
@@ -160,6 +162,8 @@ export const MiniProfile = (props: {
       member?.roleIds.includes(role.id),
     );
 
+    const presence = userPresenceStore.presences.get(props.userId);
+
     return (
       <>
         <Banner
@@ -229,6 +233,17 @@ export const MiniProfile = (props: {
               </div>
             </>
           )}
+
+          {!!presence?.activities?.length && (
+            <>
+              <div class={style.title}></div>
+
+              {presence.activities.map((activity) => (
+                <UserActivity activity={activity} userId={props.userId} />
+              ))}
+            </>
+          )}
+
           <div class={style.title}>{t`Joined`}</div>
           <div class={style.joined}>
             <div class={style.joinedContainer}>

@@ -12,10 +12,12 @@ import style from "./userPresence.module.css";
 const getActivityLabel = (
   activity: RawUserActivity | undefined,
   type: ActivityType,
+  nameOnly?: boolean,
 ) => {
   if (!activity) return null;
   const title = activity?.title;
   const name = activity?.name;
+  if (name && nameOnly) return name;
   const subtitle = activity?.subtitle;
   if (!title) return name;
 
@@ -28,6 +30,10 @@ export const UserPresence = (props: {
   userId: string;
   showOffline?: boolean;
   hideActivity?: boolean;
+  activity?: RawUserActivity;
+  hideCount?: boolean;
+  showAction?: boolean;
+  iconColor?: string;
 }) => {
   const presence = userPresenceStore.presences.get(props.userId);
   const status = UserPresenceDetails[presence?.status || 0];
@@ -41,25 +47,37 @@ export const UserPresence = (props: {
     label = presence.custom;
   }
 
-  const activity = props.hideActivity ? undefined : presence?.activities?.[0];
+  const activity = props.hideActivity
+    ? undefined
+    : props.activity || presence?.activities?.[0];
   const activityType = getActivityType(activity);
-  const activityLabel = getActivityLabel(activity, activityType);
+
+  const activityLabel = getActivityLabel(
+    activity,
+    activityType,
+    props.showAction,
+  );
 
   const countEl =
-    activity && presence?.activities?.length! > 1 ? (
+    !props.hideCount && activity && presence?.activities?.length! > 1 ? (
       <span class={style.count}>+{presence?.activities!.length}</span>
     ) : null;
 
   return (
     <span
       class={style.userPresence}
-      style={{ "--color": `var(--status-${status.id})` }}
+      style={{ "--color": props.iconColor || `var(--status-${status.id})` }}
     >
       {activityLabel ? (
         <>
           <Icon class={style.icon} name={activityType.icon} />
           {countEl}
-          <span class={style.text}>{activityLabel}</span>
+          <span class={style.text}>
+            {props.showAction && activity?.action ? (
+              <span class={style.action}>{activity.action} </span>
+            ) : null}
+            {activityLabel}
+          </span>
         </>
       ) : (
         <>
