@@ -21,4 +21,8 @@
     white-space: nowrap;
     font-size: 12px;
   }
+  .count {
+    color: var(--gray-400);
+    font-size: 10px;
+  }
 }

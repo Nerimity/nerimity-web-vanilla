@@ -45,6 +45,11 @@ export const UserPresence = (props: {
   const activityType = getActivityType(activity);
   const activityLabel = getActivityLabel(activity, activityType);
 
+  const countEl =
+    activity && presence?.activities?.length! > 1 ? (
+      <span class={style.count}>+{presence?.activities!.length}</span>
+    ) : null;
+
   return (
     <span
       class={style.userPresence}
@@ -53,11 +58,13 @@ export const UserPresence = (props: {
       {activityLabel ? (
         <>
           <Icon class={style.icon} name={activityType.icon} />
+          {countEl}
           <span class={style.text}>{activityLabel}</span>
         </>
       ) : (
         <>
           <div class={style.dot}></div>
+          {countEl}
           <Markup class={style.text} text={label} inline />
         </>
       )}
