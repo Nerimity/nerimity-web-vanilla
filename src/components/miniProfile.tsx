@@ -236,8 +236,6 @@ export const MiniProfile = (props: {
 
           {!!presence?.activities?.length && (
             <>
-              <div class={style.title}></div>
-
               <div class={style.activities}>
                 {presence.activities.map((activity) => (
                   <UserActivity activity={activity} userId={props.userId} />
