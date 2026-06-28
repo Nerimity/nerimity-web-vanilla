@@ -50,7 +50,7 @@ export const ImageEmbed = (props: {
       src={props.attachmentProperty ? props.attachmentProperty.image?.src : url}
       {...(animated && { "data-img-anim": "" })}
       loading="lazy"
-      class={style.image}
+      class={[style.image, "image"]}
     />
   ) as HTMLImageElement;
   if (cached) img.classList.add(style.loaded!);

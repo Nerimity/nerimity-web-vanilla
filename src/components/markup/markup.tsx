@@ -26,7 +26,7 @@ export interface Props {
   inline?: boolean;
   message?: Message;
   animateEmoji?: boolean;
-  class?: string;
+  class?: string | (string | boolean | undefined)[];
   serverId?: string | null;
 }
 

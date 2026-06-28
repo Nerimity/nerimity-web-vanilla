@@ -5,7 +5,7 @@
     "jsxFragmentFactory": "Fragment",
     "target": "es2023",
     "module": "esnext",
-    "lib": ["ES2023", "DOM"],
+    "lib": ["ES2023", "ESNext.Temporal", "DOM"],
     "types": ["vite/client"],
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,

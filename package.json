@@ -17,12 +17,13 @@
   "dependencies": {
     "@lingui/core": "^6.4.0",
     "@nerimity/nevula": "^0.15.1",
-    "@shikijs/langs": "^4.2.0",
-    "@shikijs/themes": "^4.2.0",
+    "@shikijs/langs": "^4.3.0",
+    "@shikijs/themes": "^4.3.0",
     "fzstd": "^0.1.1",
     "idb": "^8.0.3",
     "morphdom": "^2.7.8",
-    "shiki": "^4.2.0",
+    "shiki": "^4.3.0",
+    "temporal-polyfill": "^1.0.1",
     "urlpattern-polyfill": "^10.1.0"
   },
   "devDependencies": {

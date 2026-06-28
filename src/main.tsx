@@ -9,8 +9,14 @@ import { userAgent } from "./utils/userAgent";
 
 (async () => {
   if (!globalThis.URLPattern) {
+    console.log("polyfilling URLPattern");
     const { URLPattern } = await import("urlpattern-polyfill");
     globalThis.URLPattern = URLPattern as typeof globalThis.URLPattern;
+  }
+  if (!globalThis.Temporal) {
+    console.log("polyfilling Temporal");
+    const { install } = await import("temporal-polyfill/shim");
+    install();
   }
 
   const AppPage = () => import("./pages/app-page/AppPage");

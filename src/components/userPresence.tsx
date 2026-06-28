@@ -34,6 +34,7 @@ export const UserPresence = (props: {
   hideCount?: boolean;
   showAction?: boolean;
   iconColor?: string;
+  class?: string | (string | boolean | undefined)[];
 }) => {
   const presence = userPresenceStore.presences.get(props.userId);
   const status = UserPresenceDetails[presence?.status || 0];
@@ -60,19 +61,21 @@ export const UserPresence = (props: {
 
   const countEl =
     !props.hideCount && activity && presence?.activities?.length! > 1 ? (
-      <span class={style.count}>+{presence?.activities!.length}</span>
+      <span class={[style.count, "count"]}>
+        +{presence?.activities!.length}
+      </span>
     ) : null;
 
   return (
     <span
-      class={style.userPresence}
+      class={[style.userPresence, props.class]}
       style={{ "--color": props.iconColor || `var(--status-${status.id})` }}
     >
       {activityLabel ? (
         <>
-          <Icon class={style.icon} name={activityType.icon} />
+          <Icon class={[style.icon, "icon"]} name={activityType.icon} />
           {countEl}
-          <span class={style.text}>
+          <span class={[style.text, "text"]}>
             {props.showAction && activity?.action ? (
               <span class={style.action}>{activity.action} </span>
             ) : null}
@@ -81,9 +84,9 @@ export const UserPresence = (props: {
         </>
       ) : (
         <>
-          <div class={style.dot}></div>
+          <div class={[style.dot, "dot"]}></div>
           {countEl}
-          <Markup class={style.text} text={label} inline />
+          <Markup class={[style.text, "text"]} text={label} inline />
         </>
       )}
     </span>

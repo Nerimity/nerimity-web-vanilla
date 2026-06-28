@@ -51,8 +51,12 @@ msgstr "Inbox"
 msgid "Friends"
 msgstr "Friends"
 
+#: src/components/message-pane/HtmlEmbed.tsx:30
+msgid "Embed not supported by your browser."
+msgstr "Embed not supported by your browser."
+
 #: src/components/message-pane/JumpToPresent.tsx:23
-#: src/components/message-pane/messageItem.tsx:85
+#: src/components/message-pane/messageItem.tsx:96
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -120,11 +124,11 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/messageItem.tsx:130
+#: src/components/message-pane/messageItem.tsx:142
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:256
+#: src/components/message-pane/messageItem.tsx:269
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -153,35 +157,35 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:189
+#: src/components/miniProfile.tsx:193
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:196
+#: src/components/miniProfile.tsx:200
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:207
+#: src/components/miniProfile.tsx:211
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:214
+#: src/components/miniProfile.tsx:218
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:214
+#: src/components/miniProfile.tsx:218
 msgid "Message"
 msgstr "Message"
 
-#: src/components/miniProfile.tsx:223
+#: src/components/miniProfile.tsx:227
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:232
+#: src/components/miniProfile.tsx:249
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:246
+#: src/components/miniProfile.tsx:263
 msgid "About Me"
 msgstr "About Me"
 
@@ -239,14 +243,28 @@ msgstr "Away from keyboard"
 msgid "Do not disturb"
 msgstr "Do not disturb"
 
-#: src/utils/date.ts:50
+#: src/utils/date.ts:106
 msgid "Expired"
 msgstr "Expired"
 
-#: src/utils/date.ts:53
+#: src/utils/date.ts:109
 msgid "Expires in {minutes}m"
 msgstr "Expires in {minutes}m"
 
-#: src/utils/date.ts:56
+#: src/utils/date.ts:112
 msgid "Expires in {hours}h"
 msgstr "Expires in {hours}h"
+
+#: src/utils/date.ts:128
+#: src/utils/date.ts:248
+#: src/utils/date.ts:284
+msgid "Error"
+msgstr "Error"
+
+#: src/utils/date.ts:276
+msgid "Yesterday at {time}"
+msgstr "Yesterday at {time}"
+
+#: src/utils/date.ts:280
+msgid "{date} at {time}"
+msgstr "{date} at {time}"
