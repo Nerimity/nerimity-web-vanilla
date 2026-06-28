@@ -11,7 +11,7 @@ export const createLinkWarnModal = (url: string) => {
 
   const modal = (
     <Modal.Root>
-      <Modal.Header alert label={t`External link`} icon="warning" />
+      <Modal.Header label={t`External link`} icon="open_in_new" />
       <Modal.Body maxWidth="500px">
         <div class={style.body}>
           <div>{t`You are about to visit an external link.`}</div>
@@ -24,7 +24,6 @@ export const createLinkWarnModal = (url: string) => {
           data-button
           label={t`Visit site`}
           icon="open_in_new"
-          alert
           href={url}
           component="a"
           target="_blank"
