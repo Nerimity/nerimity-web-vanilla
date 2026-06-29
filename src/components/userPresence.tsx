@@ -101,13 +101,16 @@ export interface ActivityType {
 }
 
 export function getActivityType(activity?: RawUserActivity): ActivityType {
-  const action = activity?.action;
+  const action = activity?.action.toLowerCase();
 
-  const isMusic = action?.startsWith("Listening to");
-  const isVideo = action?.startsWith("Watching");
+  const isMusic = action?.startsWith("listening to");
+  const isVideo = action?.startsWith("watching");
   const isProgramming =
-    action?.startsWith("Programming") || action?.startsWith("Coding");
+    action?.startsWith("programming") || action?.startsWith("coding");
 
+  const isDrawing = action?.startsWith("drawing");
+
+  if (isDrawing) return { icon: "brush", isGame: true };
   if (isProgramming) return { icon: "terminal", isGame: true };
   if (isMusic) return { icon: "music_note", isMusic: true };
   if (isVideo) return { icon: "movie", isVideo: true };
