@@ -54,6 +54,10 @@
   &.withDetails {
     margin-top: 8px;
   }
+  .avatar {
+    display: flex;
+    align-self: start;
+  }
   .messageContainer {
     display: flex;
     gap: 10px;

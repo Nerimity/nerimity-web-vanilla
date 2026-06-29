@@ -497,6 +497,8 @@ const createMessageContextMenuHandler = (opts: {
 }) => {
   opts.el.addEventListener("contextmenu", (event) => {
     const target = event.target as HTMLElement;
+    if (target.closest("[data-user-id]")) return;
+
     const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
     if (!messageEl) return;
     const messageId = messageEl.dataset?.messageId!;
@@ -505,7 +507,6 @@ const createMessageContextMenuHandler = (opts: {
 
     if (!messageId) return;
     event.preventDefault();
-    event.stopPropagation();
 
     const message = messageStore.messages
       .get(channelStore.currentChannelId!)
@@ -554,6 +555,9 @@ const createMessageContextMenuHandler = (opts: {
       ),
       abortController,
     );
+    opts.signal.addEventListener("abort", () => abortController.abort(), {
+      once: true,
+    });
   });
 };
 

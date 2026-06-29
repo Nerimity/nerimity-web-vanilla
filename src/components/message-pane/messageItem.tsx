@@ -119,7 +119,11 @@ export const MessageItem = (props: {
                 {group ? (
                   <div class={style.avatarPlaceholder}></div>
                 ) : (
-                  <Link href={`/app/profile/${creator.id}`}>
+                  <Link
+                    href={`/app/profile/${creator.id}`}
+                    data-user-id={creator.id}
+                    class={style.avatar}
+                  >
                     <Avatar user={creator} size={40} />
                   </Link>
                 )}
@@ -127,6 +131,7 @@ export const MessageItem = (props: {
                   {!group && (
                     <span class={style.details}>
                       <GradientText
+                        data-user-id={creator.id}
                         tag={Link}
                         decoration
                         href={`/app/profile/${creator.id}`}

@@ -142,10 +142,6 @@ a {
 Remove mobile blue highlight on tap 
 */
 
-input,
-textarea,
-button,
-select,
-a {
+* {
   -webkit-tap-highlight-color: transparent;
 }

@@ -3,6 +3,7 @@ import { Drawer } from "../../components/drawer";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
+import { createUserContextMenuHandler } from "../../components/UserContextMenu";
 import { mobileWidth } from "../../config";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
@@ -25,6 +26,8 @@ const createAppPage = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   socket.connect();
+
+  createUserContextMenuHandler({ signal });
   const app = document.getElementById("app")!;
   let appHeader = createAppHeader();
   const serverSidebar = createSidebar();

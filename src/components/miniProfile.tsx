@@ -440,9 +440,10 @@ const UserActivities = (props: { userId: string; signal: AbortSignal }) => {
   };
 
   const intervalId = setInterval(() => {
-    const activities = [
-      ...document.querySelector(`.${style.activities}`)!.children!,
-    ];
+    const activitiesEl = document.querySelector(`.${style.activities}`);
+    if (!activitiesEl) return;
+
+    const activities = [...activitiesEl.children!];
     for (let i = 0; i < activities.length; i++) {
       const activityEl = activities[i] as HTMLDivElement;
       updateActivity(activityEl);
