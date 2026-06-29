@@ -15,6 +15,7 @@
     "lingui:compile": "lingui compile"
   },
   "dependencies": {
+    "@formatjs/intl-durationformat": "^0.10.15",
     "@lingui/core": "^6.4.0",
     "@nerimity/nevula": "^0.15.1",
     "@shikijs/langs": "^4.3.0",

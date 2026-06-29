@@ -18,6 +18,10 @@ import { userAgent } from "./utils/userAgent";
     const { install } = await import("temporal-polyfill/shim");
     install();
   }
+  if (!globalThis.Intl.DurationFormat) {
+    console.log("polyfilling Intl.DurationFormat");
+    await import("@formatjs/intl-durationformat/polyfill-force.js");
+  }
 
   const AppPage = () => import("./pages/app-page/AppPage");
   const LoginPage = () => import("./pages/LoginPage");

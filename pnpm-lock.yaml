@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@formatjs/intl-durationformat':
+        specifier: ^0.10.15
+        version: 0.10.15
       '@lingui/core':
         specifier: ^6.4.0
         version: 6.4.0
@@ -304,6 +307,18 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@formatjs/bigdecimal@0.2.6':
+    resolution: {integrity: sha512-aPzKsGQOkQRHUEbyO/ZtYfr4EqaBQnSs6U4tzTla1xBnIdEHgY2GqEqso28UMwWRkzKqqTj5+/6BmuOsRkfn2A==}
+
+  '@formatjs/fast-memoize@3.1.6':
+    resolution: {integrity: sha512-H5aexk1Le7T9TPmscacZ+1pR6CTa2n1wq+HDVGXhH8TzUlQQpeXzZs91dRtmFHrbeNbjPFPfQujUqm7MHgVoXQ==}
+
+  '@formatjs/intl-durationformat@0.10.15':
+    resolution: {integrity: sha512-3W636wOl2pOVKR2+aFC+2BMOHA/FYsHZfKTr/cT1OG0YIXI2hhGrBH2+EFmqEzzClRi5BlPvwE6LlLN2dikdDQ==}
+
+  '@formatjs/intl-localematcher@0.8.10':
+    resolution: {integrity: sha512-P/IC3qws3jH+1fEs+o0RIFgXKRaQlFehjS5W0FPAqdo6hgzawLl+eD0q0JjheQ3XtoOe5n8WSYfX06KQZI/QJA==}
 
   '@jest/schemas@29.6.3':
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
@@ -1654,6 +1669,19 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.12':
     optional: true
+
+  '@formatjs/bigdecimal@0.2.6': {}
+
+  '@formatjs/fast-memoize@3.1.6': {}
+
+  '@formatjs/intl-durationformat@0.10.15':
+    dependencies:
+      '@formatjs/bigdecimal': 0.2.6
+      '@formatjs/intl-localematcher': 0.8.10
+
+  '@formatjs/intl-localematcher@0.8.10':
+    dependencies:
+      '@formatjs/fast-memoize': 3.1.6
 
   '@jest/schemas@29.6.3':
     dependencies:
