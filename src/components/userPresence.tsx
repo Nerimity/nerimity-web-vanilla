@@ -62,7 +62,7 @@ export const UserPresence = (props: {
   const countEl =
     !props.hideCount && activity && presence?.activities?.length! > 1 ? (
       <span class={[style.count, "count"]}>
-        +{presence?.activities!.length}
+        +{presence?.activities!.length! - 1}
       </span>
     ) : null;
 
