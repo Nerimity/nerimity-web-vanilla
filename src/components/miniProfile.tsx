@@ -15,6 +15,7 @@ import { userPresenceStore } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
+import { storeEmitter } from "../utils/EventEmitter";
 import { FocusAnimator } from "../utils/FocusAnimator";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { buildImageUrl } from "../utils/image";
@@ -26,7 +27,7 @@ import { GradientText } from "./gradientText";
 import { Markup } from "./markup/markup";
 import { createModal, Modal } from "./modal";
 import { ServerClanItem } from "./serverClanItem";
-import { UserActivity } from "./UserActivity";
+import { updateActivity, UserActivity } from "./UserActivity";
 import { UserPresence } from "./userPresence";
 
 import style from "./miniProfile.module.css";
@@ -137,7 +138,11 @@ export const MiniProfile = (props: {
   abort: AbortController;
   animationMode: "hover" | "focus";
 }) => {
+  let contentAbort: AbortController | undefined;
   const Content = () => {
+    contentAbort?.abort();
+
+    contentAbort = new AbortController();
     const user = details?.user || localUser;
 
     const followers = details?.user._count?.followers;
@@ -236,11 +241,10 @@ export const MiniProfile = (props: {
 
           {!!presence?.activities?.length && (
             <>
-              <div class={style.activities}>
-                {presence.activities.map((activity) => (
-                  <UserActivity activity={activity} userId={props.userId} />
-                ))}
-              </div>
+              <UserActivities
+                userId={props.userId}
+                signal={contentAbort.signal}
+              />
             </>
           )}
 
@@ -337,6 +341,7 @@ export const MiniProfile = (props: {
     "abort",
     () => {
       focusAnimator.destroy();
+      contentAbort?.abort();
     },
     { once: true },
   );
@@ -402,4 +407,58 @@ const RoleItem = (props: { role: ServerRole }) => {
 };
 const AddRoleItem = () => {
   return <div class={[style.role, style.addRole]}>+</div>;
+};
+
+const UserActivities = (props: { userId: string; signal: AbortSignal }) => {
+  let activitiesContainer = (
+    <div class={style.activities}></div>
+  ) as HTMLDivElement;
+
+  const rerender = () => {
+    let newCont = document.querySelector(`.${style.activities}`);
+    if (newCont) {
+      activitiesContainer = newCont as HTMLDivElement;
+    }
+    const presence = userPresenceStore.presences.get(props.userId);
+    const activities = presence?.activities || [];
+    activitiesContainer.replaceChildren(
+      ...activities.map((activity) => (
+        <UserActivity activity={activity} userId={props.userId} />
+      )),
+    );
+    // morphdom(
+    //   activitiesContainer,
+    //   <div class={style.activities}>
+    //     {activities.map((activity) => (
+    //       <UserActivity activity={activity} userId={props.userId} />
+    //     ))}
+    //   </div>,
+    //   {
+    //     childrenOnly: true,
+    //   },
+    // );
+  };
+
+  const intervalId = setInterval(() => {
+    const activities = [
+      ...document.querySelector(`.${style.activities}`)!.children!,
+    ];
+    for (let i = 0; i < activities.length; i++) {
+      const activityEl = activities[i] as HTMLDivElement;
+      updateActivity(activityEl);
+    }
+  }, 1000);
+  props.signal.addEventListener("abort", () => clearInterval(intervalId));
+
+  rerender();
+  storeEmitter.on(
+    "user:presence_update",
+    (event) => {
+      if (event.userId !== props.userId) return;
+      rerender();
+    },
+    props.signal,
+  );
+
+  return activitiesContainer;
 };

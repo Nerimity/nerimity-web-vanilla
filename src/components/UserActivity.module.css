@@ -43,9 +43,33 @@
     }
   }
   .richDetails {
+    flex: 1;
     .subtitle {
       color: var(--gray-400);
       font-size: 12px;
     }
+  }
+}
+
+.progressContainer {
+  margin-top: 2px;
+  .info {
+    display: flex;
+    justify-content: space-between;
+    color: var(--gray-400);
+    font-size: 12px;
+    font-variant: tabular-nums;
+  }
+  .progressBar {
+    overflow: hidden;
+    height: 4px;
+    margin-top: 2px;
+    border-radius: var(--radius-max);
+    background-color: var(--gray-600);
+  }
+  .progress {
+    height: 100%;
+    border-radius: var(--radius-max);
+    background-color: var(--primary-color);
   }
 }
