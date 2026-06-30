@@ -25,6 +25,9 @@ export class ServerMember {
     this.nickname = data.nickname;
     this.joinedAt = data.joinedAt;
   }
+  hasPerm(perm: number) {
+    serverMemberStore.hasPermission(this.serverId, this.userId, perm);
+  }
 }
 
 function createServerMemberStore() {
@@ -52,8 +55,7 @@ function createServerMemberStore() {
     for (let i = 0; i < newMembers.length; i++) {
       const member = newMembers[i]!;
       const members =
-        serverMembers.get(member.serverId) ||
-        new Map<string, RawServerMember>();
+        serverMembers.get(member.serverId) || new Map<string, ServerMember>();
       userStore.addUser(member.user);
       members.set(member.userId, new ServerMember(member));
       serverMembers.set(member.serverId, members);

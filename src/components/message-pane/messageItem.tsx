@@ -259,7 +259,14 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
       {message ? (
         <>
           <Avatar user={creator} size={14} />
-          <GradientText class={style.username} color={color}>
+          <GradientText
+            class={style.username}
+            data-user-id={creator.id}
+            tag={Link}
+            decoration
+            color={color}
+            href={`/app/profile/${creator.id}`}
+          >
             {creator.username}
           </GradientText>
           <Markup

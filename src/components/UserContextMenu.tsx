@@ -1,13 +1,16 @@
 import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
+import { serverMemberStore } from "../store/serverMemberStore";
+import { serverStore } from "../store/serverStore";
 import { portalElement } from "../utils/portal";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { ContextMenu } from "./message-pane/ContextMenu";
+import { createKickMemberModal } from "./message-pane/KickMemberModal";
 import { createModal } from "./modal";
 
 export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
   document.body.addEventListener("contextmenu", (event) => {
-    console.log("hmm");
     const target = event.target as HTMLElement;
     const userEl = target.closest(`[data-user-id]`) as HTMLElement;
     if (!userEl) return;
@@ -30,6 +33,9 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
           case "copy_id":
             navigator.clipboard.writeText(userId);
             break;
+          case "kick":
+            createKickMemberModal({ userId });
+            break;
 
           default:
             break;
@@ -40,7 +46,11 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
 
     createModal(
       () => (
-        <UserContextMenu x={`${event.clientX}px`} y={`${event.clientY}px`} />
+        <UserContextMenu
+          x={`${event.clientX}px`}
+          y={`${event.clientY}px`}
+          userId={userId}
+        />
       ),
       abortController,
     );
@@ -50,13 +60,59 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
   });
 };
 
-const UserContextMenu = (props: { x: string; y: string }) => {
+const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
+  const BAN_BIT = RolePermissionFlag.banMembers.bit;
+  const KICK_BIT = RolePermissionFlag.kickMembers.bit;
+  const ADMIN_BIT = RolePermissionFlag.admin.bit;
+
+  const server = serverStore.currentServer();
+
+  const targetMember = serverMemberStore.serverMembers
+    .get(server?.id!)
+    ?.get(props.userId);
+  const isTargetInServer = !!targetMember;
+  const selfMember = serverMemberStore.currentMember(server?.id!);
+
+  const isSelf = props.userId === selfMember?.userId;
+
+  const isSelfCreator = server?.createdById === selfMember?.userId;
+  const targetIsCreator = server?.createdById === targetMember?.userId;
+
+  const targetIsAdmin = targetMember?.hasPerm(ADMIN_BIT);
+  const selfHasBanPerm = selfMember?.hasPerm(BAN_BIT);
+
+  const selfHasKickPerm = selfMember?.hasPerm(KICK_BIT);
+
+  const canBan =
+    !isSelf &&
+    !targetIsCreator &&
+    (isSelfCreator || (selfHasBanPerm && !targetIsAdmin));
+
+  const canKick =
+    isTargetInServer &&
+    !isSelf &&
+    !targetIsCreator &&
+    (isSelfCreator || (selfHasKickPerm && !targetIsAdmin));
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
       <ContextMenu.Item id="edit">
         <ContextMenu.Icon name="edit" />
         <ContextMenu.Label>{t`View Profile`}</ContextMenu.Label>
       </ContextMenu.Item>
+      <ContextMenu.Separator />
+      {canBan && (
+        <ContextMenu.Item id="ban" alert>
+          <ContextMenu.Icon name="block" />
+          <ContextMenu.Label>{t`Ban Member`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
+      {canKick && (
+        <ContextMenu.Item id="kick" alert>
+          <ContextMenu.Icon name="logout" />
+          <ContextMenu.Label>{t`Kick Member`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Separator />
       <ContextMenu.Item id="copy_id">
         <ContextMenu.Icon name="content_copy" />

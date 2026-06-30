@@ -52,6 +52,8 @@ function createServerStore() {
   const servers = new Map<string, Server>();
   const lastSeenChannelIds = new Map<string, number>();
 
+  const currentServer = () => servers.get(currentServerId!);
+
   const setServers = (newServers: RawServer[], notLazyServerId?: string) => {
     servers.clear();
     for (let i = 0; i < newServers.length; i++) {
@@ -323,6 +325,7 @@ function createServerStore() {
     get currentServerId() {
       return currentServerId;
     },
+    currentServer,
     notificationsMemo,
     setLastSeenChannelIds,
     lastSeenChannelIds,

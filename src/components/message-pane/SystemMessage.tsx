@@ -104,6 +104,7 @@ export const SystemMessage = (props: { message: Message }) => {
       <GradientText
         tag={Link}
         decoration
+        data-user-id={creator.id}
         href={`/app/profile/${creator.id}`}
         class={style.username}
         color={color}

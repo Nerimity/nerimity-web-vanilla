@@ -11,6 +11,9 @@
   animation-fill-mode: forwards;
 }
 
+.separator + .separator {
+  display: none;
+}
 @keyframes show {
   from {
     opacity: 0;

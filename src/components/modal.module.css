@@ -83,6 +83,8 @@
   }
   .label {
     flex: 1;
+    font-size: 16px;
+    font-weight: bold;
   }
   .closeButton {
     padding: 0px;

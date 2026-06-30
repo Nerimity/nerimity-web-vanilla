@@ -40,6 +40,7 @@ export async function request<T>(rawUrl: string, opts?: RequestOpts) {
   if (!res.ok) {
     const raw = await res.text();
     const error = safeParseJson(raw);
+    console.error(raw);
     if (!error) return [null, { message: raw } as Error] as const;
     return [null, error as Error] as const;
   }
