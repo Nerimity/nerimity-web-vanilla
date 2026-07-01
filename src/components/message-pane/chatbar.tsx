@@ -127,6 +127,8 @@ export const createChatbar = () => {
     property.content = "";
     input.value = "";
 
+    textHeight.adjust();
+
     if (property.editingMessage) {
       messageStore.editMessage(
         channelStore.currentChannel()!.id,
