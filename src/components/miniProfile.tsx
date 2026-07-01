@@ -286,13 +286,8 @@ export const MiniProfile = (props: {
   }
 
   if (!localUser) {
-    const channelId = channelStore.currentChannelId;
-    const messages = messageStore.messages.get(channelId!);
-    const message = messages?.find((m) => m.createdBy.id === props.userId);
-
-    if (message) {
-      localUser = message.createdBy;
-    }
+    const user = messageStore.findUserInCurrentMessages(props.userId);
+    localUser = user;
   }
 
   miniProfileEl.appendChild(<Content />);

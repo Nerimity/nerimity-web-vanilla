@@ -397,9 +397,37 @@ function createMessageStore() {
     storeEmitter.emit("message:reaction_updated", { message, reaction });
   };
 
+  const currentChannelMessages = () => {
+    return messages.get(channelStore.currentChannelId!) || [];
+  };
+
+  /**
+   * @description Find user in current channel messages, including replies and quoted messages.
+   */
+  const findUserInCurrentMessages = (userId: string) => {
+    let user: RawUser | undefined;
+    messageStore.currentChannelMessages().forEach((m) => {
+      if (m.createdBy.id === userId) {
+        user = m.createdBy;
+      }
+      const reply = m.replyMessages?.find(
+        (r) => r.replyToMessage?.createdBy.id === userId,
+      );
+      if (reply) {
+        user = reply.replyToMessage?.createdBy;
+      }
+      const quote = m.quotedMessages?.find((q) => q.createdBy?.id === userId);
+      if (quote) {
+        user = quote.createdBy;
+      }
+    });
+    return user;
+  };
   return {
     messages,
     loadMessages,
+    currentChannelMessages,
+    findUserInCurrentMessages,
     pushMessage,
     addReaction,
     removeReaction,

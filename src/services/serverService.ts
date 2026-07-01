@@ -9,3 +9,21 @@ export const kickServerMember = async (opts: {
     method: "DELETE",
   });
 };
+
+export const banServerMember = async (opts: {
+  serverId: string;
+  userId: string;
+  deleteRecentMessages: boolean;
+  reason?: string;
+}) => {
+  return request(`/servers/${opts.serverId}/bans/${opts.userId}`, {
+    useToken: true,
+    method: "POST",
+    params: {
+      deleteRecentMessages: opts.deleteRecentMessages,
+    },
+    body: {
+      reason: opts.reason,
+    },
+  });
+};

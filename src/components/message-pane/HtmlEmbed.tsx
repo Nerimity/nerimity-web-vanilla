@@ -122,7 +122,7 @@ function HTMLEmbedItem(props: {
                   }
                 : {})}
             >
-              {(item as HtmlNode).content.map((content) => (
+              {(item as HtmlNode).content?.map((content) => (
                 <>
                   {typeof content === "string" ? (
                     <Markup

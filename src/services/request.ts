@@ -6,7 +6,7 @@ interface RequestOpts {
   useToken?: boolean | string;
   body?: any;
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  params?: Record<string, string | undefined>;
+  params?: Record<string, any>;
   text?: boolean;
 }
 

@@ -1,10 +1,13 @@
 import { t } from "@lingui/core/macro";
 
 import { h } from "../h";
+import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
 import { serverStore } from "../store/serverStore";
+import { userStore } from "../store/userStore";
 import { portalElement } from "../utils/portal";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
+import { createBanMemberModal } from "./message-pane/BanMemberModal";
 import { ContextMenu } from "./message-pane/ContextMenu";
 import { createKickMemberModal } from "./message-pane/KickMemberModal";
 import { createModal } from "./modal";
@@ -22,6 +25,16 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
     event.stopPropagation();
     event.preventDefault();
 
+    const user =
+      userStore.users.get(userId) ||
+      messageStore.findUserInCurrentMessages(userId);
+    const member = serverMemberStore.serverMembers
+      .get(serverStore.currentServerId!)
+      ?.get(userId);
+
+    const username =
+      messageStore.findUserInCurrentMessages(userId)?.username ?? "";
+
     portalElement().addEventListener(
       "click",
       (event) => {
@@ -33,8 +46,15 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
           case "copy_id":
             navigator.clipboard.writeText(userId);
             break;
+          case "copy_object":
+            console.log("Copied user object to clipboard:", { user, member });
+            navigator.clipboard.writeText(JSON.stringify({ user, member }));
+            break;
           case "kick":
             createKickMemberModal({ userId });
+            break;
+          case "ban":
+            createBanMemberModal({ userId, username });
             break;
 
           default:
@@ -117,6 +137,10 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
       <ContextMenu.Item id="copy_id">
         <ContextMenu.Icon name="content_copy" />
         <ContextMenu.Label>{t`Copy ID`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item id="copy_object">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy Object`}</ContextMenu.Label>
       </ContextMenu.Item>
     </ContextMenu.Root>
   );

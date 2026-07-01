@@ -539,6 +539,10 @@ const createMessageContextMenuHandler = (opts: {
           case "copy_id":
             navigator.clipboard.writeText(message.id);
             break;
+          case "copy_object":
+            console.log("Copied message object to clipboard:", message);
+            navigator.clipboard.writeText(JSON.stringify(message));
+            break;
           case "reply":
             channelStore.addReply(channelStore.currentChannelId!, message);
             break;
@@ -584,6 +588,10 @@ const MessageContextMenu = (props: { x: string; y: string }) => {
       <ContextMenu.Item id="copy_id">
         <ContextMenu.Icon name="content_copy" />
         <ContextMenu.Label>{t`Copy ID`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item id="copy_object">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy Object`}</ContextMenu.Label>
       </ContextMenu.Item>
     </ContextMenu.Root>
   );
