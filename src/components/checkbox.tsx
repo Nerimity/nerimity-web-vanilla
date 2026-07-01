@@ -10,7 +10,11 @@ const Root = (props: {
 }) => {
   const { checked, children, ...rest } = props;
   return (
-    <div class={style.checkboxContainer} data-checked={checked} {...rest}>
+    <div
+      data-checked={checked}
+      {...rest}
+      class={[style.checkboxContainer, props.class]}
+    >
       {children}
     </div>
   );

@@ -44,6 +44,9 @@
       font-size: 16px;
     }
   }
+  .checkbox {
+    font-size: 12px;
+  }
 }
 
 .messageItem {
