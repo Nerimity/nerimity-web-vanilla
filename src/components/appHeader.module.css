@@ -27,6 +27,9 @@
     &.warn {
       background-color: var(--warn-color);
     }
+    &.error {
+      background-color: var(--alert-color);
+    }
   }
   .label {
     overflow: hidden;

@@ -16,6 +16,10 @@ type CurrentUser = User & {
 function createAccountStore() {
   let connected = false;
   let authenticated = false;
+  let authError: {
+    message: string;
+  } | null = null;
+
   let currentUser: CurrentUser | null = null;
   let notificationSettings = new Map<string, RawUserNotificationSettings>();
 
@@ -76,6 +80,14 @@ function createAccountStore() {
     currentUser = user;
   };
 
+  const setAuthError = (
+    newError: {
+      message: string;
+    } | null,
+  ) => {
+    authError = newError;
+  };
+
   const setAuthenticated = (newAuthenticated: boolean) => {
     authenticated = newAuthenticated;
     storeEmitter.emit("ws:authStateUpdate", authenticated);
@@ -86,6 +98,17 @@ function createAccountStore() {
   };
 
   const connectionState = () => {
+    if (authError) {
+      const message = authError.message;
+      if (message) {
+        if (message === "Invalid token.") {
+          return t`Invalid token.`;
+        }
+        return message;
+      }
+      return t`Authentication error.`;
+    }
+
     if (connected && !authenticated) {
       return t`Authenticating...`;
     }
@@ -109,6 +132,10 @@ function createAccountStore() {
     get connected() {
       return connected;
     },
+    get authError() {
+      return authError;
+    },
+    setAuthError,
     setConnected,
     setCurrentUser,
     setNotificationSettings,

@@ -32,6 +32,9 @@ export const socketEventHandler = (event: string, payload: any) => {
     case "user:authenticated":
       onAuthenticated(payload);
       break;
+    case "user:authenticate_error":
+      onAuthError(payload);
+      break;
     case "user:presence_update":
       onUserPresenceUpdate(payload);
       break;
@@ -83,6 +86,11 @@ export const socketEventHandler = (event: string, payload: any) => {
     default:
       console.warn("Unhandled socket event:", event, payload);
   }
+};
+
+const onAuthError = (payload: any) => {
+  console.error("Auth Error", payload);
+  accountStore.setAuthError(payload);
 };
 
 const onAuthenticated = (payload: any) => {

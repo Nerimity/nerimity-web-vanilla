@@ -22,18 +22,32 @@ const Pill = () => {
   const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
   const user = !inbox ? null : userStore.users.get(inbox.recipientId)!;
 
+  const authError = accountStore.authError;
   const authenticated = accountStore.authenticated;
   const label = !accountStore.authenticated
     ? accountStore.connectionState()
     : channel?.name || user?.username || t`Home`;
-  const icon = !authenticated ? "cached" : !server && !channel ? "home" : null;
+  const icon = authError
+    ? "gpp_maybe"
+    : !authenticated
+      ? "cached"
+      : !server && !channel
+        ? "home"
+        : null;
 
   const isServerChannel = server && channel;
 
   return (
     <div class={style.pill}>
       {icon ? (
-        <Icon name={icon} class={[style.icon, !authenticated && "warn"]} />
+        <Icon
+          name={icon}
+          class={[
+            style.icon,
+            !authenticated && style.warn,
+            !!authError && style.error,
+          ]}
+        />
       ) : (
         <Avatar size={24} server={server} user={user} />
       )}

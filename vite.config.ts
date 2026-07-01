@@ -1,6 +1,7 @@
-import { defineConfig } from "vite";
-import babel from "@rolldown/plugin-babel";
 import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
+import babel from "@rolldown/plugin-babel";
+import { defineConfig } from "vite";
+
 import { googleFontsLocal } from "./vitePluginGoogleFontsLocal";
 import { devRerenderHighlighter } from "./vitePluginRerenderhighlighter";
 import { shikiLangsPlugin } from "./vitePluginShikiLangsCopy";
@@ -17,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "gpp_maybe",
         "brush",
         "deceased",
         "open_in_new",
