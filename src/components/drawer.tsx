@@ -85,6 +85,7 @@ function createDrawer() {
     { signal: abortController.signal },
   );
 
+  let startY = 0;
   let startX = 0;
   let currentX = 0;
   let currentOffset = 0;
@@ -93,10 +94,29 @@ function createDrawer() {
   let pauseTouches = false;
   let startTime = 0;
 
+  let ignoreDistance = false;
+
   const handleTouchMove = (event: TouchEvent) => {
     if (pauseTouches) return;
     const touch = event.touches[0];
     if (!touch) return;
+
+    if (!ignoreDistance) {
+      const xDist = Math.abs(touch.clientX - startX);
+      const yDist = Math.abs(touch.clientY - startY);
+
+      if (yDist > xDist && yDist > 10) {
+        pauseTouches = true;
+        return;
+      }
+
+      if (xDist > 5) {
+        ignoreDistance = true;
+      } else {
+        return;
+      }
+    }
+
     currentX = touch.clientX;
     currentOffset = offsetAtDragStart + (touch.clientX - startX);
 
@@ -188,9 +208,12 @@ function createDrawer() {
   };
 
   const handleTouchCancel = () => {
+    ignoreDistance = false;
+
     updatePage();
   };
   const handleTouchUp = () => {
+    ignoreDistance = false;
     const isLeft = currentOffset > window.innerWidth / 2;
     const isRight = currentOffset + window.innerWidth < window.innerWidth / 2;
     const isContent = !isLeft && !isRight;
@@ -253,6 +276,7 @@ function createDrawer() {
     if (!touch) return;
     content.style.transition = "";
     startX = touch.clientX;
+    startY = touch.clientY;
     currentX = startX;
     offsetAtDragStart = currentOffset;
     startTime = Date.now();
