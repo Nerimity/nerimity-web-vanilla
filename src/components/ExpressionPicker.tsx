@@ -1,7 +1,10 @@
+import { t } from "@lingui/core/macro";
+
 import { isMobileWidth } from "../config";
 import { h } from "../h";
 import { storeEmitter } from "../utils/EventEmitter";
 import { portalElement } from "../utils/portal";
+import { Button } from "./button";
 import { Input } from "./input";
 
 import style from "./ExpressionPicker.module.css";
@@ -9,6 +12,8 @@ import style from "./ExpressionPicker.module.css";
 interface ExpressionPickerProps {
   // onSelect: (expression: string) => void;
   targetEl: HTMLElement;
+  defaultTab?: "GIFs" | "emojis";
+  tabs?: ("GIFs" | "emojis")[];
 }
 
 let currentInstance: {
@@ -21,18 +26,47 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
     const sameTarget = currentInstance.targetEl === props.targetEl;
     currentInstance.destroy();
     currentInstance = null;
-
     if (sameTarget) {
       return;
     }
   }
 
+  let tabs = props.tabs || ["GIFs", "emojis"];
+  let currentTab = props.defaultTab || "emojis";
   const abortController = new AbortController();
+
+  const footer = (
+    <div class={style.footer}>
+      {tabs?.map((tab) =>
+        tab === "GIFs" ? (
+          <Button
+            class={style.button}
+            data-name="GIFs"
+            label={t`GIFs`}
+            icon="gif"
+            hoverBorder
+          />
+        ) : (
+          <Button
+            class={style.button}
+            data-selected
+            data-name="emojis"
+            label={t`Emojis`}
+            hoverBorder
+            icon="face"
+          />
+        ),
+      )}
+    </div>
+  ) as HTMLElement;
 
   const el = (
     <div class={style.expressionPicker}>
-      <Input />
-      Expression Picker
+      <div class={style.content}>
+        <Input />
+        Expression Picker
+      </div>
+      {footer}
     </div>
   ) as HTMLElement;
   const updatePos = () => {
@@ -85,6 +119,27 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
       abortController.abort();
     },
     abortController.signal,
+  );
+
+  footer.addEventListener(
+    "click",
+    (e) => {
+      const button = (e.target as HTMLElement).closest("button");
+      if (!button) return;
+      const selectedTab = button.dataset.name as "GIFs" | "emojis";
+      if (selectedTab === currentTab) return;
+
+      const previousTab = currentTab;
+      currentTab = selectedTab;
+
+      footer
+        .querySelector(`[data-name="${selectedTab}"]`)
+        ?.setAttribute("data-selected", "true");
+      footer
+        .querySelector(`[data-name="${previousTab}"]`)
+        ?.removeAttribute("data-selected");
+    },
+    { signal: abortController.signal },
   );
 
   currentInstance = {

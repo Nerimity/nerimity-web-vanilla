@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "gif",
         "face",
         "gpp_maybe",
         "brush",
