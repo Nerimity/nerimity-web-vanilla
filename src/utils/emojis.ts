@@ -45,6 +45,7 @@ export interface EmojiData {
   category: string;
   emoji: string;
   short_names: string[];
+  order?: number;
 }
 
 export const shortcodeToUnicode: Record<string, string> = {};
@@ -62,10 +63,16 @@ export async function lazyLoadEmojis() {
   const tx = idb.transaction("emojis", "readwrite");
   for (let i = 0; i < emojis.length; i++) {
     const emoji = emojis[i]!;
-    tx.store.put(emoji);
+    tx.store.put({ ...emoji, order: i });
   }
   await tx.done;
   buildEmojiMaps();
+}
+
+export async function allEmojis() {
+  const db = await getIdb();
+  if (!db) return null;
+  return db.getAllFromIndex("emojis", "order");
 }
 
 async function buildEmojiMaps() {

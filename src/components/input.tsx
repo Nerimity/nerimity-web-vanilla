@@ -11,6 +11,7 @@ interface InputProps {
   label?: any;
   type?: "text" | "password" | "textarea";
   autocomplete?: "current-password" | "email";
+  placeholder?: string;
   id?: string;
 }
 export const Input = (props: InputProps) => {
@@ -21,6 +22,7 @@ export const Input = (props: InputProps) => {
         {props.prefix}
         <Dynamic
           id={props.id}
+          placeholder={props.placeholder}
           class={["input", style.input]}
           component={props.type === "textarea" ? "textarea" : "input"}
           type={props.type || "text"}

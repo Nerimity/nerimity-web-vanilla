@@ -5,7 +5,7 @@ import { h } from "../h";
 import { storeEmitter } from "../utils/EventEmitter";
 import { portalElement } from "../utils/portal";
 import { Button } from "./button";
-import { Input } from "./input";
+import { createEmojiPicker } from "./EmojiPicker";
 
 import style from "./ExpressionPicker.module.css";
 
@@ -31,9 +31,24 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
     }
   }
 
+  let contentEl = (<div class={style.content}></div>) as HTMLDivElement;
   let tabs = props.tabs || ["GIFs", "emojis"];
   let currentTab = props.defaultTab || "emojis";
   const abortController = new AbortController();
+
+  let currentPage: {
+    abortController: AbortController;
+    el: HTMLDivElement;
+  } | null = null;
+
+  const updatePage = () => {
+    currentPage?.abortController.abort();
+    if (currentTab === "emojis") {
+      currentPage = createEmojiPicker();
+      contentEl.replaceChildren(currentPage.el);
+    }
+  };
+  updatePage();
 
   const footer = (
     <div class={style.footer}>
@@ -62,10 +77,7 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
 
   const el = (
     <div class={style.expressionPicker}>
-      <div class={style.content}>
-        <Input />
-        Expression Picker
-      </div>
+      {contentEl}
       {footer}
     </div>
   ) as HTMLElement;
@@ -138,6 +150,7 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
       footer
         .querySelector(`[data-name="${previousTab}"]`)
         ?.removeAttribute("data-selected");
+      updatePage();
     },
     { signal: abortController.signal },
   );

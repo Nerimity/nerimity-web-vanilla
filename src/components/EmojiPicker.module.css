@@ -1,0 +1,9 @@
+.emojiPicker {
+  height: 100%;
+  overflow: auto;
+}
+
+.emojiContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
