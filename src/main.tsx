@@ -59,9 +59,9 @@ import { userAgent } from "./utils/userAgent";
     router.createMatchListener(
       "/app/*?",
       handleEnter(() => {
-        if (!getLocalItem("userToken")) {
-          return router.navigate("/login", { replace: true });
-        }
+        // if (!getLocalItem("userToken")) {
+        //   return router.navigate("/login", { replace: true });
+        // }
         navigate(AppPage);
       }),
       { signal },

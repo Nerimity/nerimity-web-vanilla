@@ -187,6 +187,9 @@ function createDrawer() {
     if (currentPage === 1) overlay.classList.remove(style.visible!);
   };
 
+  const handleTouchCancel = () => {
+    updatePage();
+  };
   const handleTouchUp = () => {
     const isLeft = currentOffset > window.innerWidth / 2;
     const isRight = currentOffset + window.innerWidth < window.innerWidth / 2;
@@ -270,7 +273,7 @@ function createDrawer() {
     passive: true,
     capture: false,
   });
-  window.addEventListener("touchcancel", handleTouchUp, {
+  window.addEventListener("touchcancel", handleTouchCancel, {
     signal: abortController.signal,
     passive: true,
   });
