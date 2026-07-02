@@ -323,6 +323,9 @@ const createMessagePane = () => {
 
   createResizeObserver(logs, checkAndScrollBottom, { signal });
   createResizeObserver(chatbarEl, checkAndScrollBottom, { signal });
+  createResizeObserver(document.getElementById("app")!, checkAndScrollBottom, {
+    signal,
+  });
   window.addEventListener("focus", dismissNotification, { signal });
   window.addEventListener("resize", () => scrollToBottom(), {
     signal,
