@@ -13,6 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/ExpressionPicker.tsx:45
+msgid "GIFs"
+msgstr "GIFs"
+
+#: src/components/ExpressionPicker.tsx:54
+msgid "Emojis"
+msgstr "Emojis"
+
 #: src/components/LinkWarnModal.tsx:14
 msgid "External link"
 msgstr "External link"
@@ -42,16 +50,16 @@ msgid "Kick Member"
 msgstr "Kick Member"
 
 #: src/components/UserContextMenu.tsx:139
-#: src/components/message-pane/messagePane.tsx:590
+#: src/components/message-pane/messagePane.tsx:598
 msgid "Copy ID"
 msgstr "Copy ID"
 
 #: src/components/UserContextMenu.tsx:143
-#: src/components/message-pane/messagePane.tsx:594
+#: src/components/message-pane/messagePane.tsx:602
 msgid "Copy Object"
 msgstr "Copy Object"
 
-#: src/components/appHeader.tsx:28
+#: src/components/appHeader.tsx:29
 msgid "Home"
 msgstr "Home"
 
@@ -165,12 +173,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:225
+#: src/components/message-pane/chatbar.tsx:239
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:230
+#: src/components/message-pane/chatbar.tsx:244
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -179,7 +187,7 @@ msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
 #: src/components/message-pane/deleteMessageModal.tsx:40
-#: src/components/message-pane/messagePane.tsx:581
+#: src/components/message-pane/messagePane.tsx:589
 msgid "Delete Message"
 msgstr "Delete Message"
 
@@ -204,15 +212,15 @@ msgstr "New to Nerimity"
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messagePane.tsx:573
+#: src/components/message-pane/messagePane.tsx:581
 msgid "Edit Message"
 msgstr "Edit Message"
 
-#: src/components/message-pane/messagePane.tsx:577
+#: src/components/message-pane/messagePane.tsx:585
 msgid "Reply Message"
 msgstr "Reply Message"
 
-#: src/components/message-pane/messagePane.tsx:586
+#: src/components/message-pane/messagePane.tsx:594
 msgid "Copy Content"
 msgstr "Copy Content"
 
@@ -283,15 +291,23 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/store/accountStore.ts:90
+#: src/store/accountStore.ts:105
+msgid "Invalid token."
+msgstr "Invalid token."
+
+#: src/store/accountStore.ts:109
+msgid "Authentication error."
+msgstr "Authentication error."
+
+#: src/store/accountStore.ts:113
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:93
+#: src/store/accountStore.ts:116
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:95
+#: src/store/accountStore.ts:118
 msgid "Connected!"
 msgstr "Connected!"
 
