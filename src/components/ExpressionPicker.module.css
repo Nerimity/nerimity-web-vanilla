@@ -1,0 +1,28 @@
+:global(.mobileWidth) {
+  .expressionPicker {
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 40vh;
+  }
+}
+
+.expressionPicker {
+  position: fixed;
+
+  top: var(--top);
+  left: var(--left);
+
+  display: flex;
+  flex-direction: column;
+
+  width: 400px;
+  height: 400px;
+
+  padding: 8px;
+  border: 1px solid var(--gray-700);
+  border-radius: var(--radius-8);
+  background-color: var(--gray-900);
+}

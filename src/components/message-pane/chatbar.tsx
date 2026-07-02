@@ -11,6 +11,7 @@ import { MessageType } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { userAgent } from "../../utils/userAgent";
 import { Button } from "../button";
+import { createExpressionPicker } from "../ExpressionPicker";
 import { createFileInput } from "../FileInput";
 import { createTextareaHeightHandler, Input } from "../input";
 import { createAttachmentIndicator } from "./attachmentIndicator";
@@ -30,6 +31,10 @@ export const createChatbar = () => {
   const attachmentIndicator = createAttachmentIndicator(signal);
   let repliesIndicator = createRepliesIndicator(abortController);
   const jumpToPresent = createJumpToPresent({ signal });
+
+  let emojiPickerButton = (
+    <Button class={[style.button!]} icon="face" hoverBorder />
+  ) as HTMLElement;
 
   let sendButton = (
     <Button class={[style.button!, "send"]} icon="send" hoverBorder />
@@ -74,6 +79,11 @@ export const createChatbar = () => {
   const handleAttachClick = () => {
     fileInput.trigger();
   };
+
+  const handleEmojiClick = () => {
+    createExpressionPicker({ targetEl: emojiPickerButton });
+  };
+
   let chatbar = (
     <div class={style.chatbarContainer}>
       {jumpToPresent}
@@ -94,6 +104,7 @@ export const createChatbar = () => {
           }
           suffix={
             <div class={style.buttons}>
+              {emojiPickerButton}
               {sendButton}
               {editButton}
             </div>
@@ -204,6 +215,7 @@ export const createChatbar = () => {
   cancelButton.addEventListener("click", handleCancelClick, { signal });
   sendButton.addEventListener("click", sendMessage, { signal });
   attachButton.addEventListener("click", handleAttachClick, { signal });
+  emojiPickerButton.addEventListener("click", handleEmojiClick, { signal });
   const textHeight = createTextareaHeightHandler({ textarea: input, signal });
 
   const render = () => {

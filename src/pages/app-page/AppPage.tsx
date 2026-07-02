@@ -4,7 +4,7 @@ import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { createUserContextMenuHandler } from "../../components/UserContextMenu";
-import { mobileWidth } from "../../config";
+import { isMobileWidth } from "../../config";
 import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";
@@ -117,7 +117,7 @@ const createAppPage = () => {
   createMiniProfileHandler({ signal });
 
   const handleResize = () => {
-    if (window.innerWidth < mobileWidth) {
+    if (isMobileWidth()) {
       document.body.classList.add("mobileWidth");
       document.body.classList.remove("desktopWidth");
     } else {
