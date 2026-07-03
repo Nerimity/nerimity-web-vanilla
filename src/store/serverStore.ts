@@ -36,6 +36,7 @@ export class Server {
    */
   lazy = true;
   constructor(data: RawServer) {
+    // console.log(data.customEmojis);
     this.id = data.id;
     this.name = data.name;
     this.hexColor = data.hexColor;

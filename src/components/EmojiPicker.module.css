@@ -1,9 +1,49 @@
 .emojiPicker {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
   height: 100%;
-  overflow: auto;
 }
 
 .emojiContainer {
+  position: relative;
+  overflow: auto;
+  overflow-x: hidden;
+  flex: 1;
+  min-height: 0;
+  scrollbar-gutter: stable;
+}
+.emojiItem {
   display: flex;
-  flex-wrap: wrap;
+  flex: 0 0 calc(100% / var(--row-count));
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-4);
+
+  &:hover {
+    background-color: var(--gray-600);
+  }
+  .emojiImage {
+    background: url(/emoji_sprites_17.webp);
+  }
+}
+
+.emojiGroup {
+  display: flex;
+  justify-content: flex-start;
+  &[data-type="category"] {
+    align-items: center;
+    height: 38px;
+  }
+}
+
+.groupHeader {
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-4);
+  color: var(--gray-200);
+  background-color: var(--gray-800);
+  font-size: 12px;
+  font-weight: bold;
 }
