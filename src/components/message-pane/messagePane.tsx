@@ -216,9 +216,9 @@ const createMessagePane = () => {
     });
 
     skeletonsTop.classList.toggle(style.hide!, !shouldShowTopSkel());
-    updateScrolledToBottom();
     restoreScrollPosition(opts);
     requestAnimationFrame(() => {
+      updateScrolledToBottom();
       dismissNotification();
     });
   };
