@@ -1,4 +1,5 @@
 import { emojiUrl } from "../config";
+import { Server, serverStore } from "../store/serverStore";
 import type { RawCustomEmoji, RawServer } from "../Types";
 import { getIdb } from "./idb";
 import { getLocalItem, setLocalItem, type RecentEmoji } from "./localStorage";
@@ -152,3 +153,53 @@ export const addRecentEmoji = (recentEmoji: RecentEmoji) => {
 
   setLocalItem("recentEmojis", recentEmojis);
 };
+
+export async function allCustomEmojis() {
+  const db = await getIdb();
+  if (!db) return null;
+  return db.getAllFromIndex("custom_emojis", "name");
+}
+
+export async function categorizedCustomEmojis(opts?: { uniqueName?: boolean }) {
+  const customEmojis = await allCustomEmojis();
+  if (!customEmojis) return {};
+
+  const categorized: Record<string, CustomEmoji[]> = {};
+
+  const counts: { [key: string]: number } = {};
+
+  for (let i = 0; i < customEmojis.length; i++) {
+    const emoji = customEmojis[i]!;
+    const arr = categorized[emoji.serverId] || [];
+
+    if (opts?.uniqueName) {
+      let count = counts[emoji.name] || 0;
+
+      const name = emoji.name;
+      const isDuplicate = shortcodeToUnicode[name];
+      if (isDuplicate) {
+        count++;
+      }
+      const uniqueName = count ? `${emoji.name}-${count}` : emoji.name;
+
+      counts[emoji.name] = count + 1;
+      emoji.name = uniqueName;
+    }
+
+    arr.push(emoji);
+    categorized[emoji.serverId] = arr;
+  }
+
+  const servers = serverStore
+    .orderedServers()
+    .servers.filter((s) => s.type === "s") as Server[];
+
+  return servers.map((s) => ({
+    serverId: s.id,
+    emojis: categorized[s.id] || [],
+  }));
+}
+
+// setTimeout(() => {
+//   categorizedCustomEmojis({ uniqueName: true }).then((e) => console.log(e));
+// }, 3000);
