@@ -87,7 +87,7 @@ export const createEmojiPicker = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
-  const emojiContainer = (
+  let emojiContainer = (
     <div class={style.emojiContainer}></div>
   ) as HTMLDivElement;
 
@@ -113,7 +113,7 @@ export const createEmojiPicker = () => {
   });
   emojiContainer.appendChild(vt.render());
 
-  const el = (
+  let el = (
     <div class={style.emojiPicker}>
       <Input class={"search"} placeholder={t`Search Emojis...`} />
       {emojiContainer}
@@ -149,28 +149,38 @@ export const createEmojiPicker = () => {
   window.addEventListener(
     "resize",
     throttle(rerender, 10, { leading: true, trailing: true }),
+    { signal },
   );
   rerender();
 
-  emojiContainer.addEventListener("click", (e) => {
-    const target = e.target as HTMLDivElement;
-    const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
-    if (!emojiEl) return;
-    const index = parseInt(emojiEl.dataset.index!);
-    const emoji = cachedEmojis![index]!;
-    addRecentEmoji({
-      id: emoji.emoji,
-      type: "default",
-    });
-  });
+  emojiContainer.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+      const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
+      if (!emojiEl) return;
+      const index = parseInt(emojiEl.dataset.index!);
+      const emoji = cachedEmojis![index]!;
+      addRecentEmoji({
+        id: emoji.emoji,
+        type: "default",
+      });
+    },
+    { signal },
+  );
 
-  el.querySelector(".search")!.addEventListener("input", rerender);
+  el.querySelector(".search")!.addEventListener("input", rerender, { signal });
 
   signal.addEventListener(
     "abort",
     () => {
       vt.destroy();
+
       el.remove();
+      (el as any) = null;
+
+      emojiContainer.remove();
+      (emojiContainer as any) = null;
     },
     { once: true },
   );

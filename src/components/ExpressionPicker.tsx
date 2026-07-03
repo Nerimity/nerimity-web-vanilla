@@ -120,6 +120,7 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
     const app = document.getElementById("app")!;
     app.style.height = "";
     el.remove();
+    currentPage?.abortController.abort();
     if (currentInstance?.targetEl === props.targetEl) {
       currentInstance = null;
     }
