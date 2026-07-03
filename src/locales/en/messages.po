@@ -13,11 +13,19 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/ExpressionPicker.tsx:45
+#: src/components/EmojiPicker.tsx:118
+msgid "Search Emojis..."
+msgstr "Search Emojis..."
+
+#: src/components/EmojiPicker.tsx:187
+msgid "Recent Emojis"
+msgstr "Recent Emojis"
+
+#: src/components/ExpressionPicker.tsx:60
 msgid "GIFs"
 msgstr "GIFs"
 
-#: src/components/ExpressionPicker.tsx:54
+#: src/components/ExpressionPicker.tsx:69
 msgid "Emojis"
 msgstr "Emojis"
 

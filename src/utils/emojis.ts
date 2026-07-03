@@ -1,5 +1,7 @@
 import { emojiUrl } from "../config";
+import type { RawCustomEmoji, RawServer } from "../Types";
 import { getIdb } from "./idb";
+import { getLocalItem, setLocalItem, type RecentEmoji } from "./localStorage";
 
 const U200D = String.fromCharCode(0x200d);
 const UFE0Fg = /\uFE0F/g;
@@ -91,3 +93,62 @@ async function buildEmojiMaps() {
     }
   }
 }
+
+export type CustomEmoji = RawCustomEmoji & {
+  serverId: string;
+};
+export const createCustomEmojiLoader = async () => {
+  const db = await getIdb();
+  if (!db) return null;
+
+  const tx = db.transaction("custom_emojis", "readwrite");
+
+  tx.store.clear();
+
+  const putFromServers = (servers: RawServer[]) => {
+    for (let i = 0; i < servers.length; i++) {
+      const server = servers[i]!;
+      putFromServer(server);
+    }
+  };
+
+  const putFromServer = (server: RawServer) => {
+    const customEmojis = server.customEmojis || [];
+    putMany(server.id, customEmojis);
+  };
+
+  const putMany = (serverId: string, emojis: RawCustomEmoji[]) => {
+    for (let i = 0; i < emojis.length; i++) {
+      const emoji = emojis[i]!;
+      tx.store.put({ ...emoji, serverId });
+    }
+  };
+
+  const done = async () => await tx.done;
+
+  return {
+    putFromServers,
+    putFromServer,
+    putMany,
+    done,
+  };
+};
+
+export const loadCustomEmojisFromServers = async (servers: RawServer[]) => {
+  const customEmojiLoader = await createCustomEmojiLoader();
+  customEmojiLoader?.putFromServers(servers);
+  customEmojiLoader?.done();
+};
+
+export const addRecentEmoji = (recentEmoji: RecentEmoji) => {
+  let recentEmojis = getLocalItem("recentEmojis", [])!;
+
+  recentEmojis = recentEmojis.filter((emoji) => emoji.id !== recentEmoji.id);
+
+  recentEmojis.unshift(recentEmoji);
+  if (recentEmojis.length > 20) {
+    recentEmojis = recentEmojis.slice(0, 20);
+  }
+
+  setLocalItem("recentEmojis", recentEmojis);
+};

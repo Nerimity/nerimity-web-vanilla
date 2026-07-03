@@ -78,6 +78,7 @@ export interface RawServer {
   avatar?: string;
   serverId: string;
   order?: number;
+  customEmojis?: RawCustomEmoji[];
 }
 export interface RawUser {
   id: string;
@@ -111,6 +112,13 @@ export interface RawUserActivity {
   subtitle?: string;
   link?: string;
   emoji?: string;
+}
+
+export interface RawCustomEmoji {
+  id: string;
+  gif: boolean;
+  name: string;
+  webp: boolean;
 }
 
 export interface RawInbox {

@@ -16,6 +16,7 @@ import type {
   RawServerRole,
   RawUserNotificationSettings,
 } from "../Types";
+import { loadCustomEmojisFromServers } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
@@ -93,7 +94,7 @@ const onAuthError = (payload: any) => {
   accountStore.setAuthError(payload);
 };
 
-const onAuthenticated = (payload: any) => {
+const onAuthenticated = async (payload: any) => {
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
   inboxStore.setInboxes(payload.inbox);
@@ -105,6 +106,8 @@ const onAuthenticated = (payload: any) => {
   messageMentionStore.setMentions(payload.messageMentions);
   accountStore.setCurrentUser(payload.user);
   friendStore.setFriends(payload.friends);
+
+  loadCustomEmojisFromServers(payload.servers);
 
   channelStore.notificationsMemo.rerun();
   serverStore.notificationsMemo.rerun();

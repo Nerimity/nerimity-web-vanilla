@@ -1,3 +1,7 @@
+export interface RecentEmoji {
+  type: "default" | "custom";
+  id: string;
+}
 interface LocalStorageData {
   userToken: string;
   messageReplyShouldMention: boolean;
@@ -7,6 +11,7 @@ interface LocalStorageData {
     channelId?: string;
     createdAt: number;
   }[];
+  recentEmojis: RecentEmoji[];
 }
 
 export const getLocalItem = <T extends keyof LocalStorageData>(

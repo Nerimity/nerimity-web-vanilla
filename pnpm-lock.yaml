@@ -29,6 +29,9 @@ importers:
       idb:
         specifier: ^8.0.3
         version: 8.0.3
+      match-sorter:
+        specifier: ^8.3.0
+        version: 8.3.0
       morphdom:
         specifier: ^2.7.8
         version: 2.7.8
@@ -53,10 +56,10 @@ importers:
         version: 6.4.0(react@19.2.7)
       '@lingui/vite-plugin':
         specifier: ^6.4.0
-        version: 6.4.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.4.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0)))(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
+        version: 6.4.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.4.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0)))(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
-        version: 0.2.3(@babel/core@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
+        version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
       oxfmt:
         specifier: ^0.57.0
         version: 0.57.0
@@ -126,6 +129,10 @@ packages:
     resolution: {integrity: sha512-hnORnjP/1P/zFEndoeX+n+t1RwWRJiJpM/jO7FW32Kn9r5+sJB2JWOdYo4L6k78j15eCwY3Gm/7364B1EMwtNg==}
     engines: {node: '>=6.0.0'}
     hasBin: true
+
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
+    engines: {node: '>=6.9.0'}
 
   '@babel/template@7.29.7':
     resolution: {integrity: sha512-puq+Gf35oI24FeN11LkoUQFqv9uwNeWpxXZi/Ji3rRIoKAzKnxRaZ+Gkj0vKS9ZCiTESfng1N9LyOyXvo+m+Gg==}
@@ -1155,6 +1162,9 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  match-sorter@8.3.0:
+    resolution: {integrity: sha512-8Py1GbZi5zsclYSFcPAH4H5xfTbeD0bOREA7qP/t8bW4MbOSlPl8sbqHOedEV7O+Bxyvxm6xs/v6BXJGe+JDNA==}
+
   mdast-util-to-hast@13.2.1:
     resolution: {integrity: sha512-cctsq2wp5vTsLIcaymblUriiTcZd0CwWtCbLvrOzYCDZoWyMNV8sZ7krj09FSnsiJi3WVsHLM4k6Dq/yaPyCXA==}
 
@@ -1293,6 +1303,9 @@ packages:
 
   regex@6.1.0:
     resolution: {integrity: sha512-6VwtthbV4o/7+OaAF9I5L5V3llLEsoPyq9P1JVXkedTP33c7MfCG0/5NOPcSJn0TzXcG9YUrR0gQSWioew3LDg==}
+
+  remove-accents@0.5.0:
+    resolution: {integrity: sha512-8g3/Otx1eJaVD12e31UbJj1YzdtVvzH85HV7t+9MJYk/u3XmkOUJ5Ys9wQrf9PCPK8+xn4ymzqYCiZl6QWKn+A==}
 
   restore-cursor@5.1.0:
     resolution: {integrity: sha512-oMA2dcrw6u0YfxJQXm342bFKX/E4sG9rbTzO9ptUcR/e8A33cHuvStiYOwH7fszkZlZ1z/ta9AAoPk2F4qIOHA==}
@@ -1550,6 +1563,8 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.7
 
+  '@babel/runtime@7.29.7': {}
+
   '@babel/template@7.29.7':
     dependencies:
       '@babel/code-frame': 7.29.7
@@ -1790,7 +1805,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@lingui/vite-plugin@6.4.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.4.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0)))(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))':
+  '@lingui/vite-plugin@6.4.0(@babel/core@7.29.7)(@lingui/babel-plugin-lingui-macro@6.4.0)(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0)))(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))':
     dependencies:
       '@lingui/cli': 6.4.0
       '@lingui/conf': 6.4.0
@@ -1798,7 +1813,7 @@ snapshots:
     optionalDependencies:
       '@babel/core': 7.29.7
       '@lingui/babel-plugin-lingui-macro': 6.4.0
-      '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
+      '@rolldown/plugin-babel': 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))
       rolldown: 1.1.3
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -1984,12 +1999,13 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.1.3':
     optional: true
 
-  '@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))':
+  '@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.3(@types/node@26.0.1)(jiti@2.7.0))':
     dependencies:
       '@babel/core': 7.29.7
       picomatch: 4.0.4
       rolldown: 1.1.3
     optionalDependencies:
+      '@babel/runtime': 7.29.7
       vite: 8.1.3(@types/node@26.0.1)(jiti@2.7.0)
 
   '@rolldown/pluginutils@1.0.1': {}
@@ -2323,6 +2339,11 @@ snapshots:
     dependencies:
       yallist: 3.1.1
 
+  match-sorter@8.3.0:
+    dependencies:
+      '@babel/runtime': 7.29.7
+      remove-accents: 0.5.0
+
   mdast-util-to-hast@13.2.1:
     dependencies:
       '@types/hast': 3.0.4
@@ -2481,6 +2502,8 @@ snapshots:
   regex@6.1.0:
     dependencies:
       regex-utilities: 2.3.0
+
+  remove-accents@0.5.0: {}
 
   restore-cursor@5.1.0:
     dependencies:
