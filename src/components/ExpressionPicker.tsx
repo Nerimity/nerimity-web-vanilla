@@ -103,9 +103,23 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
     passive: true,
   });
 
+  let downX = 0;
+  let downY = 0;
+  document.addEventListener(
+    "mousedown",
+    (e) => {
+      downX = e.clientX;
+      downY = e.clientY;
+    },
+    { signal: abortController.signal },
+  );
+
   document.addEventListener(
     "click",
     (e) => {
+      const movedX = Math.abs(e.clientX - downX);
+      const movedY = Math.abs(e.clientY - downY);
+      if (movedX > 10 || movedY > 10) return;
       if (
         !el.contains(e.target as Node) &&
         !props.targetEl.contains(e.target as Node)

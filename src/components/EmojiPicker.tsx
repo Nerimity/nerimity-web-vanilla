@@ -2,9 +2,23 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
 import { h } from "../h";
-import { addRecentEmoji, allEmojis, type EmojiData } from "../utils/emojis";
+import { serverStore } from "../store/serverStore";
+import { debounce } from "../utils/debounce";
+import {
+  addRecentEmoji,
+  allCustomEmojis,
+  allEmojis,
+  categorizedCustomEmojis,
+  customEmojiById,
+  unicodeToTwemojiUrl,
+  type CustomEmoji,
+  type EmojiData,
+} from "../utils/emojis";
+import { buildImageUrl } from "../utils/image";
 import { getLocalItem } from "../utils/localStorage";
 import { throttle } from "../utils/throttle";
+import { Avatar } from "./avatar";
+import { Icon } from "./icon";
 import { Input } from "./input";
 import { createVirtualList } from "./virtualList";
 
@@ -41,22 +55,51 @@ const EmojiItem = (props: { emoji: EmojiData }) => {
     </div>
   );
 };
+const CustomEmojiItem = ({ emoji }: { emoji: CustomEmoji }) => {
+  const [url] = buildImageUrl(
+    `emojis/${emoji.id}.${!emoji.webp && emoji.gif ? "gif" : "webp"}`,
+    {
+      animate: true,
+    },
+  );
 
-const GroupHeader = (props: { name: string }) => {
+  return (
+    <div class={style.emojiItem} title={emoji.name} data-id={emoji.id}>
+      <img src={url} style={{ width: `${size}px`, height: `${size}px` }} />
+    </div>
+  );
+};
+
+const GroupHeader = (props: { category: CategoryCol }) => {
+  const server = props.category.serverId
+    ? serverStore.servers.get(props.category.serverId!)
+    : null;
+
+  const emojiUrl =
+    props.category.emoji && unicodeToTwemojiUrl(props.category.emoji.emoji);
+
   return (
     <div class={style.groupHeader}>
-      <span>{props.name}</span>
+      {server && <Avatar server={server} size={16} />}
+      {emojiUrl && <img src={emojiUrl} class={style.groupEmoji} />}
+      {props.category.icon && (
+        <Icon class={style.icon} name={props.category.icon} />
+      )}
+      <span>{props.category.name || server?.name}</span>
     </div>
   );
 };
 
 type EmojiCol = {
   type: "emoji";
-  data: EmojiData;
+  data: EmojiData | CustomEmoji;
 };
 type CategoryCol = {
   type: "category";
-  name: string;
+  name?: string;
+  serverId?: string;
+  icon?: string;
+  emoji?: EmojiData;
 };
 const groupEmojisIntoRows = (emojis: EmojiData[], rowCount: number) => {
   let cols: Array<Array<EmojiCol | CategoryCol>> = [];
@@ -68,7 +111,7 @@ const groupEmojisIntoRows = (emojis: EmojiData[], rowCount: number) => {
 
     if (emoji.category !== currentCategory) {
       currentCategory = emoji.category;
-      cols.push([{ type: "category", name: emoji.category }]);
+      cols.push([{ type: "category", name: emoji.category, emoji: emoji }]);
       currentRow = null;
     }
 
@@ -91,7 +134,8 @@ export const createEmojiPicker = () => {
     <div class={style.emojiContainer}></div>
   ) as HTMLDivElement;
 
-  let cachedEmojis: EmojiData[] | null = null;
+  let emojis: EmojiData[] | null = null;
+  let cachedCustomEmojis: CustomEmoji[] | null = null;
   let virtualItems: Array<{ group: (EmojiCol | CategoryCol)[]; type: 0 }> = [];
 
   const vt = createVirtualList({
@@ -103,7 +147,9 @@ export const createEmojiPicker = () => {
       <div class={style.emojiGroup} data-type={item.group[0]?.type}>
         {item.group.map((emoji) =>
           emoji.type === "category" ? (
-            <GroupHeader name={emoji.name} />
+            <GroupHeader category={emoji} />
+          ) : "id" in emoji.data ? (
+            <CustomEmojiItem emoji={emoji.data} />
           ) : (
             <EmojiItem emoji={emoji.data} />
           ),
@@ -125,19 +171,20 @@ export const createEmojiPicker = () => {
       el.querySelector(".search input") as HTMLInputElement
     ).value.trim();
 
-    const emojis = cachedEmojis || (await allEmojis());
-    if (!emojis) return;
-    cachedEmojis = emojis;
-    const rowCount = getRowFitCount(size + 8, emojiContainer);
+    emojis = emojis || (await allEmojis());
+    cachedCustomEmojis =
+      cachedCustomEmojis || (await allCustomEmojis({ uniqueName: true }));
 
-    if (searchVal) {
-      searchResults(searchVal, cachedEmojis!, rowCount);
-    }
+    if (!emojis) return;
+    const rowCount = getRowFitCount(size + 8, emojiContainer);
 
     emojiContainer.style.setProperty("--row-count", String(rowCount));
     const groups = [
-      ...(searchVal ? searchResults(searchVal, emojis, rowCount) : []),
-      ...(searchVal ? [] : recentEmojis(emojis, rowCount)),
+      ...(searchVal
+        ? searchResults(searchVal, emojis, cachedCustomEmojis, rowCount)
+        : []),
+      ...(searchVal ? [] : recentEmojis(emojis, cachedCustomEmojis, rowCount)),
+      ...(searchVal ? [] : customEmojis(cachedCustomEmojis, rowCount)),
       ...(searchVal ? [] : groupEmojisIntoRows(emojis, rowCount)),
     ];
 
@@ -155,12 +202,20 @@ export const createEmojiPicker = () => {
 
   emojiContainer.addEventListener(
     "click",
-    (e) => {
+    async (e) => {
       const target = e.target as HTMLDivElement;
       const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
       if (!emojiEl) return;
       const index = parseInt(emojiEl.dataset.index!);
-      const emoji = cachedEmojis![index]!;
+      const id = emojiEl.dataset.id;
+
+      if (id) {
+        const emoji = await customEmojiById(id);
+        if (emoji) addRecentEmoji({ id, type: "custom" });
+        return;
+      }
+
+      const emoji = emojis![index]!;
       addRecentEmoji({
         id: emoji.emoji,
         type: "default",
@@ -169,7 +224,11 @@ export const createEmojiPicker = () => {
     { signal },
   );
 
-  el.querySelector(".search")!.addEventListener("input", rerender, { signal });
+  el.querySelector(".search")!.addEventListener(
+    "input",
+    debounce(rerender, 100),
+    { signal },
+  );
 
   signal.addEventListener(
     "abort",
@@ -188,16 +247,26 @@ export const createEmojiPicker = () => {
   return { abortController, el };
 };
 
-const recentEmojis = (emojis: EmojiData[], rowCount: number) => {
+const recentEmojis = (
+  emojis: EmojiData[],
+  customEmojis: CustomEmoji[],
+  rowCount: number,
+) => {
   const recentEmojis = getLocalItem("recentEmojis", [])!;
   if (!recentEmojis.length) return [];
   let currentRow: Array<EmojiCol | CategoryCol> | null = null;
   const mappedEmojis: Array<Array<EmojiCol | CategoryCol>> = [];
 
-  mappedEmojis.push([{ type: "category", name: t`Recent Emojis` }]);
+  const customEmojiIdToEmoji = new Map(customEmojis.map((e) => [e.id, e]));
+
+  mappedEmojis.push([
+    { type: "category", name: t`Recent Emojis`, icon: "history" },
+  ]);
 
   for (let i = 0; i < recentEmojis.length; i++) {
-    const emoji = emojis.find((e) => e.emoji === recentEmojis[i]!.id)!;
+    const emoji =
+      emojis.find((e) => e.emoji === recentEmojis[i]!.id)! ||
+      customEmojiIdToEmoji.get(recentEmojis[i]!.id);
     if (!emoji) continue;
     if (!currentRow || currentRow.length >= rowCount) {
       currentRow = [];
@@ -212,10 +281,11 @@ const recentEmojis = (emojis: EmojiData[], rowCount: number) => {
 const searchResults = (
   value: string,
   emojis: EmojiData[],
+  customEmojis: CustomEmoji[],
   rowCount: number,
 ) => {
-  const results = matchSorter(emojis, value, {
-    keys: ["short_names"],
+  const results = matchSorter([...customEmojis, ...emojis], value, {
+    keys: ["short_names", "name"],
   });
   let currentRow: Array<EmojiCol | CategoryCol> | null = null;
   const mappedEmojis: Array<Array<EmojiCol | CategoryCol>> = [];
@@ -227,6 +297,30 @@ const searchResults = (
       mappedEmojis.push(currentRow);
     }
     currentRow.push({ type: "emoji", data: emoji });
+  }
+
+  return mappedEmojis;
+};
+
+const customEmojis = (emojis: CustomEmoji[], rowCount: number) => {
+  const customEmojis = categorizedCustomEmojis(emojis);
+
+  let currentRow: Array<EmojiCol | CategoryCol> | null = null;
+  const mappedEmojis: Array<Array<EmojiCol | CategoryCol>> = [];
+
+  for (let i = 0; i < customEmojis.length; i++) {
+    const data = customEmojis[i]!;
+    mappedEmojis.push([{ type: "category", serverId: data?.serverId }]);
+    currentRow = null;
+
+    for (let j = 0; j < data.emojis.length; j++) {
+      const emoji = data.emojis[j]!;
+      if (!currentRow || currentRow.length >= rowCount) {
+        currentRow = [];
+        mappedEmojis.push(currentRow);
+      }
+      currentRow.push({ type: "emoji", data: emoji });
+    }
   }
 
   return mappedEmojis;

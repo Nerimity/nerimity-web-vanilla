@@ -154,52 +154,67 @@ export const addRecentEmoji = (recentEmoji: RecentEmoji) => {
   setLocalItem("recentEmojis", recentEmojis);
 };
 
-export async function allCustomEmojis() {
+export async function allCustomEmojis(opts?: { uniqueName?: boolean }) {
   const db = await getIdb();
-  if (!db) return null;
-  return db.getAllFromIndex("custom_emojis", "name");
-}
-
-export async function categorizedCustomEmojis(opts?: { uniqueName?: boolean }) {
-  const customEmojis = await allCustomEmojis();
-  if (!customEmojis) return {};
-
-  const categorized: Record<string, CustomEmoji[]> = {};
+  if (!db) return [];
+  const customEmojis = await db.getAllFromIndex("custom_emojis", "name");
 
   const counts: { [key: string]: number } = {};
+
+  if (!opts?.uniqueName) return customEmojis;
+  for (let i = 0; i < customEmojis.length; i++) {
+    const emoji = customEmojis[i]!;
+
+    let count = counts[emoji.name] || 0;
+
+    const name = emoji.name;
+    const isDuplicate = shortcodeToUnicode[name];
+    if (isDuplicate) {
+      count++;
+    }
+    const uniqueName = count ? `${emoji.name}-${count}` : emoji.name;
+
+    counts[emoji.name] = count + 1;
+    emoji.name = uniqueName;
+  }
+
+  return customEmojis;
+}
+
+export async function customEmojiById(id: string) {
+  const db = await getIdb();
+  if (!db) return null;
+  return db.get("custom_emojis", id);
+}
+
+export function categorizedCustomEmojis(customEmojis: CustomEmoji[] = []) {
+  const categorized: Record<string, CustomEmoji[]> = {};
 
   for (let i = 0; i < customEmojis.length; i++) {
     const emoji = customEmojis[i]!;
     const arr = categorized[emoji.serverId] || [];
 
-    if (opts?.uniqueName) {
-      let count = counts[emoji.name] || 0;
-
-      const name = emoji.name;
-      const isDuplicate = shortcodeToUnicode[name];
-      if (isDuplicate) {
-        count++;
-      }
-      const uniqueName = count ? `${emoji.name}-${count}` : emoji.name;
-
-      counts[emoji.name] = count + 1;
-      emoji.name = uniqueName;
-    }
-
     arr.push(emoji);
     categorized[emoji.serverId] = arr;
   }
+
+  const selectedServerId = serverStore.currentServerId;
 
   const servers = serverStore
     .orderedServers()
     .servers.filter((s) => s.type === "s") as Server[];
 
-  return servers.map((s) => ({
-    serverId: s.id,
-    emojis: categorized[s.id] || [],
-  }));
-}
+  if (selectedServerId) {
+    const index = servers.findIndex((s) => s.id === selectedServerId);
+    if (index !== -1) {
+      servers.unshift(servers.splice(index, 1)[0]!);
+    }
+  }
 
-// setTimeout(() => {
-//   categorizedCustomEmojis({ uniqueName: true }).then((e) => console.log(e));
-// }, 3000);
+  return servers
+    .map((s) => ({
+      serverId: s.id,
+      emojis: categorized[s.id] || [],
+    }))
+    .filter((s) => s.emojis.length);
+}
