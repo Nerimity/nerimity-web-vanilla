@@ -242,12 +242,14 @@ export const createEmojiPicker = () => {
       }
     }
 
-    sidebar.replaceChildren(
-      <>
+    morphdom(
+      sidebar,
+      <div>
         {cachedCategories.map((category) => (
           <SidebarItem category={category.group} />
         ))}
-      </>,
+      </div>,
+      { childrenOnly: true },
     );
   };
 
@@ -292,23 +294,22 @@ export const createEmojiPicker = () => {
   sidebar.addEventListener(
     "click",
     async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
       const target = e.target as HTMLDivElement;
       const sidebarItemEl = target.closest(
         `.${style.sidebarItem}`,
       ) as HTMLDivElement;
       if (!sidebarItemEl) return;
+      if (inputEl.value.trim()) {
+        inputEl.value = "";
+        await rerender();
+      }
       const index = [...sidebar.children].findIndex((c) => c === sidebarItemEl);
       const category = cachedCategories![index]!;
 
-      requestAnimationFrame(async () => {
-        if (inputEl.value.trim()) {
-          inputEl.value = "";
-          await rerender();
-        }
-
-        emojiContainer.scrollTop = category.index * (size + 8);
-        handleScroll();
-      });
+      emojiContainer.scrollTop = category.index * (size + 8);
+      handleScroll();
     },
     { signal },
   );
