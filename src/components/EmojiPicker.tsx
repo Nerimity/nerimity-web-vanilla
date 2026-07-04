@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 import morphdom from "morphdom";
 
-import { h } from "../h";
+import { h, Fragment } from "../h";
 import { serverStore } from "../store/serverStore";
 import { debounce } from "../utils/debounce";
 import {
@@ -96,6 +96,25 @@ const GroupHeader = (props: { category: CategoryCol }) => {
   );
 };
 
+const SidebarItem = (props: { category: CategoryCol }) => {
+  const server = props.category.serverId
+    ? serverStore.servers.get(props.category.serverId!)
+    : null;
+
+  const emojiUrl =
+    props.category.emoji && unicodeToTwemojiUrl(props.category.emoji.emoji);
+
+  return (
+    <div class={style.sidebarItem}>
+      {server && <Avatar server={server} size={28} />}
+      {emojiUrl && <img src={emojiUrl} class={style.groupEmoji} />}
+      {props.category.icon && (
+        <Icon class={style.icon} name={props.category.icon} />
+      )}
+    </div>
+  );
+};
+
 type EmojiCol = {
   type: "emoji";
   data: EmojiData | CustomEmoji;
@@ -141,8 +160,14 @@ export const createEmojiPicker = () => {
     <div class={style.emojiContainer}>{overlayEl}</div>
   ) as HTMLDivElement;
 
+  let searchEl = (
+    <Input class={"search"} placeholder={t`Search Emojis...`} />
+  ) as HTMLDivElement;
+  let inputEl = searchEl.querySelector("input")! as HTMLInputElement;
+
   let emojis: EmojiData[] | null = null;
   let cachedCustomEmojis: CustomEmoji[] | null = null;
+  let cachedCategories: { group: CategoryCol; index: number }[] | null = null;
   let virtualItems: Array<{ group: (EmojiCol | CategoryCol)[]; type: 0 }> = [];
 
   const vt = createVirtualList({
@@ -166,17 +191,19 @@ export const createEmojiPicker = () => {
   });
   emojiContainer.prepend(vt.render());
 
+  const sidebar = (<div class={style.sidebar}></div>) as HTMLDivElement;
   let el = (
     <div class={style.emojiPicker}>
-      <Input class={"search"} placeholder={t`Search Emojis...`} />
-      {emojiContainer}
+      {sidebar}
+      <div class={style.innerEmojiPicker}>
+        {searchEl}
+        {emojiContainer}
+      </div>
     </div>
   ) as HTMLDivElement;
 
   const rerender = async () => {
-    const searchVal = (
-      el.querySelector(".search input") as HTMLInputElement
-    ).value.trim();
+    const searchVal = inputEl.value.trim();
 
     emojis = emojis || (await allEmojis());
     cachedCustomEmojis =
@@ -195,9 +222,33 @@ export const createEmojiPicker = () => {
       ...(searchVal ? [] : groupEmojisIntoRows(emojis, rowCount)),
     ];
 
+    if (!searchVal) {
+      renderSidebar(groups);
+    }
+
     virtualItems = groups.map((g) => ({ group: g, type: 0 }));
     vt.updateItems();
     vt.rerenderItems();
+    handleScroll();
+  };
+
+  const renderSidebar = (groups: (CategoryCol | EmojiCol)[][]) => {
+    cachedCategories = [];
+
+    for (let i = 0; i < groups.length; i++) {
+      const group = groups[i]!;
+      if (group[0]?.type === "category") {
+        cachedCategories.push({ group: group[0]!, index: i });
+      }
+    }
+
+    sidebar.replaceChildren(
+      <>
+        {cachedCategories.map((category) => (
+          <SidebarItem category={category.group} />
+        ))}
+      </>,
+    );
   };
 
   window.addEventListener(
@@ -237,6 +288,65 @@ export const createEmojiPicker = () => {
       }
     },
     { signal },
+  );
+  sidebar.addEventListener(
+    "click",
+    async (e) => {
+      const target = e.target as HTMLDivElement;
+      const sidebarItemEl = target.closest(
+        `.${style.sidebarItem}`,
+      ) as HTMLDivElement;
+      if (!sidebarItemEl) return;
+      const index = [...sidebar.children].findIndex((c) => c === sidebarItemEl);
+      const category = cachedCategories![index]!;
+
+      requestAnimationFrame(async () => {
+        if (inputEl.value.trim()) {
+          inputEl.value = "";
+          await rerender();
+        }
+
+        emojiContainer.scrollTop = category.index * (size + 8);
+        handleScroll();
+      });
+    },
+    { signal },
+  );
+
+  const handleScroll = () => {
+    const scrollTop = emojiContainer.scrollTop;
+    if (!cachedCategories?.length) return;
+
+    let activeIdx = 0;
+    for (let i = 0; i < cachedCategories.length; i++) {
+      if (cachedCategories[i]!.index * (size + 8) <= scrollTop) {
+        activeIdx = i;
+      } else {
+        break;
+      }
+    }
+    const searchVal = inputEl.value.trim();
+
+    if (searchVal) {
+      activeIdx = -1;
+    }
+
+    [...sidebar.children].forEach((c, i) => {
+      const isActive = i === activeIdx;
+      c.classList.toggle(style.active!, isActive);
+      if (isActive) {
+        c.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    });
+  };
+
+  emojiContainer.addEventListener(
+    "scroll",
+    throttle(handleScroll, 100, { trailing: true, leading: true }),
+    {
+      signal,
+      passive: true,
+    },
   );
 
   const renderOverlay = (opts: { emoji?: EmojiData; custom?: CustomEmoji }) => {
@@ -287,11 +397,12 @@ export const createEmojiPicker = () => {
     { signal },
   );
 
-  el.querySelector(".search")!.addEventListener(
+  inputEl.addEventListener(
     "input",
     debounce(() => {
       overlayEl.style.display = "none";
       rerender();
+      emojiContainer.scrollTop = 0;
     }, 100),
     { signal },
   );

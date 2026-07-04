@@ -3,6 +3,14 @@
   position: relative;
   display: flex;
   overflow: hidden;
+  height: 100%;
+}
+
+.innerEmojiPicker {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex: 1;
   flex-direction: column;
   height: 100%;
 }
@@ -27,6 +35,7 @@
 
     .emojiItem {
       flex-shrink: 0;
+      padding: 0;
       pointer-events: none;
     }
 
@@ -74,7 +83,7 @@
   border-radius: var(--radius-4);
 
   &:hover {
-    background-color: var(--gray-600);
+    background-color: var(--gray-700);
   }
 
   img {
@@ -138,5 +147,65 @@
     flex-shrink: 0;
     color: var(--gray-400);
     font-size: 16px;
+  }
+}
+
+.sidebar {
+  position: relative;
+  overflow: auto;
+  overflow-x: hidden;
+  margin-right: 6px;
+  border-radius: var(--radius-8);
+  background-color: var(--gray-800);
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+.sidebarItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-4);
+  user-select: none;
+  &:hover {
+    background-color: var(--gray-700);
+
+    &:before {
+      height: 20%;
+    }
+  }
+
+  &:before {
+    position: absolute;
+    left: 0;
+    width: 2px;
+    height: 0;
+    border-radius: var(--radius-max);
+    background-color: var(--gray-500);
+    content: "";
+    transition: height 0.2s ease-in-out;
+  }
+  &.active {
+    background-color: var(--gray-700);
+    &:before {
+      height: 40%;
+      background-color: var(--primary-color);
+    }
+    .icon {
+      color: var(--gray-100);
+    }
+  }
+
+  .groupEmoji {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+  }
+  .icon {
+    flex-shrink: 0;
+    color: var(--gray-400);
+    font-size: 28px;
   }
 }

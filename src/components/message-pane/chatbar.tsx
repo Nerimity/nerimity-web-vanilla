@@ -312,12 +312,14 @@ export const createChatbar = () => {
     attachButton.remove();
     cancelButton.remove();
     input.remove();
+    inputEl.remove();
     (chatbar as any) = null;
     (sendButton as any) = null;
     (editButton as any) = null;
     (attachButton as any) = null;
     (cancelButton as any) = null;
     (input as any) = null;
+    (inputEl as any) = null;
   };
 
   return { render, destroy, jumpToPresentButton: jumpToPresent };
