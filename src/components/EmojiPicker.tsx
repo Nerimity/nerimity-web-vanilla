@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
+import morphdom from "morphdom";
 
 import { h } from "../h";
 import { serverStore } from "../store/serverStore";
@@ -17,6 +18,7 @@ import {
 import { buildImageUrl } from "../utils/image";
 import { getLocalItem } from "../utils/localStorage";
 import { throttle } from "../utils/throttle";
+import { userAgent } from "../utils/userAgent";
 import { Avatar } from "./avatar";
 import { Icon } from "./icon";
 import { Input } from "./input";
@@ -42,12 +44,11 @@ const EmojiItem = (props: { emoji: EmojiData }) => {
       class={style.emojiItem}
       data-index={index}
       title={props.emoji.short_names[0]}
+      style={{ "--size": `${size}px` }}
     >
       <div
         class={style.emojiImage}
         style={{
-          width: `${size}px`,
-          height: `${size}px`,
           backgroundPosition: `-${posX * size}px -${posY * size}px`,
           backgroundSize: `${size * 40}px`,
         }}
@@ -64,8 +65,13 @@ const CustomEmojiItem = ({ emoji }: { emoji: CustomEmoji }) => {
   );
 
   return (
-    <div class={style.emojiItem} title={emoji.name} data-id={emoji.id}>
-      <img src={url} style={{ width: `${size}px`, height: `${size}px` }} />
+    <div
+      class={style.emojiItem}
+      style={{ "--size": `${size}px` }}
+      title={emoji.name}
+      data-id={emoji.id}
+    >
+      <img src={url} />
     </div>
   );
 };
@@ -130,8 +136,9 @@ export const createEmojiPicker = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
+  let overlayEl = (<div class={style.overlay}></div>) as HTMLDivElement;
   let emojiContainer = (
-    <div class={style.emojiContainer}></div>
+    <div class={style.emojiContainer}>{overlayEl}</div>
   ) as HTMLDivElement;
 
   let emojis: EmojiData[] | null = null;
@@ -157,7 +164,7 @@ export const createEmojiPicker = () => {
       </div>
     ),
   });
-  emojiContainer.appendChild(vt.render());
+  emojiContainer.prepend(vt.render());
 
   let el = (
     <div class={style.emojiPicker}>
@@ -232,9 +239,60 @@ export const createEmojiPicker = () => {
     { signal },
   );
 
+  const renderOverlay = (opts: { emoji?: EmojiData; custom?: CustomEmoji }) => {
+    const emojiEl = opts.emoji ? (
+      <EmojiItem emoji={opts.emoji} />
+    ) : (
+      <CustomEmojiItem emoji={opts.custom!} />
+    );
+
+    const name = opts.emoji
+      ? opts.emoji.short_names.join(", ")
+      : opts.custom!.name;
+
+    const sub = opts.custom
+      ? serverStore.servers.get(opts.custom!.serverId!)?.name
+      : null;
+
+    overlayEl.style.display = "flex";
+
+    morphdom(
+      overlayEl,
+      (
+        <div>
+          <div class={style.overlayContent}>
+            {emojiEl}
+            <div class={style.info}>
+              <div class={style.name}>{name}</div>
+              {sub && <div class={style.sub}>{sub}</div>}
+            </div>
+          </div>
+        </div>
+      ) as HTMLElement,
+      { childrenOnly: true },
+    );
+  };
+
+  emojiContainer.addEventListener(
+    "mouseover",
+    async (e) => {
+      if (userAgent.mobile) return;
+      const target = e.target as HTMLDivElement;
+      const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
+      if (!emojiEl) return;
+      const { emoji, custom } = await getEmojiByElement(emojiEl);
+
+      renderOverlay({ emoji, custom });
+    },
+    { signal },
+  );
+
   el.querySelector(".search")!.addEventListener(
     "input",
-    debounce(rerender, 100),
+    debounce(() => {
+      overlayEl.style.display = "none";
+      rerender();
+    }, 100),
     { signal },
   );
 

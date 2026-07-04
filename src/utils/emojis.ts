@@ -183,7 +183,7 @@ export async function allCustomEmojis(opts?: { uniqueName?: boolean }) {
 
 export async function customEmojiById(id: string) {
   const db = await getIdb();
-  if (!db) return null;
+  if (!db) return undefined;
   return db.get("custom_emojis", id);
 }
 

@@ -1,8 +1,53 @@
 .emojiPicker {
+  position: relative;
   display: flex;
   overflow: hidden;
   flex-direction: column;
   height: 100%;
+}
+
+.overlay {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  display: none;
+  .overlayContent {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 4px;
+    padding-right: 8px;
+    border: solid 1px var(--gray-700);
+    border-radius: var(--radius-8);
+    background: var(--gray-800);
+    gap: 6px;
+
+    .emojiItem {
+      flex-shrink: 0;
+      pointer-events: none;
+    }
+
+    .info {
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .name {
+      overflow: hidden;
+      color: var(--gray-200);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .sub {
+      overflow: hidden;
+      color: var(--gray-400);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+  }
 }
 
 .emojiContainer {
@@ -13,6 +58,11 @@
   min-height: 0;
   margin-top: 4px;
   scrollbar-gutter: stable;
+
+  > *:first-child {
+    /* 48px is the height of the overlay */
+    min-height: calc(100% - 48px);
+  }
 }
 .emojiItem {
   display: flex;
@@ -26,9 +76,13 @@
   }
 
   img {
+    width: var(--size);
+    height: var(--size);
     object-fit: contain;
   }
   .emojiImage {
+    width: var(--size);
+    height: var(--size);
     background: url(/emoji_sprites_17.webp);
   }
 }
@@ -42,9 +96,22 @@
   }
 }
 
+.emojiGroup {
+  display: flex;
+  justify-content: flex-start;
+  min-width: 0;
+  &[data-type="category"] {
+    align-items: center;
+    min-width: 0;
+    height: 38px;
+  }
+}
+
 .groupHeader {
   display: flex;
+  overflow: hidden;
   justify-content: center;
+  min-width: 0;
   padding: 4px;
   border-radius: var(--radius-4);
   color: var(--gray-200);
@@ -52,11 +119,21 @@
   font-size: 12px;
   font-weight: bold;
   gap: 6px;
+
+  span {
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .groupEmoji {
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
   }
   .icon {
+    flex-shrink: 0;
     color: var(--gray-400);
     font-size: 16px;
   }
