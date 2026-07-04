@@ -59,6 +59,27 @@ export const createChatbar = () => {
     />
   ) as HTMLElement;
 
+  let inputEl = (
+    <Input
+      type="textarea"
+      id="message-input"
+      class={style.chatInput}
+      prefix={
+        <div class={style.buttons}>
+          {attachButton}
+          {cancelButton}
+        </div>
+      }
+      suffix={
+        <div class={style.buttons}>
+          {emojiPickerButton}
+          {sendButton}
+          {editButton}
+        </div>
+      }
+    />
+  ) as HTMLInputElement;
+
   const updateCancelButton = () => {
     let shouldShowCancel = false;
     const property = channelStore.currentChannelProperty()!;
@@ -81,7 +102,11 @@ export const createChatbar = () => {
   };
 
   const handleEmojiClick = () => {
-    createExpressionPicker({ targetEl: emojiPickerButton });
+    createExpressionPicker({
+      targetEl: emojiPickerButton,
+      anchorEl: inputEl,
+      offset: { top: 4 },
+    });
   };
 
   let chatbar = (
@@ -91,26 +116,7 @@ export const createChatbar = () => {
       {editMessageIndicator}
       {attachmentIndicator}
       {repliesIndicator}
-      <div class={style.chatInputContainer}>
-        <Input
-          type="textarea"
-          id="message-input"
-          class={style.chatInput}
-          prefix={
-            <div class={style.buttons}>
-              {attachButton}
-              {cancelButton}
-            </div>
-          }
-          suffix={
-            <div class={style.buttons}>
-              {emojiPickerButton}
-              {sendButton}
-              {editButton}
-            </div>
-          }
-        />
-      </div>
+      <div class={style.chatInputContainer}>{inputEl}</div>
     </div>
   ) as unknown as HTMLElement;
   let input = chatbar.querySelector(

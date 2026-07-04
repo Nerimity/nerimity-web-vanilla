@@ -1,4 +1,5 @@
 .emojiPicker {
+  --overlay-height: 48px;
   position: relative;
   display: flex;
   overflow: hidden;
@@ -11,6 +12,7 @@
   bottom: 0;
   left: 0;
   display: none;
+  pointer-events: none;
   .overlayContent {
     display: flex;
     align-items: center;
@@ -20,6 +22,7 @@
     border: solid 1px var(--gray-700);
     border-radius: var(--radius-8);
     background: var(--gray-800);
+    pointer-events: all;
     gap: 6px;
 
     .emojiItem {
@@ -60,8 +63,7 @@
   scrollbar-gutter: stable;
 
   > *:first-child {
-    /* 48px is the height of the overlay */
-    min-height: calc(100% - 48px);
+    min-height: calc(100% - var(--overlay-height));
   }
 }
 .emojiItem {

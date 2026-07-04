@@ -12,8 +12,13 @@ import style from "./ExpressionPicker.module.css";
 interface ExpressionPickerProps {
   // onSelect: (expression: string) => void;
   targetEl: HTMLElement;
+  anchorEl?: HTMLElement;
   defaultTab?: "GIFs" | "emojis";
   tabs?: ("GIFs" | "emojis")[];
+  offset?: {
+    left?: number;
+    top?: number;
+  };
 }
 
 let currentInstance: {
@@ -83,16 +88,25 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
   ) as HTMLElement;
   const updatePos = () => {
     const app = document.getElementById("app")!;
-    const targetRect = props.targetEl.getBoundingClientRect();
+    const targetRect = (
+      props.anchorEl || props.targetEl
+    ).getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
     if (isMobileWidth()) {
       app.style.height = window.innerHeight - elRect.height + "px";
     }
 
-    el.style.setProperty("--top", targetRect.top - elRect.height - 10 + "px");
+    el.style.setProperty(
+      "--top",
+      targetRect.top - elRect.height - (props.offset?.top || 0) + "px",
+    );
     el.style.setProperty(
       "--left",
-      targetRect.left - elRect.width + targetRect.width + "px",
+      targetRect.left -
+        elRect.width +
+        targetRect.width +
+        (props.offset?.left || 0) +
+        "px",
     );
   };
   portalElement().appendChild(el);
