@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 import morphdom from "morphdom";
 
-import { h, Fragment } from "../h";
+import { h } from "../h";
 import { serverStore } from "../store/serverStore";
 import { debounce } from "../utils/debounce";
 import {
