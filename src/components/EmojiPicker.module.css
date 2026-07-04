@@ -11,6 +11,7 @@
   overflow-x: hidden;
   flex: 1;
   min-height: 0;
+  margin-top: 4px;
   scrollbar-gutter: stable;
 }
 .emojiItem {
