@@ -30,7 +30,7 @@ const size = 30;
 const SPRITE_ROWS = 40;
 
 const getRowFitCount = (itemWidth: number, el: HTMLDivElement) => {
-  const { width } = el.getBoundingClientRect();
+  const width = el.clientWidth;
   const canFit = Math.floor(width / itemWidth);
   return canFit;
 };
