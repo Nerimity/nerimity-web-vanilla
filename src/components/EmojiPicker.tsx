@@ -200,26 +200,34 @@ export const createEmojiPicker = () => {
   );
   rerender();
 
+  const getEmojiByElement = async (el: HTMLElement) => {
+    const index = parseInt(el.dataset.index!);
+    const id = el.dataset.id;
+
+    if (id) {
+      const emoji = await customEmojiById(id);
+      return { custom: emoji };
+    }
+    const emoji = emojis![index]!;
+    return { emoji: emoji };
+  };
+
   emojiContainer.addEventListener(
     "click",
     async (e) => {
       const target = e.target as HTMLDivElement;
       const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
       if (!emojiEl) return;
-      const index = parseInt(emojiEl.dataset.index!);
-      const id = emojiEl.dataset.id;
+      const { emoji, custom } = await getEmojiByElement(emojiEl);
 
-      if (id) {
-        const emoji = await customEmojiById(id);
-        if (emoji) addRecentEmoji({ id, type: "custom" });
+      if (custom) {
+        addRecentEmoji({ id: custom.id, type: "custom" });
         return;
       }
 
-      const emoji = emojis![index]!;
-      addRecentEmoji({
-        id: emoji.emoji,
-        type: "default",
-      });
+      if (emoji) {
+        addRecentEmoji({ id: emoji.emoji, type: "default" });
+      }
     },
     { signal },
   );
