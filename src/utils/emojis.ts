@@ -125,7 +125,10 @@ export const createCustomEmojiLoader = async () => {
     }
   };
 
-  const done = async () => await tx.done;
+  const done = async () => {
+    await tx.done;
+    loadCustomShortcodeToIds();
+  };
 
   return {
     putFromServers,
@@ -152,6 +155,22 @@ export const addRecentEmoji = (recentEmoji: RecentEmoji) => {
   }
 
   setLocalItem("recentEmojis", recentEmojis);
+};
+
+export let customShortcodeToIds: Record<string, string> = {};
+
+export const loadCustomShortcodeToIds = async () => {
+  const customEmojis = await allCustomEmojis({ uniqueName: true });
+
+  customShortcodeToIds = {};
+
+  for (let i = 0; i < customEmojis.length; i++) {
+    const emoji = customEmojis[i]!;
+    const isGif = emoji.gif && !emoji.webp;
+    const isAWebp = emoji.webp && emoji.gif;
+    customShortcodeToIds[emoji.name] =
+      `${isGif ? "ace" : isAWebp ? "wace" : "ce"}:${emoji.id}`;
+  }
 };
 
 export async function allCustomEmojis(opts?: { uniqueName?: boolean }) {

@@ -8,6 +8,7 @@ import {
 import { Server, serverStore } from "../../store/serverStore";
 import type { User } from "../../store/userStore";
 import { MessageType } from "../../Types";
+import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
@@ -99,4 +100,23 @@ export const isMentioned = (opts: {
   const isMentioned = message.mentions?.find((u) => u.id === currentUserId);
 
   return !!isMentioned;
+};
+
+const emojiRegex = /:[\w+-]+:/g;
+
+export const formatMessage = (opts: { content: string }) => {
+  let finalString = opts.content;
+
+  finalString = finalString.replace(emojiRegex, (val) => {
+    const emojiName = val.substring(1, val.length - 1);
+    const emojiUnicode = shortcodeToUnicode[emojiName];
+    if (emojiUnicode) return emojiUnicode;
+
+    const customEmoji = customShortcodeToIds[emojiName];
+    if (customEmoji) return `[${customEmoji}]`;
+
+    return val;
+  });
+
+  return finalString;
 };

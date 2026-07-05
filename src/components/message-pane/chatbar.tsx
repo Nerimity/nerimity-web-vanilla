@@ -20,6 +20,7 @@ import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
 import { createTypingIndicator } from "./typingIndicator";
+import { formatMessage } from "./utils";
 
 import style from "./chatbar.module.css";
 
@@ -159,18 +160,20 @@ export const createChatbar = () => {
 
     textHeight.adjust();
 
+    const formattedContent = formatMessage({ content: value });
+
     if (property.editingMessage) {
       messageStore.editMessage(
         channelStore.currentChannel()!.id,
         property.editingMessage.id,
-        value,
+        formattedContent,
       );
       channelStore.setEditingMessage(channelStore.currentChannelId!, undefined);
       return;
     }
 
     messageStore.sendMessage(channelStore.currentChannel()!.id, {
-      content: value,
+      content: formattedContent,
     });
     channelStore.removeReply(channelStore.currentChannelId!);
     channelStore.updateAttachment(channelStore.currentChannelId!);
