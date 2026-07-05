@@ -13,6 +13,7 @@
   flex: 1;
   flex-direction: column;
   height: 100%;
+  user-select: none;
 }
 
 .overlay {
@@ -37,6 +38,7 @@
       flex-shrink: 0;
       padding: 0;
       pointer-events: none;
+      user-select: none;
     }
 
     .info {
@@ -130,6 +132,7 @@
   font-size: 12px;
   font-weight: bold;
   gap: 6px;
+  user-select: none;
 
   span {
     overflow: hidden;

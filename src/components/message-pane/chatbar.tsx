@@ -8,6 +8,7 @@ import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
 import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
+import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { userAgent } from "../../utils/userAgent";
 import { Button } from "../button";
@@ -59,7 +60,7 @@ export const createChatbar = () => {
     />
   ) as HTMLElement;
 
-  let inputEl = (
+  let inputContainerEl = (
     <Input
       type="textarea"
       id="message-input"
@@ -78,7 +79,10 @@ export const createChatbar = () => {
         </div>
       }
     />
-  ) as HTMLInputElement;
+  ) as HTMLDivElement;
+  let inputEl = inputContainerEl.querySelector(
+    "textarea",
+  )! as HTMLTextAreaElement;
 
   const updateCancelButton = () => {
     let shouldShowCancel = false;
@@ -101,11 +105,23 @@ export const createChatbar = () => {
     fileInput.trigger();
   };
 
+  const onEmojiPick = (emoji?: EmojiData, custom?: CustomEmoji) => {
+    const shortcode = emoji?.short_names[0] || custom?.name;
+    if (!shortcode) return;
+    inputEl.focus();
+    const selStart = inputEl.selectionStart;
+    const selEnd = inputEl.selectionEnd;
+    inputEl.setRangeText(`:${shortcode}: `, selStart, selEnd, "end");
+    const property = channelStore.currentChannelProperty()!;
+    property.content = inputEl.value;
+  };
+
   const handleEmojiClick = () => {
     createExpressionPicker({
       targetEl: emojiPickerButton,
-      anchorEl: inputEl,
+      anchorEl: inputContainerEl,
       offset: { top: 4 },
+      onEmojiPick,
     });
   };
 
@@ -116,17 +132,14 @@ export const createChatbar = () => {
       {editMessageIndicator}
       {attachmentIndicator}
       {repliesIndicator}
-      <div class={style.chatInputContainer}>{inputEl}</div>
+      <div class={style.chatInputContainer}>{inputContainerEl}</div>
     </div>
   ) as unknown as HTMLElement;
-  let input = chatbar.querySelector(
-    `.${style.chatInput} .input`,
-  ) as HTMLTextAreaElement;
 
   let lastInputAt = 0;
   const handleInput = () => {
     const property = channelStore.currentChannelProperty()!;
-    property.content = input.value.trim();
+    property.content = inputEl.value;
     if (lastInputAt >= Date.now() - 4000) {
       return;
     }
@@ -137,12 +150,12 @@ export const createChatbar = () => {
   const sendMessage = () => {
     lastInputAt = 0;
     const property = channelStore.currentChannelProperty()!;
-    input.focus();
-    const value = input.value.trim();
+    inputEl.focus();
+    const value = inputEl.value.trim();
     const hasAttachment = property.attachment;
     if (!value && !hasAttachment) return;
     property.content = "";
-    input.value = "";
+    inputEl.value = "";
 
     textHeight.adjust();
 
@@ -215,14 +228,14 @@ export const createChatbar = () => {
     }
   };
 
-  input.addEventListener("keydown", handleKeyDown, { signal });
-  input.addEventListener("input", handleInput, { signal });
+  inputEl.addEventListener("keydown", handleKeyDown, { signal });
+  inputEl.addEventListener("input", handleInput, { signal });
 
   cancelButton.addEventListener("click", handleCancelClick, { signal });
   sendButton.addEventListener("click", sendMessage, { signal });
   attachButton.addEventListener("click", handleAttachClick, { signal });
   emojiPickerButton.addEventListener("click", handleEmojiClick, { signal });
-  const textHeight = createTextareaHeightHandler({ textarea: input, signal });
+  const textHeight = createTextareaHeightHandler({ textarea: inputEl, signal });
 
   const render = () => {
     updatePlaceholder();
@@ -235,25 +248,25 @@ export const createChatbar = () => {
 
     if (!channel) {
       if (!authenticated) {
-        input.placeholder = accountStore.connectionState();
+        inputEl.placeholder = accountStore.connectionState();
       }
 
       return;
     }
 
     if (channel.serverId) {
-      input.placeholder = t`Message in ${channel.name!}`;
+      inputEl.placeholder = t`Message in ${channel.name!}`;
     } else {
       const inbox = inboxStore.inboxes.get(channel.id);
       if (!inbox) return;
       const user = userStore.users.get(inbox.recipientId);
-      input.placeholder = t`Message ${user?.username ?? ""}`;
+      inputEl.placeholder = t`Message ${user?.username ?? ""}`;
     }
   };
 
   const syncValue = () => {
     const property = channelStore.currentChannelProperty()!;
-    input.value = property.content || "";
+    inputEl.value = property.content || "";
 
     const isEditing = !!property.editingMessage;
 
@@ -276,7 +289,7 @@ export const createChatbar = () => {
   storeEmitter.on(
     "message_property:attachment",
     () => {
-      input.focus();
+      inputEl.focus();
       updateCancelButton();
     },
     signal,
@@ -284,7 +297,7 @@ export const createChatbar = () => {
   storeEmitter.on(
     "message_property:replying",
     () => {
-      input.focus();
+      inputEl.focus();
       updateCancelButton();
     },
     signal,
@@ -293,7 +306,7 @@ export const createChatbar = () => {
     "message_property:editing",
     () => {
       syncValue();
-      input.focus();
+      inputEl.focus();
       updateCancelButton();
     },
     signal,
@@ -311,15 +324,15 @@ export const createChatbar = () => {
     editButton.remove();
     attachButton.remove();
     cancelButton.remove();
-    input.remove();
     inputEl.remove();
+    inputContainerEl.remove();
     (chatbar as any) = null;
     (sendButton as any) = null;
     (editButton as any) = null;
     (attachButton as any) = null;
     (cancelButton as any) = null;
-    (input as any) = null;
     (inputEl as any) = null;
+    (inputContainerEl as any) = null;
   };
 
   return { render, destroy, jumpToPresentButton: jumpToPresent };

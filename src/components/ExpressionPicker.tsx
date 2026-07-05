@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { isMobileWidth } from "../config";
 import { h } from "../h";
+import type { CustomEmoji, EmojiData } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { portalElement } from "../utils/portal";
 import { Button } from "./button";
@@ -19,6 +20,7 @@ interface ExpressionPickerProps {
     left?: number;
     top?: number;
   };
+  onEmojiPick: (emoji?: EmojiData, custom?: CustomEmoji) => void;
 }
 
 let currentInstance: {
@@ -49,7 +51,10 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
   const updatePage = () => {
     currentPage?.abortController.abort();
     if (currentTab === "emojis") {
-      currentPage = createEmojiPicker();
+      currentPage = createEmojiPicker({
+        abortController,
+        onPick: props.onEmojiPick,
+      });
       contentEl.replaceChildren(currentPage.el);
     }
   };

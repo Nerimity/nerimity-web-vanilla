@@ -151,7 +151,11 @@ const groupEmojisIntoRows = (emojis: EmojiData[], rowCount: number) => {
   return cols;
 };
 
-export const createEmojiPicker = () => {
+interface EmojiPickerOpts {
+  abortController: AbortController;
+  onPick: (emoji?: EmojiData, custom?: CustomEmoji) => void;
+}
+export const createEmojiPicker = (opts: EmojiPickerOpts) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -282,11 +286,17 @@ export const createEmojiPicker = () => {
 
       if (custom) {
         addRecentEmoji({ id: custom.id, type: "custom" });
-        return;
       }
 
       if (emoji) {
         addRecentEmoji({ id: emoji.emoji, type: "default" });
+      }
+
+      if (emoji || custom) {
+        if (!userAgent.mobile && !e.shiftKey) {
+          opts.abortController.abort();
+        }
+        opts.onPick(emoji, custom);
       }
     },
     { signal },
