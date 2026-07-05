@@ -270,6 +270,9 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
 
     if (id) {
       const emoji = await customEmojiById(id);
+      if (emoji) {
+        emoji.name = el.title;
+      }
       return { custom: emoji };
     }
     const emoji = emojis![index]!;
