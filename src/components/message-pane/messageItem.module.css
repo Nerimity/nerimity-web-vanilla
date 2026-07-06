@@ -69,6 +69,10 @@
     align-items: center;
     margin-bottom: 2px;
     gap: 4px;
+    .muted {
+      color: var(--alert-color);
+      font-size: 18px;
+    }
     .timestamp {
       flex-shrink: 0;
       color: var(--gray-400);

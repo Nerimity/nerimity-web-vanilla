@@ -17,6 +17,7 @@ export class ServerMember {
   serverId: string;
   nickname?: string;
   joinedAt: number;
+  muteExpireAt?: number;
   constructor(data: RawServerMember) {
     this.id = data.id;
     this.roleIds = data.roleIds;
@@ -24,6 +25,7 @@ export class ServerMember {
     this.userId = data.userId;
     this.nickname = data.nickname;
     this.joinedAt = data.joinedAt;
+    this.muteExpireAt = data.muteExpireAt;
   }
   hasPerm(perm: number) {
     serverMemberStore.hasPermission(this.serverId, this.userId, perm);

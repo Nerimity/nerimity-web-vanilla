@@ -9,7 +9,7 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { MessageType, type RawReplyMessage } from "../../Types";
 import { convertShorthandToLinearGradient } from "../../utils/color";
-import { friendlyTimestamp, fullDate } from "../../utils/date";
+import { formatTimestamp, friendlyTimestamp, fullDate } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
 import { GradientText } from "../gradientText";
@@ -90,6 +90,11 @@ export const MessageItem = (props: {
 
   const htmlEmbed = props.message.htmlEmbed;
 
+  const muted = member?.muteExpireAt ? member.muteExpireAt > Date.now() : null;
+  const mutedUntil = member?.muteExpireAt
+    ? formatTimestamp(member.muteExpireAt)
+    : null;
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
@@ -130,6 +135,15 @@ export const MessageItem = (props: {
                 <div class={style.messageBody}>
                   {!group && (
                     <span class={style.details}>
+                      {muted && (
+                        <Icon
+                          title={
+                            mutedUntil ? t`Muted until ${mutedUntil}` : null
+                          }
+                          name="volume_off"
+                          class={style.muted}
+                        />
+                      )}
                       <GradientText
                         data-user-id={creator.id}
                         tag={Link}

@@ -23,6 +23,7 @@ export interface RawServerMember {
   user: RawUser;
   nickname?: string;
   joinedAt: number;
+  muteExpireAt?: number;
 }
 
 export interface RawServerRole {
