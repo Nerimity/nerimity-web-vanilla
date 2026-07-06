@@ -1,6 +1,3 @@
-import type Zoomist from "zoomist";
-import type { BoundingRect } from "zoomist/types";
-
 import { h } from "../h";
 import { portalElement } from "../utils/portal";
 
@@ -42,6 +39,7 @@ const createImagePreviewModal = (opts: {
 
   const abortController = new AbortController();
   const { signal } = abortController;
+
   const el = (
     <div class={style.bg}>
       <div class="zoomist-container">
@@ -81,13 +79,13 @@ const createImagePreviewModal = (opts: {
   let downX = 0;
   let downY = 0;
   let MOVE_THRESHOLD = 10;
-  el.addEventListener("mousedown", (e) => {
+  el.addEventListener("pointerdown", (e) => {
     downX = e.clientX;
     downY = e.clientY;
   });
 
   el.addEventListener(
-    "click",
+    "pointerup",
     (e) => {
       const target = e.target as HTMLDivElement;
       if (target.classList.contains("zoomist-image")) {
@@ -139,7 +137,6 @@ const createImagePreviewModal = (opts: {
     }, 200);
   });
 };
-
 const createZoomistInstance = async (opts: {
   zoomistImage: HTMLDivElement;
   img: HTMLElement;
@@ -165,7 +162,7 @@ const createZoomistInstance = async (opts: {
   const TARGET_SCALE = 2.5;
 
   img.addEventListener(
-    "click",
+    "pointerup",
     (e) => {
       const currentTime = Date.now();
       const timeSinceLastClick = currentTime - lastClickTime;
@@ -182,7 +179,7 @@ const createZoomistInstance = async (opts: {
 
         let zoom = currentScale !== 0 ? 0 : TARGET_SCALE;
 
-        zoomTo(opts.zoomistImage, zoomist, zoom, {
+        zoomist.zoomTo(zoom, {
           clientX: e.clientX,
           clientY: e.clientY,
         });
@@ -206,93 +203,6 @@ const createZoomistInstance = async (opts: {
 
   return zoomist;
 };
-
-const minmax = (value: number, min: number, max: number): number => {
-  return Math.min(Math.max(value, min), max);
-};
-
-const getBoundingRect = (target: HTMLElement): BoundingRect => {
-  const { width, height, top, left, bottom } = target.getBoundingClientRect();
-  return {
-    width,
-    height,
-    top,
-    left,
-    bottom,
-  };
-};
-
-type Entries<T> = {
-  [K in keyof T]: [K, T[K]];
-}[keyof T][];
-
-const setObject = <T, K extends keyof T>(obj: T, value: Pick<T, K>): void => {
-  for (const [k, v] of Object.entries(value) as Entries<Pick<T, K>>) {
-    obj[k] = v;
-  }
-};
-
-function zoomTo(
-  zoomistImage: HTMLDivElement,
-  zoomist: Zoomist,
-  ratio: number,
-  pointer: { clientX: number; clientY: number },
-) {
-  const {
-    image,
-    transform: { scale, translateX: oldTranslateX, translateY: oldTranslateY },
-    options: { bounds },
-  } = zoomist;
-  ratio = zoomist.useFixedRatio(ratio);
-  if (ratio === scale) return zoomist;
-
-  let oldScale = zoomist.transform.scale;
-  zoomist.transform.scale = ratio;
-
-  const { clientX, clientY } = pointer;
-  const {
-    top: imageTop,
-    left: imageLeft,
-    width: imageWidth,
-    height: imageHeight,
-  } = getBoundingRect(image);
-  const { width: widthDiff, height: heightDiff } = zoomist.getImageDiff();
-  const scaleDiff = ratio / scale - 1;
-  const distanceX =
-    (imageWidth / 2 - clientX + imageLeft) * scaleDiff + oldTranslateX;
-  const distanceY =
-    (imageHeight / 2 - clientY + imageTop) * scaleDiff + oldTranslateY;
-  const translateX = bounds
-    ? minmax(distanceX, widthDiff, -widthDiff)
-    : distanceX;
-  const translateY = bounds
-    ? minmax(distanceY, heightDiff, -heightDiff)
-    : distanceY;
-
-  zoomist.transform.scale = oldScale;
-
-  zoomistImage.style.transition = "0.2s";
-  setTimeout(() => {
-    zoomistImage.style.transition = "";
-    zoomist.update();
-    zoomist.transform.scale = ratio;
-
-    setObject(zoomist.transform, {
-      translateX,
-      translateY,
-    });
-  }, 200);
-
-  zoomist.transform.scale = ratio;
-  setObject(zoomist.transform, {
-    translateX,
-    translateY,
-  });
-
-  zoomist.emit("zoom", zoomist, zoomist.transform.scale);
-
-  return zoomist;
-}
 
 function copyClipboard(imgSrc: string) {
   const img = new Image();
