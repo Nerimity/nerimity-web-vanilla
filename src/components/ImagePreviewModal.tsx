@@ -117,7 +117,7 @@ const createImagePreviewModal = (opts: {
           break;
         }
         case "copy": {
-          navigator.clipboard.writeText(opts.src);
+          copyClipboard(opts.src);
           break;
         }
       }
@@ -292,4 +292,20 @@ function zoomTo(
   zoomist.emit("zoom", zoomist, zoomist.transform.scale);
 
   return zoomist;
+}
+
+function copyClipboard(imgSrc: string) {
+  const img = new Image();
+  img.crossOrigin = "Anonymous";
+  img.src = imgSrc;
+
+  img.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    canvas.getContext("2d")!.drawImage(img, 0, 0, img.width, img.height);
+    canvas.toBlob((blob) => {
+      navigator.clipboard.write([new ClipboardItem({ "image/png": blob! })]);
+    }, "image/png");
+  };
 }
