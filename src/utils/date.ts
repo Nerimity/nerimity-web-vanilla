@@ -45,6 +45,13 @@ export const formatters = (() => {
         timeStyle: "short",
         hour12: timeFormat === 12,
       }),
+      dateOnly: new Intl.DateTimeFormat(options, {
+        dateStyle: "medium",
+      }),
+      time: new Intl.DateTimeFormat(options, {
+        timeStyle: "short",
+        hour12: timeFormat === 12,
+      }),
       seconds: new Intl.DateTimeFormat(options, {
         timeStyle: "medium",
         hour12: timeFormat === 12,
@@ -265,19 +272,20 @@ export function formatTimestamp(timestampMs: number, seconds = false) {
     const date = timestamp.toPlainDate();
     const dateValue = new Date(timestamp.toInstant().epochMilliseconds);
 
-    const dateFormat = formatters.datetime.mediumDate;
-    const timeFormatSeconds = formatters.datetime.seconds;
+    const dateFormat = formatters.datetime.dateOnly;
+    const timeFormat = seconds
+      ? formatters.datetime.seconds
+      : formatters.datetime.time;
 
     if (date.equals(today.toPlainDate())) {
-      const formatter = seconds ? timeFormatSeconds : dateFormat;
-      return formatter.format(dateValue);
+      return timeFormat.format(dateValue);
     } else if (date.equals(yesterday.toPlainDate())) {
-      const time = dateFormat.format(dateValue);
+      const time = timeFormat.format(dateValue);
       return t`Yesterday at ${time}`;
     } else {
-      const date = dateFormat.format(dateValue);
-      const time = dateFormat.format(dateValue);
-      return t`${date} at ${time}`;
+      const dateStr = dateFormat.format(dateValue);
+      const time = timeFormat.format(dateValue);
+      return t`${dateStr} at ${time}`;
     }
   } catch (e) {
     console.warn(e);

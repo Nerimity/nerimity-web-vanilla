@@ -71,6 +71,7 @@ export class Message {
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
   htmlEmbed?: HtmlNode | HtmlNode[];
+  silent?: boolean;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -88,6 +89,7 @@ export class Message {
     this.quotedMessages = data.quotedMessages || [];
     this.roleMentions = data.roleMentions || [];
     this.htmlEmbed = data.htmlEmbed;
+    this.silent = data.silent;
   }
 }
 

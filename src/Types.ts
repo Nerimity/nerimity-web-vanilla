@@ -180,6 +180,7 @@ export interface RawMessage {
   reactions?: RawMessageReaction[];
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
+  silent?: boolean;
 }
 
 export interface HtmlNode {

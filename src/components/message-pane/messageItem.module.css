@@ -73,6 +73,10 @@
       color: var(--alert-color);
       font-size: 18px;
     }
+    .silent {
+      color: var(--gray-400);
+      font-size: 12px;
+    }
     .timestamp {
       flex-shrink: 0;
       color: var(--gray-400);

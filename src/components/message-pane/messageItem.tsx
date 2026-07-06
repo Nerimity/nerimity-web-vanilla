@@ -174,6 +174,13 @@ export const MessageItem = (props: {
                       <span class={style.timestamp}>
                         {friendlyTimestamp(props.message.createdAt)}
                       </span>
+                      {props.message.silent && (
+                        <Icon
+                          title={t`Silent`}
+                          name="notifications_off"
+                          class={style.silent}
+                        />
+                      )}
                     </span>
                   )}
                   <div class={style.content}>
