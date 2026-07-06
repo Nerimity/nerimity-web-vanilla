@@ -44,6 +44,9 @@ importers:
       urlpattern-polyfill:
         specifier: ^10.1.0
         version: 10.1.0
+      zoomist:
+        specifier: ^2.2.0
+        version: 2.2.0
     devDependencies:
       '@lingui/cli':
         specifier: ^6.4.0
@@ -1481,6 +1484,9 @@ packages:
     resolution: {integrity: sha512-CzhO+pFNo8ajLM2d2IW/R93ipy99LWjtwblvC1RsoSUMZgyLbYFr221TnSNT7GjGdYui6P459mw9JH/g/zW2ug==}
     engines: {node: '>=18'}
 
+  zoomist@2.2.0:
+    resolution: {integrity: sha512-+TkJ5Kw8ybTOjXy5bNhUxYlOshcwPlL2fU6t11jZur+4A5GR7wT7i8+FghFh1QqFaiBH34USR7Ak2/acNGI+0A==}
+
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
 
@@ -2667,5 +2673,7 @@ snapshots:
   yallist@3.1.1: {}
 
   yoctocolors@2.1.2: {}
+
+  zoomist@2.2.0: {}
 
   zwitch@2.0.4: {}

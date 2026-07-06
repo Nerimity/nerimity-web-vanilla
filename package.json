@@ -26,7 +26,8 @@
     "morphdom": "^2.7.8",
     "shiki": "^4.3.1",
     "temporal-polyfill": "^1.0.1",
-    "urlpattern-polyfill": "^10.1.0"
+    "urlpattern-polyfill": "^10.1.0",
+    "zoomist": "^2.2.0"
   },
   "devDependencies": {
     "@lingui/cli": "^6.4.0",

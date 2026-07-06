@@ -17,6 +17,7 @@ import {
 import { portalElement } from "../../utils/portal";
 import { setRecentServerChannel } from "../../utils/recentServerChannels";
 import { Drawer } from "../drawer";
+import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { createModal } from "../modal";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
@@ -436,6 +437,8 @@ const createMessagePane = () => {
   createMessageContextMenuHandler({ el, signal });
 
   handleBlockedMessageClick({ el, signal, updateMessage });
+
+  handleImagePreviewModal({ root: el, signal, selector: ".imageEmbed .image" });
 
   const destroy = () => {
     abortController.abort();

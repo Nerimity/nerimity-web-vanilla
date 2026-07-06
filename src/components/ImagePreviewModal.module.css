@@ -1,0 +1,80 @@
+.bg {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  user-select: none;
+
+  &.showOverlay .overlay {
+    opacity: 1;
+  }
+  :global(.zoomist-wrapper) {
+    background-color: transparent;
+  }
+  :global(.zoomist-container) {
+    width: 100%;
+    height: 100%;
+  }
+
+  :global(.zoomist-image) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: 0 0;
+  touch-action: none;
+  view-transition-name: embed-image;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 1111;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+
+  transition: opacity 0.2s ease-in-out;
+  pointer-events: none;
+
+  :global(.button) {
+    border-radius: var(--radius-10);
+  }
+
+  .controls {
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    padding: 4px;
+    border-radius: var(--radius-12);
+    background-color: var(--gray-800);
+    pointer-events: all;
+  }
+  .header {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    padding: 4px;
+    border-radius: var(--radius-12);
+    background-color: var(--gray-800);
+    pointer-events: all;
+  }
+}
