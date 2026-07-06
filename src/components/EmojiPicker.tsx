@@ -165,7 +165,11 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
   ) as HTMLDivElement;
 
   let searchEl = (
-    <Input class={"search"} placeholder={t`Search Emojis...`} />
+    <Input
+      id="emoji-search"
+      class={"search"}
+      placeholder={t`Search Emojis...`}
+    />
   ) as HTMLDivElement;
   let inputEl = searchEl.querySelector("input")! as HTMLInputElement;
 
