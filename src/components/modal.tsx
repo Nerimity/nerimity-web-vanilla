@@ -439,7 +439,6 @@ export const createModal = (
     modalY = 0;
 
     if (modal.classList.contains(style.hasPos!)) {
-      clampPosition();
       modal.style.opacity = "0";
       const anim = modal.animate(
         [
@@ -452,6 +451,9 @@ export const createModal = (
         modal.style.opacity = "";
         modal.style.transform = "";
         anim.cancel();
+        requestAnimationFrame(() => {
+          clampPosition();
+        });
       };
       return;
     }
@@ -520,23 +522,30 @@ export const createModal = (
   const clampPosition = () => {
     if (!modal.classList.contains(style.hasPos!)) return;
     const rect = modal.getBoundingClientRect();
-
     const overflowLeft = Math.min(0, rect.left);
-    const overflowTop = Math.min(0, rect.top);
     const overflowRight = Math.max(0, rect.right - window.innerWidth);
     const overflowBottom = Math.max(0, rect.bottom - window.innerHeight);
+    const overflowTop = Math.min(0, rect.top);
 
     const currentX = parseFloat(modal.style.getPropertyValue("--x")) || 0;
     const currentY = parseFloat(modal.style.getPropertyValue("--y")) || 0;
+    const anchorYStr = modal.style.getPropertyValue("--anchor-y").trim();
+    const anchorYPercent = anchorYStr ? parseFloat(anchorYStr) / 100 : 0;
+    const anchorYPixels = anchorYPercent * rect.height;
+
+    let adjustedY = currentY;
+
+    if (overflowBottom > 0) {
+      adjustedY = window.innerHeight - rect.height - anchorYPixels;
+    } else if (overflowTop < 0) {
+      adjustedY = -anchorYPixels;
+    }
 
     modal.style.setProperty(
       "--x",
       `${currentX - overflowLeft - overflowRight}px`,
     );
-    modal.style.setProperty(
-      "--y",
-      `${currentY - overflowTop - overflowBottom}px`,
-    );
+    modal.style.setProperty("--y", `${adjustedY}px`);
   };
   const handleResize = () => {
     clampPosition();
