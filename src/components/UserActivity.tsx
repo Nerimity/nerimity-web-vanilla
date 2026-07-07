@@ -1,6 +1,7 @@
 import morphdom from "morphdom";
 
 import { cdnUrl } from "../config";
+import { Dynamic } from "../dynamic";
 import { h } from "../h";
 import type { RawUserActivity } from "../Types";
 import {
@@ -116,7 +117,14 @@ export const UserActivity = ({
           )}
           <div class={style.richDetails}>
             {(activity.title || activity.name) && (
-              <div class={style.title}>{activity.title || activity.name}</div>
+              <Dynamic
+                component={activity.link ? "a" : "div"}
+                class={style.title}
+                data-warn
+                href={activity.link}
+              >
+                {activity.title || activity.name}
+              </Dynamic>
             )}
             {activity.subtitle && (
               <div class={style.subtitle}>{activity.subtitle}</div>
