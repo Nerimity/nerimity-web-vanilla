@@ -40,6 +40,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
         const anchorEl = e.target.closest("a[data-route]") as HTMLAnchorElement;
 
         const href = anchorEl?.attributes.getNamedItem("href")?.value;
+        const options = anchorEl?.dataset.options === "true";
 
         const modalAbortController = new AbortController();
 
@@ -56,6 +57,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
               <MiniProfileModal
                 userId={isProfilePath.params.id}
                 triggerEl={anchorEl!}
+                options={options}
                 abort={modalAbortController}
               />
             ),
@@ -71,6 +73,7 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
 const MiniProfileModal = (props: {
   userId: string;
   triggerEl?: HTMLElement;
+  options?: boolean;
   abort: AbortController;
 }) => {
   const rect = props.triggerEl?.getBoundingClientRect();
@@ -89,6 +92,7 @@ const MiniProfileModal = (props: {
         <MiniProfile
           animationMode="focus"
           abort={props.abort}
+          options={props.options}
           userId={props.userId}
         />
       </Modal.Body>
@@ -137,6 +141,7 @@ export const MiniProfile = (props: {
   class?: string | string[];
   abort: AbortController;
   animationMode: "hover" | "focus";
+  options?: boolean;
 }) => {
   let contentAbort: AbortController | undefined;
   const Content = () => {
@@ -209,64 +214,82 @@ export const MiniProfile = (props: {
               )}
             </div>
           )}
-          <div class={style.buttons}>
-            <Button
-              class={style.button}
-              icon="article_person"
-              label={t`Full Profile`}
-            />
-            {!isCurrentChannel && (
+          {!props.options && (
+            <div class={style.buttons}>
               <Button
                 class={style.button}
-                icon={isSelf ? "book" : "mail"}
-                data-action="message"
-                label={isSelf ? t`Notes` : t`Message`}
+                icon="article_person"
+                label={t`Full Profile`}
               />
-            )}
-          </div>
-        </div>
-
-        <div class={[style.section, "scrollbarHover"]}>
-          {server && (
-            <>
-              <div class={style.title}>{t`Roles`}</div>
-              <div class={style.roles}>
-                {roles?.map((role) => (
-                  <RoleItem role={role} />
-                ))}
-                <AddRoleItem />
-              </div>
-            </>
-          )}
-
-          {!!presence?.activities?.length && (
-            <>
-              <UserActivities
-                userId={props.userId}
-                signal={contentAbort.signal}
-              />
-            </>
-          )}
-
-          <div class={style.title}>{t`Joined`}</div>
-          <div class={style.joined}>
-            <div class={style.joinedContainer}>
-              <img class={style.logo} src="/logo.png" />
-              <div>{friendlyTimestamp(user?.joinedAt || 0)}</div>
+              {!isCurrentChannel && (
+                <Button
+                  class={style.button}
+                  icon={isSelf ? "book" : "mail"}
+                  data-action="message"
+                  label={isSelf ? t`Notes` : t`Message`}
+                />
+              )}
             </div>
-            {member && (
-              <div class={style.joinedContainer}>
-                <Avatar server={server} size={14} />
-                <div>{friendlyTimestamp(member?.joinedAt || 0)}</div>
-              </div>
-            )}
-          </div>
-
-          <div class={style.title}>{t`About Me`}</div>
-          <div>
-            <Markup text={details?.profile?.bio || ""} />
-          </div>
+          )}
         </div>
+
+        {props.options && (
+          <div class={[style.section, style.options]}>
+            <Button hoverBorder label={t`Profile`} icon="article_person" />
+            <Button
+              data-action="message"
+              hoverBorder
+              label={t`Notes`}
+              icon="book"
+            />
+            <Button hoverBorder label={t`Settings`} icon="settings" />
+            <Button hoverBorder label={t`Logout`} alert icon="logout" />
+          </div>
+        )}
+
+        {!props.options && (
+          <div class={[style.section, "scrollbarHover"]}>
+            {server && (
+              <>
+                <div class={style.title}>{t`Roles`}</div>
+                <div class={style.roles}>
+                  {roles?.map((role) => (
+                    <RoleItem role={role} />
+                  ))}
+                  <AddRoleItem />
+                </div>
+              </>
+            )}
+
+            {!!presence?.activities?.length && (
+              <>
+                <UserActivities
+                  userId={props.userId}
+                  signal={contentAbort.signal}
+                />
+              </>
+            )}
+
+            <div class={style.title}>{t`Joined`}</div>
+            <div class={style.joined}>
+              <div class={style.joinedContainer}>
+                <img class={style.logo} src="/logo.png" />
+                <div>{friendlyTimestamp(user?.joinedAt || 0)}</div>
+              </div>
+              {member && (
+                <div class={style.joinedContainer}>
+                  <Avatar server={server} size={14} />
+                  <div>{friendlyTimestamp(member?.joinedAt || 0)}</div>
+                </div>
+              )}
+            </div>
+
+            <div class={style.title}>{t`About Me`}</div>
+            <div>
+              <Markup text={details?.profile?.bio || ""} />
+            </div>
+          </div>
+        )}
       </>
     );
   };

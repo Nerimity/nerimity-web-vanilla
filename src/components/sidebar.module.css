@@ -10,6 +10,7 @@
 
   .scrollable {
     overflow: auto;
+    flex: 1;
     &::-webkit-scrollbar {
       display: none;
     }
@@ -17,12 +18,17 @@
   .serverList {
     display: flex;
     align-items: center;
+    flex: 1;
     flex-direction: column;
     padding-top: 4px;
     margin-top: 4px;
     margin-bottom: 4px;
     border-top: solid 1px var(--gray-700);
     gap: 2px;
+  }
+  .footer {
+    padding-top: 4px;
+    padding-bottom: 4px;
   }
 }
 

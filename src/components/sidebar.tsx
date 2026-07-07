@@ -275,6 +275,9 @@ export const createSidebar = () => {
           {homeEl}
           {serverListEl}
         </div>
+        <div class={style.footer}>
+          <ProfileItem signal={signal} />
+        </div>
       </div>
     ) as HTMLElement;
     hoverAnimator = new HoverAnimator(serverListEl, [
@@ -322,4 +325,22 @@ export const createSidebar = () => {
     destroy,
     render,
   };
+};
+
+const ProfileItem = (props: { signal: AbortSignal }) => {
+  const { signal } = props;
+  let el = (
+    <SidebarItem href="#" data-options></SidebarItem>
+  ) as HTMLDivElement;
+
+  const rerender = () => {
+    if (accountStore.authenticated) {
+      el.setAttribute("href", `/app/profile/${accountStore.currentUser?.id}`);
+      el.replaceChildren(<Avatar user={accountStore.currentUser} size={42} />);
+    }
+  };
+
+  storeEmitter.on("ws:authStateUpdate", rerender, signal);
+
+  return el;
 };
