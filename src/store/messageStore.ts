@@ -72,6 +72,8 @@ export class Message {
   roleMentions: RawServerRole[];
   htmlEmbed?: HtmlNode | HtmlNode[];
   silent?: boolean;
+  webhookId?: string;
+  pinned?: boolean;
 
   constructor(data: RawMessage) {
     this.id = data.id;
@@ -90,6 +92,8 @@ export class Message {
     this.roleMentions = data.roleMentions || [];
     this.htmlEmbed = data.htmlEmbed;
     this.silent = data.silent;
+    this.webhookId = data.webhookId;
+    this.pinned = data.pinned;
   }
 }
 

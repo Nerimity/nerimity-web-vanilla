@@ -95,6 +95,8 @@ export const MessageItem = (props: {
     ? formatTimestamp(member.muteExpireAt)
     : null;
 
+  const isServerCreator = props.message.createdBy.id === server?.createdById;
+
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
       {newDay && <Marker label={fullDate(props.message.createdAt)} />}
@@ -170,6 +172,23 @@ export const MessageItem = (props: {
                           role={{ icon: topRole.icon }}
                           size={14}
                         />
+                      )}
+                      {props.message.pinned && (
+                        <Icon
+                          title={t`Pinned Message`}
+                          name="keep"
+                          class={style.pinned}
+                        />
+                      )}
+
+                      {(props.message.createdBy.bot || isServerCreator) && (
+                        <div class={style.badge}>
+                          {props.message.webhookId
+                            ? t`Webhook`
+                            : props.message.createdBy.bot
+                              ? t`Bot`
+                              : t`Owner`}
+                        </div>
                       )}
                       <span class={style.timestamp}>
                         {friendlyTimestamp(props.message.createdAt)}

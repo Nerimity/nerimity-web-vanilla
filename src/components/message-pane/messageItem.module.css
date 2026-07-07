@@ -73,6 +73,25 @@
       color: var(--alert-color);
       font-size: 18px;
     }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      line-height: 1;
+      padding: 0 7px;
+      border-radius: var(--radius-max);
+      color: var(--primary-color);
+      background: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .pinned {
+      color: var(--alert-color);
+      font-size: 14px;
+    }
     .silent {
       color: var(--gray-400);
       font-size: 12px;

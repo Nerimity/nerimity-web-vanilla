@@ -4,7 +4,12 @@ import { buildImageUrl } from "../utils/image";
 import style from "./avatar.module.css";
 
 interface AvatarProps {
-  user?: { avatar?: string; username: string; hexColor: string } | null;
+  user?: {
+    avatar?: string;
+    avatarUrl?: string;
+    username: string;
+    hexColor: string;
+  } | null;
   server?: { avatar?: string; name: string; hexColor: string } | null;
 
   size:
@@ -26,7 +31,19 @@ interface AvatarProps {
   imgClass?: string;
 }
 const buildUrl = (props: AvatarProps) => {
-  const avatar = props.user?.avatar || props.server?.avatar;
+  let avatar = props.user?.avatar || props.server?.avatar;
+  if (props.user?.avatarUrl) {
+    try {
+      const animated = props.user.avatarUrl.startsWith("a");
+      const baseUrl = new URL(
+        animated ? props.user.avatarUrl.slice(1) : props.user.avatarUrl,
+      );
+
+      avatar = `proxy/${encodeURIComponent(baseUrl.href)}/a.webp`;
+    } catch {
+      return [undefined, false] as const;
+    }
+  }
   if (!avatar) return [undefined, false] as const;
   return buildImageUrl(avatar, { size: props.size * 2 });
 };

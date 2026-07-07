@@ -168,7 +168,7 @@ export interface RawMessage {
   id: string;
   content: string;
   channelId: string;
-  createdBy: RawUser;
+  createdBy: RawUser & { avatarUrl?: string };
   createdAt: number;
   editedAt?: number;
   mentions?: RawUser[];
@@ -181,6 +181,8 @@ export interface RawMessage {
   quotedMessages: Partial<RawMessage>[];
   roleMentions: RawServerRole[];
   silent?: boolean;
+  webhookId?: string;
+  pinned?: boolean;
 }
 
 export interface HtmlNode {

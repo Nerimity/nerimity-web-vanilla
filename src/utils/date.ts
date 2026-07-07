@@ -283,9 +283,9 @@ export function formatTimestamp(timestampMs: number, seconds = false) {
       const time = timeFormat.format(dateValue);
       return t`Yesterday at ${time}`;
     } else {
-      const dateStr = dateFormat.format(dateValue);
+      const date = dateFormat.format(dateValue);
       const time = timeFormat.format(dateValue);
-      return t`${dateStr} at ${time}`;
+      return t`${date} at ${time}`;
     }
   } catch (e) {
     console.warn(e);
