@@ -408,11 +408,14 @@ const createMessagePane = () => {
   const hoverAnimator = new HoverAnimator(logs, [
     { trigger: `.messageItem`, image: ".clanIcon img" },
     { trigger: `.messageItem`, image: ".avatar img" },
-    { trigger: `.messageItem`, image: ".emoji" },
+    { trigger: `.messageItem`, image: "details .emoji" },
   ]);
 
   createMessageReactionHandler({ logs, signal });
-  const imageEmbedFocusAnimator = new FocusAnimator(logs, ".imageEmbed .image");
+  const imageEmbedFocusAnimator = new FocusAnimator(
+    logs,
+    ".imageEmbed .image, .focusAnimate .emoji",
+  );
 
   scrollToBottom(true);
 

@@ -1,6 +1,12 @@
 .markup {
   line-height: 1.3;
   white-space: pre-wrap;
+  &.largeEmoji {
+    :global(.emoji) {
+      width: 48px;
+      height: 48px;
+    }
+  }
 
   .edit {
     margin-left: 4px;

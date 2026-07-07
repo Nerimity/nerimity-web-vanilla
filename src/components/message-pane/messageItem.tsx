@@ -136,7 +136,7 @@ export const MessageItem = (props: {
                 )}
                 <div class={style.messageBody}>
                   {!group && (
-                    <span class={style.details}>
+                    <span class={[style.details, "details"]}>
                       {muted && (
                         <Icon
                           title={
@@ -205,8 +205,10 @@ export const MessageItem = (props: {
                   <div class={style.content}>
                     {!isImageEmbedOnly && (
                       <Markup
+                        animateInitialOnFocus
                         text={props.message.content}
                         message={props.message}
+                        class="focusAnimate"
                       />
                     )}
                     {htmlEmbed && <HtmlEmbed htmlEmbed={htmlEmbed} />}
@@ -310,7 +312,8 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
             {creator.username}
           </GradientText>
           <Markup
-            class={style.content}
+            animateInitialOnFocus
+            class={[style.content, "focusAnimate"]}
             text={message.content || "Attachment"}
             inline
           />

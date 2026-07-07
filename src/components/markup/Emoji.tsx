@@ -9,12 +9,14 @@ interface CdnIconProps {
   class?: string;
   title?: string;
   size?: number;
+  animate?: boolean;
 }
 
 export const buildEmojiUrl = (props: CdnIconProps) => {
   if (props.icon.includes(".")) {
     return buildImageUrl(`emojis/${props.icon}`, {
-      size: props.size || 28,
+      size: props.size || 48 * 2,
+      animate: props.animate,
     });
   }
   return [unicodeToTwemojiUrl(props.icon!), false] as const;

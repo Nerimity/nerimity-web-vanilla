@@ -25,6 +25,7 @@ export interface Props {
   text: string;
   inline?: boolean;
   message?: Message;
+  animateInitialOnFocus?: boolean;
   animateEmoji?: boolean;
   class?: string | (string | boolean | undefined)[];
   serverId?: string | null;
@@ -122,13 +123,11 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
       ctx.emojiCount += 1;
       const animated = type === "ace";
       const webpAnimated = type === "wace";
-      const url = `${id}${animated && !webpAnimated ? ".gif" : ".webp"}`;
+      const url = `${id}${animated && !webpAnimated ? ".gif" : ".webp" + (webpAnimated ? "#a" : "")}`;
 
-      // const shouldAnimate =
-      //   (animated || webpAnimated) && ctx.props().animateEmoji === false
-      //     ? "?type=webp"
-      //     : "";
-      return <Emoji icon={url} title={name} />;
+      return (
+        <Emoji icon={url} title={name} animate={ctx.props().animateEmoji} />
+      );
     }
     case "link": {
       const [url, text] = expr.split("->").map((s) => s.trim());
@@ -278,7 +277,13 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       const unicode = shortcodeToUnicode[name];
       if (unicode) {
         ctx.emojiCount += 1;
-        return <Emoji icon={unicode} title={name} />;
+        return (
+          <Emoji
+            icon={unicode}
+            title={name}
+            animate={ctx.props().animateEmoji}
+          />
+        );
       }
 
       return <span>:{name}:</span>;
@@ -289,7 +294,13 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
       const title = unicodeToShortcode[unicode];
       if (title) {
         ctx.emojiCount += 1;
-        return <Emoji icon={unicode} title={title} />;
+        return (
+          <Emoji
+            icon={unicode}
+            title={title}
+            animate={ctx.props().animateEmoji}
+          />
+        );
       }
 
       return <span>{unicode}</span>;
@@ -318,6 +329,7 @@ export function Markup(props: Props) {
     props: () => ({
       ...props,
       text: props.text,
+      animateEmoji: props.animateInitialOnFocus ? document.hasFocus() : false,
     }),
     emojiCount: 0,
     textCount: 0,
@@ -328,11 +340,11 @@ export function Markup(props: Props) {
 
   const output = transformEntity(entity, ctx);
 
-  const largeEmoji = () =>
+  const largeEmoji =
     !ctx.props().inline && ctx.emojiCount <= 5 && ctx.textCount === 0;
 
   return (
-    <span class={[style.markup, props.class, largeEmoji() && "largeEmoji"]}>
+    <span class={[style.markup, props.class, largeEmoji && style.largeEmoji]}>
       {output}
       {props.message?.editedAt ? <Icon class={style.edit} name="edit" /> : null}
     </span>
