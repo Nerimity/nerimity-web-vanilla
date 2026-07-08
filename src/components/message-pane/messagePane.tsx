@@ -299,11 +299,6 @@ const createMessagePane = () => {
 
   const dismissNotification = () => {
     const messages = messageStore.messages.get(channelStore.currentChannelId!);
-    console.log("dismissNotification", {
-      msgs: !!messages,
-      isFocusedAtBottom: isFocusedAtBottom(),
-      canLoadBottom: getChannelProperty()?.canLoadBottom,
-    });
 
     if (!messages) return;
     if (!isFocusedAtBottom()) return;
