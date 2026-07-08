@@ -88,11 +88,6 @@ export const createBanMemberModal = (props: {
     const reason = (document.getElementById("ban-reason") as HTMLInputElement)
       .value;
 
-    console.log({
-      deleteRecentMessages,
-      reason,
-    });
-
     const [, error] = await banServerMember({
       serverId: serverStore.currentServerId!,
       userId: props.userId,

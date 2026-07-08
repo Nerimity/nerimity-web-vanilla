@@ -21,80 +21,48 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
 
+const handlers: Record<string, (payload: any) => void> = {
+  "channel:typing": onTyping,
+  "user:authenticated": onAuthenticated,
+  "user:authenticate_error": onAuthError,
+  "user:presence_update": onUserPresenceUpdate,
+  "message:created": onMessageCreated,
+  "message:deleted": onMessageDeleted,
+  "message:updated": onMessageUpdated,
+  "notification:dismissed": onNotificationDismissed,
+  "server:members_fetched": onServerMembersFetched,
+  "inbox:opened": onInboxOpened,
+  "user:notification_settings_update": onNotificationSettingsUpdate,
+  "server:channel_created": onServerChannelCreated,
+  "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
+  "server:role_updated": onServerRoleUpdated,
+  "server:member_updated": onServerMemberUpdated,
+  "server:role_deleted": onServerRoleDeleted,
+  "server:channel_deleted": onServerChannelDeleted,
+  "message:reaction_added": onMessageReactionAdded,
+  "message:reaction_removed": onMessageReactionRemoved,
+};
+
 export const socketEventHandler = (event: string, payload: any) => {
   if (payload instanceof ArrayBuffer) {
     payload = decompressObject(new Uint8Array(payload));
   }
 
-  switch (event) {
-    case "channel:typing":
-      onTyping(payload);
-      break;
-    case "user:authenticated":
-      onAuthenticated(payload);
-      break;
-    case "user:authenticate_error":
-      onAuthError(payload);
-      break;
-    case "user:presence_update":
-      onUserPresenceUpdate(payload);
-      break;
-    case "message:created":
-      onMessageCreated(payload);
-      break;
-    case "message:deleted":
-      onMessageDeleted(payload);
-      break;
-    case "message:updated":
-      onMessageUpdated(payload);
-      break;
-    case "notification:dismissed":
-      onNotificationDismissed(payload);
-      break;
-    case "server:members_fetched":
-      onServerMembersFetched(payload);
-      break;
-    case "inbox:opened":
-      onInboxOpened(payload);
-      break;
-    case "user:notification_settings_update":
-      onNotificationSettingsUpdate(payload);
-      break;
-    case "server:channel_created":
-      onServerChannelCreated(payload);
-      break;
-    case "server:channel_permissions_updated":
-      onServerChannelPermissionsUpdated(payload);
-      break;
-    case "server:role_updated":
-      onServerRoleUpdated(payload);
-      break;
-    case "server:member_updated":
-      onServerMemberUpdated(payload);
-      break;
-    case "server:role_deleted":
-      onServerRoleDeleted(payload);
-      break;
-    case "server:channel_deleted":
-      onServerChannelDeleted(payload);
-      break;
-    case "message:reaction_added":
-      onMessageReactionAdded(payload);
-      break;
-    case "message:reaction_removed":
-      onMessageReactionRemoved(payload);
-      break;
-    default:
-      console.warn("Unhandled socket event:", event, payload);
+  const handler = handlers[event];
+  if (!handler) {
+    console.warn("Unhandled socket event:", event, payload);
+    return;
   }
+
+  handler(payload);
 };
 
-const onAuthError = (payload: any) => {
+function onAuthError(payload: any) {
   console.error("Auth Error", payload);
   accountStore.setAuthError(payload);
-};
+}
 
-const onAuthenticated = async (payload: any) => {
+function onAuthenticated(payload: any) {
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
   inboxStore.setInboxes(payload.inbox);
@@ -112,20 +80,17 @@ const onAuthenticated = async (payload: any) => {
   channelStore.notificationsMemo.rerun();
   serverStore.notificationsMemo.rerun();
   accountStore.setAuthenticated(true);
-};
+}
 
-// const onServerChannelUpdated = (payload: any) => {
+// function onServerChannelUpdated  (payload: any){
 //   // channelStore.updateChannel(payload.channelId, payload);
 // };
 
-const onUserPresenceUpdate = (payload: any) => {
+function onUserPresenceUpdate(payload: any) {
   userPresenceStore.updatePresence(payload.userId, payload);
-};
+}
 
-const onMessageCreated = (payload: {
-  message: RawMessage;
-  socketId?: string;
-}) => {
+function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
   if (payload.socketId && payload.socketId === socket.socketId) return;
   const message = payload.message;
 
@@ -169,96 +134,96 @@ const onMessageCreated = (payload: {
   }
 
   messageStore.pushMessage(message.channelId, message);
-};
+}
 
-const onMessageDeleted = (payload: any) => {
+function onMessageDeleted(payload: any) {
   messageStore.deleteMessage(payload.channelId, payload.messageId);
-};
+}
 
-const onMessageUpdated = (payload: any) => {
+function onMessageUpdated(payload: any) {
   messageStore.updateMessage(
     payload.channelId,
     payload.messageId,
     payload.updated,
   );
-};
+}
 
-const onNotificationDismissed = (payload: { channelId: string }) => {
+function onNotificationDismissed(payload: { channelId: string }) {
   messageMentionStore.removeMention(payload.channelId);
   serverStore.updateLastSeenServerChannel(payload.channelId);
-};
+}
 
-const onServerMembersFetched = (payload: {
+function onServerMembersFetched(payload: {
   serverId: string;
   members: RawServerMember[];
-}) => {
+}) {
   serverMemberStore.setServerMembers(payload.members, payload.serverId);
-};
+}
 
-const onInboxOpened = (payload: { channel: RawChannel } & RawInbox) => {
+function onInboxOpened(payload: { channel: RawChannel } & RawInbox) {
   channelStore.setChannel(payload.channel);
   inboxStore.setInbox(payload);
-};
+}
 
-const onTyping = (payload: { channelId: string; userId: string }) => {
+function onTyping(payload: { channelId: string; userId: string }) {
   storeEmitter.emit("channel:typing", payload);
-};
+}
 
-const onNotificationSettingsUpdate = (payload: {
+function onNotificationSettingsUpdate(payload: {
   serverId?: string;
   channelId?: string;
   updated: Partial<RawUserNotificationSettings>;
-}) => {
+}) {
   accountStore.updateNotificationSetting({
     serverId: payload.serverId,
     channelId: payload.channelId,
     ...payload.updated,
   });
-};
+}
 
-const onServerChannelCreated = (payload: { channel: RawChannel }) => {
+function onServerChannelCreated(payload: { channel: RawChannel }) {
   channelStore.setChannel(payload.channel);
-};
+}
 
-const onServerChannelPermissionsUpdated = (payload: {
+function onServerChannelPermissionsUpdated(payload: {
   permissions: 0;
   roleId: string;
   serverId: string;
   channelId: string;
-}) => {
+}) {
   channelStore.updatePermissions(payload);
-};
+}
 
-const onServerRoleUpdated = (payload: {
+function onServerRoleUpdated(payload: {
   serverId: string;
   roleId: string;
   updated: Partial<RawServerRole>;
-}) => {
+}) {
   serverRoleStore.updateRole(payload.serverId, payload.roleId, payload.updated);
-};
+}
 
-const onServerMemberUpdated = (payload: {
+function onServerMemberUpdated(payload: {
   serverId: string;
   userId: string;
   updated: Partial<RawServerMember>;
-}) => {
+}) {
   serverMemberStore.updateMember(
     payload.serverId,
     payload.userId,
     payload.updated,
   );
-};
+}
 
-const onServerRoleDeleted = (payload: { serverId: string; roleId: string }) => {
+function onServerRoleDeleted(payload: { serverId: string; roleId: string }) {
   serverRoleStore.deleteRole(payload.serverId, payload.roleId);
-};
+}
 
-const onServerChannelDeleted = (payload: {
+function onServerChannelDeleted(payload: {
   serverId: string;
   channelId: string;
-}) => {
+}) {
   channelStore.deleteChannel(payload.channelId, payload.serverId);
-};
+}
 
 export interface ReactionAddedPayload {
   reactedByUserId: string;
@@ -271,9 +236,9 @@ export interface ReactionAddedPayload {
   count: number;
 }
 
-const onMessageReactionAdded = (payload: ReactionAddedPayload) => {
+function onMessageReactionAdded(payload: ReactionAddedPayload) {
   messageStore.addReaction(payload);
-};
+}
 export interface ReactionRemovedPayload {
   reactionRemovedByUserId: string;
   messageId: string;
@@ -284,6 +249,6 @@ export interface ReactionRemovedPayload {
   gif: boolean;
 }
 
-const onMessageReactionRemoved = (payload: ReactionRemovedPayload) => {
+function onMessageReactionRemoved(payload: ReactionRemovedPayload) {
   messageStore.removeReaction(payload);
-};
+}
