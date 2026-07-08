@@ -14,6 +14,8 @@ interface VirtualListProps<T, V extends string | number> {
 export function createVirtualList<T, V extends string | number>(
   props: VirtualListProps<T, V>,
 ) {
+  const overscan = 100;
+
   const abortController = new AbortController();
   const { signal } = abortController;
   let cacheItems: Item<T, V>[] = props.items();
@@ -46,8 +48,8 @@ export function createVirtualList<T, V extends string | number>(
   };
 
   const updateChunks = () => {
-    const top = cachedScrollTop;
-    const bottom = top + cachedClientHeight;
+    const top = Math.max(0, cachedScrollTop - overscan);
+    const bottom = cachedScrollTop + cachedClientHeight + overscan;
 
     const items: Item<T, V>[] = [];
     const pos: number[] = [];
