@@ -28,7 +28,7 @@ export class ServerMember {
     this.muteExpireAt = data.muteExpireAt;
   }
   hasPerm(perm: number) {
-    serverMemberStore.hasPermission(this.serverId, this.userId, perm);
+    return serverMemberStore.hasPermission(this.serverId, this.userId, perm);
   }
 }
 

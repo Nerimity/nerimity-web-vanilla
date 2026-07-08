@@ -8,6 +8,7 @@ import { MessageType } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
 import { Button } from "../button";
 import { createDeleteMessageModal } from "./deleteMessageModal";
+import { canDeleteMessage } from "./utils";
 
 import style from "./messageHoverActions.module.css";
 
@@ -49,13 +50,15 @@ const HoverActions = (props: {
           hoverBorder
         />
       )}
-      <Button
-        class={style.button}
-        data-action="delete"
-        icon="delete"
-        alert
-        hoverBorder
-      />
+      {canDeleteMessage({ message }) && (
+        <Button
+          class={style.button}
+          data-action="delete"
+          icon="delete"
+          alert
+          hoverBorder
+        />
+      )}
     </div>
   );
 };

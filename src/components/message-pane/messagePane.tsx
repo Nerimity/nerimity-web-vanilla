@@ -28,7 +28,7 @@ import { createImageEmbedResizer } from "./imageEmbed";
 import { createMessageHoverActions } from "./messageHoverActions";
 import { MessageItem } from "./messageItem";
 import { createMessageReactionHandler } from "./MessageReactions";
-import { getLastSeenMessage, shouldGroup } from "./utils";
+import { canDeleteMessage, getLastSeenMessage, shouldGroup } from "./utils";
 
 import style from "./messagePane.module.css";
 
@@ -564,7 +564,11 @@ const createMessageContextMenuHandler = (opts: {
 
     createModal(
       () => (
-        <MessageContextMenu x={`${event.clientX}px`} y={`${event.clientY}px`} />
+        <MessageContextMenu
+          message={message}
+          x={`${event.clientX}px`}
+          y={`${event.clientY}px`}
+        />
       ),
       abortController,
     );
@@ -574,7 +578,11 @@ const createMessageContextMenuHandler = (opts: {
   });
 };
 
-const MessageContextMenu = (props: { x: string; y: string }) => {
+const MessageContextMenu = (props: {
+  message: Message;
+  x: string;
+  y: string;
+}) => {
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
       <ContextMenu.Item id="edit">
@@ -585,10 +593,12 @@ const MessageContextMenu = (props: { x: string; y: string }) => {
         <ContextMenu.Icon name="reply" />
         <ContextMenu.Label>{t`Reply Message`}</ContextMenu.Label>
       </ContextMenu.Item>
-      <ContextMenu.Item alert id="delete">
-        <ContextMenu.Icon name="delete" />
-        <ContextMenu.Label>{t`Delete Message`}</ContextMenu.Label>
-      </ContextMenu.Item>
+      {canDeleteMessage({ message: props.message }) && (
+        <ContextMenu.Item alert id="delete">
+          <ContextMenu.Icon name="delete" />
+          <ContextMenu.Label>{t`Delete Message`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Separator />
       <ContextMenu.Item id="copy">
         <ContextMenu.Icon name="content_copy" />

@@ -1,5 +1,4 @@
 import { accountStore } from "../../store/accountStore";
-
 import { type Message } from "../../store/messageStore";
 import {
   serverMemberStore,
@@ -119,4 +118,16 @@ export const formatMessage = (opts: { content: string }) => {
   });
 
   return finalString;
+};
+
+export const canDeleteMessage = (opts: { message?: Message }) => {
+  if (!opts.message) return false;
+  if (opts.message.state === "error") return true;
+  const selfUserId = accountStore.currentUser?.id;
+  if (selfUserId === opts.message.createdBy.id) return true;
+  const currentServerId = serverStore.currentServerId;
+  if (!currentServerId) return false;
+
+  const member = serverMemberStore.getMember(currentServerId, selfUserId!);
+  return member?.hasPerm(RolePermissionFlag.manageChannels.bit);
 };
