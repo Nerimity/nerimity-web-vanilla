@@ -58,9 +58,9 @@ live: https://vanilla.nerimity.com
 
 - [x] `server:channel_permissions_updated`
 
-- [ ] `server:emoji_add`
-- [ ] `server:emoji_remove`
-- [ ] `server:emoji_update`
+- [x] `server:emoji_add`
+- [x] `server:emoji_remove`
+- [x] `server:emoji_update`
 
 - [ ] `server:schedule_delete`
 - [ ] `server:remove_schedule_delete`

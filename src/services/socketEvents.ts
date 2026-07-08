@@ -10,13 +10,17 @@ import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import type {
   RawChannel,
+  RawCustomEmoji,
   RawInbox,
   RawMessage,
   RawServerMember,
   RawServerRole,
   RawUserNotificationSettings,
 } from "../Types";
-import { loadCustomEmojisFromServers } from "../utils/emojis";
+import {
+  createCustomEmojiLoader,
+  loadCustomEmojisFromServers,
+} from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { decompressObject } from "../utils/zstd";
 import { socket } from "./socket";
@@ -41,6 +45,9 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:channel_deleted": onServerChannelDeleted,
   "message:reaction_added": onMessageReactionAdded,
   "message:reaction_removed": onMessageReactionRemoved,
+  "server:emoji_add": onServerEmojiAdded,
+  "server:emoji_remove": onServerEmojiRemoved,
+  "server:emoji_update": onServerEmojiUpdated,
 };
 
 export const socketEventHandler = (event: string, payload: any) => {
@@ -251,4 +258,35 @@ export interface ReactionRemovedPayload {
 
 function onMessageReactionRemoved(payload: ReactionRemovedPayload) {
   messageStore.removeReaction(payload);
+}
+
+type EmojiAddedPayload = {
+  emoji: RawCustomEmoji & {
+    uploadedById?: string;
+  };
+  serverId: string;
+};
+async function onServerEmojiAdded(payload: EmojiAddedPayload) {
+  delete payload.emoji.uploadedById;
+  const loader = await createCustomEmojiLoader();
+  loader?.put(payload.serverId, payload.emoji);
+  loader?.done();
+}
+async function onServerEmojiRemoved(payload: {
+  serverId: string;
+  emojiId: string;
+}) {
+  const loader = await createCustomEmojiLoader();
+  loader?.remove(payload.emojiId);
+  loader?.done();
+}
+
+async function onServerEmojiUpdated(payload: {
+  serverId: string;
+  emojiId: string;
+  name: string;
+}) {
+  const loader = await createCustomEmojiLoader();
+  await loader?.update(payload.emojiId, payload.name);
+  loader?.done();
 }

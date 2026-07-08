@@ -98,13 +98,15 @@ async function buildEmojiMaps() {
 export type CustomEmoji = RawCustomEmoji & {
   serverId: string;
 };
-export const createCustomEmojiLoader = async () => {
+export const createCustomEmojiLoader = async (opts?: { clear?: boolean }) => {
   const db = await getIdb();
   if (!db) return null;
 
   const tx = db.transaction("custom_emojis", "readwrite");
 
-  tx.store.clear();
+  if (opts?.clear) {
+    tx.store.clear();
+  }
 
   const putFromServers = (servers: RawServer[]) => {
     for (let i = 0; i < servers.length; i++) {
@@ -125,21 +127,37 @@ export const createCustomEmojiLoader = async () => {
     }
   };
 
+  const put = (serverId: string, emoji: RawCustomEmoji) => {
+    tx.store.put({ ...emoji, serverId });
+  };
+  const remove = (emojiId: string) => {
+    tx.store.delete(emojiId);
+  };
+
+  const update = async (emojiId: string, name: string) => {
+    const existing = await tx.store.get(emojiId);
+    if (!existing) return;
+    tx.store.put({ ...existing, name });
+  };
+
   const done = async () => {
     await tx.done;
     loadCustomShortcodeToIds();
   };
 
   return {
+    put,
     putFromServers,
     putFromServer,
     putMany,
     done,
+    remove,
+    update,
   };
 };
 
 export const loadCustomEmojisFromServers = async (servers: RawServer[]) => {
-  const customEmojiLoader = await createCustomEmojiLoader();
+  const customEmojiLoader = await createCustomEmojiLoader({ clear: true });
   customEmojiLoader?.putFromServers(servers);
   customEmojiLoader?.done();
 };
