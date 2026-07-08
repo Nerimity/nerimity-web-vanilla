@@ -1,0 +1,9 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  color: var(--gray-300);
+}

@@ -35,3 +35,6 @@ export const setLocalItem = <T extends keyof LocalStorageData>(
     key,
     typeof value === "string" ? value : JSON.stringify(value),
   );
+
+export const removeLocalItem = (key: keyof LocalStorageData) =>
+  localStorage.removeItem(key);

@@ -25,6 +25,7 @@ import { Button } from "./button";
 import { CdnIcon } from "./cdnIcon";
 import { GradientText } from "./gradientText";
 import { Markup } from "./markup/markup";
+import { createLogoutModal } from "./message-pane/LogoutModal";
 import { createModal, Modal } from "./modal";
 import { ServerClanItem } from "./serverClanItem";
 import { updateActivity, UserActivity } from "./UserActivity";
@@ -243,7 +244,13 @@ export const MiniProfile = (props: {
               icon="book"
             />
             <Button hoverBorder label={t`Settings`} icon="settings" />
-            <Button hoverBorder label={t`Logout`} alert icon="logout" />
+            <Button
+              data-action="logout"
+              hoverBorder
+              label={t`Logout`}
+              alert
+              icon="logout"
+            />
           </div>
         )}
 
@@ -394,15 +401,18 @@ export const MiniProfile = (props: {
     "click",
     (e) => {
       if (e.target instanceof Element) {
-        const button = e.target.closest(`.${style.button}`) as HTMLElement;
+        const button = e.target.closest(".button") as HTMLElement;
         if (!button) return;
         if (button.dataset.action === "message") {
           openChannel(props.userId);
           props.abort.abort();
         }
+        if (button.dataset.action === "logout") {
+          createLogoutModal();
+        }
       }
     },
-    { once: true },
+    { signal: props.abort.signal },
   );
 
   render();

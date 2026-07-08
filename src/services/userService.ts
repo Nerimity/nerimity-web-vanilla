@@ -26,3 +26,8 @@ export const getUserDetails = async (opts: GetUserDetailsOpts) => {
     method: "GET",
   });
 };
+export const userLogout = async () => {
+  return request<any>(`/users/logout`, {
+    method: "DELETE",
+  });
+};
