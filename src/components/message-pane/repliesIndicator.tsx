@@ -5,7 +5,7 @@ import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
-import { convertShorthandToLinearGradient } from "../../utils/color";
+import { resolveGradient } from "../../utils/color";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
 import { getLocalItem, setLocalItem } from "../../utils/localStorage";
@@ -29,8 +29,7 @@ const MessageItem = (props: { message: Message }) => {
 
   const topRoleColor = serverStore.memberTopColor(member);
 
-  const color =
-    convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+  const color = resolveGradient(topRoleColor) ?? "";
 
   return (
     <div class={style.messageItem} data-message-id={props.message.id}>

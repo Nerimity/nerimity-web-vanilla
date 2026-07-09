@@ -13,7 +13,7 @@ import type { ServerRole } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
-import { convertShorthandToLinearGradient } from "../utils/color";
+import { resolveGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
 import { storeEmitter } from "../utils/EventEmitter";
 import { FocusAnimator } from "../utils/FocusAnimator";
@@ -431,7 +431,7 @@ export const MiniProfile = (props: {
 };
 
 const RoleItem = (props: { role: ServerRole }) => {
-  const color = convertShorthandToLinearGradient(props.role.hexColor);
+  const color = resolveGradient(props.role.hexColor);
 
   return (
     <div class={style.role}>

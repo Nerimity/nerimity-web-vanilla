@@ -8,7 +8,7 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { MessageType, type RawReplyMessage } from "../../Types";
-import { convertShorthandToLinearGradient } from "../../utils/color";
+import { resolveGradient } from "../../utils/color";
 import { formatTimestamp, friendlyTimestamp, fullDate } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
@@ -63,8 +63,7 @@ export const MessageItem = (props: {
     ?.get(creator.id);
 
   const topRole = serverStore.memberTopColorAndIcon(member);
-  const color =
-    convertShorthandToLinearGradient(topRole?.color) ?? topRole?.color ?? "";
+  const color = resolveGradient(topRole?.color) ?? "";
 
   const name = member?.nickname || creator.username;
 
@@ -293,8 +292,7 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
     ?.get(creator?.id);
   const topRoleColor = serverStore.memberTopColor(member);
 
-  const color =
-    convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+  const color = resolveGradient(topRoleColor) ?? "";
 
   return (
     <div class={style.replyMessage}>

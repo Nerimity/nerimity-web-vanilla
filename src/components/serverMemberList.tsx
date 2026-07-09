@@ -9,7 +9,7 @@ import { userPresenceStore } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
 import { hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
-import { convertShorthandToLinearGradient } from "../utils/color";
+import { resolveGradient } from "../utils/color";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { ManualMemo } from "../utils/memo";
@@ -408,8 +408,7 @@ const memberItem = (cat: Categorized) => {
     const user = userStore.users.get(cat.member.userId);
     const topRoleColor = serverStore.memberTopColor(cat.member);
 
-    const color =
-      convertShorthandToLinearGradient(topRoleColor) ?? topRoleColor ?? "";
+    const color = resolveGradient(topRoleColor) ?? "";
 
     return (
       <Link

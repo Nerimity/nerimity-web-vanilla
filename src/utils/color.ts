@@ -32,6 +32,9 @@ export const convertShorthandToLinearGradient = (shorthand?: string) => {
   return `linear-gradient(${degree}deg, ${cssStops})`;
 };
 
+export const resolveGradient = (shorthand?: string) => {
+  return convertShorthandToLinearGradient(shorthand) || shorthand;
+};
 export interface ColorStop {
   color: string;
   percent: number;

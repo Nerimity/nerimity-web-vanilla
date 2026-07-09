@@ -1,5 +1,5 @@
 import { h, Fragment } from "../../h";
-import { convertShorthandToLinearGradient } from "../../utils/color";
+import { resolveGradient } from "../../utils/color";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
@@ -30,7 +30,7 @@ export const Mention = (props: MentionProps) => {
     url = `/app/servers/${props.channel.serverId!}/${props.channel.id}`;
   }
 
-  const color = convertShorthandToLinearGradient(props.role?.hexColor);
+  const color = resolveGradient(props.role?.hexColor);
 
   return h(
     url ? Link : "span",

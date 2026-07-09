@@ -6,7 +6,7 @@ import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import type { ServerRole } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
-import { convertShorthandToLinearGradient } from "../../utils/color";
+import { resolveGradient } from "../../utils/color";
 import { CdnIcon } from "../cdnIcon";
 import { Checkbox } from "../checkbox";
 import { GradientText } from "../gradientText";
@@ -81,7 +81,7 @@ const RoleItem = (props: {
   role: ServerRole;
   members: ServerMember[];
 }) => {
-  const color = convertShorthandToLinearGradient(props.role.hexColor);
+  const color = resolveGradient(props.role.hexColor);
 
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const isDefaultRole = server?.defaultRoleId === props.role.id;

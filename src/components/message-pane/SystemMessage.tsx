@@ -4,7 +4,7 @@ import { h } from "../../h";
 import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
-import { convertShorthandToLinearGradient } from "../../utils/color";
+import { resolveGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
@@ -84,8 +84,7 @@ export const SystemMessage = (props: { message: Message }) => {
     ?.get(creator.id);
 
   const topRole = serverStore.memberTopColorAndIcon(member);
-  const color =
-    convertShorthandToLinearGradient(topRole?.color) ?? topRole?.color ?? "";
+  const color = resolveGradient(topRole?.color) ?? "";
 
   const name = member?.nickname || creator.username;
 
