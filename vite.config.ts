@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "bar_chart",
         "settings",
         "notifications_off",
         "volume_off",

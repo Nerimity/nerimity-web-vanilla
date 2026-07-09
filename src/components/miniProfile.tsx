@@ -25,6 +25,7 @@ import { Button } from "./button";
 import { CdnIcon } from "./cdnIcon";
 import { GradientText } from "./gradientText";
 import { Markup } from "./markup/markup";
+import { createEditServerRolesModal } from "./message-pane/EditServerRolesModal";
 import { createLogoutModal } from "./message-pane/LogoutModal";
 import { createModal, Modal } from "./modal";
 import { ServerClanItem } from "./serverClanItem";
@@ -401,6 +402,16 @@ export const MiniProfile = (props: {
     "click",
     (e) => {
       if (e.target instanceof Element) {
+        const role = e.target.closest(`.${style.role}`) as HTMLElement;
+        if (role) {
+          if (role.dataset.action === "edit_role") {
+            createEditServerRolesModal({
+              userId: props.userId,
+              username: details?.user.username,
+            });
+          }
+        }
+
         const button = e.target.closest(".button") as HTMLElement;
         if (!button) return;
         if (button.dataset.action === "message") {
@@ -434,7 +445,11 @@ const RoleItem = (props: { role: ServerRole }) => {
   );
 };
 const AddRoleItem = () => {
-  return <div class={[style.role, style.addRole]}>+</div>;
+  return (
+    <div data-action="edit_role" class={[style.role, style.addRole]}>
+      +
+    </div>
+  );
 };
 
 const UserActivities = (props: { userId: string; signal: AbortSignal }) => {

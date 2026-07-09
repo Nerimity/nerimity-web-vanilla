@@ -7,8 +7,10 @@ import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { portalElement } from "../utils/portal";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
+import { Avatar } from "./avatar";
 import { createBanMemberModal } from "./message-pane/BanMemberModal";
 import { ContextMenu } from "./message-pane/ContextMenu";
+import { createEditServerRolesModal } from "./message-pane/EditServerRolesModal";
 import { createKickMemberModal } from "./message-pane/KickMemberModal";
 import { createModal } from "./modal";
 
@@ -56,6 +58,9 @@ export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {
           case "ban":
             createBanMemberModal({ userId, username });
             break;
+          case "edit_roles":
+            createEditServerRolesModal({ userId, username });
+            break;
 
           default:
             break;
@@ -84,8 +89,13 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const BAN_BIT = RolePermissionFlag.banMembers.bit;
   const KICK_BIT = RolePermissionFlag.kickMembers.bit;
   const ADMIN_BIT = RolePermissionFlag.admin.bit;
+  const MANAGE_ROLES_BIT = RolePermissionFlag.manageRoles.bit;
 
   const server = serverStore.currentServer();
+
+  const user =
+    userStore.users.get(props.userId) ||
+    messageStore.findUserInCurrentMessages(props.userId);
 
   const targetMember = serverMemberStore.serverMembers
     .get(server?.id!)
@@ -102,6 +112,7 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const selfHasBanPerm = selfMember?.hasPerm(BAN_BIT);
 
   const selfHasKickPerm = selfMember?.hasPerm(KICK_BIT);
+  const selfHasManageRolesPerm = selfMember?.hasPerm(MANAGE_ROLES_BIT);
 
   const canBan =
     !isSelf &&
@@ -114,12 +125,27 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
     !targetIsCreator &&
     (isSelfCreator || (selfHasKickPerm && !targetIsAdmin));
 
+  const canEditRoles =
+    isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
       <ContextMenu.Item id="edit">
-        <ContextMenu.Icon name="edit" />
+        {user ? (
+          <div style={{ padding: "4px" }}>
+            <Avatar user={user} size={18} />
+          </div>
+        ) : (
+          <ContextMenu.Icon name="edit" />
+        )}
         <ContextMenu.Label>{t`View Profile`}</ContextMenu.Label>
       </ContextMenu.Item>
+      {canEditRoles && (
+        <ContextMenu.Item id="edit_roles">
+          <ContextMenu.Icon name="bar_chart" />
+          <ContextMenu.Label>{t`Edit Roles`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Separator />
       {canBan && (
         <ContextMenu.Item id="ban" alert>

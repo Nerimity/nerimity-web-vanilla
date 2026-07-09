@@ -10,7 +10,7 @@
   padding-top: 0;
   pointer-events: none;
   gap: 4px;
-  & > * {
+  & * {
     pointer-events: all;
   }
   .chatInput {

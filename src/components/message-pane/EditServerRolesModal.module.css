@@ -1,0 +1,47 @@
+.roles {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+  gap: 4px;
+}
+
+.roleItem {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  gap: 8px;
+  &:hover {
+    background: var(--gray-900);
+  }
+  &[data-default="true"],
+  &[data-selected="true"] {
+    background: var(--gray-800);
+  }
+  &[data-default="true"] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    & * {
+      pointer-events: none;
+    }
+  }
+  .roleName {
+    font-weight: 500;
+  }
+  .noIcon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    margin: 4px;
+    border-radius: var(--radius-4);
+    background: white;
+  }
+  .memberCount {
+    color: var(--gray-400);
+    font-size: 12px;
+  }
+  .details {
+    flex: 1;
+  }
+}
