@@ -27,3 +27,18 @@ export const banServerMember = async (opts: {
     },
   });
 };
+
+export const updateServerMember = async (opts: {
+  serverId: string;
+  userId: string;
+  update: {
+    roleIds?: string[];
+  };
+}) => {
+  return request(`/servers/${opts.serverId}/members/${opts.userId}`, {
+    useToken: true,
+    method: "POST",
+
+    body: opts.update,
+  });
+};

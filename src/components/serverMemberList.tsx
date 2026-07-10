@@ -294,7 +294,7 @@ export const createServerMemberList = () => {
   storeEmitter.on(
     "server:member_update",
     (event) => {
-      if (!event.isMe) return;
+      if (event.serverId !== serverStore.currentServerId) return;
       serverStore.currentServerSortedRoles.rerun();
     },
     signal,

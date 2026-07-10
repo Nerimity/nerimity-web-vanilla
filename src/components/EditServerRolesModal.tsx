@@ -2,11 +2,13 @@ import { plural, t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h } from "../h";
+import { updateServerMember } from "../services/serverService";
 import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
 import type { ServerRole } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { resolveGradient } from "../utils/color";
+import { storeEmitter } from "../utils/EventEmitter";
 import { CdnIcon } from "./cdnIcon";
 import { Checkbox } from "./checkbox";
 import { GradientText } from "./gradientText";
@@ -57,16 +59,44 @@ export const createEditServerRolesModal = (props: {
     </Modal.Root>
   ) as HTMLDivElement;
 
+  storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      renderRoles();
+    },
+    signal,
+  );
+
   modal.addEventListener(
     "click",
     async (e) => {
       const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
-      const action = button?.dataset.action;
+      const button = target.closest(`.${style.roleItem}`) as HTMLElement | null;
+      const roleId = button?.dataset.roleId;
+      if (!roleId) return;
 
-      if (action === "close") {
-        abortController.abort();
+      const member = serverMemberStore.getMember(
+        serverStore.currentServerId!,
+        props.userId,
+      );
+      if (!member) return;
+
+      const hasRole = member.roleIds.includes(roleId);
+
+      if (hasRole) {
+        member.roleIds = member.roleIds.filter((id) => id !== roleId);
+      } else {
+        member.roleIds.push(roleId);
       }
+
+      updateServerMember({
+        serverId: serverStore.currentServerId!,
+        userId: props.userId,
+        update: {
+          roleIds: member.roleIds,
+        },
+      });
     },
     { signal },
   );
@@ -85,6 +115,9 @@ const RoleItem = (props: {
 
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const isDefaultRole = server?.defaultRoleId === props.role.id;
+  const isBotRole = props.role.botRole;
+
+  const isDisabled = isDefaultRole || isBotRole;
 
   const memberCount = isDefaultRole
     ? props.members.length
@@ -102,9 +135,10 @@ const RoleItem = (props: {
 
   return (
     <div
-      data-default={isDefaultRole}
+      data-default={isDisabled}
       class={style.roleItem}
       data-selected={hasRole}
+      data-role-id={isDisabled ? undefined : props.role.id}
     >
       {props.role.icon ? (
         <CdnIcon role={props.role} size={24} animate />

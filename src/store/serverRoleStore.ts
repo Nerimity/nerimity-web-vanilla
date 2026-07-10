@@ -17,6 +17,7 @@ export class ServerRole {
   hideRole: boolean;
   hexColor?: string;
   icon?: string;
+  botRole?: boolean;
   constructor(data: RawServerRole) {
     this.id = data.id;
     this.serverId = data.serverId;
@@ -26,6 +27,7 @@ export class ServerRole {
     this.hideRole = data.hideRole;
     this.hexColor = data.hexColor;
     this.icon = data.icon;
+    this.botRole = data.botRole;
   }
 }
 
