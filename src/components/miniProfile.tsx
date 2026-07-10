@@ -163,18 +163,17 @@ export const MiniProfile = (props: {
     const isCurrentChannel = inbox?.recipientId === props.userId;
 
     const server = serverStore.servers.get(serverStore.currentServerId!);
+    const presence = userPresenceStore.presences.get(props.userId);
+
+    let rolesEl = createRolesSection({
+      userId: props.userId,
+      serverId: server?.id,
+      signal: contentAbort.signal,
+    });
 
     const member = serverMemberStore.serverMembers
       .get(server?.id!)
       ?.get(props.userId);
-
-    const serverRoles = serverStore.currentServerSortedRoles.value();
-
-    const roles = serverRoles.filter((role) =>
-      member?.roleIds.includes(role.id),
-    );
-
-    const presence = userPresenceStore.presences.get(props.userId);
 
     return (
       <>
@@ -260,12 +259,7 @@ export const MiniProfile = (props: {
             {server && (
               <>
                 <div class={style.title}>{t`Roles`}</div>
-                <div class={style.roles}>
-                  {roles?.map((role) => (
-                    <RoleItem role={role} />
-                  ))}
-                  <AddRoleItem />
-                </div>
+                {rolesEl}
               </>
             )}
 
@@ -505,4 +499,56 @@ const UserActivities = (props: { userId: string; signal: AbortSignal }) => {
   );
 
   return activitiesContainer;
+};
+
+const createRolesSection = (opts: {
+  serverId?: string;
+  userId: string;
+  signal: AbortSignal;
+}) => {
+  if (!opts.serverId) return;
+
+  let rolesEl = (<div class={style.roles}></div>) as HTMLDivElement;
+
+  const member = serverMemberStore.serverMembers
+    .get(opts.serverId!)
+    ?.get(opts.userId);
+
+  const renderRoles = () => {
+    rolesEl = (document.querySelector(`.${style.roles}`) ||
+      rolesEl) as HTMLDivElement;
+
+    const serverRoles = serverStore.currentServerSortedRoles.value();
+
+    const roles = serverRoles.filter((role) =>
+      member?.roleIds.includes(role.id),
+    );
+
+    if (!roles) return;
+    rolesEl?.replaceChildren(
+      ...roles.map((role) => (<RoleItem role={role} />) as HTMLElement),
+      (<AddRoleItem />) as HTMLElement,
+    );
+  };
+
+  renderRoles();
+
+  storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (event.userId !== opts.userId) return;
+      if (event.serverId !== opts.serverId) return;
+      renderRoles();
+    },
+    opts.signal,
+  );
+  storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (event.serverId !== opts.serverId) return;
+      renderRoles();
+    },
+    opts.signal,
+  );
+  return rolesEl;
 };
