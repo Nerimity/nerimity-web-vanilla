@@ -1,6 +1,6 @@
-import { h } from "../../h";
-import { Icon } from "../icon";
-import { Modal } from "../modal";
+import { h } from "../h";
+import { Icon } from "./icon";
+import { Modal } from "./modal";
 
 import style from "./ContextMenu.module.css";
 

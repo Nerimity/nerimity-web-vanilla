@@ -1,16 +1,16 @@
 import { plural, t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
-import { h } from "../../h";
-import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
-import type { ServerRole } from "../../store/serverRoleStore";
-import { serverStore } from "../../store/serverStore";
-import { userStore } from "../../store/userStore";
-import { resolveGradient } from "../../utils/color";
-import { CdnIcon } from "../cdnIcon";
-import { Checkbox } from "../checkbox";
-import { GradientText } from "../gradientText";
-import { createModal, Modal } from "../modal";
+import { h } from "../h";
+import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
+import type { ServerRole } from "../store/serverRoleStore";
+import { serverStore } from "../store/serverStore";
+import { userStore } from "../store/userStore";
+import { resolveGradient } from "../utils/color";
+import { CdnIcon } from "./cdnIcon";
+import { Checkbox } from "./checkbox";
+import { GradientText } from "./gradientText";
+import { createModal, Modal } from "./modal";
 
 import style from "./EditServerRolesModal.module.css";
 

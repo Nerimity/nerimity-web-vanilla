@@ -1,14 +1,14 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { h } from "../../h";
-import { banServerMember } from "../../services/serverService";
-import { serverStore } from "../../store/serverStore";
-import { userStore } from "../../store/userStore";
-import { Button } from "../button";
-import { Checkbox } from "../checkbox";
-import { Input } from "../input";
-import { createModal, Modal } from "../modal";
+import { h } from "../h";
+import { banServerMember } from "../services/serverService";
+import { serverStore } from "../store/serverStore";
+import { userStore } from "../store/userStore";
+import { Button } from "./button";
+import { Checkbox } from "./checkbox";
+import { Input } from "./input";
+import { createModal, Modal } from "./modal";
 
 import style from "./BanMemberModal.module.css";
 

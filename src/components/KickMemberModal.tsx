@@ -1,12 +1,12 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { h } from "../../h";
-import { kickServerMember } from "../../services/serverService";
-import { serverStore } from "../../store/serverStore";
-import { userStore } from "../../store/userStore";
-import { Button } from "../button";
-import { createModal, Modal } from "../modal";
+import { h } from "../h";
+import { kickServerMember } from "../services/serverService";
+import { serverStore } from "../store/serverStore";
+import { userStore } from "../store/userStore";
+import { Button } from "./button";
+import { createModal, Modal } from "./modal";
 
 import style from "./kickMemberModal.module.css";
 

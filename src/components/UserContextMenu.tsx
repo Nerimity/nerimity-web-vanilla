@@ -8,10 +8,10 @@ import { userStore } from "../store/userStore";
 import { portalElement } from "../utils/portal";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { Avatar } from "./avatar";
-import { createBanMemberModal } from "./message-pane/BanMemberModal";
-import { ContextMenu } from "./message-pane/ContextMenu";
-import { createEditServerRolesModal } from "./message-pane/EditServerRolesModal";
-import { createKickMemberModal } from "./message-pane/KickMemberModal";
+import { createBanMemberModal } from "./BanMemberModal";
+import { ContextMenu } from "./ContextMenu";
+import { createEditServerRolesModal } from "./EditServerRolesModal";
+import { createKickMemberModal } from "./KickMemberModal";
 import { createModal } from "./modal";
 
 export const createUserContextMenuHandler = (opts: { signal: AbortSignal }) => {

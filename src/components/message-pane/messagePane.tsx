@@ -16,12 +16,12 @@ import {
 } from "../../utils/observer";
 import { portalElement } from "../../utils/portal";
 import { setRecentServerChannel } from "../../utils/recentServerChannels";
+import { ContextMenu } from "../ContextMenu";
 import { Drawer } from "../drawer";
 import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { createModal } from "../modal";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
-import { ContextMenu } from "./ContextMenu";
 import { createInfiniteScroll } from "./createInfiniteScroll";
 import { createDeleteMessageModal } from "./deleteMessageModal";
 import { createImageEmbedResizer } from "./imageEmbed";

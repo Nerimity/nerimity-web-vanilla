@@ -1,10 +1,10 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
-import { logout } from "../../utils/logout";
-import { Button } from "../button";
-import { Checkbox } from "../checkbox";
-import { createModal, Modal } from "../modal";
+import { h } from "../h";
+import { logout } from "../utils/logout";
+import { Button } from "./button";
+import { Checkbox } from "./checkbox";
+import { createModal, Modal } from "./modal";
 
 import style from "./logoutModal.module.css";
 
