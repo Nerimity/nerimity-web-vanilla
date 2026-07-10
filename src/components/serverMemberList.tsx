@@ -115,13 +115,13 @@ export const createServerMemberList = () => {
   const roleOrderMemoized = new ManualMemo(roleOrder);
   const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
   const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
-  let dontRender = () =>
+  let isMemberListHidden = () =>
     (Drawer().currentMode === "mobile" && Drawer().visiblePage !== 2) ||
     (Drawer().currentMode === "desktop" && Drawer().desktopHideRightDrawer);
 
-  let cachedDontRender = dontRender();
+  let memberListHidden = isMemberListHidden();
   const categorizedMembersMemoized = new ManualMemo((prev) => {
-    if (cachedDontRender) return { result: [], userIdToRoleId: {} };
+    if (memberListHidden) return { result: [], userIdToRoleId: {} };
     const result = ((prev as any)?.result || []) as Categorized[];
     const userIdToRoleId: Record<string, string | null> = {};
 
@@ -303,15 +303,15 @@ export const createServerMemberList = () => {
   storeEmitter.on(
     "navigate:channelId",
     () => {
-      cachedDontRender = dontRender();
+      memberListHidden = isMemberListHidden();
       rerunAndRender(true);
     },
     signal,
   );
 
   const updateVisibility = () => {
-    if (cachedDontRender) {
-      cachedDontRender = dontRender();
+    if (memberListHidden) {
+      memberListHidden = isMemberListHidden();
       categorizedMembersMemoized.rerun();
       renderList();
     }
