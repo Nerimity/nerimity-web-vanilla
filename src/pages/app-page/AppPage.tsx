@@ -76,7 +76,6 @@ const createAppPage = () => {
       const createDashboardPane = (await import("./createDashboardPane"))
         .default;
       if (isStale()) return;
-      console.log("test");
       dashboardPane = createDashboardPane(content);
     },
     { signal },

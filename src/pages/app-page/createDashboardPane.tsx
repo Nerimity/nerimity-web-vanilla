@@ -2,8 +2,7 @@ import { h } from "../../h";
 
 const createDashboardPane = (content: HTMLElement) => {
   const abortController = new AbortController();
-  console.log("hmm", content);
-  const { signal } = abortController;
+  // const { signal } = abortController;
 
   const el = <div>Dashboard</div>;
 
