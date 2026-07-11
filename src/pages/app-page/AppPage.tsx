@@ -13,7 +13,7 @@ import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
 import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
-import type createDashboardPane from "./createDashboardPane";
+import type createHomePane from "./createHomePane";
 import type createInboxChannelRoute from "./createInboxChannelRoute";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
@@ -57,7 +57,7 @@ const createAppPage = () => {
 
   let inboxChannelPage: ReturnType<typeof createInboxChannelRoute> | null =
     null;
-  let dashboardPane: ReturnType<typeof createDashboardPane> | null = null;
+  let dashboardPane: ReturnType<typeof createHomePane> | null = null;
 
   const appRouteSource = createTokenSource();
   const contentSource = createTokenSource();
@@ -73,10 +73,9 @@ const createAppPage = () => {
 
       if (dashboardPane) return;
       const isStale = contentSource.capture();
-      const createDashboardPane = (await import("./createDashboardPane"))
-        .default;
+      const createHomePane = (await import("./createHomePane")).default;
       if (isStale()) return;
-      dashboardPane = createDashboardPane(content);
+      dashboardPane = createHomePane(content);
     },
     { signal },
   );
