@@ -23,16 +23,18 @@ const createHomePane = (content: HTMLElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
-  const el = (
+  let el = (
     <div class={style.container}>
       <div class={style.mainContent}>Main Content</div>
       <Sidebar signal={signal} />
     </div>
-  );
+  ) as HTMLDivElement;
 
   content.replaceChildren(el);
 
   const destroy = () => {
+    el.remove();
+    (el as any) = null;
     abortController.abort();
     (content as any) = null;
   };
