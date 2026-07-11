@@ -39,7 +39,9 @@ function createDrawer() {
     <div class={style.rightDrawer}>{rightDrawerInner}</div>
   ) as unknown as HTMLElement;
 
-  const contentInner = (<div class={style.contentInner}></div>) as HTMLElement;
+  const contentInner = (
+    <div class={[style.contentInner, "scrollbarHover"]}></div>
+  ) as HTMLElement;
   const overlay = (<div class={style.overlay}></div>) as HTMLElement;
 
   const updateRightDrawerAvailable = (available: boolean) => {

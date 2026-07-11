@@ -39,7 +39,7 @@
 }
 
 .header {
-  position: absolute;
+  position: sticky;
   z-index: 1111;
   top: 0;
   right: 0;

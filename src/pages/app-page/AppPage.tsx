@@ -13,6 +13,7 @@ import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
 import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
+import type createDashboardPane from "./createDashboardPane";
 import type createInboxChannelRoute from "./createInboxChannelRoute";
 import type createServerChannelRoute from "./createServerChannelRoute";
 
@@ -56,8 +57,30 @@ const createAppPage = () => {
 
   let inboxChannelPage: ReturnType<typeof createInboxChannelRoute> | null =
     null;
+  let dashboardPane: ReturnType<typeof createDashboardPane> | null = null;
 
   const appRouteSource = createTokenSource();
+  const contentSource = createTokenSource();
+
+  router.createMatchListener(
+    "/app",
+    async (res) => {
+      if (!res) {
+        dashboardPane?.destroy();
+        dashboardPane = null;
+        return;
+      }
+
+      if (dashboardPane) return;
+      const isStale = contentSource.capture();
+      const createDashboardPane = (await import("./createDashboardPane"))
+        .default;
+      if (isStale()) return;
+      console.log("test");
+      dashboardPane = createDashboardPane(content);
+    },
+    { signal },
+  );
 
   router.createMatchListener<{ serverId: string; channelId: string }>(
     "/app/servers/:serverId/:channelId",
@@ -108,7 +131,9 @@ const createAppPage = () => {
       }
       Drawer().updateRightDrawerAvailable(true);
       if (messagePane) return;
+      const isStale = contentSource.capture();
       messagePane = await createMessagePane();
+      if (isStale()) return;
       content.replaceChildren(messagePane.render());
     },
     { signal },

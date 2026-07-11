@@ -78,9 +78,10 @@ const createMessagePane = () => {
   ) as HTMLDivElement;
 
   let chatbarEl = chatbar.render();
+  const scrollContainer = Drawer().content as HTMLDivElement;
 
   const el = (
-    <div class={[style.messagePane, "scrollbarHover"]}>
+    <div class={style.messagePane}>
       {skeletonsTop}
       {logs}
       {skeletonsBottom}
@@ -97,14 +98,14 @@ const createMessagePane = () => {
   const updateScrolledToBottom = () => {
     const prev = isScrolledToBottom;
     isScrolledToBottom =
-      el.scrollTop + el.clientHeight >=
-      el.scrollHeight - SCROLLED_BOTTOM_THRESHOLD;
+      scrollContainer.scrollTop + scrollContainer.clientHeight >=
+      scrollContainer.scrollHeight - SCROLLED_BOTTOM_THRESHOLD;
     if (prev !== isScrolledToBottom) {
       storeEmitter.emit("channel:scrolledToBottom", isScrolledToBottom);
     }
   };
 
-  el.addEventListener("scroll", updateScrolledToBottom, {
+  scrollContainer.addEventListener("scroll", updateScrolledToBottom, {
     passive: true,
     signal,
   });
@@ -114,7 +115,7 @@ const createMessagePane = () => {
     // when drawer is  currently being dragged, don't reset the position.
     requestAnimationFrame(() => {
       Drawer().setIgnoreNextScroll();
-      el.scrollTop = el.scrollHeight;
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
     });
   };
   const updateMessage = (message: Message, index: number) => {
@@ -159,7 +160,7 @@ const createMessagePane = () => {
     const savedScrollTop = property?.scrollTop;
     if (opts?.useSavedTop && savedScrollTop !== undefined) {
       requestAnimationFrame(() => {
-        el.scrollTop = savedScrollTop;
+        scrollContainer.scrollTop = savedScrollTop;
       });
     } else {
       scrollToBottom(opts?.forceScrollDown);
@@ -224,7 +225,7 @@ const createMessagePane = () => {
     });
   };
   const { onBottomSkeletonIntersect } = createInfiniteScroll({
-    el,
+    el: scrollContainer,
     logs,
     skeletonsTop,
     skeletonsBottom,
@@ -268,7 +269,7 @@ const createMessagePane = () => {
 
       lastSeenMessage = null;
       const scrolledToBottom = isScrolledToBottom;
-      const scrollTop = el.scrollTop;
+      const scrollTop = scrollContainer.scrollTop;
 
       if (previousChannelId) {
         channelStore.setProperty(previousChannelId, {
@@ -307,10 +308,15 @@ const createMessagePane = () => {
     channelStore.dismissNotification(channelStore.currentChannelId!);
   };
 
-  createIntersectionObserver(bottomSentinel, el, dismissNotification, {
-    signal,
-    rootMargin: "0px 0px -50px 0px",
-  });
+  createIntersectionObserver(
+    bottomSentinel,
+    scrollContainer,
+    dismissNotification,
+    {
+      signal,
+      rootMargin: "0px 0px -50px 0px",
+    },
+  );
 
   const checkAndScrollBottom = () => {
     const property = getChannelProperty();
@@ -427,7 +433,7 @@ const createMessagePane = () => {
       if (channelStore.currentChannelProperty()?.canLoadBottom) {
         await onBottomSkeletonIntersect(true, true);
       }
-      el.scrollTop = el.scrollHeight;
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
     },
     { signal },
   );
