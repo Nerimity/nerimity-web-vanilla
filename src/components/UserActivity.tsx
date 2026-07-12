@@ -12,14 +12,12 @@ import { getActivityType, UserPresence } from "./userPresence";
 
 import style from "./UserActivity.module.css";
 
-const playingFor = (activity: RawUserActivity, isMusic?: boolean) => (
-  <div
-    class={style.playingFor}
-    title={formatTimestamp(activity.startedAt || 0)}
-  >
-    {calculateTimeElapsedForActivityStatus(activity.startedAt, isMusic)}
-  </div>
-);
+const playingForInfo = (activity: RawUserActivity) => {
+  return {
+    title: formatTimestamp(activity.startedAt || 0),
+    text: calculateTimeElapsedForActivityStatus(activity.startedAt, true),
+  };
+};
 
 const mediaProgressInfo = (activity: RawUserActivity) => {
   const currentTime = calculateTimeElapsedForActivityStatus(
@@ -50,17 +48,15 @@ const mediaProgressInfo = (activity: RawUserActivity) => {
   return { percent, currentTime, duration: endsAt };
 };
 
-const mediaProgress = (activity: RawUserActivity) => {
-  const info = mediaProgressInfo(activity);
-
+const MediaProgress = () => {
   return (
     <div class={style.progressContainer}>
       <div class={style.info}>
-        <div>{info.currentTime}</div>
-        <div>{info.duration}</div>
+        <div></div>
+        <div></div>
       </div>
       <div class={style.progressBar}>
-        <div class={style.progress} style={{ width: `${info.percent}%` }} />
+        <div class={style.progress} />
       </div>
     </div>
   );
@@ -127,16 +123,19 @@ export const UserActivity = ({
             {activity.subtitle && (
               <div class={style.subtitle}>{activity.subtitle}</div>
             )}
-            {!isMusic && !isVideo && playingFor(activity, isMusic)}
-            {(isMusic || isVideo) && mediaProgress(activity)}
+            {!isMusic && !isVideo && <div class={style.playingFor}></div>}
+            {(isMusic || isVideo) && MediaProgress()}
           </div>
         </div>
       )}
-      {!showRich && !isMusic && !isVideo && playingFor(activity, isMusic)}
+      {!showRich && !isMusic && !isVideo && (
+        <div class={style.playingFor}></div>
+      )}
     </div>
   ) as HTMLDivElement;
 
   activityMap.set(el, activity);
+  updateActivity(el);
 
   return el;
 };
@@ -144,6 +143,16 @@ export const UserActivity = ({
 export const updateActivity = (activityEl: HTMLDivElement) => {
   const activity = activityMap.get(activityEl);
   if (!activity) return;
+
+  const playingForEl = activityEl.querySelector(
+    `.${style.playingFor}`,
+  ) as HTMLDivElement;
+  if (playingForEl) {
+    const info = playingForInfo(activity);
+
+    playingForEl.title = info.title;
+    playingForEl.textContent = info.text;
+  }
 
   const progressContainerEl = activityEl.querySelector(
     `.${style.progressContainer}`,
@@ -154,17 +163,19 @@ export const updateActivity = (activityEl: HTMLDivElement) => {
 
     const infoEl = progressContainerEl.querySelector(`.${style.info}`);
     const currentTimeEl = infoEl?.firstElementChild;
+    const durationEl = infoEl?.lastElementChild;
     const progressBarEl = progressContainerEl.querySelector(
       `.${style.progress}`,
     ) as HTMLDivElement;
 
     requestAnimationFrame(() => {
-      if (
-        currentTimeEl &&
-        currentTimeEl.textContent !== String(info.currentTime)
-      ) {
-        currentTimeEl.textContent = String(info.currentTime);
+      if (currentTimeEl) {
+        currentTimeEl.textContent = info.currentTime;
       }
+      if (durationEl) {
+        durationEl.textContent = info.duration;
+      }
+
       if (progressBarEl) {
         progressBarEl.style.width = `${info.percent}%`;
       }
