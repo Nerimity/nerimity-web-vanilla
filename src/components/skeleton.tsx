@@ -3,7 +3,7 @@ import { h } from "../h";
 import style from "./skeleton.module.css";
 
 export const MessageSkeleton = (props: { wide?: boolean }) => (
-  <div class={[style.skeletonItem, "message"]}>
+  <div class={[style.skeletonItem, style.message]}>
     <div class={style.avatarSkeleton} />
     <div class={style.lines}>
       <div class={style.line} style={{ width: "120px" }} />

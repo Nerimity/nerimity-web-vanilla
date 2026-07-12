@@ -5,7 +5,6 @@
   flex: 1;
 
   &[data-mode="desktop"] .leftDrawer {
-
     width: 300px;
     transition: width 0.2s;
     &.hide {
@@ -16,7 +15,6 @@
     }
   }
   &[data-mode="desktop"] .rightDrawer {
-
     width: 260px;
     transition: width 0.2s;
     &.hide {
@@ -61,7 +59,6 @@
 
     .contentInner {
       display: flex;
-      overflow: hidden;
       flex: 1;
       flex-direction: column;
     }

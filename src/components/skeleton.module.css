@@ -12,7 +12,7 @@
     background: var(--gray-700);
   }
   &.message {
-    padding: 4px 8px;
+    padding: 4px 12px;
   }
 
   .avatarSkeleton {

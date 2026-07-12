@@ -127,7 +127,7 @@ const createMessagePane = () => {
 
     const newMessageEl = (
       <MessageItem
-        container={el}
+        container={scrollContainer}
         message={message}
         prevMessage={messages?.[index - 1]}
       />
@@ -203,7 +203,7 @@ const createMessagePane = () => {
           newMarker={m.id === lastSeenMessage?.id}
           message={m}
           prevMessage={messages[i - 1]}
-          container={el}
+          container={scrollContainer}
         />
       ),
       shouldRecreate: (node, m, i) => {
@@ -235,7 +235,7 @@ const createMessagePane = () => {
     shouldShowBottomSkel,
   });
 
-  const imageEmbedResizer = createImageEmbedResizer(el);
+  const imageEmbedResizer = createImageEmbedResizer(scrollContainer);
 
   let previousChannelId = channelStore.currentChannelId;
 
