@@ -1,5 +1,12 @@
 type ThrottleOptions = {
+  /**
+   * If true, the first call will be immediately executed
+   */
   leading?: boolean;
+
+  /**
+   * If true, the last call will be executed
+   */
   trailing?: boolean;
 };
 

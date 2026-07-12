@@ -15,7 +15,9 @@ import {
 } from "../../store/userPresenceStore";
 import { userStore } from "../../store/userStore";
 import type { RawUserActivity } from "../../Types";
+import { debounce } from "../../utils/debounce";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { throttle } from "../../utils/throttle";
 
 import style from "./createHomePane.module.css";
 
@@ -68,6 +70,12 @@ const Sidebar = (props: { signal: AbortSignal }) => {
       },
     );
   };
+
+  storeEmitter.on(
+    "user:presence_update",
+    throttle(rerender, 1000, { trailing: true }),
+    props.signal,
+  );
 
   storeEmitter.on(
     "ws:authStateUpdate",
