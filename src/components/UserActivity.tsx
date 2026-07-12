@@ -1,5 +1,3 @@
-import morphdom from "morphdom";
-
 import { cdnUrl } from "../config";
 import { Dynamic } from "../dynamic";
 import { h } from "../h";
@@ -146,20 +144,30 @@ export const UserActivity = ({
 export const updateActivity = (activityEl: HTMLDivElement) => {
   const activity = activityMap.get(activityEl);
   if (!activity) return;
-  const activityType = getActivityType(activity);
 
-  const playingForEl = activityEl.querySelector(
-    `.${style.playingFor}`,
-  ) as HTMLDivElement;
-  if (playingForEl) {
-    const isMusic =
-      activityType.isMusic && !!activity.startedAt && !!activity.endsAt;
-    playingForEl.replaceWith(playingFor(activity, isMusic));
-  }
   const progressContainerEl = activityEl.querySelector(
     `.${style.progressContainer}`,
   ) as HTMLDivElement;
+
   if (progressContainerEl) {
-    morphdom(progressContainerEl, mediaProgress(activity));
+    const info = mediaProgressInfo(activity);
+
+    const infoEl = progressContainerEl.querySelector(`.${style.info}`);
+    const currentTimeEl = infoEl?.firstElementChild;
+    const progressBarEl = progressContainerEl.querySelector(
+      `.${style.progress}`,
+    ) as HTMLDivElement;
+
+    requestAnimationFrame(() => {
+      if (
+        currentTimeEl &&
+        currentTimeEl.textContent !== String(info.currentTime)
+      ) {
+        currentTimeEl.textContent = String(info.currentTime);
+      }
+      if (progressBarEl) {
+        progressBarEl.style.width = `${info.percent}%`;
+      }
+    });
   }
 };

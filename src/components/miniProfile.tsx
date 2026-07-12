@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
-import morphdom from "morphdom";
 
 import { h, Fragment } from "../h";
 import { getUserDetails, type UserDetails } from "../services/userService";
@@ -331,15 +330,7 @@ export const MiniProfile = (props: {
     const bg = `linear-gradient(180deg, ${colorOne}, ${colorTwo})`;
     miniProfileEl.style.background = bg;
 
-    morphdom(
-      miniProfileEl,
-      <div class={style.miniProfile}>
-        <Content />
-      </div>,
-      {
-        childrenOnly: true,
-      },
-    );
+    miniProfileEl.replaceChildren(<Content />);
 
     focusAnimator.destroy();
     focusAnimator =
@@ -452,10 +443,6 @@ const UserActivities = (props: { userId: string; signal: AbortSignal }) => {
   ) as HTMLDivElement;
 
   const rerender = () => {
-    let newCont = document.querySelector(`.${style.activities}`);
-    if (newCont) {
-      activitiesContainer = newCont as HTMLDivElement;
-    }
     const presence = userPresenceStore.presences.get(props.userId);
     const activities = presence?.activities || [];
     activitiesContainer.replaceChildren(
@@ -463,17 +450,6 @@ const UserActivities = (props: { userId: string; signal: AbortSignal }) => {
         <UserActivity activity={activity} userId={props.userId} />
       )),
     );
-    // morphdom(
-    //   activitiesContainer,
-    //   <div class={style.activities}>
-    //     {activities.map((activity) => (
-    //       <UserActivity activity={activity} userId={props.userId} />
-    //     ))}
-    //   </div>,
-    //   {
-    //     childrenOnly: true,
-    //   },
-    // );
   };
 
   const intervalId = setInterval(() => {

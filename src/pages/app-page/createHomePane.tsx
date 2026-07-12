@@ -15,7 +15,6 @@ import {
 } from "../../store/userPresenceStore";
 import { userStore } from "../../store/userStore";
 import type { RawUserActivity } from "../../Types";
-import { debounce } from "../../utils/debounce";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { throttle } from "../../utils/throttle";
 
@@ -46,6 +45,7 @@ const createHomePane = (content: HTMLElement) => {
 
 const Sidebar = (props: { signal: AbortSignal }) => {
   let el = (<div class={style.sidebar}></div>) as HTMLDivElement;
+  let rafId: number | null = null;
 
   const rerender = () => {
     const activities = (
@@ -58,18 +58,35 @@ const Sidebar = (props: { signal: AbortSignal }) => {
         .map((p) => p.activities?.map((a) => ({ ...a, userId: p.userId })))
         .flat() as (RawUserActivity & { userId: string })[]
     ).sort((a, b) => b.startedAt - a.startedAt);
-    morphdom(
-      el,
-      <div>
-        {activities.map((activity) => (
-          <DashboardUserActivity activity={activity} userId={activity.userId} />
-        ))}
-      </div>,
-      {
-        childrenOnly: true,
-      },
-    );
+
+    if (rafId !== null) cancelAnimationFrame(rafId);
+
+    rafId = requestAnimationFrame(() => {
+      morphdom(
+        el,
+        <div>
+          {activities.map((activity) => (
+            <DashboardUserActivity
+              activity={activity}
+              userId={activity.userId}
+            />
+          ))}
+        </div>,
+        {
+          childrenOnly: true,
+        },
+      );
+      rafId = null;
+    });
   };
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    },
+    { once: true },
+  );
 
   storeEmitter.on(
     "user:presence_update",
@@ -85,6 +102,7 @@ const Sidebar = (props: { signal: AbortSignal }) => {
     },
     props.signal,
   );
+
   rerender();
   return el;
 };
