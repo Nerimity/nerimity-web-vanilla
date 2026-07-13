@@ -29,8 +29,15 @@
     font-weight: 500;
   }
   .title {
+    display: -webkit-box;
+    overflow: hidden;
     color: var(--gray-400);
+    text-overflow: ellipsis;
+    word-break: break-word;
     font-size: 12px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
   .activityName {
     display: flex;
@@ -100,11 +107,11 @@
       gap: 8px;
     }
     .activityImage {
-      width: 58px;
-      height: 58px;
+      width: 64px;
+      height: 64px;
     }
     .activityVideo {
-      width: 100px;
+      width: 111px;
     }
   }
 }

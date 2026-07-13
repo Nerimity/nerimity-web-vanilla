@@ -44,7 +44,9 @@ const createHomePane = (content: HTMLElement) => {
 };
 
 const Sidebar = (props: { signal: AbortSignal }) => {
-  let el = (<div class={style.sidebar}></div>) as HTMLDivElement;
+  let el = (
+    <div class={[style.sidebar, "pauseDrawerTouches"]}></div>
+  ) as HTMLDivElement;
   let rafId: number | null = null;
 
   const rerender = () => {
@@ -156,6 +158,7 @@ const DashboardUserActivity = (props: {
               data-warn
               href={props.activity.link}
               class={style.title}
+              title={props.activity.title}
             >
               {props.activity.title}
             </Dynamic>

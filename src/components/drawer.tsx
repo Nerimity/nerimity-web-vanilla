@@ -274,6 +274,30 @@ function createDrawer() {
       pauseTouches = true;
     }
 
+    const target = event.target as HTMLElement;
+
+    if (target.closest("input[type=range]")) {
+      pauseTouches = true;
+      return;
+    }
+    if (target.closest("input[type=text]")) {
+      pauseTouches = true;
+      return;
+    }
+    if (target.closest("canvas")) {
+      pauseTouches = true;
+      return;
+    }
+
+    if (target.closest("textarea")) {
+      pauseTouches = true;
+      return;
+    }
+    if (target.closest(".pauseDrawerTouches")) {
+      pauseTouches = true;
+      return;
+    }
+
     const touch = event.touches[0];
     if (!touch) return;
     content.style.transition = "";
