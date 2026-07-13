@@ -73,6 +73,7 @@ export const MessageItem = (props: {
 
   const hasMessageReplies = !!props.message.replyMessages?.length;
   const editing = channelProperty?.editingMessage?.id === props.message.id;
+  const replying = channelProperty?.replyingMessages?.includes(props.message);
 
   const isContentMessage = props.message.type === MessageType.CONTENT;
 
@@ -112,7 +113,7 @@ export const MessageItem = (props: {
             style.messageItem,
             !group && style.withDetails,
             props.message.state,
-            editing && style.editing,
+            (editing || replying) && "editing",
             someoneMentioned && style.someoneMentioned,
             !someoneMentioned && mentioned && style.mentioned,
           ]}

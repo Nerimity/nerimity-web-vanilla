@@ -22,6 +22,9 @@
   &:global(.error) {
     color: var(--alert-color);
   }
+  &:global(.editing) {
+    background-color: var(--gray-850);
+  }
 
   &.mentioned {
     &:hover {
@@ -47,9 +50,6 @@
       #00f3 80%,
       #88008233 100%
     );
-  }
-  &.editing {
-    background-color: var(--gray-850);
   }
   &.withDetails {
     margin-top: 8px;
