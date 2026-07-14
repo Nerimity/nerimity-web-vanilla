@@ -36,6 +36,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "notification:dismissed": onNotificationDismissed,
   "server:members_fetched": onServerMembersFetched,
   "inbox:opened": onInboxOpened,
+  "inbox:closed": onInboxClosed,
   "user:notification_settings_update": onNotificationSettingsUpdate,
   "server:channel_created": onServerChannelCreated,
   "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
@@ -170,6 +171,11 @@ function onServerMembersFetched(payload: {
 function onInboxOpened(payload: { channel: RawChannel } & RawInbox) {
   channelStore.setChannel(payload.channel);
   inboxStore.setInbox(payload);
+}
+
+async function onInboxClosed(payload: { channelId: string }) {
+  channelStore.removeChannel(payload.channelId);
+  inboxStore.removeInbox(payload.channelId);
 }
 
 function onTyping(payload: { channelId: string; userId: string }) {

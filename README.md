@@ -32,7 +32,7 @@ live: https://vanilla.nerimity.com
 - [ ] `friend:request_accepted`
 - [ ] `friend:removed`
 - [x] `inbox:opened`
-- [ ] `inbox:closed`
+- [x] `inbox:closed`
 - [x] `notification:dismissed`
 
 - [ ] `server:joined`

@@ -40,6 +40,11 @@ function createInboxStore() {
     storeEmitter.emit("inbox:open", inbox);
     return newInbox;
   };
+  const removeInbox = (channelId: string) => {
+    const inbox = inboxes.get(channelId)!;
+    inboxes.delete(channelId);
+    storeEmitter.emit("inbox:close", inbox);
+  };
 
   const loadInbox = async (userId: string) => {
     const [inbox, error] = await openInbox(userId);
@@ -51,5 +56,5 @@ function createInboxStore() {
     return newInbox;
   };
 
-  return { inboxes, setInboxes, setInbox, loadInbox };
+  return { inboxes, setInboxes, setInbox, loadInbox, removeInbox };
 }

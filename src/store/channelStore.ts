@@ -251,6 +251,12 @@ function createChannelStore() {
     }
   };
 
+  const removeChannel = (channelId: string) => {
+    channels.delete(channelId);
+    delete channelStore.notificationsMemo.value()[channelId];
+    dismissNotification(channelId);
+  };
+
   const addNotification = (channelId: string, serverId: string) => {
     const isMuted =
       accountStore.notificationSettings.get(channelId)?.notificationPingMode !==
@@ -359,5 +365,6 @@ function createChannelStore() {
     deleteChannel,
     updatePermissions,
     updateAttachment,
+    removeChannel,
   };
 }

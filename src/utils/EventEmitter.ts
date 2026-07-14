@@ -30,6 +30,7 @@ type StoreEvents = {
   "channel:notify_update": { channelId: string; serverId?: string };
   "channel:scrolledToBottom": boolean;
   "inbox:open": Inbox;
+  "inbox:close": Inbox;
   "channel:typing": { channelId: string; userId: string };
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };

@@ -453,17 +453,16 @@ const createInboxDrawer = () => {
     signal,
   );
 
-  storeEmitter.on(
-    "inbox:open",
-    (event) => {
-      inboxList?.sorted.rerun();
-      inboxList?.rerender();
-      friendList?.sorted.rerun();
-      friendList?.categorizedFriends.rerun();
-      friendList?.rerender(event.recipientId);
-    },
-    signal,
-  );
+  const rerender = (event: { recipientId: string }) => {
+    inboxList?.sorted.rerun();
+    inboxList?.rerender();
+    friendList?.sorted.rerun();
+    friendList?.categorizedFriends.rerun();
+    friendList?.rerender(event.recipientId);
+  };
+
+  storeEmitter.on("inbox:open", rerender, signal);
+  storeEmitter.on("inbox:close", rerender, signal);
 
   const render = () => {
     return containerEl;
