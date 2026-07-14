@@ -17,6 +17,7 @@ import { reconcile } from "../utils/html";
 import { ManualMemo } from "../utils/memo";
 import { router } from "../utils/router";
 import { Avatar } from "./avatar";
+import { Button } from "./button";
 import { Drawer } from "./drawer";
 import { Icon } from "./icon";
 import { Item } from "./item";
@@ -59,7 +60,10 @@ const UserItem = (props: {
         <div class={style.username}>{props.user?.username}</div>
         <UserPresenceItem userId={props.user.id} />
       </div>
-      {count && <NotificationPill class={style.pill} count={count} />}
+      <div class={style.right}>
+        {count && <NotificationPill class={style.pill} count={count} />}
+        {props.inbox && <Button class={style.closeButton} icon="close" alert />}
+      </div>
     </Item.Base>
   );
 };
@@ -396,8 +400,15 @@ const createInboxDrawer = () => {
       const target = e.target as HTMLElement;
       const item = target.closest(`.${style.inboxItem}`) as HTMLElement;
       if (item) {
-        Drawer().updatePage({ page: 1 });
         const channelId = item.dataset.channelId;
+        if (target.closest(`.${style.closeButton}`)) {
+          e?.preventDefault();
+          e?.stopPropagation();
+          inboxStore.close(channelId!);
+          return;
+        }
+
+        Drawer().updatePage({ page: 1 });
         const channel = channelStore.channels.get(channelId!);
         if (channel) return;
         const userId = item.dataset.userId;

@@ -1,6 +1,8 @@
-import { openInbox } from "../services/inboxService";
+import { closeInbox, openInbox } from "../services/inboxService";
 import type { RawInbox } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { router } from "../utils/router";
+import { channelStore } from "./channelStore";
 import { userStore } from "./userStore";
 
 export const inboxStore = createInboxStore();
@@ -55,6 +57,17 @@ function createInboxStore() {
     const newInbox = setInbox(inbox);
     return newInbox;
   };
+  const close = async (channelId: string) => {
+    const [, error] = await closeInbox(channelId);
+    if (error) {
+      alert(error.message);
+      return;
+    }
+    if (channelStore.currentChannelId === channelId) {
+      router.navigate("/app", { replace: true });
+    }
+    removeInbox(channelId);
+  };
 
-  return { inboxes, setInboxes, setInbox, loadInbox, removeInbox };
+  return { inboxes, setInboxes, setInbox, loadInbox, removeInbox, close };
 }

@@ -29,6 +29,12 @@
   padding-left: 12px;
   border-radius: var(--radius-8);
   gap: 8px;
+
+  &:hover {
+    .closeButton {
+      display: flex;
+    }
+  }
   .info {
     display: flex;
     overflow: hidden;
@@ -41,8 +47,19 @@
       white-space: nowrap;
     }
   }
-  .pill {
+  .right {
+    display: flex;
+    align-items: center;
     margin-left: auto;
+    gap: 4px;
+  }
+  .pill {
+    flex-shrink: 0;
+  }
+  .closeButton {
+    display: none;
+    padding: 4px;
+    font-size: 16px;
   }
 }
 

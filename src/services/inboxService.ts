@@ -10,3 +10,9 @@ export const openInbox = async (userId: string) => {
     },
   );
 };
+export const closeInbox = async (channelId: string) => {
+  return request<{ status: true }>(`/channels/${channelId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};
