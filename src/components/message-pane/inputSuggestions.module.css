@@ -1,0 +1,56 @@
+.inputSuggestions {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  padding: 6px;
+  margin-top: 4px;
+  border: solid 1px var(--gray-600);
+  border-radius: var(--radius-8);
+  color: var(--text-color);
+  background: var(--gray-900);
+  font-size: 14px;
+  &.hide {
+    display: none;
+  }
+}
+
+.suggestionItem {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: var(--radius-6);
+  color: var(--text-color);
+  font-size: 14px;
+  gap: 8px;
+  &:hover {
+    background-color: initial;
+  }
+  &[data-selected="true"] {
+    background: var(--gray-600);
+    .returnIcon {
+      display: block;
+    }
+    .name {
+      color: var(--text-color);
+    }
+  }
+  .name {
+    color: var(--text-muted);
+  }
+  .icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+  }
+  .left {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    color: var(--text-muted);
+    gap: 4px;
+  }
+  .returnIcon {
+    display: none;
+    font-size: 18px;
+  }
+}

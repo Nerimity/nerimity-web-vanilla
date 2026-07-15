@@ -17,6 +17,7 @@ import { createFileInput } from "../FileInput";
 import { createTextareaHeightHandler, Input } from "../input";
 import { createAttachmentIndicator } from "./attachmentIndicator";
 import { createEditMessageIndicator } from "./editMessageIndicator";
+import { createInputSuggestions } from "./inputSuggestions";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
 import { createTypingIndicator } from "./typingIndicator";
@@ -85,6 +86,8 @@ export const createChatbar = () => {
     "textarea",
   )! as HTMLTextAreaElement;
 
+  const inputSuggestions = createInputSuggestions({ signal, inputEl });
+
   const updateCancelButton = () => {
     let shouldShowCancel = false;
     const property = channelStore.currentChannelProperty()!;
@@ -133,6 +136,7 @@ export const createChatbar = () => {
       {editMessageIndicator}
       {attachmentIndicator}
       {repliesIndicator}
+      {inputSuggestions}
       <div class={style.chatInputContainer}>{inputContainerEl}</div>
     </div>
   ) as unknown as HTMLElement;

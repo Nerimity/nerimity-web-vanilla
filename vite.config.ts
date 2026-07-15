@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "keyboard_return",
         "bar_chart",
         "settings",
         "notifications_off",

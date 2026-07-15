@@ -27,6 +27,9 @@ export class ServerMember {
     this.joinedAt = data.joinedAt;
     this.muteExpireAt = data.muteExpireAt;
   }
+  get user() {
+    return userStore.users.get(this.userId);
+  }
   hasPerm(perm: number) {
     return serverMemberStore.hasPermission(this.serverId, this.userId, perm);
   }

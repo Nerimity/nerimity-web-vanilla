@@ -1,10 +1,10 @@
-export const debounce = <T extends (...args: never[]) => void>(
-  fn: T,
+export const debounce = <T extends unknown[]>(
+  callback: (...args: T) => void,
   delay: number,
 ) => {
   let timer: ReturnType<typeof setTimeout>;
-  return (...args: Parameters<T>) => {
+  return (...args: T) => {
     clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
+    timer = setTimeout(() => callback(...args), delay);
   };
 };
