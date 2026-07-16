@@ -38,6 +38,9 @@
     color: var(--text-muted);
   }
   .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     width: 18px;
     height: 18px;
@@ -48,6 +51,10 @@
     margin-left: auto;
     color: var(--text-muted);
     gap: 4px;
+  }
+  .specialIcon {
+    font-size: 16px;
+    color: var(--gray-400);
   }
   .returnIcon {
     display: none;

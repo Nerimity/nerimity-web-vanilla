@@ -265,13 +265,14 @@ const SuggestionItem = (props: {
 
   let subText = special?.subText;
   if (userItem && userItem.name !== userItem?.user.username) {
-    subText = userItem.name;
+    subText = userItem.user.username;
   }
 
   return (
     <Item.Base class={style.suggestionItem} data-selected={props.selected}>
       <div class={style.icon}>
         {userItem && <Avatar user={userItem.user} size={18} />}
+        {special && <Icon name="alternate_email" class={style.specialIcon} />}
       </div>
       <div class={style.name}>{props.item.name}</div>
       <div class={style.left}>
