@@ -31,11 +31,11 @@
       display: block;
     }
     .name {
-      color: var(--text-color);
+      opacity: 1;
     }
   }
   .name {
-    color: var(--text-muted);
+    opacity: 0.6;
   }
   .icon {
     display: flex;

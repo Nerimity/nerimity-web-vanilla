@@ -1,16 +1,20 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
+import { Dynamic } from "../../dynamic";
 import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { ServerRole, serverRoleStore } from "../../store/serverRoleStore";
+import { serverStore } from "../../store/serverStore";
 import { User, userStore } from "../../store/userStore";
+import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { Avatar } from "../avatar";
+import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Item } from "../item";
 
@@ -22,6 +26,7 @@ interface UserSuggestion {
   name: string;
   avatar?: string;
   user: User;
+  member?: ServerMember;
 }
 interface RoleSuggestion {
   type: "role";
@@ -29,6 +34,7 @@ interface RoleSuggestion {
   name: string;
   icon?: string;
   color?: string;
+  subText?: string;
 }
 
 interface SpecialSuggestion {
@@ -105,6 +111,7 @@ export const createInputSuggestions = (opts: {
         name: role.name,
         icon: role.icon,
         color: role.hexColor,
+        subText: t`Role`,
       }));
     }
 
@@ -115,6 +122,7 @@ export const createInputSuggestions = (opts: {
         name: member.nickname || member.user?.username || "",
         avatar: member.user?.avatar || "",
         user: member.user!,
+        member,
       }));
     }
 
@@ -261,20 +269,35 @@ const SuggestionItem = (props: {
   item: SuggestionItem;
 }) => {
   const userItem = props.item.type === "user" ? props.item : undefined;
+  const roleItem = props.item.type === "role" ? props.item : undefined;
   const special = props.item.type === "special" ? props.item : undefined;
 
-  let subText = special?.subText;
+  let subText = "subText" in props.item ? props.item.subText : undefined;
   if (userItem && userItem.name !== userItem?.user.username) {
     subText = userItem.user.username;
   }
 
+  const color = userItem?.member
+    ? resolveGradient(serverStore.memberTopColor(userItem.member))
+    : roleItem?.color
+      ? resolveGradient(roleItem.color)
+      : undefined;
   return (
     <Item.Base class={style.suggestionItem} data-selected={props.selected}>
       <div class={style.icon}>
         {userItem && <Avatar user={userItem.user} size={18} />}
-        {special && <Icon name="alternate_email" class={style.specialIcon} />}
+        {(special || roleItem) && (
+          <Icon name="alternate_email" class={style.specialIcon} />
+        )}
       </div>
-      <div class={style.name}>{props.item.name}</div>
+      <Dynamic
+        component={color ? GradientText : "div"}
+        color={color}
+        class={style.name}
+      >
+        {props.item.name}
+      </Dynamic>
+
       <div class={style.left}>
         {subText}
         {!subText && <Icon name="keyboard_return" class={style.returnIcon} />}
