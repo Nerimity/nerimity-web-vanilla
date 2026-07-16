@@ -13,9 +13,13 @@ import { getActivityType, UserPresence } from "./userPresence";
 import style from "./UserActivity.module.css";
 
 const playingForInfo = (activity: RawUserActivity) => {
+  const activityType = getActivityType(activity);
+
+  const isMusic =
+    activityType.isMusic && !!activity.startedAt && !!activity.endsAt;
   return {
     title: formatTimestamp(activity.startedAt || 0),
-    text: calculateTimeElapsedForActivityStatus(activity.startedAt, true),
+    text: calculateTimeElapsedForActivityStatus(activity.startedAt, isMusic),
   };
 };
 

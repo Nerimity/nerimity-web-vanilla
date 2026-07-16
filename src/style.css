@@ -45,6 +45,10 @@
   --status-looking-to-play: #3b82f6;
   --status-away-from-keyboard: #ff8f2c;
   --status-do-not-disturb: #eb6e6e;
+
+  --font-mono:
+    "SF Mono", "Cascadia Code", "Consolas", "Roboto Mono", "Menlo", "Monaco",
+    "Courier New", monospace;
 }
 
 html,

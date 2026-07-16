@@ -13,14 +13,15 @@ interface MentionProps {
   role?: { id: string; name?: string; hexColor?: string };
   label?: string;
   icon?: string;
+  monospace?: boolean;
 }
 
 export const Mention = (props: MentionProps) => {
   const text =
+    props.label ||
     props.user?.username ||
     props.channel?.name ||
-    props.role?.name ||
-    props.label;
+    props.role?.name;
 
   let url = "";
   if (props.user) {
@@ -44,7 +45,7 @@ export const Mention = (props: MentionProps) => {
           {text}
         </GradientText>
       ) : (
-        <span class="text">{text}</span>
+        <span class={["text", props.monospace && style.monospace]}>{text}</span>
       )}
     </>,
   );

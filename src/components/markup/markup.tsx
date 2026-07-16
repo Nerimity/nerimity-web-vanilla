@@ -29,6 +29,7 @@ export interface Props {
   animateEmoji?: boolean;
   class?: string | (string | boolean | undefined)[];
   serverId?: string | null;
+  replaceCommandBotId?: boolean;
 }
 
 type RenderContext = {
@@ -196,6 +197,12 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
       }
       break;
     }
+    case "cmd": {
+      const [name, id] = expr.split(":");
+      return (
+        <Mention monospace user={userStore.users.get(id!)} label={`/${name}`} />
+      );
+    }
     default: {
       console.warn("Unknown custom entity:", type);
     }
@@ -323,12 +330,14 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
   }
 }
 
-// const commandRegex = /^(\/[^:\s]*):\d+( .*)?$/m;
+const commandRegex = /^\/([^:\s]*):(\d+)( .*)?$/m;
 export function Markup(props: Props) {
   const ctx = {
     props: () => ({
       ...props,
-      text: props.text,
+      text: props.replaceCommandBotId
+        ? props.text.replace(commandRegex, "[cmd:$1:$2]$3")
+        : props.text,
       animateEmoji: props.animateInitialOnFocus ? document.hasFocus() : false,
     }),
     emojiCount: 0,

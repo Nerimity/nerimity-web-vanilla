@@ -205,6 +205,7 @@ export const MessageItem = (props: {
                   <div class={style.content}>
                     {!isImageEmbedOnly && (
                       <Markup
+                        replaceCommandBotId
                         animateInitialOnFocus
                         text={props.message.content}
                         message={props.message}
@@ -311,6 +312,7 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
             {creator.username}
           </GradientText>
           <Markup
+            replaceCommandBotId
             animateInitialOnFocus
             class={[style.content, "focusAnimate"]}
             text={message.content || "Attachment"}
