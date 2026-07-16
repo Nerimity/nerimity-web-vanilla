@@ -207,13 +207,15 @@ export const createInputSuggestions = (opts: {
     return [];
   };
 
+  const refreshSuggestions = () => {
+    suggestionItems = results();
+    selectedIndex = 0;
+    rerenderItems();
+  };
+
   inputEl.addEventListener(
     "input",
-    () => {
-      suggestionItems = results();
-      selectedIndex = 0;
-      rerenderItems();
-    },
+    refreshSuggestions,
 
     { signal, passive: true },
   );
@@ -239,13 +241,7 @@ export const createInputSuggestions = (opts: {
     },
     { signal },
   );
-  inputEl.addEventListener(
-    "focus",
-    () => {
-      rerenderItems();
-    },
-    { signal },
-  );
+  inputEl.addEventListener("focus", refreshSuggestions, { signal });
   inputEl.addEventListener(
     "blur",
     () => {
