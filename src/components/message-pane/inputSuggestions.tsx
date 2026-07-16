@@ -172,14 +172,16 @@ export const createInputSuggestions = (opts: {
         { keys: ["name"] },
       );
 
-      const matched = matchSorter(members, searchTerm, {
-        keys: ["nickname", (item) => item.user?.username!],
-      });
+      const matched = !searchTerm
+        ? members.sort((a, b) => b.joinedAt - a.joinedAt)
+        : matchSorter(members, searchTerm, {
+            keys: ["nickname", (item) => item.user?.username!],
+          });
       return [
         ...transformToSuggestion({ members: matched }),
         ...transformToSuggestion({ roles: matchedRoles }),
         ...transformToSuggestion({ special: matchedSpecialMentions }),
-      ].slice(0, 5);
+      ].slice(0, 10);
     }
     const users: User[] = [accountStore.currentUser!];
     const recipientId = inboxStore.inboxes.get(channel.id)?.recipientId;
