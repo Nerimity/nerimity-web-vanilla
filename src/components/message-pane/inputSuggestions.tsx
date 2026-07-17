@@ -4,7 +4,7 @@ import { matchSorter } from "match-sorter";
 import { Dynamic } from "../../dynamic";
 import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
-import { channelStore } from "../../store/channelStore";
+import { Channel, channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { ServerRole, serverRoleStore } from "../../store/serverRoleStore";
@@ -12,11 +12,14 @@ import { serverStore } from "../../store/serverStore";
 import { User, userStore } from "../../store/userStore";
 import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
+import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
+import { getLocalItem } from "../../utils/localStorage";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Item } from "../item";
+import { Emoji } from "../markup/Emoji";
 
 import style from "./inputSuggestions.module.css";
 
@@ -37,14 +40,32 @@ interface RoleSuggestion {
   subText?: string;
 }
 
+interface ChannelSuggestion {
+  type: "channel";
+  id: string;
+  name: string;
+}
+
 interface SpecialSuggestion {
   type: "special";
   id: string;
   name: string;
   subText?: string;
 }
+interface EmojiSuggestion {
+  type: "emoji";
+  id: string;
+  name: string;
+  gif?: boolean;
+  custom?: boolean;
+}
 
-type SuggestionItem = UserSuggestion | RoleSuggestion | SpecialSuggestion;
+type SuggestionItem =
+  | UserSuggestion
+  | RoleSuggestion
+  | SpecialSuggestion
+  | ChannelSuggestion
+  | EmojiSuggestion;
 export const createInputSuggestions = (opts: {
   signal: AbortSignal;
   inputEl: HTMLTextAreaElement;
@@ -91,7 +112,9 @@ export const createInputSuggestions = (opts: {
     users?: User[];
     members?: ServerMember[];
     roles?: ServerRole[];
+    channels?: Channel[];
     special?: ({ id: string; name: string; subText?: string } | null)[];
+    emojis?: { id: string; name: string; shortcodes?: string; gif?: boolean }[];
   }): SuggestionItem[] => {
     const { users, members, roles } = opts;
 
@@ -126,12 +149,30 @@ export const createInputSuggestions = (opts: {
       }));
     }
 
+    if (opts.channels) {
+      return opts.channels.map((channel) => ({
+        type: "channel",
+        id: channel.id,
+        name: channel.name!,
+      }));
+    }
+
     if (opts.special) {
       return opts.special.map((item) => ({
         type: "special",
         id: item?.id || "",
         name: item?.name || "",
         subText: item?.subText,
+      }));
+    }
+
+    if (opts.emojis) {
+      return opts.emojis.map((emoji) => ({
+        type: "emoji",
+        id: emoji.id,
+        name: emoji.shortcodes?.[0] || emoji.name,
+        gif: emoji.gif,
+        custom: !emoji.shortcodes,
       }));
     }
 
@@ -159,7 +200,9 @@ export const createInputSuggestions = (opts: {
         ? [...(serverRoleStore.roles.get(channel.serverId)?.values() || [])]
         : [];
 
-      const matchedRoles = matchSorter(roles, searchTerm, { keys: ["name"] });
+      const matchedRoles = matchSorter(roles, searchTerm, {
+        keys: ["name"],
+      }).slice(0, 10);
       const matchedSpecialMentions = matchSorter(
         [
           { id: "si", name: "silent", subText: t`Silent message.` },
@@ -170,18 +213,18 @@ export const createInputSuggestions = (opts: {
         ],
         searchTerm,
         { keys: ["name"] },
-      );
+      ).slice(0, 10);
 
       const matched = !searchTerm
         ? members.sort((a, b) => b.joinedAt - a.joinedAt)
         : matchSorter(members, searchTerm, {
             keys: ["nickname", (item) => item.user?.username!],
-          });
+          }).slice(0, 10);
       return [
         ...transformToSuggestion({ members: matched }),
         ...transformToSuggestion({ roles: matchedRoles }),
         ...transformToSuggestion({ special: matchedSpecialMentions }),
-      ].slice(0, 10);
+      ];
     }
     const users: User[] = [accountStore.currentUser!];
     const recipientId = inboxStore.inboxes.get(channel.id)?.recipientId;
@@ -190,8 +233,71 @@ export const createInputSuggestions = (opts: {
       : undefined;
     if (recipient) users.push(recipient);
 
-    const matched = matchSorter(users, searchTerm, { keys: ["username"] });
+    const matched = matchSorter(users, searchTerm, {
+      keys: ["username"],
+    }).slice(0, 10);
     return transformToSuggestion({ users: matched });
+  };
+
+  const getChannelSuggestions = (searchTerm: string): SuggestionItem[] => {
+    const channels = serverStore.currentChannelsSorted.value() || [];
+
+    const matched = matchSorter(channels, searchTerm, { keys: ["name"] }).slice(
+      0,
+      10,
+    );
+    return transformToSuggestion({ channels: matched });
+  };
+
+  const mapEmoji = () => {
+    const emojiMapped: { shortcodes: string[]; id: string }[] = [];
+    const emojiEntries = Object.entries(shortcodeToUnicode);
+
+    const byUnicode = new Map<string, { shortcodes: string[]; id: string }>();
+
+    for (let i = 0; i < emojiEntries.length; i++) {
+      const [shortcode, unicode] = emojiEntries[i]!;
+
+      let entry = byUnicode.get(unicode);
+      if (!entry) {
+        entry = { shortcodes: [], id: unicode };
+        byUnicode.set(unicode, entry);
+        emojiMapped.push(entry);
+      }
+      entry.shortcodes.push(shortcode);
+    }
+    return emojiMapped;
+  };
+
+  let cachedCombinedEmojis: any[] | null = null;
+
+  const getEmojiSuggestions = (searchTerm: string) => {
+    if (!cachedCombinedEmojis) {
+      const emojiMapped = mapEmoji();
+
+      const customEmojiEntries = Object.entries(customShortcodeToIds).map(
+        ([name, prefixedId]) => ({
+          name,
+          id: prefixedId.split(":")[1] ?? prefixedId,
+          gif: prefixedId.startsWith("ace:"),
+        }),
+      );
+      cachedCombinedEmojis = [...emojiMapped, ...customEmojiEntries];
+    }
+
+    const recentEmojis = getLocalItem("recentEmojis", [])!;
+    const recentIds = new Set(recentEmojis.map((e) => e.id));
+
+    const matched = matchSorter(cachedCombinedEmojis, searchTerm, {
+      keys: ["name", "shortcodes.*"],
+      baseSort: (a, b) => {
+        const aRecent = recentIds.has(a.item.id) ? 1 : 0;
+        const bRecent = recentIds.has(b.item.id) ? 1 : 0;
+        return bRecent - aRecent;
+      },
+    }).slice(0, 10);
+
+    return transformToSuggestion({ emojis: matched });
   };
 
   const results = (): SuggestionItem[] => {
@@ -199,18 +305,28 @@ export const createInputSuggestions = (opts: {
     const searchTerm = wordAtCursor.substring(1);
 
     const isMentionTrigger = wordAtCursor.startsWith("@");
-    // const isEmojiTrigger = wordAtCursor.startsWith(":") && wordAtCursor.length >= 3;
+    const isChannelTrigger = wordAtCursor.startsWith("#");
+    const isEmojiTrigger =
+      wordAtCursor.startsWith(":") && wordAtCursor.length >= 3;
     // const isCommandTrigger = inputEl.value.startsWith("/");
 
     if (isMentionTrigger) return getMentionSuggestions(searchTerm);
-
+    if (isChannelTrigger) return getChannelSuggestions(searchTerm);
+    if (isEmojiTrigger) return getEmojiSuggestions(searchTerm);
     return [];
   };
 
+  let refId = 0;
   const refreshSuggestions = () => {
-    suggestionItems = results();
-    selectedIndex = 0;
-    rerenderItems();
+    cancelAnimationFrame(refId);
+    refId = requestAnimationFrame(() => {
+      suggestionItems = results().slice(0, 10);
+      if (!suggestionItems.length) {
+        cachedCombinedEmojis = null;
+      }
+      selectedIndex = 0;
+      rerenderItems();
+    });
   };
 
   inputEl.addEventListener(
@@ -223,6 +339,11 @@ export const createInputSuggestions = (opts: {
   inputEl.addEventListener(
     "keydown",
     (event) => {
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        refreshSuggestions();
+        return;
+      }
+
       if (event.key !== "ArrowUp" && event.key !== "ArrowDown") return;
 
       const children = [...container.children];
@@ -241,7 +362,7 @@ export const createInputSuggestions = (opts: {
     },
     { signal },
   );
-  inputEl.addEventListener("focus", refreshSuggestions, { signal });
+  inputEl.addEventListener("click", refreshSuggestions, { signal });
   inputEl.addEventListener(
     "blur",
     () => {
@@ -269,6 +390,8 @@ const SuggestionItem = (props: {
   const userItem = props.item.type === "user" ? props.item : undefined;
   const roleItem = props.item.type === "role" ? props.item : undefined;
   const special = props.item.type === "special" ? props.item : undefined;
+  const channelItem = props.item.type === "channel" ? props.item : undefined;
+  const emojiItem = props.item.type === "emoji" ? props.item : undefined;
 
   let subText = "subText" in props.item ? props.item.subText : undefined;
   if (userItem && userItem.name !== userItem?.user.username) {
@@ -286,6 +409,16 @@ const SuggestionItem = (props: {
         {userItem && <Avatar user={userItem.user} size={18} />}
         {(special || roleItem) && (
           <Icon name="alternate_email" class={style.specialIcon} />
+        )}
+        {channelItem && <Icon name="tag" class={style.specialIcon} />}
+        {emojiItem && (
+          <Emoji
+            icon={
+              emojiItem.id +
+              (emojiItem.custom ? `.${emojiItem.gif ? "gif" : "webp"}` : "")
+            }
+            animate
+          />
         )}
       </div>
       <Dynamic

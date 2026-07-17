@@ -37,8 +37,8 @@
     .emojiItem {
       flex-shrink: 0;
       padding: 0;
-      pointer-events: none;
       user-select: none;
+      pointer-events: none;
     }
 
     .info {
@@ -129,10 +129,10 @@
   border-radius: var(--radius-4);
   color: var(--gray-200);
   background-color: var(--gray-800);
+  user-select: none;
   font-size: 12px;
   font-weight: bold;
   gap: 6px;
-  user-select: none;
 
   span {
     overflow: hidden;
@@ -171,6 +171,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 36px;
+  height: 36px;
   padding: 4px;
   border-radius: var(--radius-4);
   user-select: none;
@@ -211,6 +213,6 @@
   .icon {
     flex-shrink: 0;
     color: var(--gray-400);
-    font-size: 28px;
+    font-size: 20px;
   }
 }

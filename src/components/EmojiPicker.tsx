@@ -210,6 +210,12 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
     </div>
   ) as HTMLDivElement;
 
+  requestAnimationFrame(() => {
+    if (!userAgent.mobile) {
+      inputEl.focus();
+    }
+  });
+
   const rerender = async () => {
     const searchVal = inputEl.value.trim();
 
