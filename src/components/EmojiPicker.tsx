@@ -485,8 +485,18 @@ const searchResults = (
   customEmojis: CustomEmoji[],
   rowCount: number,
 ) => {
+  const recentEmojis = getLocalItem("recentEmojis", [])!;
+  const recentIds = new Set(recentEmojis.map((e) => e.id));
+
   const results = matchSorter([...customEmojis, ...emojis], value, {
     keys: ["short_names", "name"],
+    baseSort: (a, b) => {
+      const aId = "id" in a.item ? a.item.id : a.item.emoji;
+      const bId = "id" in b.item ? b.item.id : b.item.emoji;
+      const aRecent = recentIds.has(aId) ? 1 : 0;
+      const bRecent = recentIds.has(bId) ? 1 : 0;
+      return bRecent - aRecent;
+    },
   });
   let currentRow: Array<EmojiCol | CategoryCol> | null = null;
   const mappedEmojis: Array<Array<EmojiCol | CategoryCol>> = [];
