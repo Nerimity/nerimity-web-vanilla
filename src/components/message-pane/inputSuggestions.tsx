@@ -134,7 +134,6 @@ export const createInputSuggestions = (opts: {
         name: role.name,
         icon: role.icon,
         color: role.hexColor,
-        subText: t`Role`,
       }));
     }
 
@@ -208,7 +207,7 @@ export const createInputSuggestions = (opts: {
           { id: "si", name: "silent", subText: t`Silent message.` },
           { id: "s1", name: "someone", subText: t`Mentions a random user.` },
           ...(canMentionEveryone
-            ? [{ id: "e1", name: "@ everyone", subText: t`Mentions everyone.` }]
+            ? [{ id: "e1", name: "everyone", subText: t`Mentions everyone.` }]
             : []),
         ],
         searchTerm,
@@ -339,6 +338,15 @@ export const createInputSuggestions = (opts: {
   inputEl.addEventListener(
     "keydown",
     (event) => {
+      if (event.key === "Enter") {
+        const action = container.children[selectedIndex] as HTMLElement | null;
+        if (action) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          insert(action);
+        }
+      }
+
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         refreshSuggestions();
         return;
@@ -363,9 +371,34 @@ export const createInputSuggestions = (opts: {
     { signal },
   );
   inputEl.addEventListener("click", refreshSuggestions, { signal });
-  inputEl.addEventListener(
-    "blur",
-    () => {
+
+  const insert = (itemEl: HTMLElement) => {
+    const insert = itemEl.dataset.insert;
+    if (!insert) return;
+    const wordAtCursor = getWordAtCursor(inputEl);
+
+    insertAutocompleteText({
+      channelId: channelStore.currentChannelId!,
+      textArea: inputEl,
+      triggerText: wordAtCursor,
+      replacementText: insert + " ",
+    });
+    refreshSuggestions();
+  };
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLElement;
+
+      const item = target.closest(
+        `.${style.suggestionItem}`,
+      ) as HTMLElement | null;
+
+      if (item) {
+        insert(item);
+      }
+
       container.classList.add(style.hide!);
     },
     { signal },
@@ -383,55 +416,85 @@ export const createInputSuggestions = (opts: {
   return container;
 };
 
-const SuggestionItem = (props: {
+type SuggestionItemProps = {
   selected?: boolean;
   item: SuggestionItem;
-}) => {
-  const userItem = props.item.type === "user" ? props.item : undefined;
-  const roleItem = props.item.type === "role" ? props.item : undefined;
-  const special = props.item.type === "special" ? props.item : undefined;
-  const channelItem = props.item.type === "channel" ? props.item : undefined;
-  const emojiItem = props.item.type === "emoji" ? props.item : undefined;
+};
 
-  let subText = "subText" in props.item ? props.item.subText : undefined;
-  if (userItem && userItem.name !== userItem?.user.username) {
-    subText = userItem.user.username;
-  }
-
-  const color = userItem?.member
-    ? resolveGradient(serverStore.memberTopColor(userItem.member))
-    : roleItem?.color
-      ? resolveGradient(roleItem.color)
-      : undefined;
-  return (
-    <Item.Base class={style.suggestionItem} data-selected={props.selected}>
-      <div class={style.icon}>
-        {userItem && <Avatar user={userItem.user} size={18} />}
-        {(special || roleItem) && (
-          <Icon name="alternate_email" class={style.specialIcon} />
-        )}
-        {channelItem && <Icon name="tag" class={style.specialIcon} />}
-        {emojiItem && (
+function getItemConfig(item: SuggestionItem) {
+  switch (item.type) {
+    case "user": {
+      const color = item.member
+        ? resolveGradient(serverStore.memberTopColor(item.member))
+        : undefined;
+      return {
+        icon: <Avatar user={item.user} size={18} />,
+        insert: `@${item.user.username}:${item.user.tag}`,
+        color,
+        subText:
+          item.name !== item.user.username ? item.user.username : undefined,
+      };
+    }
+    case "role":
+      return {
+        icon: <Icon name="alternate_email" class={style.specialIcon} />,
+        insert: `@${item.name}@`,
+        color: item.color ? resolveGradient(item.color) : undefined,
+        subText: t`Role`,
+      };
+    case "channel":
+      return {
+        icon: <Icon name="tag" class={style.specialIcon} />,
+        insert: `#${item.name}#`,
+        color: undefined,
+      };
+    case "emoji":
+      return {
+        icon: (
           <Emoji
             icon={
-              emojiItem.id +
-              (emojiItem.custom ? `.${emojiItem.gif ? "gif" : "webp"}` : "")
+              item.id + (item.custom ? `.${item.gif ? "gif" : "webp"}` : "")
             }
             animate
           />
-        )}
-      </div>
+        ),
+        insert: `:${item.name}:`,
+      };
+    case "special":
+      return {
+        icon: <Icon name="alternate_email" class={style.specialIcon} />,
+        insert: `@${item.name}`,
+        subText: item.subText,
+      };
+    default:
+      return item satisfies never;
+  }
+}
+
+const SuggestionItem = (props: SuggestionItemProps) => {
+  const config = getItemConfig(props.item);
+
+  return (
+    <Item.Base
+      class={style.suggestionItem}
+      data-selected={props.selected}
+      data-insert={config.insert}
+    >
+      <div class={style.icon}>{config.icon}</div>
+
       <Dynamic
-        component={color ? GradientText : "div"}
-        color={color}
+        component={config.color ? GradientText : "div"}
+        color={config.color}
         class={style.name}
       >
         {props.item.name}
       </Dynamic>
 
-      <div class={style.left}>
-        {subText}
-        {!subText && <Icon name="keyboard_return" class={style.returnIcon} />}
+      <div class={style.right}>
+        {config.subText}
+        {!config.subText && (
+          <Icon name="keyboard_return" class={style.returnIcon} />
+        )}
       </div>
     </Item.Base>
   );
@@ -443,3 +506,46 @@ const getWordAtCursor = (element: HTMLTextAreaElement) => {
   const lastWord = textBeforeCursor.split(/\s+/).reverse()[0];
   return lastWord || "";
 };
+
+interface AutocompleteConfig {
+  channelId: string;
+  textArea: HTMLTextAreaElement;
+  triggerText: string;
+  replacementText: string;
+}
+
+function insertAutocompleteText(config: AutocompleteConfig) {
+  const { channelId, textArea, triggerText, replacementText } = config;
+
+  const property = channelStore.getProperty(channelId)!;
+  const cursorPosition = textArea.selectionStart!;
+
+  const targetIndex = cursorPosition - triggerText.length;
+
+  const textWithTriggerRemoved = stringSplice(
+    property.content,
+    targetIndex,
+    triggerText.length,
+  );
+
+  const result =
+    textWithTriggerRemoved.slice(0, targetIndex) +
+    replacementText +
+    textWithTriggerRemoved.slice(targetIndex);
+
+  property.content = result;
+  textArea.value = result;
+
+  textArea.focus();
+
+  const newCursorPosition =
+    cursorPosition + (replacementText.length - triggerText.length);
+  textArea.selectionStart = newCursorPosition;
+  textArea.selectionEnd = newCursorPosition;
+}
+
+function stringSplice(text: string, startIndex: number, deleteCount: number) {
+  return (
+    text.substring(0, startIndex) + text.substring(startIndex + deleteCount)
+  );
+}

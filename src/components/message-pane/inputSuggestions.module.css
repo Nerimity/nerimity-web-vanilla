@@ -40,12 +40,12 @@
   .icon {
     display: flex;
     align-items: center;
-    justify-content: center;
     flex-shrink: 0;
+    justify-content: center;
     width: 18px;
     height: 18px;
   }
-  .left {
+  .right {
     display: flex;
     align-items: center;
     margin-left: auto;
@@ -53,8 +53,8 @@
     gap: 4px;
   }
   .specialIcon {
-    font-size: 16px;
     color: var(--gray-400);
+    font-size: 16px;
   }
   .returnIcon {
     display: none;
