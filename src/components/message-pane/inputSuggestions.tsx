@@ -399,7 +399,8 @@ export const createInputSuggestions = (opts: {
         insert(item);
       }
 
-      container.classList.add(style.hide!);
+      suggestionItems = null;
+      rerenderItems();
     },
     { signal },
   );
