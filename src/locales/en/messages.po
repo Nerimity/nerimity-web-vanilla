@@ -13,11 +13,48 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/BanMemberModal.tsx:32
+msgid "Delete messages sent in the past 7 hours."
+msgstr "Delete messages sent in the past 7 hours."
+
+#: src/components/BanMemberModal.tsx:38
+msgid "Are you sure you want to ban <0>{username}</0>"
+msgstr "Are you sure you want to ban <0>{username}</0>"
+
+#: src/components/BanMemberModal.tsx:43
+msgid "Reason (optional)"
+msgstr "Reason (optional)"
+
+#: src/components/BanMemberModal.tsx:59
+msgid "Ban {username}"
+msgstr "Ban {username}"
+
+#: src/components/BanMemberModal.tsx:65
+msgid "Don't Ban"
+msgstr "Don't Ban"
+
+#: src/components/BanMemberModal.tsx:72
+#: src/components/BanMemberModal.tsx:98
+msgid "Ban"
+msgstr "Ban"
+
+#: src/components/BanMemberModal.tsx:86
+msgid "Banning..."
+msgstr "Banning..."
+
+#: src/components/EditServerRolesModal.tsx:57
+msgid "Edit Roles - {username}"
+msgstr "Edit Roles - {username}"
+
+#: src/components/EditServerRolesModal.tsx:153
+msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
+msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
+
 #: src/components/EmojiPicker.tsx:171
 msgid "Search Emojis..."
 msgstr "Search Emojis..."
 
-#: src/components/EmojiPicker.tsx:458
+#: src/components/EmojiPicker.tsx:464
 msgid "Recent Emojis"
 msgstr "Recent Emojis"
 
@@ -28,6 +65,27 @@ msgstr "GIFs"
 #: src/components/ExpressionPicker.tsx:79
 msgid "Emojis"
 msgstr "Emojis"
+
+#: src/components/KickMemberModal.tsx:30
+msgid "Are you sure you want to kick <0>{username}</0>"
+msgstr "Are you sure you want to kick <0>{username}</0>"
+
+#: src/components/KickMemberModal.tsx:41
+msgid "Kick {username}"
+msgstr "Kick {username}"
+
+#: src/components/KickMemberModal.tsx:47
+msgid "Don't Kick"
+msgstr "Don't Kick"
+
+#: src/components/KickMemberModal.tsx:54
+#: src/components/KickMemberModal.tsx:75
+msgid "Kick"
+msgstr "Kick"
+
+#: src/components/KickMemberModal.tsx:68
+msgid "Kicking..."
+msgstr "Kicking..."
 
 #: src/components/LinkWarnModal.tsx:14
 msgid "External link"
@@ -44,6 +102,24 @@ msgstr "Don't visit"
 #: src/components/LinkWarnModal.tsx:25
 msgid "Visit site"
 msgstr "Visit site"
+
+#: src/components/LogoutModal.tsx:21
+msgid "Are you sure you want to logout?"
+msgstr "Are you sure you want to logout?"
+
+#: src/components/LogoutModal.tsx:24
+msgid "Clear local settings"
+msgstr "Clear local settings"
+
+#: src/components/LogoutModal.tsx:40
+#: src/components/LogoutModal.tsx:53
+#: src/components/miniProfile.tsx:249
+msgid "Logout"
+msgstr "Logout"
+
+#: src/components/LogoutModal.tsx:46
+msgid "Don't Logout"
+msgstr "Don't Logout"
 
 #: src/components/UserContextMenu.tsx:141
 msgid "View Profile"
@@ -62,12 +138,12 @@ msgid "Kick Member"
 msgstr "Kick Member"
 
 #: src/components/UserContextMenu.tsx:165
-#: src/components/message-pane/messagePane.tsx:609
+#: src/components/message-pane/messagePane.tsx:615
 msgid "Copy ID"
 msgstr "Copy ID"
 
 #: src/components/UserContextMenu.tsx:169
-#: src/components/message-pane/messagePane.tsx:613
+#: src/components/message-pane/messagePane.tsx:619
 msgid "Copy Object"
 msgstr "Copy Object"
 
@@ -76,63 +152,22 @@ msgid "Home"
 msgstr "Home"
 
 #. placeholder {0}: online.length
-#: src/components/inboxDrawer.tsx:262
+#: src/components/inboxDrawer.tsx:266
 msgid "Online - {0}"
 msgstr "Online - {0}"
 
 #. placeholder {0}: offline.length
-#: src/components/inboxDrawer.tsx:263
+#: src/components/inboxDrawer.tsx:267
 msgid "Offline - {0}"
 msgstr "Offline - {0}"
 
-#: src/components/inboxDrawer.tsx:322
+#: src/components/inboxDrawer.tsx:326
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:323
+#: src/components/inboxDrawer.tsx:327
 msgid "Friends"
 msgstr "Friends"
-
-#: src/components/message-pane/BanMemberModal.tsx:32
-msgid "Delete messages sent in the past 7 hours."
-msgstr "Delete messages sent in the past 7 hours."
-
-#: src/components/message-pane/BanMemberModal.tsx:38
-msgid "Are you sure you want to ban <0>{username}</0>"
-msgstr "Are you sure you want to ban <0>{username}</0>"
-
-#: src/components/message-pane/BanMemberModal.tsx:43
-msgid "Reason (optional)"
-msgstr "Reason (optional)"
-
-#: src/components/message-pane/BanMemberModal.tsx:59
-msgid "Ban {username}"
-msgstr "Ban {username}"
-
-#: src/components/message-pane/BanMemberModal.tsx:65
-msgid "Don't Ban"
-msgstr "Don't Ban"
-
-#: src/components/message-pane/BanMemberModal.tsx:72
-#: src/components/message-pane/BanMemberModal.tsx:98
-msgid "Ban"
-msgstr "Ban"
-
-#: src/components/message-pane/BanMemberModal.tsx:86
-msgid "Banning..."
-msgstr "Banning..."
-
-#: src/components/message-pane/EditServerRolesModal.tsx:55
-msgid "Edit Roles - {username}"
-msgstr "Edit Roles - {username}"
-
-#: src/components/message-pane/EditServerRolesModal.tsx:119
-msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
-msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
-
-#: src/components/message-pane/EditServerRolesModal.tsx:119
-#~ msgid "{memberCount, plural, one {# member} other {# members}}"
-#~ msgstr "{memberCount, plural, one {# member} other {# members}}"
 
 #: src/components/message-pane/HtmlEmbed.tsx:30
 msgid "Embed not supported by your browser."
@@ -142,45 +177,6 @@ msgstr "Embed not supported by your browser."
 #: src/components/message-pane/messageItem.tsx:103
 msgid "New Messages"
 msgstr "New Messages"
-
-#: src/components/message-pane/KickMemberModal.tsx:30
-msgid "Are you sure you want to kick <0>{username}</0>"
-msgstr "Are you sure you want to kick <0>{username}</0>"
-
-#: src/components/message-pane/KickMemberModal.tsx:41
-msgid "Kick {username}"
-msgstr "Kick {username}"
-
-#: src/components/message-pane/KickMemberModal.tsx:47
-msgid "Don't Kick"
-msgstr "Don't Kick"
-
-#: src/components/message-pane/KickMemberModal.tsx:54
-#: src/components/message-pane/KickMemberModal.tsx:75
-msgid "Kick"
-msgstr "Kick"
-
-#: src/components/message-pane/KickMemberModal.tsx:68
-msgid "Kicking..."
-msgstr "Kicking..."
-
-#: src/components/message-pane/LogoutModal.tsx:21
-msgid "Are you sure you want to logout?"
-msgstr "Are you sure you want to logout?"
-
-#: src/components/message-pane/LogoutModal.tsx:24
-msgid "Clear local settings"
-msgstr "Clear local settings"
-
-#: src/components/message-pane/LogoutModal.tsx:40
-#: src/components/message-pane/LogoutModal.tsx:53
-#: src/components/miniProfile.tsx:251
-msgid "Logout"
-msgstr "Logout"
-
-#: src/components/message-pane/LogoutModal.tsx:46
-msgid "Don't Logout"
-msgstr "Don't Logout"
 
 #: src/components/message-pane/SystemMessage.tsx:30
 msgid "{username} has been added."
@@ -215,12 +211,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name!
-#: src/components/message-pane/chatbar.tsx:261
+#: src/components/message-pane/chatbar.tsx:265
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:266
+#: src/components/message-pane/chatbar.tsx:270
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -229,7 +225,7 @@ msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
 #: src/components/message-pane/deleteMessageModal.tsx:40
-#: src/components/message-pane/messagePane.tsx:599
+#: src/components/message-pane/messagePane.tsx:605
 msgid "Delete Message"
 msgstr "Delete Message"
 
@@ -245,6 +241,22 @@ msgstr "Delete"
 #: src/components/message-pane/deleteMessageModal.tsx:67
 msgid "Deleting..."
 msgstr "Deleting..."
+
+#: src/components/message-pane/inputSuggestions.tsx:207
+msgid "Silent message."
+msgstr "Silent message."
+
+#: src/components/message-pane/inputSuggestions.tsx:208
+msgid "Mentions a random user."
+msgstr "Mentions a random user."
+
+#: src/components/message-pane/inputSuggestions.tsx:210
+msgid "Mentions everyone."
+msgstr "Mentions everyone."
+
+#: src/components/message-pane/inputSuggestions.tsx:443
+msgid "Role"
+msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:143
 msgid "Muted until {mutedUntil}"
@@ -274,23 +286,23 @@ msgstr "Owner"
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:324
+#: src/components/message-pane/messageItem.tsx:325
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messagePane.tsx:590
+#: src/components/message-pane/messagePane.tsx:596
 msgid "Edit Message"
 msgstr "Edit Message"
 
-#: src/components/message-pane/messagePane.tsx:594
+#: src/components/message-pane/messagePane.tsx:600
 msgid "Reply Message"
 msgstr "Reply Message"
 
-#: src/components/message-pane/messagePane.tsx:605
+#: src/components/message-pane/messagePane.tsx:611
 msgid "Copy Content"
 msgstr "Copy Content"
 
-#: src/components/message-pane/repliesIndicator.tsx:75
+#: src/components/message-pane/repliesIndicator.tsx:74
 msgid "Mention"
 msgstr "Mention"
 
@@ -299,44 +311,44 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:205
+#: src/components/miniProfile.tsx:203
 msgid "<0>{followers}</0> Followers"
 msgstr "<0>{followers}</0> Followers"
 
-#: src/components/miniProfile.tsx:212
+#: src/components/miniProfile.tsx:210
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:224
+#: src/components/miniProfile.tsx:222
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:231
-#: src/components/miniProfile.tsx:244
+#: src/components/miniProfile.tsx:229
+#: src/components/miniProfile.tsx:242
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/miniProfile.tsx:231
+#: src/components/miniProfile.tsx:229
 msgid "Message"
 msgstr "Message"
 
-#: src/components/miniProfile.tsx:240
+#: src/components/miniProfile.tsx:238
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/miniProfile.tsx:247
+#: src/components/miniProfile.tsx:245
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/miniProfile.tsx:262
+#: src/components/miniProfile.tsx:260
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:281
+#: src/components/miniProfile.tsx:274
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:295
+#: src/components/miniProfile.tsx:288
 msgid "About Me"
 msgstr "About Me"
 
