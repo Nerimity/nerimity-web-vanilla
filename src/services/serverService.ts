@@ -1,3 +1,4 @@
+import type { RawBotCommand } from "../Types";
 import { request } from "./request";
 
 export const kickServerMember = async (opts: {
@@ -41,4 +42,14 @@ export const updateServerMember = async (opts: {
 
     body: opts.update,
   });
+};
+
+export const getServerCommands = async (serverId: string) => {
+  return request<{ commands: RawBotCommand[] }>(
+    `/servers/${serverId}/bot-commands`,
+    {
+      useToken: true,
+      method: "GET",
+    },
+  );
 };

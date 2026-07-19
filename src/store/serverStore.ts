@@ -1,7 +1,9 @@
+import { getServerCommands } from "../services/serverService";
 import { socket } from "../services/socket";
 import {
   ChannelType,
   NotificationMode,
+  type RawBotCommand,
   type RawServer,
   type RawServerFolder,
 } from "../Types";
@@ -10,6 +12,7 @@ import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
 import { debounce } from "../utils/debounce";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
+import { newQueue } from "../utils/queue";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { accountStore } from "./accountStore";
 import { Channel, channelStore } from "./channelStore";
@@ -22,6 +25,8 @@ export type ServerOrFolder =
 
 export const serverStore = createServerStore();
 
+const getBotCommandsQueue = newQueue();
+
 export class Server {
   id: string;
   name: string;
@@ -31,6 +36,7 @@ export class Server {
   defaultRoleId: string;
   createdById: string;
   createdAt: number;
+  botCommands?: RawBotCommand[];
   /**
    * @description if true, server members are not loaded yet.
    */
@@ -44,6 +50,15 @@ export class Server {
     this.defaultRoleId = data.defaultRoleId;
     this.createdById = data.createdById;
     this.createdAt = data.createdAt;
+  }
+  getOrLoadBotCommands() {
+    return getBotCommandsQueue.add(async () => {
+      if (this.botCommands) return { cache: true, commands: this.botCommands };
+      const [res, error] = await getServerCommands(this.id);
+      if (error) return { cache: false, commands: [] };
+      this.botCommands = res.commands;
+      return { cache: false, commands: this.botCommands };
+    });
   }
 }
 

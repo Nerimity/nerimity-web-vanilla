@@ -10,6 +10,7 @@ import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { ServerRole, serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { User, userStore } from "../../store/userStore";
+import type { RawBotCommand } from "../../Types";
 import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
@@ -59,13 +60,20 @@ interface EmojiSuggestion {
   gif?: boolean;
   custom?: boolean;
 }
+interface CommandSuggestion {
+  type: "cmd";
+  id: string;
+  name: string;
+  botId?: string;
+}
 
 type SuggestionItem =
   | UserSuggestion
   | RoleSuggestion
   | SpecialSuggestion
   | ChannelSuggestion
-  | EmojiSuggestion;
+  | EmojiSuggestion
+  | CommandSuggestion;
 export const createInputSuggestions = (opts: {
   signal: AbortSignal;
   inputEl: HTMLTextAreaElement;
@@ -115,6 +123,7 @@ export const createInputSuggestions = (opts: {
     channels?: Channel[];
     special?: ({ id: string; name: string; subText?: string } | null)[];
     emojis?: { id: string; name: string; shortcodes?: string; gif?: boolean }[];
+    commands?: RawBotCommand[];
   }): SuggestionItem[] => {
     const { users, members, roles } = opts;
 
@@ -172,6 +181,15 @@ export const createInputSuggestions = (opts: {
         name: emoji.shortcodes?.[0] || emoji.name,
         gif: emoji.gif,
         custom: !emoji.shortcodes,
+      }));
+    }
+
+    if (opts.commands) {
+      return opts.commands.map((command) => ({
+        type: "cmd",
+        id: command.name,
+        name: `/${command.name}`,
+        botId: command.botUserId,
       }));
     }
 
@@ -247,6 +265,24 @@ export const createInputSuggestions = (opts: {
     );
     return transformToSuggestion({ channels: matched });
   };
+  const getCommandSuggestions = async (
+    searchTerm: string,
+  ): Promise<SuggestionItem[]> => {
+    const server = serverStore.currentServer();
+    if (!server) return [];
+    const { commands, cache } = await server.getOrLoadBotCommands();
+    //fixes race condition
+    if (!cache) {
+      refreshSuggestions();
+    }
+    if (!commands) return [];
+
+    const matched = matchSorter(commands, searchTerm, { keys: ["name"] }).slice(
+      0,
+      10,
+    );
+    return transformToSuggestion({ commands: matched });
+  };
 
   const mapEmoji = () => {
     const emojiMapped: { shortcodes: string[]; id: string }[] = [];
@@ -299,7 +335,7 @@ export const createInputSuggestions = (opts: {
     return transformToSuggestion({ emojis: matched });
   };
 
-  const results = (): SuggestionItem[] => {
+  const results = async (): Promise<SuggestionItem[]> => {
     const wordAtCursor = getWordAtCursor(inputEl);
     const searchTerm = wordAtCursor.substring(1);
 
@@ -307,19 +343,23 @@ export const createInputSuggestions = (opts: {
     const isChannelTrigger = wordAtCursor.startsWith("#");
     const isEmojiTrigger =
       wordAtCursor.startsWith(":") && wordAtCursor.length >= 3;
-    // const isCommandTrigger = inputEl.value.startsWith("/");
+    const isCommandTrigger =
+      inputEl.value.startsWith("/") && !inputEl.value.includes(" ");
 
     if (isMentionTrigger) return getMentionSuggestions(searchTerm);
     if (isChannelTrigger) return getChannelSuggestions(searchTerm);
     if (isEmojiTrigger) return getEmojiSuggestions(searchTerm);
+
+    if (isCommandTrigger) return await getCommandSuggestions(searchTerm);
+
     return [];
   };
 
   let refId = 0;
   const refreshSuggestions = () => {
     cancelAnimationFrame(refId);
-    refId = requestAnimationFrame(() => {
-      suggestionItems = results().slice(0, 10);
+    refId = requestAnimationFrame(async () => {
+      suggestionItems = (await results()).slice(0, 10);
       if (!suggestionItems.length) {
         cachedCombinedEmojis = null;
       }
@@ -338,7 +378,7 @@ export const createInputSuggestions = (opts: {
   inputEl.addEventListener(
     "keydown",
     (event) => {
-      if (event.key === "Enter") {
+      if (event.key === "Enter" || event.key === "Tab") {
         const action = container.children[selectedIndex] as HTMLElement | null;
         if (action) {
           event.preventDefault();
@@ -461,6 +501,14 @@ function getItemConfig(item: SuggestionItem) {
         ),
         insert: `:${item.name}:`,
       };
+    case "cmd": {
+      const botUser = userStore.users.get(item.botId!);
+      return {
+        icon: botUser ? <Avatar user={botUser} size={18} /> : undefined,
+        insert: `${item.name}`,
+        subText: botUser?.username,
+      };
+    }
     case "special":
       return {
         icon: <Icon name="alternate_email" class={style.specialIcon} />,

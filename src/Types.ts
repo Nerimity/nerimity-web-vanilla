@@ -69,6 +69,14 @@ export interface RawServerFolder {
   name: string;
 }
 
+export interface RawBotCommand {
+  botUserId: string;
+  name: string;
+  description: string | null;
+  args: string | null;
+  permissions: number | null;
+}
+
 export interface RawServer {
   id: string;
   name: string;

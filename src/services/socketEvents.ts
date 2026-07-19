@@ -1,3 +1,5 @@
+// TODO: On server join event, if its a bot, flush bot commands cache for that server.
+
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { friendStore } from "../store/friendStore";
