@@ -37,13 +37,20 @@
   .name {
     opacity: 0.6;
   }
+
+  .args {
+    color: var(--text-muted);
+  }
+  .description {
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
   .icon {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     justify-content: center;
-    width: 18px;
-    height: 18px;
   }
   .right {
     display: flex;

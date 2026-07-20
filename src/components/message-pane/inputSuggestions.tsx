@@ -65,6 +65,8 @@ interface CommandSuggestion {
   id: string;
   name: string;
   botId?: string;
+  description?: string;
+  args?: string;
 }
 
 type SuggestionItem =
@@ -184,13 +186,21 @@ export const createInputSuggestions = (opts: {
       }));
     }
 
+    const currentMember = serverMemberStore.currentMember(
+      channelStore.currentChannel()?.serverId || "",
+    );
+
     if (opts.commands) {
-      return opts.commands.map((command) => ({
-        type: "cmd",
-        id: command.name,
-        name: `/${command.name}`,
-        botId: command.botUserId,
-      }));
+      return opts.commands
+        .filter((command) => currentMember?.hasPerm(command.permissions || 0))
+        .map((command) => ({
+          type: "cmd",
+          id: command.name,
+          name: `/${command.name}`,
+          botId: command.botUserId,
+          description: command.description || undefined,
+          args: command.args || undefined,
+        }));
     }
 
     return [];
@@ -504,9 +514,10 @@ function getItemConfig(item: SuggestionItem) {
     case "cmd": {
       const botUser = userStore.users.get(item.botId!);
       return {
-        icon: botUser ? <Avatar user={botUser} size={18} /> : undefined,
+        icon: botUser ? <Avatar user={botUser} size={32} /> : undefined,
         insert: `${item.name}`,
-        subText: botUser?.username,
+        description: item.description,
+        args: item.args,
       };
     }
     case "special":
@@ -531,13 +542,19 @@ const SuggestionItem = (props: SuggestionItemProps) => {
     >
       <div class={style.icon}>{config.icon}</div>
 
-      <Dynamic
-        component={config.color ? GradientText : "div"}
-        color={config.color}
-        class={style.name}
-      >
-        {props.item.name}
-      </Dynamic>
+      <div>
+        <Dynamic
+          component={config.color ? GradientText : "div"}
+          color={config.color}
+          class={style.name}
+        >
+          {props.item.name}{" "}
+          {config.args && <span class={style.args}>{config.args}</span>}
+        </Dynamic>
+        {config.description && (
+          <div class={style.description}>{config.description}</div>
+        )}
+      </div>
 
       <div class={style.right}>
         {config.subText}
