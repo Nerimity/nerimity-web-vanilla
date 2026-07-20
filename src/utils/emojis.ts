@@ -1,5 +1,5 @@
 import { emojiUrl } from "../config";
-import { Server, serverStore } from "../store/serverStore";
+import { serverStore } from "../store/serverStore";
 import type { RawCustomEmoji, RawServer } from "../Types";
 import { getIdb } from "./idb";
 import { getLocalItem, setLocalItem, type RecentEmoji } from "./localStorage";
@@ -239,7 +239,7 @@ export function categorizedCustomEmojis(customEmojis: CustomEmoji[] = []) {
 
   const servers = serverStore
     .orderedServers()
-    .servers.filter((s) => s.type === "s") as Server[];
+    .servers.filter((s) => s.type === "s");
 
   if (selectedServerId) {
     const index = servers.findIndex((s) => s.id === selectedServerId);

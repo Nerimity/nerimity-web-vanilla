@@ -191,9 +191,9 @@ export const createSidebar = () => {
       valueId: "id",
       create: (item) =>
         item.type === "s" ? (
-          <ServerItem server={item} />
+          <ServerItem server={item.server} />
         ) : (
-          <FolderItem folder={item} />
+          <FolderItem folder={item.folder} />
         ),
       shouldRecreate(_, item) {
         if (opts?.forceRecreate) return true;

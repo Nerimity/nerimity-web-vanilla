@@ -299,13 +299,14 @@ function createServerStore() {
   const orderedServers = () => {
     const folders =
       accountStore.currentUser?.serverFolders.map((f) => ({
-        ...f,
+        folder: f,
         serverIds: f.serverIds.filter((s) => serverStore.servers.has(s)),
+        id: f.id,
         type: "f" as const,
       })) || [];
 
     const serverIdToFolderId = new Map(
-      folders.flatMap((f) => f.serverIds.map((s) => [s, f.id])),
+      folders.flatMap((f) => f.serverIds.map((s) => [s, f.folder.id])),
     );
 
     const orderedServerIds = accountStore.currentUser?.orderedServerIds || [];
@@ -314,7 +315,8 @@ function createServerStore() {
     const sortedServers = [...serverStore.servers.values()]
       .sort((a, b) => a.createdAt - b.createdAt)
       .map((s) => ({
-        ...s,
+        server: s,
+        id: s.id!,
         type: "s" as const,
         isInFolder: serverIdToFolderId.has(s.id!),
       }));
