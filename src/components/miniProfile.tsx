@@ -285,10 +285,14 @@ export const MiniProfile = (props: {
               )}
             </div>
 
-            <div class={style.title}>{t`About Me`}</div>
-            <div>
-              <Markup text={details?.profile?.bio || ""} />
-            </div>
+            {details?.profile?.bio?.trim() && (
+              <>
+                <div class={style.title}>{t`About Me`}</div>
+                <div>
+                  <Markup text={details?.profile?.bio} />
+                </div>
+              </>
+            )}
           </div>
         )}
       </>
