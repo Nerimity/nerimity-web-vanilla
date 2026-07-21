@@ -209,7 +209,7 @@ export const MessageItem = (props: {
                         animateInitialOnFocus
                         text={props.message.content}
                         message={props.message}
-                        class="focusAnimate"
+                        class={["focusAnimate", style.messageContent]}
                       />
                     )}
                     {htmlEmbed && <HtmlEmbed htmlEmbed={htmlEmbed} />}

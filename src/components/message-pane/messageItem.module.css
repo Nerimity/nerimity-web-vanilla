@@ -133,6 +133,10 @@
   }
 }
 
+.messageContent {
+  color: var(--gray-200);
+}
+
 .marker {
   display: flex;
   align-items: center;
