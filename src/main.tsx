@@ -1,3 +1,5 @@
+import { updateTheme } from "./utils/theme";
+updateTheme();
 import "./i18n";
 import "./style.css";
 import type createAppPage from "./pages/app-page/AppPage";
