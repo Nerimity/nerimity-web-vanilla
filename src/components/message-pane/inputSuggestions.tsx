@@ -263,7 +263,20 @@ export const createInputSuggestions = (opts: {
     const matched = matchSorter(users, searchTerm, {
       keys: ["username"],
     }).slice(0, 10);
-    return transformToSuggestion({ users: matched });
+
+    const matchedSpecialMentions = matchSorter(
+      [
+        { id: "si", name: "silent", subText: t`Silent message.` },
+        { id: "s1", name: "someone", subText: t`Mentions a random user.` },
+      ],
+      searchTerm,
+      { keys: ["name"] },
+    ).slice(0, 10);
+
+    return [
+      ...transformToSuggestion({ users: matched }),
+      ...transformToSuggestion({ special: matchedSpecialMentions }),
+    ];
   };
 
   const getChannelSuggestions = (searchTerm: string): SuggestionItem[] => {

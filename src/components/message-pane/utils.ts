@@ -1,13 +1,17 @@
 import { accountStore } from "../../store/accountStore";
+import { channelStore } from "../../store/channelStore";
+import { inboxStore } from "../../store/inboxStore";
 import { type Message } from "../../store/messageStore";
 import {
   serverMemberStore,
   type ServerMember,
 } from "../../store/serverMemberStore";
+import { serverRoleStore } from "../../store/serverRoleStore";
 import { Server, serverStore } from "../../store/serverStore";
-import type { User } from "../../store/userStore";
+import { userStore, type User } from "../../store/userStore";
 import { MessageType } from "../../Types";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
+import { randomKaomoji } from "../../utils/kaomoji";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 
 export const shouldGroup = (message: Message, prev?: Message): boolean => {
@@ -101,13 +105,44 @@ export const isMentioned = (opts: {
   return !!isMentioned;
 };
 
+function randomIndex(arrLength: number) {
+  return Math.floor(Math.random() * arrLength);
+}
+
 const emojiRegex = /:[\w+-]+:/g;
+const userMentionRegex = /@([^@:]+):([a-zA-Z0-9]+)/gu;
+const channelMentionRegex = /#([^#]+)#/gu;
+const roleMentionRegex = /@([^@]+)@/gu;
 
-export const formatMessage = (opts: { content: string }) => {
-  let finalString = opts.content;
+export const formatMessage = (opts: {
+  content: string;
+  isEditing?: boolean;
+}) => {
+  const { content, isEditing } = opts;
 
-  finalString = finalString.replace(emojiRegex, (val) => {
+  const serverId = serverStore.currentServerId;
+  const channelId = channelStore.currentChannelId;
+  const isDmChannel = !!channelId && !serverId;
+
+  const someoneMentioned = !isEditing && content.includes("@someone");
+
+  let result = replaceEmojis(content);
+
+  if (isDmChannel) {
+    result = formatDmMentions(result, channelId!, someoneMentioned);
+  }
+
+  if (serverId) {
+    result = formatServerMentions(result, serverId, someoneMentioned);
+  }
+
+  return result.replaceAll("@everyone", "[@:e]");
+};
+
+const replaceEmojis = (text: string) =>
+  text.replace(emojiRegex, (val) => {
     const emojiName = val.substring(1, val.length - 1);
+
     const emojiUnicode = shortcodeToUnicode[emojiName];
     if (emojiUnicode) return emojiUnicode;
 
@@ -117,7 +152,79 @@ export const formatMessage = (opts: { content: string }) => {
     return val;
   });
 
-  return finalString;
+const formatDmMentions = (
+  text: string,
+  channelId: string,
+  someoneMentioned: boolean,
+) => {
+  const inbox = inboxStore.inboxes.get(channelId);
+  const recipient = userStore.users.get(inbox?.recipientId!);
+  const me = userStore.users.get(accountStore.currentUser?.id!);
+
+  if (!me || !recipient) return text;
+
+  const users = [recipient, me];
+
+  let result = text.replace(userMentionRegex, (match, name, tag) => {
+    const user = users.find((u) => u.username === name && u.tag === tag);
+    return user ? `[@:${user.id}]` : match;
+  });
+
+  if (someoneMentioned) {
+    result = result.replaceAll(
+      "@someone",
+      () =>
+        `[@:s] **${randomKaomoji()} (${users[randomIndex(users.length)]?.username})**`,
+    );
+  }
+
+  return result;
+};
+
+const formatServerMentions = (
+  text: string,
+  serverId: string,
+  someoneMentioned: boolean,
+) => {
+  let result = text.replace(userMentionRegex, (match, name, tag) => {
+    const members = serverMemberStore.serverMembers.get(serverId)?.values();
+    if (!members) return match;
+
+    for (const member of members) {
+      if (member.user?.username === name && member.user?.tag === tag) {
+        return `[@:${member.user?.id}]`;
+      }
+    }
+    return match;
+  });
+
+  result = result.replaceAll(roleMentionRegex, (match, group) => {
+    const roles = serverRoleStore.roles.get(serverId)?.values();
+    if (!roles) return match;
+
+    for (const role of roles) {
+      if (role.name === group) return `[r:${role.id}]`;
+    }
+    return match;
+  });
+
+  const channels = serverStore.currentChannelsSorted.value();
+  result = result.replaceAll(channelMentionRegex, (match, group) => {
+    const channel = channels?.find((c) => c.name === group);
+    return channel ? `[#:${channel.id}]` : match;
+  });
+
+  if (someoneMentioned) {
+    const members = [
+      ...(serverMemberStore.serverMembers.get(serverId)?.values() || []),
+    ];
+    result = result.replaceAll("@someone", () => {
+      const randMember = members[randomIndex(members.length)]!;
+      return `[@:s] **${randomKaomoji()} (${randMember.user!.username})**`;
+    });
+  }
+
+  return result;
 };
 
 export const canDeleteMessage = (opts: { message?: Message }) => {
