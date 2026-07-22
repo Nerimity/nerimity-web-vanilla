@@ -549,7 +549,7 @@ const createMessageContextMenuHandler = (opts: {
             );
             break;
           case "copy":
-            navigator.clipboard.writeText(message.content);
+            navigator.clipboard.writeText(message.content || "");
             break;
           case "copy_id":
             navigator.clipboard.writeText(message.id);

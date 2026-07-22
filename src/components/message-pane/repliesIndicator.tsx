@@ -40,7 +40,7 @@ const MessageItem = (props: { message: Message }) => {
         </GradientText>
         <Markup
           class={style.message}
-          text={props.message.content}
+          text={props.message.content || ""}
           inline
           message={props.message}
           serverId={serverStore.currentServerId}

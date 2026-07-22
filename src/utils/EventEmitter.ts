@@ -3,7 +3,7 @@ import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
 import type { UserPresence } from "../store/userPresenceStore";
-import type { RawServer } from "../Types";
+import type { RawBotCommand, RawServer } from "../Types";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 
@@ -42,6 +42,7 @@ type StoreEvents = {
     speed?: string;
   };
   recent_server_update: { serverId: string; channelId: string };
+  "message_property:select_bot_command": RawBotCommand;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

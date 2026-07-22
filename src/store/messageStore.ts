@@ -4,7 +4,6 @@ import {
   patchEditMessage,
   postMessage,
 } from "../services/messageService";
-
 import { socket } from "../services/socket";
 import type {
   ReactionAddedPayload,
@@ -53,7 +52,7 @@ type MessageState = "sending" | "error";
 
 export class Message {
   id: string;
-  content: string;
+  content?: string;
   createdBy: RawUser;
   channelId: string;
   createdAt: number;
@@ -189,8 +188,10 @@ function createMessageStore() {
   };
 
   interface SendMessageOpts {
-    content: string;
+    content?: string;
   }
+
+  const silentRegex = /^@silent([\s]|$)/;
 
   const createLocalMessage = (channelId: string, opts: SendMessageOpts) => {
     const existing = messages.get(channelId);
@@ -199,7 +200,26 @@ function createMessageStore() {
     const property = channelStore.getProperty(channelId, false);
     if (!property) return;
 
+    if (property?.selectedBotCommand && opts.content) {
+      const args = opts.content?.split(" ");
+      args[0] = `${args[0]}:${property.selectedBotCommand.botUserId}`;
+      opts.content = args.join(" ");
+      channelStore.updateSelectedBotCommand(channelId);
+    }
+    const isSilent = !!opts.content && silentRegex.test(opts.content);
+
+    if (opts.content && isSilent) {
+      if (opts.content.trim() === "@silent") {
+        opts.content = undefined;
+        if (!property.attachment?.file) return;
+      } else {
+        opts.content = opts.content.replace(silentRegex, "").trim();
+        if (!opts.content && !property.attachment?.file) return;
+      }
+    }
+
     const message = new Message({
+      silent: isSilent,
       id: Date.now() + "" + Math.random(),
       content: opts.content,
       channelId,
@@ -296,11 +316,12 @@ function createMessageStore() {
     }
 
     const [result, error] = await postMessage(channelId, {
-      content: opts.content.trim() || undefined,
+      content: opts.content?.trim() || undefined,
       socketId: socket.socketId,
       replyToMessageIds: replyToMessageIds,
       mentionReplies: mentionReplies,
       nerimityCdnFileId: attachmentFileId,
+      silent: localMessage.silent,
     });
 
     if (error) {

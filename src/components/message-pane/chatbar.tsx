@@ -20,6 +20,7 @@ import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createInputSuggestions } from "./inputSuggestions";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
+import { createSelectedCommandIndicator } from "./selectedCommandIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 import { formatMessage } from "./utils";
 
@@ -31,6 +32,7 @@ export const createChatbar = () => {
 
   const typingIndicator = createTypingIndicator(abortController);
   const editMessageIndicator = createEditMessageIndicator(signal);
+  const selectedCommandIndicator = createSelectedCommandIndicator(signal);
   const attachmentIndicator = createAttachmentIndicator(signal);
   let repliesIndicator = createRepliesIndicator(abortController);
   const jumpToPresent = createJumpToPresent({ signal });
@@ -137,6 +139,7 @@ export const createChatbar = () => {
       {attachmentIndicator}
       {repliesIndicator}
       {inputSuggestions}
+      {selectedCommandIndicator}
       <div class={style.chatInputContainer}>{inputContainerEl}</div>
     </div>
   ) as unknown as HTMLElement;

@@ -69,7 +69,7 @@ export const MessageItem = (props: {
 
   const isImageEmbedOnly =
     props.message.embed?.type == "image" &&
-    !props.message.content.includes(" ");
+    !props.message.content?.includes(" ");
 
   const hasMessageReplies = !!props.message.replyMessages?.length;
   const editing = channelProperty?.editingMessage?.id === props.message.id;
@@ -207,7 +207,7 @@ export const MessageItem = (props: {
                       <Markup
                         replaceCommandBotId
                         animateInitialOnFocus
-                        text={props.message.content}
+                        text={props.message.content || ""}
                         message={props.message}
                         class={["focusAnimate", style.messageContent]}
                       />

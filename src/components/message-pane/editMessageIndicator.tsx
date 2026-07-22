@@ -28,7 +28,7 @@ export const createEditMessageIndicator = (signal: AbortSignal) => {
     const serverId = serverStore?.currentServerId;
     textEl.replaceChildren(
       <Markup
-        text={message.content}
+        text={message.content || ""}
         message={message}
         serverId={serverId}
         class={style.markup}

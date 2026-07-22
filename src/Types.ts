@@ -175,7 +175,7 @@ export type MessageType = (typeof MessageType)[keyof typeof MessageType];
 
 export interface RawMessage {
   id: string;
-  content: string;
+  content?: string;
   channelId: string;
   createdBy: RawUser & { avatarUrl?: string };
   createdAt: number;

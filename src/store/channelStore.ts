@@ -3,6 +3,7 @@ import {
   ChannelType,
   NotificationMode,
   type ChannelPermissions,
+  type RawBotCommand,
   type RawChannel,
 } from "../Types";
 import { createTokenSource } from "../utils/createTokenSource";
@@ -13,7 +14,6 @@ import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
 import type { Message } from "./messageStore";
 import { serverMemberStore } from "./serverMemberStore";
-
 import { serverStore } from "./serverStore";
 
 export const channelStore = createChannelStore();
@@ -60,6 +60,7 @@ interface ChannelProperty {
   editingMessage?: Message;
   replyingMessages?: Message[];
   attachment?: AttachmentProperty;
+  selectedBotCommand?: RawBotCommand;
 }
 
 function createChannelStore() {
@@ -230,6 +231,16 @@ function createChannelStore() {
   ) => {
     properties.set(channelId, { ...getProperty(channelId)!, ...property });
   };
+  const updateSelectedBotCommand = (
+    channelId: string,
+    botCommand?: RawBotCommand,
+  ) => {
+    setProperty(channelId, {
+      selectedBotCommand: botCommand,
+    });
+    storeEmitter.emit("message_property:select_bot_command", botCommand);
+    console.log("set command", botCommand);
+  };
 
   const setChannels = (newChannels: RawChannel[]) => {
     channels.clear();
@@ -366,5 +377,6 @@ function createChannelStore() {
     updatePermissions,
     updateAttachment,
     removeChannel,
+    updateSelectedBotCommand,
   };
 }

@@ -14,6 +14,7 @@ import type { RawBotCommand } from "../../Types";
 import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { getLocalItem } from "../../utils/localStorage";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { Avatar } from "../avatar";
@@ -67,6 +68,7 @@ interface CommandSuggestion {
   botId?: string;
   description?: string;
   args?: string;
+  rawCommand: RawBotCommand;
 }
 
 type SuggestionItem =
@@ -200,6 +202,7 @@ export const createInputSuggestions = (opts: {
           botId: command.botUserId,
           description: command.description || undefined,
           args: command.args || undefined,
+          rawCommand: command,
         }));
     }
 
@@ -391,11 +394,44 @@ export const createInputSuggestions = (opts: {
     });
   };
 
+  let lastInputValue = "";
   inputEl.addEventListener(
     "input",
-    refreshSuggestions,
+    () => {
+      const firstItem = suggestionItems?.[selectedIndex];
+      if (firstItem?.type === "cmd") {
+        if (lastInputValue === firstItem.name) {
+          if (inputEl.value === `${firstItem.name} `) {
+            channelStore.updateSelectedBotCommand(
+              channelStore.currentChannelId!,
+              firstItem.rawCommand,
+            );
+          }
+        }
+      }
+      lastInputValue = inputEl.value;
 
+      const properties = channelStore.currentChannelProperty();
+      if (properties?.selectedBotCommand) {
+        const cmd = properties.selectedBotCommand;
+        if (!inputEl.value.startsWith(`/${cmd.name} `)) {
+          channelStore.updateSelectedBotCommand(channelStore.currentChannelId!);
+        }
+      }
+
+      refreshSuggestions();
+    },
     { signal, passive: true },
+  );
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      const properties = channelStore.getProperty(
+        channelStore.currentChannelId!,
+      );
+      lastInputValue = properties?.content || "";
+    },
+    signal,
   );
 
   inputEl.addEventListener(
@@ -439,6 +475,14 @@ export const createInputSuggestions = (opts: {
     const insert = itemEl.dataset.insert;
     if (!insert) return;
     const wordAtCursor = getWordAtCursor(inputEl);
+
+    const selectedItem = suggestionItems?.[selectedIndex];
+    if (selectedItem?.type === "cmd") {
+      channelStore.updateSelectedBotCommand(
+        channelStore.currentChannelId!,
+        selectedItem.rawCommand,
+      );
+    }
 
     insertAutocompleteText({
       channelId: channelStore.currentChannelId!,
