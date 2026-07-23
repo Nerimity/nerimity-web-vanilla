@@ -130,13 +130,13 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
 
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
-      <ContextMenu.Item id="edit">
+      <ContextMenu.Item id="view_profile">
         {user ? (
           <div style={{ padding: "4px" }}>
             <Avatar user={user} size={18} />
           </div>
         ) : (
-          <ContextMenu.Icon name="edit" />
+          <ContextMenu.Icon name="article_person" />
         )}
         <ContextMenu.Label>{t`View Profile`}</ContextMenu.Label>
       </ContextMenu.Item>

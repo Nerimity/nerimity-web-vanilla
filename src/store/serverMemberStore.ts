@@ -1,7 +1,8 @@
 import type { RawServerMember } from "../Types";
-import { hasBit } from "../utils/bitwise";
+import { addBit, hasBit } from "../utils/bitwise";
 import { storeEmitter } from "../utils/EventEmitter";
 import { patchProperty } from "../utils/object";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { accountStore } from "./accountStore";
 import { channelStore } from "./channelStore";
 import { serverRoleStore } from "./serverRoleStore";
@@ -30,8 +31,14 @@ export class ServerMember {
   get user() {
     return userStore.users.get(this.userId);
   }
-  hasPerm(perm: number) {
-    return serverMemberStore.hasPermission(this.serverId, this.userId, perm);
+  hasPerm(perm: number, checkAdmin = true, checkCreator = true) {
+    return serverMemberStore.hasPermission({
+      permission: perm,
+      serverId: this.serverId,
+      userId: this.userId,
+      checkAdmin,
+      checkCreator,
+    });
   }
 }
 
@@ -119,11 +126,25 @@ function createServerMemberStore() {
         isOwner || hasBit(combinedPermissions, permission),
     };
   };
-  const hasPermission = (
-    serverId: string,
-    userId: string,
-    permission: number,
-  ) => {
+  const hasPermission = (opts: {
+    serverId: string;
+    userId: string;
+    permission: number;
+    /**
+     * @default true
+     */
+    checkAdmin?: boolean;
+    /**
+     * @default true
+     */
+    checkCreator?: boolean;
+  }) => {
+    let { serverId, userId, permission, checkAdmin, checkCreator } = opts;
+
+    if (checkAdmin) {
+      permission = addBit(permission, RolePermissionFlag.admin.bit);
+    }
+
     const members = serverMembers.get(serverId);
     if (!members) return false;
     const member = members.get(userId);
@@ -131,7 +152,9 @@ function createServerMemberStore() {
     const server = serverStore.servers.get(serverId);
     if (!server) return false;
 
-    if (server.createdById === userId) return true;
+    if (checkCreator) {
+      if (server.createdById === userId) return true;
+    }
 
     for (let i = 0; i < member.roleIds.length; i++) {
       const roleId = member.roleIds[i]!;

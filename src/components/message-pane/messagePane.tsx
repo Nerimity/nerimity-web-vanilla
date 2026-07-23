@@ -589,12 +589,16 @@ const MessageContextMenu = (props: {
   x: string;
   y: string;
 }) => {
+  const canEdit = props.message.createdBy.id === accountStore.currentUser?.id;
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
-      <ContextMenu.Item id="edit">
-        <ContextMenu.Icon name="edit" />
-        <ContextMenu.Label>{t`Edit Message`}</ContextMenu.Label>
-      </ContextMenu.Item>
+      {canEdit && (
+        <ContextMenu.Item id="edit">
+          <ContextMenu.Icon name="edit" />
+          <ContextMenu.Label>{t`Edit Message`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Item id="reply">
         <ContextMenu.Icon name="reply" />
         <ContextMenu.Label>{t`Reply Message`}</ContextMenu.Label>
