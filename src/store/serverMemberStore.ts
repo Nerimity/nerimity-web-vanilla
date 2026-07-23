@@ -1,5 +1,5 @@
 import type { RawServerMember } from "../Types";
-import { addBit, hasBit } from "../utils/bitwise";
+import { hasBit } from "../utils/bitwise";
 import { storeEmitter } from "../utils/EventEmitter";
 import { patchProperty } from "../utils/object";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
@@ -124,10 +124,8 @@ function createServerMemberStore() {
     return {
       hasPermission: (permission: number) =>
         isOwner ||
-        hasBit(
-          combinedPermissions,
-          addBit(permission, RolePermissionFlag.admin.bit),
-        ),
+        hasBit(combinedPermissions, permission) ||
+        hasBit(combinedPermissions, RolePermissionFlag.admin.bit),
     };
   };
   const hasPermission = (opts: {
@@ -144,10 +142,6 @@ function createServerMemberStore() {
     checkCreator?: boolean;
   }) => {
     let { serverId, userId, permission, checkAdmin, checkCreator } = opts;
-
-    if (checkAdmin !== false) {
-      permission = addBit(permission, RolePermissionFlag.admin.bit);
-    }
 
     const members = serverMembers.get(serverId);
     if (!members) return false;
@@ -171,6 +165,12 @@ function createServerMemberStore() {
       .get(serverId)
       ?.get(server.defaultRoleId!);
     if (!defaultRole) return false;
+
+    if (checkAdmin !== false) {
+      if (hasBit(permission, RolePermissionFlag.admin.bit)) {
+        return true;
+      }
+    }
     return hasBit(defaultRole.permissions, permission);
   };
 
