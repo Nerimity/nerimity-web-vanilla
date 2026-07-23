@@ -123,7 +123,11 @@ function createServerMemberStore() {
 
     return {
       hasPermission: (permission: number) =>
-        isOwner || hasBit(combinedPermissions, permission),
+        isOwner ||
+        hasBit(
+          combinedPermissions,
+          addBit(permission, RolePermissionFlag.admin.bit),
+        ),
     };
   };
   const hasPermission = (opts: {
