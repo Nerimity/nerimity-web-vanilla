@@ -141,7 +141,7 @@ function createServerMemberStore() {
   }) => {
     let { serverId, userId, permission, checkAdmin, checkCreator } = opts;
 
-    if (checkAdmin) {
+    if (checkAdmin !== false) {
       permission = addBit(permission, RolePermissionFlag.admin.bit);
     }
 
@@ -152,7 +152,7 @@ function createServerMemberStore() {
     const server = serverStore.servers.get(serverId);
     if (!server) return false;
 
-    if (checkCreator) {
+    if (checkCreator !== false) {
       if (server.createdById === userId) return true;
     }
 
