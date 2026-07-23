@@ -129,11 +129,11 @@ function createServerStore() {
       .get(currentServerId!)
       ?.get(currentUserId!);
 
-    const isAdmin = serverMemberStore.hasPermission(
-      serverStore.currentServerId!,
-      currentUserId!,
-      RolePermissionFlag.admin.bit,
-    );
+    const isAdmin = serverMemberStore.hasPermission({
+      serverId: serverStore.currentServerId!,
+      userId: currentUserId!,
+      permission: RolePermissionFlag.admin.bit,
+    });
 
     const server = servers.get(currentServerId!);
     const defaultRoleId = server?.defaultRoleId;
@@ -245,11 +245,11 @@ function createServerStore() {
         .get(channel.serverId)
         ?.get(currentUserId!);
 
-      const isAdmin = serverMemberStore.hasPermission(
-        channel.serverId,
-        currentUserId!,
-        RolePermissionFlag.admin.bit,
-      );
+      const isAdmin = serverMemberStore.hasPermission({
+        serverId: channel.serverId,
+        userId: currentUserId!,
+        permission: RolePermissionFlag.admin.bit,
+      });
 
       const defaultPerm = channel.permissions?.find(
         (p) => p.roleId === defaultRoleId,
