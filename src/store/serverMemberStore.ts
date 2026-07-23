@@ -158,6 +158,11 @@ function createServerMemberStore() {
       const roleId = member.roleIds[i]!;
       const role = serverRoleStore.roles.get(serverId)?.get(roleId);
       if (!role) continue;
+      if (checkAdmin !== false) {
+        if (hasBit(role.permissions, RolePermissionFlag.admin.bit)) {
+          return true;
+        }
+      }
       if (hasBit(role.permissions, permission)) return true;
     }
 
@@ -167,10 +172,11 @@ function createServerMemberStore() {
     if (!defaultRole) return false;
 
     if (checkAdmin !== false) {
-      if (hasBit(permission, RolePermissionFlag.admin.bit)) {
+      if (hasBit(defaultRole.permissions, RolePermissionFlag.admin.bit)) {
         return true;
       }
     }
+
     return hasBit(defaultRole.permissions, permission);
   };
 
