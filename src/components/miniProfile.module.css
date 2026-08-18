@@ -36,6 +36,7 @@
   }
 
   .section.info {
+    gap: 4px;
     .name {
       display: flex;
       gap: 6px;
