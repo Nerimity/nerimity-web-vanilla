@@ -66,4 +66,12 @@
   .categoryLabel {
     color: var(--text-color);
   }
+
+  .typingIcon {
+    color: var(--gray-400);
+    font-size: 16px;
+    &.hide {
+      display: none;
+    }
+  }
 }

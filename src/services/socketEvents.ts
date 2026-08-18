@@ -122,6 +122,7 @@ function onUserPresenceUpdate(payload: any) {
 }
 
 function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
+  storeEmitter.emit("message:created_raw", payload.message);
   if (payload.socketId && payload.socketId === socket.socketId) return;
   const message = payload.message;
 

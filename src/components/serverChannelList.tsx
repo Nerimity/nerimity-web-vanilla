@@ -9,6 +9,10 @@ import { CdnIcon } from "./cdnIcon";
 import { Drawer } from "./drawer";
 import { Icon } from "./icon";
 import { Item } from "./item";
+import {
+  handleTypingIndicator,
+  typingEmitter,
+} from "./message-pane/typingIndicator";
 import { NotificationPill } from "./NotificationPill";
 import { createPillUpdater, Pill } from "./Pill";
 
@@ -57,6 +61,8 @@ export const createServerChannelList = () => {
     forceRecreate?: boolean;
   }) => {
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
+
+    handleTypingIndicator?.updateChannelIds(serverChannels.map((c) => c.id));
 
     if (!channelListEl) return;
 
@@ -156,6 +162,27 @@ export const createServerChannelList = () => {
     (containerEl as any) = null;
   };
 
+  // payload[channelId] = userIds[]
+  typingEmitter.on(
+    "typing:update",
+    (typingChannels) => {
+      const channelEls = channelListEl.querySelectorAll(
+        `.${style.channelItem}`,
+      );
+      channelEls.forEach((c) => {
+        const el = c as HTMLDivElement;
+        const typingEl = el.querySelector(
+          `.${style.typingIcon}`,
+        ) as HTMLDivElement;
+        typingEl?.classList.toggle(
+          style.hide!,
+          !typingChannels[el.dataset.channelId!],
+        );
+      });
+    },
+    signal,
+  );
+
   return {
     destroy,
     render,
@@ -198,6 +225,16 @@ const createChannelItemHelper = () => {
           {notification && notification > 0 ? (
             <NotificationPill count={notification} />
           ) : null}
+
+          <Icon
+            class={[
+              style.typingIcon,
+              !handleTypingIndicator?.typingUsers.get(channel.id)?.size &&
+                style.hide,
+            ]}
+            name="more_horiz"
+            outlined
+          />
         </>
       </Item.Base>
     );
