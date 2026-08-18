@@ -20,6 +20,7 @@ type StoreEvents = {
   "message:created_raw": RawMessage;
   "message:deleted": { id: string; channelId: string };
   "message:updated": { message: Message; index: number };
+  "message:updated_raw": RawMessage;
   "message_property:editing": { message?: Message; prevMessage?: Message };
   "message_property:replying": { replies: Message[] };
   "message_property:attachment": { attachment: AttachmentProperty | undefined };

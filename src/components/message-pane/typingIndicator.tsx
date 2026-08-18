@@ -93,7 +93,7 @@ const createHandleTypingIndicator = () => {
 
     const users = typingUsers.get(payload.channelId);
 
-    const hadUser = users?.delete(payload.createdBy.id);
+    const hadUser = users?.delete(payload.createdBy?.id);
     if (!users?.size) {
       typingUsers.delete(payload.channelId);
     }
@@ -104,6 +104,7 @@ const createHandleTypingIndicator = () => {
   };
 
   storeEmitter.on("channel:typing", handleTyping, signal);
+  storeEmitter.on("message:updated_raw", handleMessageCreated, signal);
   storeEmitter.on("message:created_raw", handleMessageCreated, signal);
 
   const updateChannelIds = (newChannelIds: string[]) => {

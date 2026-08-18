@@ -181,7 +181,12 @@ function onMessageDeleted(payload: any) {
   messageStore.deleteMessage(payload.channelId, payload.messageId);
 }
 
-function onMessageUpdated(payload: any) {
+function onMessageUpdated(payload: {
+  channelId: string;
+  messageId: string;
+  updated: RawMessage;
+}) {
+  storeEmitter.emit("message:updated_raw", payload.updated);
   messageStore.updateMessage(
     payload.channelId,
     payload.messageId,
