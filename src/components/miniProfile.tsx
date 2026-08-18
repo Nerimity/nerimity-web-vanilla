@@ -653,6 +653,7 @@ const PresenceOption = (props: { signal: AbortSignal }) => {
           hideActivity
           userId={accountStore.currentUser?.id!}
           hideCustomStatus
+          showOffline
         />
         <Icon name="chevron_forward" />
       </>,
