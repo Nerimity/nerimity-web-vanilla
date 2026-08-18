@@ -61,7 +61,10 @@ function createPresenceStore() {
     }
   };
 
-  const updatePresence = (userId: string, presence: RawUserPresence) => {
+  const updatePresence = (
+    userId: string,
+    presence: Partial<RawUserPresence>,
+  ) => {
     if (presence.status === 0) {
       presences.delete(userId);
       storeEmitter.emit("user:presence_update", { userId });

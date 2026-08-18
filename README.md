@@ -6,8 +6,8 @@ live: https://vanilla.nerimity.com
 ### Handled Events
 
 - [x] `user:authenticate_error`
-- [ ] `user:updatedSelf`
-- [ ] `user:updated`
+- [x] `user:updatedSelf`
+- [x] `user:updated`
 - [x] `user:notice_created`
 
 - [ ] `user:connection_added`

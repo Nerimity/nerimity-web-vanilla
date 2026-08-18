@@ -1,6 +1,6 @@
 // TODO: On server join event, if its a bot, flush bot commands cache for that server.
 
-import { accountStore } from "../store/accountStore";
+import { accountStore, type CurrentUser } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { friendStore } from "../store/friendStore";
 import { inboxStore } from "../store/inboxStore";
@@ -9,7 +9,11 @@ import { messageStore } from "../store/messageStore";
 import { serverMemberStore } from "../store/serverMemberStore";
 import { serverRoleStore } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
-import { userPresenceStore } from "../store/userPresenceStore";
+import {
+  userPresenceStore,
+  UserPresenceType,
+} from "../store/userPresenceStore";
+import { userStore } from "../store/userStore";
 import {
   FriendStatus,
   MessageType,
@@ -21,6 +25,8 @@ import {
   type RawNotice,
   type RawServerMember,
   type RawServerRole,
+  type RawUser,
+  type RawUserActivity,
   type RawUserNotificationSettings,
 } from "../Types";
 import {
@@ -33,6 +39,8 @@ import { socket } from "./socket";
 const handlers: Record<string, (payload: any) => void> = {
   "channel:typing": onTyping,
   "user:authenticated": onAuthenticated,
+  "user:updated": onUserUpdated,
+  "user:updatedSelf": onUserSelfUpdated,
   "user:authenticate_error": onAuthError,
   "user:presence_update": onUserPresenceUpdate,
   "user:notice_created": onNoticeCreated,
@@ -117,8 +125,32 @@ function onAuthenticated(payload: any) {
 //   // channelStore.updateChannel(payload.channelId, payload);
 // };
 
-function onUserPresenceUpdate(payload: any) {
+function onUserPresenceUpdate(payload: {
+  userId: string;
+  status?: (typeof UserPresenceType)[keyof typeof UserPresenceType];
+  custom?: string;
+  activities?: RawUserActivity[];
+}) {
+  if (payload.status === UserPresenceType.OFFLINE) {
+    const user = userStore.users.get(payload.userId);
+    user?.updateLastOnlineAt();
+  }
   userPresenceStore.updatePresence(payload.userId, payload);
+}
+
+function onUserSelfUpdated(payload: Partial<CurrentUser>) {
+  accountStore.setCurrentUser({
+    ...accountStore.currentUser!,
+    ...payload,
+  } as CurrentUser);
+
+  const user = userStore.users.get(accountStore.currentUser?.id!);
+  user?.update(payload);
+}
+
+function onUserUpdated(payload: { userId: string; updated: Partial<RawUser> }) {
+  const user = userStore.users.get(payload.userId);
+  user?.update(payload.updated);
 }
 
 function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {

@@ -1,4 +1,12 @@
-import type { ServerClan, Profile, RawUser } from "../Types";
+import {
+  type ServerClan,
+  type Profile,
+  type RawUser,
+  LastOnlineStatus,
+  FriendStatus,
+} from "../Types";
+import { accountStore } from "./accountStore";
+import { friendStore } from "./friendStore";
 
 export const userStore = createUserStore();
 
@@ -14,6 +22,8 @@ export class User {
   joinedAt: number;
   badges: number;
   inboxChannelId?: string;
+  lastOnlineAt?: number;
+  lastOnlineStatus?: LastOnlineStatus;
   constructor(data: RawUser) {
     this.id = data.id;
     this.username = data.username;
@@ -25,6 +35,42 @@ export class User {
     this.bot = data.bot;
     this.joinedAt = data.joinedAt;
     this.badges = data.badges;
+
+    this.lastOnlineAt = data.lastOnlineAt;
+    this.lastOnlineStatus = data.lastOnlineStatus;
+  }
+
+  update(updated: Partial<RawUser>) {
+    this.username = updated.username ?? this.username;
+    this.tag = updated.tag ?? this.tag;
+    this.avatar = updated.avatar ?? this.avatar;
+    this.banner = updated.banner ?? this.banner;
+    this.lastOnlineAt = updated.lastOnlineAt ?? this.lastOnlineAt;
+    this.lastOnlineStatus = updated.lastOnlineStatus ?? this.lastOnlineStatus;
+  }
+
+  updateLastOnlineAt() {
+    if (
+      accountStore.currentUser?.id === this.id &&
+      this.lastOnlineStatus !== LastOnlineStatus.HIDDEN
+    ) {
+      this.lastOnlineAt = Date.now();
+      return;
+    }
+    if (this.lastOnlineStatus === LastOnlineStatus.FRIENDS_AND_SERVERS) {
+      this.lastOnlineAt = Date.now();
+
+      return;
+    }
+    if (this.lastOnlineStatus === LastOnlineStatus.FRIENDS) {
+      const isFriends =
+        friendStore.friends.get(this.id)?.status === FriendStatus.FRIENDS;
+      if (isFriends) {
+        this.lastOnlineAt = Date.now();
+        return;
+      }
+    }
+    this.lastOnlineAt = undefined;
   }
 }
 

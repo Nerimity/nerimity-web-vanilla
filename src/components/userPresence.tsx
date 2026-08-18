@@ -1,9 +1,13 @@
+import { t } from "@lingui/core/macro";
+
 import { h, Fragment } from "../h";
 import {
   UserPresenceDetails,
   userPresenceStore,
 } from "../store/userPresenceStore";
+import { userStore } from "../store/userStore";
 import type { RawUserActivity } from "../Types";
+import { formatTimestamp } from "../utils/date";
 import { Icon } from "./icon";
 import { Markup } from "./markup/markup";
 
@@ -46,15 +50,19 @@ export const UserPresence = (props: {
   const presence = userPresenceStore.presences.get(props.userId);
   const status = UserPresenceDetails[presence?.status || 0];
 
-  if (!presence && !props.showOffline) {
-    return null;
-  }
-
   let label = status.text;
   if (!props.hideCustomStatus && presence?.custom) {
     label = presence.custom;
   }
 
+  if (!presence?.status) {
+    const user = userStore.users.get(props.userId);
+    if (user?.lastOnlineAt) {
+      label = t`Last online ${formatTimestamp(user.lastOnlineAt)}`;
+    } else {
+      if (!props.showOffline) return null;
+    }
+  }
   const activity = props.hideActivity
     ? undefined
     : props.activity || presence?.activities?.[0];

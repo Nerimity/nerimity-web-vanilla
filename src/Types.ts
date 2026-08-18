@@ -92,6 +92,16 @@ export interface RawServer {
   customEmojis?: RawCustomEmoji[];
   verified?: boolean;
 }
+
+export const LastOnlineStatus = {
+  HIDDEN: 0,
+  FRIENDS: 1,
+  FRIENDS_AND_SERVERS: 2,
+} as const;
+
+export type LastOnlineStatus =
+  (typeof LastOnlineStatus)[keyof typeof LastOnlineStatus];
+
 export interface RawUser {
   id: string;
   username: string;
@@ -103,6 +113,8 @@ export interface RawUser {
   bot?: boolean;
   joinedAt: number;
   badges: number;
+  lastOnlineAt?: number;
+  lastOnlineStatus?: LastOnlineStatus;
 }
 
 export interface RawNotice {

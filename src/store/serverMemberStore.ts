@@ -77,7 +77,7 @@ function createServerMemberStore() {
   const updateMember = (
     serverId: string,
     userId: string,
-    updated: Partial<ServerMember>,
+    updated: Partial<RawServerMember>,
   ) => {
     const members = serverMembers.get(serverId);
     if (!members) return;

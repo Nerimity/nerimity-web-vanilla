@@ -15,7 +15,7 @@ import { User } from "./userStore";
 
 export const accountStore = createAccountStore();
 
-type CurrentUser = User & {
+export type CurrentUser = User & {
   orderedServerIds: string[];
   serverFolders: RawServerFolder[];
   notices: RawNotice[];

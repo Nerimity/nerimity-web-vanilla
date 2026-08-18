@@ -21,6 +21,7 @@ import {
   UserPresenceType,
 } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
+import type { RawUser } from "../Types";
 import { resolveGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -352,7 +353,7 @@ export const MiniProfile = (props: {
     <div class={[style.miniProfile, props.class]}></div>
   ) as HTMLDivElement;
 
-  let localUser = userStore.users.get(props.userId);
+  let localUser: RawUser | undefined = userStore.users.get(props.userId);
   let details: UserDetails | null = null;
 
   if (cached?.userId === props.userId) {
