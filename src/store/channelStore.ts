@@ -390,3 +390,4 @@ const handleEvent = () => {
 storeEmitter.on("mention:dm_update", handleEvent, sig);
 storeEmitter.on("channel:notify_update", handleEvent, sig);
 storeEmitter.on("noti_settings:update", handleEvent, sig);
+storeEmitter.on("ws:authStateUpdate", handleEvent, sig);
