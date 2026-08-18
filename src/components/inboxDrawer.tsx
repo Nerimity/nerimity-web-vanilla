@@ -11,7 +11,7 @@ import {
 } from "../store/messageMentionStore";
 import { userPresenceStore } from "../store/userPresenceStore";
 import { User, userStore } from "../store/userStore";
-import { FriendStatus } from "../Types";
+import { FriendStatus, type RawUser } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { getFont } from "../utils/font";
 import { HoverAnimator } from "../utils/HoverAnimator";
@@ -48,7 +48,7 @@ const TabItem = (props: {
 
 const UserItem = (props: {
   inbox?: InboxItem;
-  user: User;
+  user: RawUser;
   friendItem?: FriendItem;
 }) => {
   const channelId =
@@ -128,7 +128,7 @@ type InboxItem =
   | {
       type: 0;
       channelId: string;
-      user: User;
+      user: RawUser;
       count?: number;
     }
   | {
@@ -136,7 +136,7 @@ type InboxItem =
       channelId: string;
       channel: Channel;
       inbox: Inbox;
-      user: User;
+      user: RawUser;
       count?: number;
     };
 const createInboxList = () => {

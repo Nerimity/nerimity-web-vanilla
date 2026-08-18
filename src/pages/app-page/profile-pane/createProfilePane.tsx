@@ -31,7 +31,7 @@ import { inboxStore } from "../../../store/inboxStore";
 import { serverStore } from "../../../store/serverStore";
 import { userPresenceStore } from "../../../store/userPresenceStore";
 import { User, userStore } from "../../../store/userStore";
-import { FriendStatus } from "../../../Types";
+import { FriendStatus, type RawUser } from "../../../Types";
 import { hasBit } from "../../../utils/bitwise";
 import { createWidthQuery } from "../../../utils/createWidthQuery";
 import { formatTimestamp, getDaysAgo } from "../../../utils/date";
@@ -54,7 +54,7 @@ export const emitter = createEventEmitter<{
 
 const Content = (opts: {
   userDetails?: UserDetails;
-  user?: User;
+  user?: RawUser;
   mobile: boolean;
 }) => {
   const { userDetails, user } = opts;
@@ -132,7 +132,7 @@ const NameAndTag = ({
   user,
   details,
 }: {
-  user: User;
+  user: RawUser;
   details?: UserDetails;
 }) => {
   const font = getFont(user?.profile?.font || details?.profile?.font);
@@ -161,7 +161,7 @@ const Actions = ({
   signal,
   mobile,
 }: {
-  user?: User;
+  user?: RawUser;
   details?: UserDetails;
   signal: AbortSignal;
   mobile?: boolean;
@@ -420,7 +420,7 @@ const BadgeItem = (props: { badge: UserBadge }) => {
 const Sidebar = (opts: {
   mobile?: boolean;
   userDetails?: UserDetails;
-  user?: User;
+  user?: RawUser;
 }) => {
   sidebarAbortController?.abort();
   sidebarAbortController = new AbortController();
@@ -550,7 +550,7 @@ const MutualItem = (props: {
   );
 };
 
-const SidebarJoined = (opts: { user?: User; signal: AbortSignal }) => {
+const SidebarJoined = (opts: { user?: RawUser; signal: AbortSignal }) => {
   let fullDate = true;
   const infoEl = (<div class={style.info}></div>) as HTMLDivElement;
 
@@ -578,7 +578,7 @@ const SidebarJoined = (opts: { user?: User; signal: AbortSignal }) => {
   return el;
 };
 
-const SidebarBadges = (props: { user?: User; signal: AbortSignal }) => {
+const SidebarBadges = (props: { user?: RawUser; signal: AbortSignal }) => {
   const enabledBadges = UserBadgeValues.filter((b) =>
     hasBit(props.user?.badges, b.bit),
   );
@@ -617,7 +617,7 @@ const SidebarBadges = (props: { user?: User; signal: AbortSignal }) => {
   );
 };
 
-const SidebarActivity = (props: { user?: User; signal: AbortSignal }) => {
+const SidebarActivity = (props: { user?: RawUser; signal: AbortSignal }) => {
   let activitiesContainer = (
     <div class={style.activities}></div>
   ) as HTMLDivElement;
