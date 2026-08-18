@@ -37,6 +37,9 @@ export const createJumpToPresent = (opts: { signal: AbortSignal }) => {
     (isBottom) => {
       scrolledBottom = isBottom;
       el.classList.toggle(style.hide!, isBottom);
+      if (!isBottom) {
+        updateButton();
+      }
     },
     opts.signal,
   );
