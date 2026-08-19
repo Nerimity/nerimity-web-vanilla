@@ -9,8 +9,10 @@
   background-color: var(--sidebar-bg);
 
   .scrollable {
+    display: flex;
     overflow: auto;
     flex: 1;
+    flex-direction: column;
     &::-webkit-scrollbar {
       display: none;
     }
@@ -27,8 +29,12 @@
     gap: 2px;
   }
   .footer {
-    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 2px;
     padding-bottom: 4px;
+    border-top: solid 1px var(--gray-700);
+    gap: 2px;
   }
 }
 

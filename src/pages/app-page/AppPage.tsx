@@ -1,6 +1,7 @@
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
+import type { createMessagePane } from "../../components/message-pane/messagePane";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { createUserContextMenuHandler } from "../../components/UserContextMenu";
@@ -11,17 +12,13 @@ import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
-import { lazy, type LazyResult } from "../../utils/lazy";
 import { router } from "../../utils/router";
-import type createHomePane from "./createHomePane";
-import type createInboxChannelRoute from "./createInboxChannelRoute";
-import type createServerChannelRoute from "./createServerChannelRoute";
-import type createProfilePane from "./profile-pane/createProfilePane";
+import type { createHomePane } from "./createHomePane";
+import type { createInboxChannelRoute } from "./createInboxChannelRoute";
+import type { createServerChannelRoute } from "./createServerChannelRoute";
+import type { createProfilePane } from "./profile-pane/createProfilePane";
 
 import style from "./AppPage.module.css";
-const createMessagePane = lazy(
-  () => import("../../components/message-pane/messagePane"),
-);
 
 const createAppPage = () => {
   lazyLoadEmojis();
@@ -34,7 +31,7 @@ const createAppPage = () => {
   let appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
-  let messagePane: LazyResult<typeof createMessagePane> | null = null;
+  let messagePane: ReturnType<typeof createMessagePane> | null = null;
 
   let leftDrawer = (<div class={style.leftDrawerInner}></div>) as HTMLElement;
   let content = (<div class={style.contentInner}></div>) as HTMLElement;
@@ -75,7 +72,7 @@ const createAppPage = () => {
 
       if (dashboardPane) return;
       const isStale = contentSource.capture();
-      const createHomePane = (await import("./createHomePane")).default;
+      const { createHomePane } = await import("./createHomePane");
       if (isStale()) return;
       dashboardPane = createHomePane(content);
     },
@@ -92,12 +89,11 @@ const createAppPage = () => {
       }
       profilePane?.destroy();
       const isStale = contentSource.capture();
-      const createProfilePaneRoute = (
-        await import("./profile-pane/createProfilePane")
-      ).default;
+      const { createProfilePane } =
+        await import("./profile-pane/createProfilePane");
 
       if (isStale()) return;
-      profilePane = createProfilePaneRoute(content);
+      profilePane = createProfilePane(content);
     },
     { signal },
   );
@@ -112,9 +108,8 @@ const createAppPage = () => {
         if (inboxChannelPage) return;
         const isStale = appRouteSource.capture();
 
-        const createInboxChannelRoute = (
-          await import("./createInboxChannelRoute")
-        ).default;
+        const { createInboxChannelRoute } =
+          await import("./createInboxChannelRoute");
 
         if (isStale()) return;
         inboxChannelPage = createInboxChannelRoute(leftDrawer);
@@ -128,9 +123,8 @@ const createAppPage = () => {
       inboxChannelPage = null;
 
       const isStale = appRouteSource.capture();
-      const createServerChannelRoute = (
-        await import("./createServerChannelRoute")
-      ).default;
+      const { createServerChannelRoute } =
+        await import("./createServerChannelRoute");
 
       if (isStale()) return;
       serverChannelPage = createServerChannelRoute(leftDrawer);
@@ -152,8 +146,12 @@ const createAppPage = () => {
       Drawer().updateRightDrawerAvailable(true);
       if (messagePane) return;
       const isStale = contentSource.capture();
-      messagePane = await createMessagePane();
+
+      const { createMessagePane } =
+        await import("../../components/message-pane/messagePane");
       if (isStale()) return;
+
+      messagePane = createMessagePane();
       content.replaceChildren(messagePane.render());
     },
     { signal },

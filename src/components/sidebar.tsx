@@ -270,6 +270,7 @@ export const createSidebar = () => {
           {serverListEl}
         </div>
         <div class={style.footer}>
+          <SettingsItem signal={signal} />
           <ProfileItem signal={signal} />
         </div>
       </div>
@@ -334,6 +335,35 @@ const ProfileItem = (props: { signal: AbortSignal }) => {
   };
 
   storeEmitter.on("ws:authStateUpdate", rerender, signal);
+
+  return el;
+};
+
+const SettingsItem = (props: { signal: AbortSignal }) => {
+  const matcher = "/app/settings/*";
+  const match = router.match(matcher);
+
+  const createEl = () => {
+    return (
+      <SidebarItem
+        selected={!!match}
+        class={style.homeItem}
+        title="Settings"
+        href="/app/settings/account"
+      >
+        <Icon name="settings" />
+      </SidebarItem>
+    ) as HTMLDivElement;
+  };
+  let el = createEl();
+
+  router.createMatchListener(
+    matcher,
+    (match) => {
+      el?.setAttribute("data-selected", match ? "true" : "false");
+    },
+    { signal: props.signal },
+  );
 
   return el;
 };

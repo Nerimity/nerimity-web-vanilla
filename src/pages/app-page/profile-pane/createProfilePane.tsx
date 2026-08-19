@@ -665,7 +665,7 @@ const SidebarActivity = (props: { user?: RawUser; signal: AbortSignal }) => {
   return activitiesContainer;
 };
 
-const createProfilePane = (content: HTMLElement) => {
+export const createProfilePane = (content: HTMLElement) => {
   Drawer().updatePage({ page: 1 });
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -759,5 +759,3 @@ const createProfilePane = (content: HTMLElement) => {
 
   return { destroy };
 };
-
-export default createProfilePane;

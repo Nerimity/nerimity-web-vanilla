@@ -4,7 +4,7 @@ import { createServerChannelList } from "../../components/serverChannelList";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 
-const createServerChannelRoute = (leftDrawer: HTMLElement) => {
+export const createServerChannelRoute = (leftDrawer: HTMLElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -36,5 +36,3 @@ const createServerChannelRoute = (leftDrawer: HTMLElement) => {
 
   return { destroy };
 };
-
-export default createServerChannelRoute;

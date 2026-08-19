@@ -21,7 +21,7 @@ import { throttle } from "../../utils/throttle";
 
 import style from "./createHomePane.module.css";
 
-const createHomePane = (content: HTMLElement) => {
+export const createHomePane = (content: HTMLElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -173,5 +173,3 @@ const DashboardUserActivity = (props: {
     </div>
   );
 };
-
-export default createHomePane;

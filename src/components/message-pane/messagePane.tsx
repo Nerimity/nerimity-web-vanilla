@@ -32,7 +32,7 @@ import style from "./messagePane.module.css";
 
 const SCROLLED_BOTTOM_THRESHOLD = 50;
 
-const createMessagePane = () => {
+export const createMessagePane = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let chatbar = createChatbar();
@@ -477,8 +477,6 @@ const createMessagePane = () => {
 
   return { render, destroy };
 };
-
-export default createMessagePane;
 
 const createAttachmentProgressHandler = (
   signal: AbortSignal,

@@ -4,7 +4,7 @@ import { createRightDrawer } from "../../components/right-drawer/RightDrawer";
 import { channelStore } from "../../store/channelStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 
-const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
+export const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -58,5 +58,3 @@ const createInboxChannelRoute = (leftDrawer: HTMLElement) => {
 
   return { destroy };
 };
-
-export default createInboxChannelRoute;
