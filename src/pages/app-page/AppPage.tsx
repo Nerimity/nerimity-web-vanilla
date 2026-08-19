@@ -128,8 +128,6 @@ const createAppPage = () => {
         return;
       }
 
-      appRouteSource.invalidate();
-
       if (serverChannelPage) return;
 
       const isStale = appRouteSource.capture();
