@@ -29,7 +29,13 @@ export const FileEmbed = (props: {
     : undefined;
 
   return (
-    <div class={[style.fileEmbed, "fileEmbed"]}>
+    <div
+      class={[
+        style.fileEmbed,
+        "fileEmbed",
+        props.attachmentProperty && style.uploading,
+      ]}
+    >
       <div class={style.content}>
         <Icon outlined class={style.icon} name="draft" />
         <div class={style.details}>

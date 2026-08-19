@@ -38,10 +38,12 @@
     height: 35px;
     padding: 0;
     border: none;
+    border-radius: var(--radius-max);
     cursor: pointer;
     transition: 0.2s;
     font-size: 12px;
     text-decoration: none;
+
     &:hover {
       background-color: var(--gray-700);
     }
@@ -50,9 +52,12 @@
 
 .fileEmbed {
   padding: 6px;
-  border-radius: var(--radius-8);
+  border-radius: var(--radius-max);
   background-color: var(--gray-800);
   place-self: start;
+  &.uploading {
+    border-radius: var(--radius-16);
+  }
 }
 
 .progressContainer {
