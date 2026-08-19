@@ -98,8 +98,6 @@ const createHandleTypingIndicator = () => {
       typingUsers.delete(payload.channelId);
     }
 
-    console.log("emit");
-
     if (hadUser) emit();
   };
 
