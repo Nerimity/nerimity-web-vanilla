@@ -13,10 +13,6 @@ import { serverStore } from "../../store/serverStore";
 import { createTokenSource } from "../../utils/createTokenSource";
 import { lazyLoadEmojis } from "../../utils/emojis";
 import { router } from "../../utils/router";
-import type { createHomePane } from "./createHomePane";
-import type { createInboxChannelRoute } from "./createInboxChannelRoute";
-import type { createServerChannelRoute } from "./createServerChannelRoute";
-import type { createProfilePane } from "./profile-pane/createProfilePane";
 
 import style from "./AppPage.module.css";
 
@@ -50,13 +46,12 @@ const createAppPage = () => {
   );
   app.replaceChildren(Drawer().render());
 
-  let serverChannelPage: ReturnType<typeof createServerChannelRoute> | null =
-    null;
+  type Page = { destroy: () => void };
 
-  let inboxChannelPage: ReturnType<typeof createInboxChannelRoute> | null =
-    null;
-  let homePane: ReturnType<typeof createHomePane> | null = null;
-  let profilePane: ReturnType<typeof createProfilePane> | null = null;
+  let serverChannelPage: Page | null = null;
+  let inboxChannelPage: Page | null = null;
+  let homePane: Page | null = null;
+  let profilePane: Page | null = null;
 
   const appRouteSource = createTokenSource();
   const contentSource = createTokenSource();
