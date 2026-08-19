@@ -69,10 +69,7 @@ const Sidebar = (props: { signal: AbortSignal }) => {
         el,
         <div>
           {activities.map((activity) => (
-            <DashboardUserActivity
-              activity={activity}
-              userId={activity.userId}
-            />
+            <HomeUserActivity activity={activity} userId={activity.userId} />
           ))}
         </div>,
         {
@@ -110,7 +107,7 @@ const Sidebar = (props: { signal: AbortSignal }) => {
   return el;
 };
 
-const DashboardUserActivity = (props: {
+const HomeUserActivity = (props: {
   userId: string;
   activity: RawUserActivity;
 }) => {

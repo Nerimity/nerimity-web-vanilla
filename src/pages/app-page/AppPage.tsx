@@ -55,7 +55,7 @@ const createAppPage = () => {
 
   let inboxChannelPage: ReturnType<typeof createInboxChannelRoute> | null =
     null;
-  let dashboardPane: ReturnType<typeof createHomePane> | null = null;
+  let homePane: ReturnType<typeof createHomePane> | null = null;
   let profilePane: ReturnType<typeof createProfilePane> | null = null;
 
   const appRouteSource = createTokenSource();
@@ -65,16 +65,16 @@ const createAppPage = () => {
     "/app",
     async (res) => {
       if (!res) {
-        dashboardPane?.destroy();
-        dashboardPane = null;
+        homePane?.destroy();
+        homePane = null;
         return;
       }
 
-      if (dashboardPane) return;
+      if (homePane) return;
       const isStale = contentSource.capture();
       const { createHomePane } = await import("./createHomePane");
       if (isStale()) return;
-      dashboardPane = createHomePane(content);
+      homePane = createHomePane(content);
     },
     { signal },
   );
