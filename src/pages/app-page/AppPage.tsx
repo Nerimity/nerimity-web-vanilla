@@ -15,7 +15,60 @@ import { router } from "../../utils/router";
 
 import style from "./AppPage.module.css";
 
-type Page = { destroy: () => void; render?: () => HTMLDivElement };
+type Page = { destroy: () => void };
+type MatchResult<P> = { params: P } | null | undefined;
+
+export interface RouteContext {
+  content: HTMLDivElement;
+  leftDrawer: HTMLDivElement;
+}
+
+function registerPaneRoute<T extends Page, P = unknown>(opts: {
+  paths: string | string[];
+  signal: AbortSignal;
+  tokenSource: ReturnType<typeof createTokenSource>;
+  context: RouteContext;
+  load: (res: {
+    params: P;
+  }) => Promise<{ default: (context: RouteContext) => T | Promise<T> }>;
+  onRoute?: (res: MatchResult<P>) => void;
+  onMatch?: () => void;
+  onUnmatch?: () => void;
+  alwaysRemount?: boolean;
+}) {
+  let pane: T | null = null;
+
+  router.createMatchListener<P>(
+    opts.paths,
+    async (res) => {
+      opts.onRoute?.(res);
+
+      if (!res) {
+        pane?.destroy();
+        pane = null;
+        opts.onUnmatch?.();
+        return;
+      }
+
+      opts.onMatch?.();
+      if (pane && !opts.alwaysRemount) return;
+      pane?.destroy();
+
+      const isStale = opts.tokenSource.capture();
+      const module = await opts.load(res);
+      if (isStale()) return;
+      pane = await module.default(opts.context);
+    },
+    { signal: opts.signal },
+  );
+
+  return {
+    destroy: () => {
+      pane?.destroy();
+      pane = null;
+    },
+  };
+}
 
 const createAppPage = () => {
   lazyLoadEmojis();
@@ -25,154 +78,90 @@ const createAppPage = () => {
 
   createUserContextMenuHandler({ signal });
   const app = document.getElementById("app")!;
-  let appHeader = createAppHeader();
+  const drawer = Drawer();
+  const appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
-  let leftDrawer = (
+  const leftDrawer = (
     <div class={style.leftDrawerInner}></div>
   ) as HTMLDivElement;
-  let content = (<div class={style.contentInner}></div>) as HTMLDivElement;
+  const content = (<div class={style.contentInner}></div>) as HTMLDivElement;
 
-  Drawer().leftDrawer.replaceChildren(
+  drawer.leftDrawer.replaceChildren(
     <>
       {serverSidebar.render()}
       {leftDrawer}
     </>,
   );
-
-  Drawer().content.replaceChildren(
+  drawer.content.replaceChildren(
     <>
       {appHeader.render()} {content}
     </>,
   );
-  app.replaceChildren(Drawer().render());
+  app.replaceChildren(drawer.render());
 
   const appRouteSource = createTokenSource();
   const contentSource = createTokenSource();
 
-  let serverChannelPage: Page | null = null;
+  const context: RouteContext = {
+    leftDrawer,
+    content,
+  };
 
-  let messagePane: Page | null = null;
-  let inboxChannelPage: Page | null = null;
-  let homePane: Page | null = null;
-  let profilePane: Page | null = null;
+  const routes = [
+    registerPaneRoute({
+      paths: "/app",
+      signal,
+      tokenSource: contentSource,
+      load: () => import("./createHomePane"),
+      context,
+    }),
 
-  router.createMatchListener(
-    "/app",
-    async (res) => {
-      if (!res) {
-        homePane?.destroy();
-        homePane = null;
-        return;
-      }
+    registerPaneRoute<Page, { userId: string }>({
+      paths: "/app/profile/:userId",
+      signal,
+      tokenSource: contentSource,
+      alwaysRemount: true,
+      load: () => import("./profile-pane/createProfilePane"),
+      context,
+    }),
 
-      if (homePane) return;
-      const isStale = contentSource.capture();
-      const { createHomePane } = await import("./createHomePane");
-      if (isStale()) return;
-      homePane = createHomePane(content);
-    },
-    { signal },
-  );
+    registerPaneRoute({
+      paths: ["/app", "/app/inbox/*", "/app/profile/*"],
+      signal,
+      tokenSource: appRouteSource,
+      load: () => import("./createInboxChannelRoute"),
+      context,
+    }),
 
-  router.createMatchListener<{ userId: string }>(
-    "/app/profile/:userId",
-    async (res) => {
-      if (!res) {
-        profilePane?.destroy();
-        profilePane = null;
-        return;
-      }
-      profilePane?.destroy();
-      const isStale = contentSource.capture();
-      const { createProfilePane } =
-        await import("./profile-pane/createProfilePane");
+    registerPaneRoute<Page, { serverId: string; channelId: string }>({
+      paths: "/app/servers/:serverId/:channelId",
+      signal,
+      tokenSource: appRouteSource,
+      onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
+      load: () => import("./createServerChannelRoute"),
+      context,
+    }),
 
-      if (isStale()) return;
-      profilePane = createProfilePane(content);
-    },
-    { signal },
-  );
-
-  router.createMatchListener(
-    ["/app", "/app/inbox/*", "/app/profile/*"],
-    async (res) => {
-      if (!res) {
-        inboxChannelPage?.destroy();
-        inboxChannelPage = null;
-        return;
-      }
-      if (inboxChannelPage) return;
-      const isStale = appRouteSource.capture();
-
-      const { createInboxChannelRoute } =
-        await import("./createInboxChannelRoute");
-
-      if (isStale()) return;
-      inboxChannelPage = createInboxChannelRoute(leftDrawer);
-    },
-    { signal },
-  );
-
-  router.createMatchListener<{ serverId: string; channelId: string }>(
-    "/app/servers/:serverId/:channelId",
-    async (res) => {
-      serverStore.setCurrentServerId(res?.params.serverId);
-      if (!res) {
-        serverChannelPage?.destroy();
-        serverChannelPage = null;
-        return;
-      }
-
-      if (serverChannelPage) return;
-
-      const isStale = appRouteSource.capture();
-      const { createServerChannelRoute } =
-        await import("./createServerChannelRoute");
-
-      if (isStale()) return;
-      serverChannelPage = createServerChannelRoute(leftDrawer);
-    },
-    { signal },
-  );
-
-  router.createMatchListener<{ channelId: string }>(
-    ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
-    async (res) => {
-      channelStore.setCurrentChannelId(res?.params.channelId);
-      if (!res) {
-        messagePane?.destroy();
-        messagePane = null;
-        content.replaceChildren();
-        Drawer().updateRightDrawerAvailable(false);
-        return;
-      }
-      Drawer().updateRightDrawerAvailable(true);
-      if (messagePane) return;
-      const isStale = contentSource.capture();
-
-      const { createMessagePane } =
-        await import("../../components/message-pane/messagePane");
-      if (isStale()) return;
-
-      messagePane = createMessagePane(content);
-    },
-    { signal },
-  );
+    registerPaneRoute<Page, { channelId: string }>({
+      paths: ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
+      signal,
+      tokenSource: contentSource,
+      onRoute: (res) => channelStore.setCurrentChannelId(res?.params.channelId),
+      onMatch: () => drawer.updateRightDrawerAvailable(true),
+      onUnmatch: () => drawer.updateRightDrawerAvailable(false),
+      load: () => import("../../components/message-pane/messagePane"),
+      context,
+    }),
+  ];
 
   createMiniProfileHandler({ signal });
 
   const handleResize = () => {
-    if (isMobileWidth()) {
-      document.body.classList.add("mobileWidth");
-      document.body.classList.remove("desktopWidth");
-    } else {
-      document.body.classList.remove("mobileWidth");
-      document.body.classList.add("desktopWidth");
-    }
+    document.body.classList.toggle("mobileWidth", isMobileWidth());
+    document.body.classList.toggle("desktopWidth", !isMobileWidth());
   };
   handleResize();
-
   window.addEventListener("resize", handleResize, { signal });
   handleDangerLink(signal);
 
@@ -181,19 +170,11 @@ const createAppPage = () => {
     socket.disconnect();
     serverSidebar.destroy();
     appHeader.destroy();
-    messagePane?.destroy();
-    serverChannelPage?.destroy();
-    serverChannelPage = null;
-    inboxChannelPage?.destroy();
-    Drawer().destroy();
-
-    (leftDrawer as any) = null;
-    (content as any) = null;
+    routes.forEach((route) => route.destroy());
+    drawer.destroy();
   };
 
-  const render = () => {};
-
-  return { render, destroy };
+  return { render: () => {}, destroy };
 };
 
 export default createAppPage;

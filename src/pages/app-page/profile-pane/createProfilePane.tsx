@@ -41,6 +41,7 @@ import { getFont } from "../../../utils/font";
 import { getRecentServerChannelId } from "../../../utils/recentServerChannels";
 import { router } from "../../../utils/router";
 import { UserBadgeValues, type UserBadge } from "../../../utils/UserBadgeFlag";
+import type { RouteContext } from "../AppPage";
 import { createRemoveFriendModal } from "./removeFriendModal";
 
 import style from "./createProfilePane.module.css";
@@ -665,7 +666,7 @@ const SidebarActivity = (props: { user?: RawUser; signal: AbortSignal }) => {
   return activitiesContainer;
 };
 
-export const createProfilePane = (content: HTMLElement) => {
+const createProfilePane = ({ content }: RouteContext) => {
   Drawer().updatePage({ page: 1 });
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -759,3 +760,4 @@ export const createProfilePane = (content: HTMLElement) => {
 
   return { destroy };
 };
+export default createProfilePane;

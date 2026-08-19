@@ -18,10 +18,11 @@ import type { RawUserActivity } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
 import { throttle } from "../../utils/throttle";
+import type { RouteContext } from "./AppPage";
 
 import style from "./createHomePane.module.css";
 
-export const createHomePane = (content: HTMLElement) => {
+const createHomePane = ({ content }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -106,6 +107,8 @@ const Sidebar = (props: { signal: AbortSignal }) => {
   rerender();
   return el;
 };
+
+export default createHomePane;
 
 const HomeUserActivity = (props: {
   userId: string;

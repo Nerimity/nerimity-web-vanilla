@@ -3,8 +3,9 @@ import { createRightDrawer } from "../../components/right-drawer/RightDrawer";
 import { createServerChannelList } from "../../components/serverChannelList";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
+import type { RouteContext } from "./AppPage";
 
-export const createServerChannelRoute = (leftDrawer: HTMLElement) => {
+const createServerChannelRoute = ({ leftDrawer }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
@@ -36,3 +37,5 @@ export const createServerChannelRoute = (leftDrawer: HTMLElement) => {
 
   return { destroy };
 };
+
+export default createServerChannelRoute;

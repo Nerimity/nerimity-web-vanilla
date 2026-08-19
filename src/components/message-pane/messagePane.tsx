@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { h } from "../../h";
+import type { RouteContext } from "../../pages/app-page/AppPage";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
@@ -32,7 +33,7 @@ import style from "./messagePane.module.css";
 
 const SCROLLED_BOTTOM_THRESHOLD = 50;
 
-export const createMessagePane = (contentEl: HTMLDivElement) => {
+const createMessagePane = ({ content: contentEl }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let chatbar = createChatbar();
@@ -474,10 +475,13 @@ export const createMessagePane = (contentEl: HTMLDivElement) => {
     chatbarEl.remove();
     (chatbar as any) = null;
     (chatbarEl as any) = null;
+    contentEl.replaceChildren();
   };
   render();
   return { destroy };
 };
+
+export default createMessagePane;
 
 const createAttachmentProgressHandler = (
   signal: AbortSignal,
