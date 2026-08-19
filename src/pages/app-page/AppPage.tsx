@@ -131,8 +131,6 @@ const createAppPage = () => {
       appRouteSource.invalidate();
 
       if (serverChannelPage) return;
-      inboxChannelPage?.destroy();
-      inboxChannelPage = null;
 
       const isStale = appRouteSource.capture();
       const { createServerChannelRoute } =
