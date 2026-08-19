@@ -98,6 +98,26 @@ const createAppPage = () => {
     { signal },
   );
 
+  router.createMatchListener(
+    ["/app", "/app/inbox/*", "/app/profile/*"],
+    async (res) => {
+      if (!res) {
+        inboxChannelPage?.destroy();
+        inboxChannelPage = null;
+        return;
+      }
+      if (inboxChannelPage) return;
+      const isStale = appRouteSource.capture();
+
+      const { createInboxChannelRoute } =
+        await import("./createInboxChannelRoute");
+
+      if (isStale()) return;
+      inboxChannelPage = createInboxChannelRoute(leftDrawer);
+    },
+    { signal },
+  );
+
   router.createMatchListener<{ serverId: string; channelId: string }>(
     "/app/servers/:serverId/:channelId",
     async (res) => {
@@ -105,14 +125,6 @@ const createAppPage = () => {
       if (!res) {
         serverChannelPage?.destroy();
         serverChannelPage = null;
-        if (inboxChannelPage) return;
-        const isStale = appRouteSource.capture();
-
-        const { createInboxChannelRoute } =
-          await import("./createInboxChannelRoute");
-
-        if (isStale()) return;
-        inboxChannelPage = createInboxChannelRoute(leftDrawer);
         return;
       }
 
