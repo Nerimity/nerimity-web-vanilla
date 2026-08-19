@@ -1,7 +1,6 @@
 import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
-import type { createMessagePane } from "../../components/message-pane/messagePane";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { createUserContextMenuHandler } from "../../components/UserContextMenu";
@@ -16,6 +15,8 @@ import { router } from "../../utils/router";
 
 import style from "./AppPage.module.css";
 
+type Page = { destroy: () => void; render?: () => HTMLDivElement };
+
 const createAppPage = () => {
   lazyLoadEmojis();
   const abortController = new AbortController();
@@ -27,10 +28,10 @@ const createAppPage = () => {
   let appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
-  let messagePane: ReturnType<typeof createMessagePane> | null = null;
-
-  let leftDrawer = (<div class={style.leftDrawerInner}></div>) as HTMLElement;
-  let content = (<div class={style.contentInner}></div>) as HTMLElement;
+  let leftDrawer = (
+    <div class={style.leftDrawerInner}></div>
+  ) as HTMLDivElement;
+  let content = (<div class={style.contentInner}></div>) as HTMLDivElement;
 
   Drawer().leftDrawer.replaceChildren(
     <>
@@ -46,15 +47,15 @@ const createAppPage = () => {
   );
   app.replaceChildren(Drawer().render());
 
-  type Page = { destroy: () => void };
+  const appRouteSource = createTokenSource();
+  const contentSource = createTokenSource();
 
   let serverChannelPage: Page | null = null;
+
+  let messagePane: Page | null = null;
   let inboxChannelPage: Page | null = null;
   let homePane: Page | null = null;
   let profilePane: Page | null = null;
-
-  const appRouteSource = createTokenSource();
-  const contentSource = createTokenSource();
 
   router.createMatchListener(
     "/app",
@@ -154,8 +155,7 @@ const createAppPage = () => {
         await import("../../components/message-pane/messagePane");
       if (isStale()) return;
 
-      messagePane = createMessagePane();
-      content.replaceChildren(messagePane.render());
+      messagePane = createMessagePane(content);
     },
     { signal },
   );

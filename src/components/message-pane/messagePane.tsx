@@ -32,7 +32,7 @@ import style from "./messagePane.module.css";
 
 const SCROLLED_BOTTOM_THRESHOLD = 50;
 
-export const createMessagePane = () => {
+export const createMessagePane = (contentEl: HTMLDivElement) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let chatbar = createChatbar();
@@ -430,7 +430,8 @@ export const createMessagePane = () => {
     if (accountStore.authenticated) {
       onBottomSkeletonIntersect(true);
     }
-    return el;
+
+    contentEl.replaceChildren(el);
   };
 
   chatbar.jumpToPresentButton.addEventListener(
@@ -474,8 +475,8 @@ export const createMessagePane = () => {
     (chatbar as any) = null;
     (chatbarEl as any) = null;
   };
-
-  return { render, destroy };
+  render();
+  return { destroy };
 };
 
 const createAttachmentProgressHandler = (
