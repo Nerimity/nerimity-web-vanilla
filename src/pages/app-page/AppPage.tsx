@@ -142,6 +142,13 @@ const createAppPage = () => {
       load: () => import("./createServerChannelRoute"),
       context,
     }),
+    registerPaneRoute<Page>({
+      paths: "/app/settings/*",
+      signal,
+      tokenSource: appRouteSource,
+      load: () => import("./createSettingsRoute"),
+      context,
+    }),
 
     registerPaneRoute<Page, { channelId: string }>({
       paths: ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
