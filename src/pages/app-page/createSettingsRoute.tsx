@@ -202,7 +202,10 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
       const matchedRoute = Settings.find((s) =>
         router.match("/app/settings" + s.path),
       );
-      if (!matchedRoute) return;
+      if (!matchedRoute) {
+        router.navigate("/app/settings" + Settings[0]!.path, { replace: true });
+        return;
+      }
       getAppHeader()?.updateHeader({
         icon: matchedRoute.icon,
         label: matchedRoute.name(),

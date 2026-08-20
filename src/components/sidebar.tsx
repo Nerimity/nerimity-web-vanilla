@@ -349,7 +349,7 @@ const SettingsItem = (props: { signal: AbortSignal }) => {
         selected={!!match}
         class={style.homeItem}
         title="Settings"
-        href="/app/settings/account"
+        href="/app/settings"
       >
         <Icon name="settings" />
       </SidebarItem>

@@ -290,7 +290,13 @@ export const MiniProfile = (props: {
                 label={t`Notes`}
                 icon="book"
               />
-              <Button hoverBorder label={t`Settings`} icon="settings" />
+              <Button
+                hoverBorder
+                data-action="settings"
+                label={t`Settings`}
+                icon="settings"
+                href="/app/settings"
+              />
               <Button
                 data-action="logout"
                 hoverBorder
@@ -451,6 +457,9 @@ export const MiniProfile = (props: {
           inboxStore.openChannel(props.userId);
           Drawer().updatePage({ page: 1 });
 
+          props.abort.abort();
+        }
+        if (button.dataset.action === "settings") {
           props.abort.abort();
         }
         if (button.dataset.action === "logout") {

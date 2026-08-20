@@ -147,7 +147,7 @@ const createAppPage = () => {
       context,
     }),
     registerPaneRoute<Page>({
-      paths: "/app/settings/*",
+      paths: "/app/settings{/*}?",
       signal,
       tokenSource: appRouteSource,
       load: () => import("./createSettingsRoute"),
