@@ -53,18 +53,16 @@ const createHandleTypingIndicator = () => {
   const handleTyping = (payload: { channelId: string; userId: string }) => {
     if (!getChannelIds().includes(payload.channelId)) return;
 
-    const users = typingUsers.get(payload.channelId);
-    const existing = users?.get(payload.userId);
-    if (existing) {
-      users?.set(payload.userId, Date.now());
-      return;
+    let users = typingUsers.get(payload.channelId);
+    if (!users) {
+      users = new Map<string, number>();
+      typingUsers.set(payload.channelId, users);
     }
 
-    const newUsers = new Map<string, number>();
-    newUsers.set(payload.userId, Date.now());
+    const isNew = !users.has(payload.userId);
+    users.set(payload.userId, Date.now());
 
-    typingUsers.set(payload.channelId, newUsers);
-    emit();
+    if (isNew) emit();
   };
 
   const TYPING_TIMEOUT = 5000;
@@ -160,6 +158,7 @@ export const createTypingIndicator = (abortController: AbortController) => {
 
   const handleTypingUpdate = (payload: Record<string, string[]>) => {
     const userIds = payload[channelStore.currentChannelId!] ?? [];
+    console.log(userIds);
     rerender(userIds);
   };
 
