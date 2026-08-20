@@ -158,7 +158,6 @@ export const createTypingIndicator = (abortController: AbortController) => {
 
   const handleTypingUpdate = (payload: Record<string, string[]>) => {
     const userIds = payload[channelStore.currentChannelId!] ?? [];
-    console.log(userIds);
     rerender(userIds);
   };
 
