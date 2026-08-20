@@ -1,0 +1,62 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 820px;
+  padding-left: 4px;
+  place-self: center;
+}
+
+.header {
+  width: 100%;
+}
+.banner {
+  overflow: hidden;
+  border-radius: var(--radius-16);
+  transition: filter 0.2s;
+  filter: brightness(70%);
+  &:hover {
+    filter: none;
+  }
+}
+.overlayInfo {
+  position: relative;
+  z-index: 111;
+  margin-top: -64px;
+  margin-bottom: 10px;
+  margin-left: 18px;
+}
+
+.detailsSection {
+  font-size: 16px;
+  .nameAndTag {
+    margin-bottom: 6px;
+    .username {
+      --font-size: 16px;
+    }
+    .tag {
+      opacity: 0.6;
+    }
+    .clan {
+      margin-left: 6px;
+    }
+  }
+}
+
+.section {
+  padding: 12px;
+  border-radius: var(--radius-16);
+  background-color: var(--gray-900);
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  color: var(--gray-400);
+  font-size: 14px;
+  gap: 8px;
+  .full {
+    color: var(--gray-100);
+  }
+}
