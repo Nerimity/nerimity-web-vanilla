@@ -31,7 +31,6 @@
   .memberName {
     overflow: hidden;
     flex-shrink: 1;
-    line-height: 1.25;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-weight: 500;
