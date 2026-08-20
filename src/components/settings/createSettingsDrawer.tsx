@@ -1,7 +1,10 @@
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
-import { getAppHeader } from "../../pages/app-page/AppPage";
+import {
+  Settings,
+  type Setting,
+} from "../../pages/app-page/createSettingsRoute";
 import { router } from "../../utils/router";
 import { Item } from "../item";
 import { Pill } from "../Pill";
@@ -11,33 +14,6 @@ import style from "./createSettingsDrawer.module.css";
 const HeaderPill = () => {
   return <Pill icon="settings" label={t`Settings`} />;
 };
-
-type Page = { destroy: () => void };
-
-interface Setting {
-  id: string;
-  icon: string;
-  name: () => string;
-  path: string;
-  load: () => Promise<{ default: (context: any) => Page }>;
-}
-
-const Settings: Setting[] = [
-  {
-    id: "account",
-    icon: "account_circle",
-    name: () => t`Account`,
-    path: "/account",
-    load: () => import("../../pages/app-page/createHomePane"),
-  },
-  {
-    id: "profile",
-    icon: "person",
-    name: () => t`Profile`,
-    path: "/profile",
-    load: () => import("../../pages/app-page/createHomePane"),
-  },
-];
 
 const createItemHelper = () => {
   const create = (props: { setting: Setting }) => {
@@ -112,16 +88,11 @@ export const createSettingsDrawer = () => {
       );
       if (!matchedRoute) return;
       itemHelper.updateSelected(listEl, matchedRoute.id);
-      getAppHeader()?.updateHeader({
-        icon: matchedRoute.icon,
-        label: matchedRoute.name(),
-      });
     },
     { signal, always: true },
   );
 
   const destroy = () => {
-    getAppHeader()?.updateHeader({ trigger: false });
     ac.abort();
     listEl.remove();
     (listEl as any) = null;
