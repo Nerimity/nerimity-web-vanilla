@@ -56,4 +56,7 @@
     color: var(--text-muted);
     font-size: var(--size);
   }
+  .icon {
+    font-size: 18px;
+  }
 }

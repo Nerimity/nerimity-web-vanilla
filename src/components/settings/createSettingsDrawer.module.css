@@ -39,3 +39,7 @@
   height: 100%;
   gap: 2px;
 }
+
+.item {
+  padding-left: 14px;
+}

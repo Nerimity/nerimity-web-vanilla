@@ -14,6 +14,9 @@ import { createPillUpdater, Pill } from "./Pill";
 
 import style from "./appHeader.module.css";
 
+let overrideIcon = "";
+let overrideLabel = "";
+
 const AppPill = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const channel = channelStore.channels.get(channelStore.currentChannelId!);
@@ -26,6 +29,7 @@ const AppPill = () => {
 
   const getLabel = () => {
     if (!authenticated) return accountStore.connectionState();
+    if (overrideLabel) return overrideLabel;
     if (channel?.name) return channel.name;
     if (user?.username) return user.username;
     return isProfilePage ? t`Profile` : t`Home`;
@@ -34,6 +38,7 @@ const AppPill = () => {
   const getIcon = () => {
     if (authError) return "gpp_maybe";
     if (!authenticated) return "cached";
+    if (overrideIcon) return overrideIcon;
     if (server || channel) return null;
     return isProfilePage ? "article_person" : "home";
   };
@@ -122,6 +127,18 @@ export const createAppHeader = () => {
   const render = () => {
     return container;
   };
+
+  const updateHeader = (opts?: {
+    label?: string;
+    icon?: string;
+    trigger?: boolean;
+  }) => {
+    overrideIcon = opts?.icon || "";
+    overrideLabel = opts?.label || "";
+    if (opts?.trigger === false) return;
+    updatePill();
+  };
+
   const destroy = () => {
     abortController.abort();
     container.remove();
@@ -130,5 +147,5 @@ export const createAppHeader = () => {
     (container as any) = null;
     (headerContainer as any) = null;
   };
-  return { render, destroy };
+  return { render, destroy, updateHeader };
 };

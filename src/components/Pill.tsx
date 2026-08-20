@@ -4,6 +4,7 @@ import { h } from "../h";
 import { Channel } from "../store/channelStore";
 import type { Server } from "../store/serverStore";
 import type { User } from "../store/userStore";
+import { debounce } from "../utils/debounce";
 import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
 import { Icon } from "./icon";
@@ -56,10 +57,11 @@ export const createPillUpdater = (
   pill: () => any,
 ) => {
   let pendingAnim: Animation | null = null;
-  const updatePill = () => {
-    const pillEl = pillContainer().querySelector(
+  const updatePill = debounce(() => {
+    const pillEl = pillContainer()?.querySelector(
       `.${style.pill}`,
     ) as HTMLElement;
+    if (!pillEl) return;
 
     const oldWidth = pillEl.getBoundingClientRect().width;
     const oldHTML = pillEl.innerHTML;
@@ -93,6 +95,6 @@ export const createPillUpdater = (
     pendingAnim.onfinish = () => {
       pendingAnim = null;
     };
-  };
+  }, 100);
   return updatePill;
 };

@@ -29,6 +29,7 @@ const createRouter = () => {
   const matchResult = <P>(result: URLPatternResult) => {
     return {
       params: result.pathname.groups as P,
+      path: location.pathname,
     };
   };
 
@@ -91,7 +92,7 @@ const createRouter = () => {
   const createMatchListener = <P = {}>(
     pattern: string | string[],
     callback: (res: MatchResult<P> | null) => void,
-    opts: { signal: AbortSignal; defer?: boolean },
+    opts: { signal: AbortSignal; defer?: boolean; always?: boolean },
   ) => {
     const pats = Array.isArray(pattern)
       ? pattern.map((p) => new URLPattern({ pathname: p }))
@@ -110,6 +111,15 @@ const createRouter = () => {
           result = res;
           break;
         }
+      }
+
+      if (opts.always) {
+        didMatch = !!result;
+        prevParams = result
+          ? JSON.stringify(namedGroups(result.pathname.groups))
+          : null;
+        callback(result ? matchResult(result) : null);
+        return;
       }
 
       const newParams = result

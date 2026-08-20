@@ -44,7 +44,7 @@ updateFavicon();
 
     let pageSource = createTokenSource();
 
-    const navigate = async (create?: typeof AppPage) => {
+    const navigate = async (create?: typeof HomePage) => {
       const isStale = pageSource.capture();
       currentPage?.destroy();
       app.replaceChildren();

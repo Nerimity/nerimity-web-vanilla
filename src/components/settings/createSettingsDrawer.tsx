@@ -1,6 +1,9 @@
 import { t } from "@lingui/core/macro";
 
 import { h } from "../../h";
+import { getAppHeader } from "../../pages/app-page/AppPage";
+import { router } from "../../utils/router";
+import { Item } from "../item";
 import { Pill } from "../Pill";
 
 import style from "./createSettingsDrawer.module.css";
@@ -9,8 +12,80 @@ const HeaderPill = () => {
   return <Pill icon="settings" label={t`Settings`} />;
 };
 
+type Page = { destroy: () => void };
+
+interface Setting {
+  id: string;
+  icon: string;
+  name: () => string;
+  path: string;
+  load: () => Promise<{ default: (context: any) => Page }>;
+}
+
+const Settings: Setting[] = [
+  {
+    id: "account",
+    icon: "account_circle",
+    name: () => t`Account`,
+    path: "/account",
+    load: () => import("../../pages/app-page/createHomePane"),
+  },
+  {
+    id: "profile",
+    icon: "person",
+    name: () => t`Profile`,
+    path: "/profile",
+    load: () => import("../../pages/app-page/createHomePane"),
+  },
+];
+
+const createItemHelper = () => {
+  const create = (props: { setting: Setting }) => {
+    const fullPath = "/app/settings" + props.setting.path;
+    return (
+      <Item.Base
+        class={style.item}
+        data-id={props.setting.id}
+        href={fullPath}
+        selected={!!router.match(fullPath)}
+      >
+        <Item.Icon name={props.setting.icon} />
+        <Item.Label>{props.setting.name()}</Item.Label>
+      </Item.Base>
+    );
+  };
+
+  const updateSelected = (container: HTMLElement, id: string) => {
+    const selected = container.querySelector(
+      `.${style.item}[data-selected="true"]`,
+    );
+
+    if (selected) {
+      selected.setAttribute("data-selected", "false");
+    }
+
+    const item = container.querySelector(`.${style.item}[data-id="${id}"]`);
+
+    item?.setAttribute("data-selected", "true");
+  };
+
+  return {
+    updateSelected,
+    create,
+  };
+};
+
+const itemHelper = createItemHelper();
+
 export const createSettingsDrawer = () => {
-  let listEl = (<div class={style.list}></div>) as HTMLDivElement;
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  let listEl = (
+    <div class={style.list}>
+      {Settings.map((s) => itemHelper.create({ setting: s }))}
+    </div>
+  ) as HTMLDivElement;
 
   let containerEl = (
     <div class={style.outerContainer}>
@@ -29,7 +104,25 @@ export const createSettingsDrawer = () => {
     return containerEl;
   };
 
+  router.createMatchListener(
+    "/app/settings/*",
+    () => {
+      const matchedRoute = Settings.find((s) =>
+        router.match("/app/settings" + s.path),
+      );
+      if (!matchedRoute) return;
+      itemHelper.updateSelected(listEl, matchedRoute.id);
+      getAppHeader()?.updateHeader({
+        icon: matchedRoute.icon,
+        label: matchedRoute.name(),
+      });
+    },
+    { signal, always: true },
+  );
+
   const destroy = () => {
+    getAppHeader()?.updateHeader({ trigger: false });
+    ac.abort();
     listEl.remove();
     (listEl as any) = null;
 
@@ -42,36 +135,3 @@ export const createSettingsDrawer = () => {
     render,
   };
 };
-
-// const createItemHelper = () => {
-//   const create = () => {
-//     return (
-//       <Item.Base>
-//         <Item.Label>test</Item.Label>
-//       </Item.Base>
-//     );
-//   };
-
-//   const updateSelected = (container: HTMLElement, channelId: string) => {
-//     const selected = container.querySelector(
-//       `.${style.channelItem}[data-selected="true"]`,
-//     );
-
-//     if (selected) {
-//       selected.setAttribute("data-selected", "false");
-//     }
-
-//     const item = container.querySelector(
-//       `.${style.channelItem}[data-channel-id="${channelId}"]`,
-//     );
-
-//     item?.setAttribute("data-selected", "true");
-//   };
-
-//   return {
-//     updateSelected,
-//     create,
-//   };
-// };
-
-// const itemHelper = createItemHelper();

@@ -1,5 +1,6 @@
 import { Dynamic } from "../dynamic";
 import { h } from "../h";
+import { Icon as MaterialIcon } from "./icon";
 import { Link } from "./link";
 
 import style from "./item.module.css";
@@ -38,8 +39,8 @@ export const Item = {
       </Dynamic>
     );
   },
-  Icon() {
-    return <div>Icon</div>;
+  Icon(props: { name: string }) {
+    return <MaterialIcon class={style.icon} name={props.name} />;
   },
   Label(props: {
     children: any;

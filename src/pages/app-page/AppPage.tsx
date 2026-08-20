@@ -70,6 +70,10 @@ function registerPaneRoute<T extends Page, P = unknown>(opts: {
   };
 }
 
+let appHeader: ReturnType<typeof createAppHeader> | undefined = undefined;
+
+export const getAppHeader = () => appHeader;
+
 const createAppPage = () => {
   lazyLoadEmojis();
   const abortController = new AbortController();
@@ -79,7 +83,7 @@ const createAppPage = () => {
   createUserContextMenuHandler({ signal });
   const app = document.getElementById("app")!;
   const drawer = Drawer();
-  const appHeader = createAppHeader();
+  appHeader = createAppHeader();
   const serverSidebar = createSidebar();
 
   const leftDrawer = (
@@ -176,7 +180,8 @@ const createAppPage = () => {
     abortController.abort();
     socket.disconnect();
     serverSidebar.destroy();
-    appHeader.destroy();
+    appHeader?.destroy();
+    appHeader = undefined;
     routes.forEach((route) => route.destroy());
     drawer.destroy();
   };

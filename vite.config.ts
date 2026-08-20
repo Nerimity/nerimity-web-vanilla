@@ -18,6 +18,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "person",
+        "account_circle",
         "add_reaction",
         "add",
         "visibility",
