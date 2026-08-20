@@ -9,6 +9,7 @@
 
 .header {
   width: 100%;
+  margin-bottom: 12px;
 }
 .banner {
   overflow: hidden;

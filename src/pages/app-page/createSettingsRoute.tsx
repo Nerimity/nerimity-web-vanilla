@@ -3,8 +3,10 @@ import { Plural, Trans } from "@trans";
 
 import { Avatar } from "../../components/avatar";
 import { Banner } from "../../components/Banner";
+import { Input } from "../../components/input";
 import { ServerClanItem } from "../../components/serverClanItem";
 import { createSettingsDrawer } from "../../components/settings/createSettingsDrawer";
+import { SettingsBlock } from "../../components/SettingsBlock";
 import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { friendStore } from "../../store/friendStore";
@@ -142,7 +144,45 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   const serverChannelList = createSettingsDrawer();
 
-  const innerContent = (<div>test</div>) as HTMLDivElement;
+  const innerContent = (
+    <div>
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="settings" />
+          <SettingsBlock.Details
+            title="Settings"
+            description="Edit Your Settings"
+          />
+          <Input placeholder="Something" />
+        </SettingsBlock.Root>
+
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="settings" />
+          <SettingsBlock.Details
+            title="Settings"
+            description="Edit Your Settings"
+          />
+          <Input placeholder="Something" />
+        </SettingsBlock.Root>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="settings" />
+          <SettingsBlock.Details
+            title="Settings"
+            description="Edit Your Settings"
+          />
+          <Input placeholder="Something" />
+        </SettingsBlock.Root>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="settings" />
+          <SettingsBlock.Details
+            title="Settings"
+            description="Edit Your Settings"
+          />
+          <Input placeholder="Something" />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
+    </div>
+  ) as HTMLDivElement;
 
   const render = () => {
     content.replaceChildren(

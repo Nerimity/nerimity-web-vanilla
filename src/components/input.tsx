@@ -18,7 +18,7 @@ export const Input = (props: InputProps) => {
   return (
     <div class={[style.inputContainer, props.class]}>
       {props.label && <div class="label">{props.label}</div>}
-      <div class={style.inputInnerContainer}>
+      <div class={[style.inputInnerContainer, "inputContainer"]}>
         {props.prefix}
         <Dynamic
           id={props.id}
