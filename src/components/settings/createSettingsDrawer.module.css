@@ -31,12 +31,18 @@
   pointer-events: none;
 }
 
+.searchIcon {
+  margin-left: 8px;
+  color: var(--gray-300);
+  font-size: 16px;
+}
+
 .list {
   display: flex;
   flex: 1;
   flex-direction: column;
   flex-shrink: 0;
-  height: 100%;
+  margin-top: 8px;
   gap: 2px;
 }
 

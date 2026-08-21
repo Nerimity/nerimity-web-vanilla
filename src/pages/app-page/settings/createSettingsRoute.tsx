@@ -1,12 +1,9 @@
-import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
 import { Avatar } from "../../../components/avatar";
 import { Banner } from "../../../components/Banner";
-import { Input } from "../../../components/input";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
-import { SettingsBlock } from "../../../components/SettingsBlock";
 import { h } from "../../../h";
 import { accountStore } from "../../../store/accountStore";
 import { friendStore } from "../../../store/friendStore";
@@ -16,35 +13,9 @@ import { storeEmitter } from "../../../utils/EventEmitter";
 import { getFont } from "../../../utils/font";
 import { router } from "../../../utils/router";
 import { getAppHeader, type RouteContext } from "../AppPage";
+import { Settings, type Page } from "./Settings";
 
 import style from "./createSettingsRoute.module.css";
-
-type Page = { destroy: () => void };
-
-export interface Setting {
-  id: string;
-  icon: string;
-  name: () => string;
-  path: string;
-  load: () => Promise<{ default: (context: any) => Page }>;
-}
-
-export const Settings: Setting[] = [
-  {
-    id: "account",
-    icon: "account_circle",
-    name: () => t`Account`,
-    path: "/account",
-    load: () => import("../createHomePane"),
-  },
-  {
-    id: "profile",
-    icon: "person",
-    name: () => t`Profile`,
-    path: "/profile",
-    load: () => import("../createHomePane"),
-  },
-];
 
 const NameAndTag = ({ user }: { user: RawUser }) => {
   const font = getFont(user.profile?.font);
@@ -144,45 +115,7 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   const serverChannelList = createSettingsDrawer();
 
-  const innerContent = (
-    <div>
-      <SettingsBlock.Group>
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="settings" />
-          <SettingsBlock.Details
-            title="Settings"
-            description="Edit Your Settings"
-          />
-          <Input placeholder="Something" />
-        </SettingsBlock.Root>
-
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="settings" />
-          <SettingsBlock.Details
-            title="Settings"
-            description="Edit Your Settings"
-          />
-          <Input placeholder="Something" />
-        </SettingsBlock.Root>
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="settings" />
-          <SettingsBlock.Details
-            title="Settings"
-            description="Edit Your Settings"
-          />
-          <Input placeholder="Something" />
-        </SettingsBlock.Root>
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="settings" />
-          <SettingsBlock.Details
-            title="Settings"
-            description="Edit Your Settings"
-          />
-          <Input placeholder="Something" />
-        </SettingsBlock.Root>
-      </SettingsBlock.Group>
-    </div>
-  ) as HTMLDivElement;
+  const innerContent = (<div></div>) as HTMLDivElement;
 
   const render = () => {
     content.replaceChildren(
@@ -196,6 +129,10 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   leftDrawer.replaceChildren(serverChannelList.render());
 
+  let page: Page | undefined = undefined;
+
+  const context = { content: innerContent };
+
   router.createMatchListener(
     "/app/settings/*",
     () => {
@@ -206,6 +143,9 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
         router.navigate("/app/settings" + Settings[0]!.path, { replace: true });
         return;
       }
+
+      page?.destroy();
+      page = matchedRoute.load.create(context);
       getAppHeader()?.updateHeader({
         icon: matchedRoute.icon,
         label: matchedRoute.name(),

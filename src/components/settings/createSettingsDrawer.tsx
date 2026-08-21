@@ -1,11 +1,11 @@
 import { t } from "@lingui/core/macro";
+import { matchSorter } from "match-sorter";
 
-import { h } from "../../h";
-import {
-  Settings,
-  type Setting,
-} from "../../pages/app-page/settings/createSettingsRoute";
+import { h, Fragment } from "../../h";
+import { Settings, type Setting } from "../../pages/app-page/settings/Settings";
 import { router } from "../../utils/router";
+import { Icon } from "../icon";
+import { Input } from "../input";
 import { Item } from "../item";
 import { Pill } from "../Pill";
 
@@ -57,11 +57,7 @@ export const createSettingsDrawer = () => {
   const ac = new AbortController();
   const { signal } = ac;
 
-  let listEl = (
-    <div class={style.list}>
-      {Settings.map((s) => itemHelper.create({ setting: s }))}
-    </div>
-  ) as HTMLDivElement;
+  let listEl = (<div class={style.list}></div>) as HTMLDivElement;
 
   let containerEl = (
     <div class={style.outerContainer}>
@@ -70,11 +66,38 @@ export const createSettingsDrawer = () => {
         <div class={style.header}>
           <HeaderPill />
         </div>
+        <Input
+          prefix={<Icon class={style.searchIcon} name="search" />}
+          class="searchInput"
+          placeholder="Search Settings"
+        />
 
         {listEl}
       </div>
     </div>
   ) as HTMLDivElement;
+
+  const searchInputEl = containerEl.querySelector(
+    ".searchInput input",
+  ) as HTMLInputElement;
+
+  const renderList = () => {
+    const val = searchInputEl.value;
+
+    const results = matchSorter(Settings, val, {
+      keys: [
+        (item) => item.name(),
+        (item) => Object.values(item.load.getStrings()),
+      ],
+    });
+
+    listEl.replaceChildren(
+      <> {results.map((s) => itemHelper.create({ setting: s }))}</>,
+    );
+  };
+  renderList();
+
+  searchInputEl.addEventListener("input", renderList, { signal });
 
   const render = () => {
     return containerEl;
