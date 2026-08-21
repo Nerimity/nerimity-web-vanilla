@@ -150,7 +150,7 @@ const createAppPage = () => {
       paths: "/app/settings{/*}?",
       signal,
       tokenSource: appRouteSource,
-      load: () => import("./createSettingsRoute"),
+      load: () => import("./settings/createSettingsRoute"),
       context,
     }),
 

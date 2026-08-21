@@ -1,21 +1,21 @@
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
-import { Avatar } from "../../components/avatar";
-import { Banner } from "../../components/Banner";
-import { Input } from "../../components/input";
-import { ServerClanItem } from "../../components/serverClanItem";
-import { createSettingsDrawer } from "../../components/settings/createSettingsDrawer";
-import { SettingsBlock } from "../../components/SettingsBlock";
-import { h } from "../../h";
-import { accountStore } from "../../store/accountStore";
-import { friendStore } from "../../store/friendStore";
-import { serverStore } from "../../store/serverStore";
-import { FriendStatus, type RawUser } from "../../Types";
-import { storeEmitter } from "../../utils/EventEmitter";
-import { getFont } from "../../utils/font";
-import { router } from "../../utils/router";
-import { getAppHeader, type RouteContext } from "./AppPage";
+import { Avatar } from "../../../components/avatar";
+import { Banner } from "../../../components/Banner";
+import { Input } from "../../../components/input";
+import { ServerClanItem } from "../../../components/serverClanItem";
+import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
+import { SettingsBlock } from "../../../components/SettingsBlock";
+import { h } from "../../../h";
+import { accountStore } from "../../../store/accountStore";
+import { friendStore } from "../../../store/friendStore";
+import { serverStore } from "../../../store/serverStore";
+import { FriendStatus, type RawUser } from "../../../Types";
+import { storeEmitter } from "../../../utils/EventEmitter";
+import { getFont } from "../../../utils/font";
+import { router } from "../../../utils/router";
+import { getAppHeader, type RouteContext } from "../AppPage";
 
 import style from "./createSettingsRoute.module.css";
 
@@ -35,14 +35,14 @@ export const Settings: Setting[] = [
     icon: "account_circle",
     name: () => t`Account`,
     path: "/account",
-    load: () => import("./createHomePane"),
+    load: () => import("../createHomePane"),
   },
   {
     id: "profile",
     icon: "person",
     name: () => t`Profile`,
     path: "/profile",
-    load: () => import("./createHomePane"),
+    load: () => import("../createHomePane"),
   },
 ];
 

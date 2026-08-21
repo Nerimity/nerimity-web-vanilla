@@ -4,7 +4,7 @@ import { h } from "../../h";
 import {
   Settings,
   type Setting,
-} from "../../pages/app-page/createSettingsRoute";
+} from "../../pages/app-page/settings/createSettingsRoute";
 import { router } from "../../utils/router";
 import { Item } from "../item";
 import { Pill } from "../Pill";
