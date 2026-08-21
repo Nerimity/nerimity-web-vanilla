@@ -13,6 +13,8 @@ interface InputProps {
   autocomplete?: "current-password" | "email";
   placeholder?: string;
   id?: string;
+  value?: string;
+  maxLength?: number;
 }
 export const Input = (props: InputProps) => {
   return (
@@ -23,9 +25,11 @@ export const Input = (props: InputProps) => {
         <Dynamic
           id={props.id}
           placeholder={props.placeholder}
+          maxlength={props.maxLength}
           class={["input", style.input]}
           component={props.type === "textarea" ? "textarea" : "input"}
           type={props.type || "text"}
+          value={props.value}
           autocomplete={props.autocomplete}
         />
         {props.suffix}

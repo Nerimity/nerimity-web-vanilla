@@ -116,6 +116,27 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const serverChannelList = createSettingsDrawer();
 
   const innerContent = (<div></div>) as HTMLDivElement;
+  let page: Page | undefined = undefined;
+  const context = { content: innerContent };
+
+  const renderPage = () => {
+    const matchedRoute = Settings.find((s) =>
+      router.match("/app/settings" + s.path),
+    );
+    if (!matchedRoute) {
+      router.navigate("/app/settings" + Settings[0]!.path, { replace: true });
+      return;
+    }
+    getAppHeader()?.updateHeader({
+      icon: matchedRoute.icon,
+      label: matchedRoute.name(),
+    });
+
+    const user = accountStore.currentUser;
+    if (!user) return;
+    page?.destroy();
+    page = matchedRoute.load.create(context);
+  };
 
   const render = () => {
     content.replaceChildren(
@@ -124,35 +145,16 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
         {innerContent}
       </div>,
     );
+    renderPage();
   };
   render();
 
   leftDrawer.replaceChildren(serverChannelList.render());
 
-  let page: Page | undefined = undefined;
-
-  const context = { content: innerContent };
-
-  router.createMatchListener(
-    "/app/settings/*",
-    () => {
-      const matchedRoute = Settings.find((s) =>
-        router.match("/app/settings" + s.path),
-      );
-      if (!matchedRoute) {
-        router.navigate("/app/settings" + Settings[0]!.path, { replace: true });
-        return;
-      }
-
-      page?.destroy();
-      page = matchedRoute.load.create(context);
-      getAppHeader()?.updateHeader({
-        icon: matchedRoute.icon,
-        label: matchedRoute.name(),
-      });
-    },
-    { signal, always: true },
-  );
+  router.createMatchListener("/app/settings/*", renderPage, {
+    signal,
+    always: true,
+  });
 
   storeEmitter.on("ws:authStateUpdate", render, signal);
 

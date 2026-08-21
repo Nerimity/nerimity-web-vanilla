@@ -1,0 +1,18 @@
+.editEmailButton {
+  padding: 4px;
+  margin-right: 2px;
+  border-radius: var(--radius-2);
+  :global(.icon) {
+    font-size: 17px;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tagInput {
+  width: 5em;
+}

@@ -19,6 +19,7 @@ export type CurrentUser = User & {
   orderedServerIds: string[];
   serverFolders: RawServerFolder[];
   notices: RawNotice[];
+  email?: string;
 };
 
 function createAccountStore() {
