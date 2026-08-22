@@ -1,10 +1,12 @@
+type Handler<T> = { type: "input"; el: HTMLInputElement; key: T };
+
 export function createUpdatedHandler<T extends string, V>(
   initialValue: () => Record<T, V>,
   signal: AbortSignal,
 ) {
-  const changedValues: Partial<Record<T, V>> = {};
+  let changedValues: Partial<Record<T, V>> = {};
 
-  const handlers: { type: "input"; el: HTMLInputElement; key: T }[] = [];
+  const handlers: Handler<T>[] = [];
 
   let onUpdateHandler:
     | undefined
@@ -23,7 +25,7 @@ export function createUpdatedHandler<T extends string, V>(
     for (const [key, val] of entries) {
       const changedVal = changedValues[key];
       if (changedVal === undefined) continue;
-      if (changedVal !== val) {
+      if (JSON.stringify(changedVal) !== JSON.stringify(val)) {
         updatedValues[key] = changedVal;
       }
     }
@@ -44,15 +46,20 @@ export function createUpdatedHandler<T extends string, V>(
     );
   };
 
+  const changeValue = (key: T, value: V) => {
+    changedValues[key] = value;
+    check();
+  };
+
   const undo = () => {
     for (let i = 0; i < handlers.length; i++) {
       const handler = handlers[i]!;
       if (changedValues[handler.key] === undefined) continue;
       if (handler.type === "input") {
-        delete changedValues[handler.key];
         handler.el.value = initialValue()[handler.key] as string;
       }
     }
+    changedValues = {};
     check();
   };
 
@@ -61,5 +68,5 @@ export function createUpdatedHandler<T extends string, V>(
     check();
   };
 
-  return { handleInput, onUpdate, undo };
+  return { handleInput, onUpdate, undo, changeValue };
 }

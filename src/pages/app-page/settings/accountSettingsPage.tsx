@@ -1,11 +1,14 @@
 import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
+import { createFileInput } from "../../../components/FileInput";
+import { createImageCropModal } from "../../../components/ImageCropModal";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { fileToDataUrl } from "../../../utils/file";
 import type { SettingsContext } from "./Settings";
 
 import style from "./accountSettingsPage.module.css";
@@ -14,6 +17,7 @@ const getStrings = () => ({
   email: t`Email`,
   username: t`Username`,
   tag: t`Tag`,
+  avatar: t`Avatar`,
 });
 
 const accountSettingsPage = (context: SettingsContext) => {
@@ -27,6 +31,7 @@ const accountSettingsPage = (context: SettingsContext) => {
     email: currentUser?.email || "",
     username: currentUser?.username || "",
     tag: currentUser?.tag || "",
+    avatar: null as null | File,
   });
 
   const actions = createSettingsActions({ signal });
@@ -77,6 +82,18 @@ const accountSettingsPage = (context: SettingsContext) => {
           value={initialValues().tag}
         />
       </SettingsBlock.Root>
+
+      {/* Avatar */}
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="image" />
+        <SettingsBlock.Details title={strings.avatar} />
+        <Button
+          data-action="browseAvatar"
+          icon="attach_file"
+          label={t`Browse`}
+        />
+      </SettingsBlock.Root>
+
       {actions.el}
     </div>
   ) as HTMLDivElement;
@@ -112,6 +129,30 @@ const accountSettingsPage = (context: SettingsContext) => {
       done("no");
     }, 1000);
   });
+
+  const fileInput = createFileInput({
+    signal,
+    async onChange(file) {
+      updateHandler.changeValue("avatar", file || null);
+      if (!file) return;
+      const url = await fileToDataUrl(file);
+      createImageCropModal({ src: url, type: "avatar" });
+    },
+  });
+
+  el.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const button = target.closest("[data-action]") as HTMLDivElement;
+      if (!button) return;
+      const action = button.dataset.action;
+      if (action === "browseAvatar") {
+        fileInput.trigger();
+      }
+    },
+    { signal },
+  );
 
   context.content.replaceChildren(el);
 
