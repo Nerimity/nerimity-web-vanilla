@@ -8,7 +8,7 @@ import { createModal, Modal } from "./modal";
 
 export type CropPoints = [number, number, number, number];
 
-export function getCropRect(state: CroptState) {
+function getCropRect(state: CroptState) {
   const { x, y, width, height, zoom } = state;
   const startX = Math.round(x);
   const startY = Math.round(y);
@@ -17,12 +17,14 @@ export function getCropRect(state: CroptState) {
   return [startX, startY, endX, endY] as CropPoints;
 }
 
+let abortController = new AbortController();
 export const createImageCropModal = (props: {
   src: string;
   type: "avatar" | "banner";
   onCrop?: (points: CropPoints) => void;
 }) => {
-  const abortController = new AbortController();
+  abortController.abort();
+  abortController = new AbortController();
   const { signal } = abortController;
 
   const isAvatar = props.type === "avatar";

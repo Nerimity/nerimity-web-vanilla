@@ -2,10 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { createFileInput } from "../../../components/FileInput";
-import {
-  createImageCropModal,
-  type CropPoints,
-} from "../../../components/ImageCropModal";
+import { type CropPoints } from "../../../components/ImageCropModal";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -156,13 +153,15 @@ const accountSettingsPage = (context: SettingsContext) => {
       updateHandler.changeValue("avatar", url || null);
 
       if (!url) return;
-      createImageCropModal({
-        src: url,
-        type: "avatar",
-        onCrop(points) {
-          updateHandler.changeValue("avatarCropPoints", points);
+      (await import("../../../components/ImageCropModal")).createImageCropModal(
+        {
+          src: url,
+          type: "avatar",
+          onCrop(points) {
+            updateHandler.changeValue("avatarCropPoints", points);
+          },
         },
-      });
+      );
     },
   });
 

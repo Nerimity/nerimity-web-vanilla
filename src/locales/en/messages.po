@@ -66,6 +66,18 @@ msgstr "GIFs"
 msgid "Emojis"
 msgstr "Emojis"
 
+#: src/components/ImageCropModal.tsx:65
+msgid "Crop Image"
+msgstr "Crop Image"
+
+#: src/components/ImageCropModal.tsx:71
+msgid "Don't Crop"
+msgstr "Don't Crop"
+
+#: src/components/ImageCropModal.tsx:74
+msgid "Crop"
+msgstr "Crop"
+
 #: src/components/KickMemberModal.tsx:29
 msgid "Are you sure you want to kick <0>{username}</0>"
 msgstr "Are you sure you want to kick <0>{username}</0>"
@@ -163,7 +175,7 @@ msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
-#: src/pages/app-page/settings/Settings.ts:35
+#: src/pages/app-page/settings/Settings.ts:46
 msgid "Profile"
 msgstr "Profile"
 
@@ -565,7 +577,7 @@ msgid "Last online {0}"
 msgstr "Last online {0}"
 
 #: src/pages/LoginPage.tsx:14
-#: src/pages/app-page/settings/accountSettingsPage.tsx:14
+#: src/pages/app-page/settings/accountSettingsPage.tsx:17
 msgid "Email"
 msgstr "Email"
 
@@ -650,23 +662,31 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/settings/Settings.ts:28
+#: src/pages/app-page/settings/Settings.ts:39
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:15
+#: src/pages/app-page/settings/accountSettingsPage.tsx:18
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:16
+#: src/pages/app-page/settings/accountSettingsPage.tsx:19
 msgid "Tag"
 msgstr "Tag"
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:46
+#: src/pages/app-page/settings/accountSettingsPage.tsx:20
+msgid "Avatar"
+msgstr "Avatar"
+
+#: src/pages/app-page/settings/accountSettingsPage.tsx:95
+msgid "Browse"
+msgstr "Browse"
+
+#: src/pages/app-page/settings/createSettingsRoute.tsx:52
 msgid "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
 msgstr "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:66
+#: src/pages/app-page/settings/createSettingsRoute.tsx:72
 msgid "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
 
