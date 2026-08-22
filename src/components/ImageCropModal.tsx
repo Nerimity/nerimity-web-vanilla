@@ -18,11 +18,13 @@ function getCropRect(state: CroptState) {
 }
 
 let abortController = new AbortController();
-export const createImageCropModal = (props: {
+
+export interface ImageCropModalProps {
   src: string;
   type: "avatar" | "banner";
   onCrop?: (points: CropPoints) => void;
-}) => {
+}
+export const createImageCropModal = (props: ImageCropModalProps) => {
   abortController.abort();
   abortController = new AbortController();
   const { signal } = abortController;

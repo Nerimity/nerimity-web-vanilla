@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { createFileInput } from "../../../components/FileInput";
-import { type CropPoints } from "../../../components/ImageCropModal";
+import type { CropPoints } from "../../../components/ImageCropModal";
 import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
@@ -154,7 +154,7 @@ const accountSettingsPage = (context: SettingsContext) => {
       updateHandler.changeValue("avatar", url || null);
 
       if (!url) return;
-      createImageCropModalLazy({
+      await createImageCropModalLazy({
         src: url,
         type: "avatar",
         onCrop(points) {

@@ -1,7 +1,6 @@
-import type { createImageCropModal } from "./ImageCropModal";
+import type { ImageCropModalProps } from "./ImageCropModal";
 
-export const createImageCropModalLazy = async (
-  ...params: Parameters<typeof createImageCropModal>
-) => {
-  return (await import("./ImageCropModal")).createImageCropModal(...params);
+export const createImageCropModalLazy = async (props: ImageCropModalProps) => {
+  const { createImageCropModal } = await import("./ImageCropModal");
+  return createImageCropModal(props);
 };
