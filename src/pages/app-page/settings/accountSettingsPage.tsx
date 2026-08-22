@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { Input } from "../../../components/input";
+import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
@@ -27,6 +28,8 @@ const accountSettingsPage = (context: SettingsContext) => {
     username: currentUser?.username || "",
     tag: currentUser?.tag || "",
   });
+
+  const actions = createSettingsActions({ signal });
 
   const updateHandler = createUpdatedHandler(initialValues, signal);
 
@@ -74,6 +77,7 @@ const accountSettingsPage = (context: SettingsContext) => {
           value={initialValues().tag}
         />
       </SettingsBlock.Root>
+      {actions.el}
     </div>
   ) as HTMLDivElement;
 
@@ -95,7 +99,19 @@ const accountSettingsPage = (context: SettingsContext) => {
   updateHandler.handleInput(el.querySelector(".usernameInput")!, "username");
   updateHandler.handleInput(el.querySelector(`.${style.tagInput}`)!, "tag");
 
-  updateHandler.onUpdate(console.log);
+  updateHandler.onUpdate((values, hasChanges) => {
+    actions.setVisibility(hasChanges);
+  });
+
+  actions.handleUndoClick(updateHandler.undo);
+
+  actions.handleSaveClick((done) => {
+    // await ...
+
+    setTimeout(() => {
+      done("no");
+    }, 1000);
+  });
 
   context.content.replaceChildren(el);
 

@@ -4,6 +4,8 @@ export function createUpdatedHandler<T extends string, V>(
 ) {
   const changedValues: Partial<Record<T, V>> = {};
 
+  const handlers: { type: "input"; el: HTMLInputElement; key: T }[] = [];
+
   let onUpdateHandler:
     | undefined
     | ((
@@ -29,7 +31,10 @@ export function createUpdatedHandler<T extends string, V>(
   };
 
   const handleInput = (inputContainer: HTMLDivElement, key: T) => {
-    inputContainer.querySelector("input")?.addEventListener(
+    const inputEl = inputContainer.querySelector("input")! as HTMLInputElement;
+    handlers.push({ type: "input", el: inputEl, key });
+
+    inputEl.addEventListener(
       "input",
       (e) => {
         const t = e.target as HTMLInputElement;
@@ -39,10 +44,22 @@ export function createUpdatedHandler<T extends string, V>(
     );
   };
 
+  const undo = () => {
+    for (let i = 0; i < handlers.length; i++) {
+      const handler = handlers[i]!;
+      if (changedValues[handler.key] === undefined) continue;
+      if (handler.type === "input") {
+        delete changedValues[handler.key];
+        handler.el.value = initialValue()[handler.key] as string;
+      }
+    }
+    check();
+  };
+
   const update = (key: T, value: V) => {
     changedValues[key] = value;
     check();
   };
 
-  return { handleInput, onUpdate };
+  return { handleInput, onUpdate, undo };
 }
