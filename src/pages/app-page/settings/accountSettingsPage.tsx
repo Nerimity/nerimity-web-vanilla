@@ -99,7 +99,7 @@ const accountSettingsPage = (context: SettingsContext) => {
   updateHandler.handleInput(el.querySelector(".usernameInput")!, "username");
   updateHandler.handleInput(el.querySelector(`.${style.tagInput}`)!, "tag");
 
-  updateHandler.onUpdate((values, hasChanges) => {
+  updateHandler.onUpdate((_, hasChanges) => {
     actions.setVisibility(hasChanges);
   });
 
