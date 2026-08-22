@@ -31,9 +31,13 @@ export function fileToDataUrl(file: File): Promise<string> {
 }
 
 export async function fileToDimensions(file: File) {
+  const url = await fileToDataUrl(file);
+  return urlToDimensions(url);
+}
+
+export async function urlToDimensions(url: string) {
   const img = new Image();
 
-  const url = await fileToDataUrl(file);
   img.src = url;
   return new Promise<{
     width: number;

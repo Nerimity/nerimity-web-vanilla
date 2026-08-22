@@ -1,13 +1,24 @@
 import { t } from "@lingui/core/macro";
 
+import type { CropPoints } from "../../../components/ImageCropModal";
 import * as accountSettingsPage from "./accountSettingsPage";
 
 export interface Page {
   destroy: () => void;
 }
 
+export interface HeaderOverrides {
+  username?: string;
+  tag?: string;
+  avatar?: {
+    url: string;
+    cropPoints?: CropPoints;
+  };
+}
+
 export interface SettingsContext {
   content: HTMLDivElement;
+  overrideHeader: (override: HeaderOverrides) => void;
 }
 
 export interface Setting {

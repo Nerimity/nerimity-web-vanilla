@@ -2,7 +2,10 @@ import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { createFileInput } from "../../../components/FileInput";
-import { createImageCropModal } from "../../../components/ImageCropModal";
+import {
+  createImageCropModal,
+  type CropPoints,
+} from "../../../components/ImageCropModal";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -31,7 +34,9 @@ const accountSettingsPage = (context: SettingsContext) => {
     email: currentUser?.email || "",
     username: currentUser?.username || "",
     tag: currentUser?.tag || "",
-    avatar: null as null | File,
+
+    avatar: null as null | string,
+    avatarCropPoints: null as null | CropPoints,
   });
 
   const actions = createSettingsActions({ signal });
@@ -116,7 +121,20 @@ const accountSettingsPage = (context: SettingsContext) => {
   updateHandler.handleInput(el.querySelector(".usernameInput")!, "username");
   updateHandler.handleInput(el.querySelector(`.${style.tagInput}`)!, "tag");
 
-  updateHandler.onUpdate((_, hasChanges) => {
+  updateHandler.onUpdate((changes, hasChanges) => {
+    context.overrideHeader({
+      username: changes.username,
+      tag: changes.tag,
+      ...(changes.avatar
+        ? {
+            avatar: {
+              url: changes.avatar,
+              cropPoints: changes.avatarCropPoints || undefined,
+            },
+          }
+        : { avatar: undefined }),
+    });
+
     actions.setVisibility(hasChanges);
   });
 
@@ -132,11 +150,19 @@ const accountSettingsPage = (context: SettingsContext) => {
 
   const fileInput = createFileInput({
     signal,
+    imageOnly: true,
     async onChange(file) {
-      updateHandler.changeValue("avatar", file || null);
-      if (!file) return;
-      const url = await fileToDataUrl(file);
-      createImageCropModal({ src: url, type: "avatar" });
+      const url = file && (await fileToDataUrl(file));
+      updateHandler.changeValue("avatar", url || null);
+
+      if (!url) return;
+      createImageCropModal({
+        src: url,
+        type: "avatar",
+        onCrop(points) {
+          updateHandler.changeValue("avatarCropPoints", points);
+        },
+      });
     },
   });
 

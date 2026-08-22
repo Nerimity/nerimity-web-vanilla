@@ -1,4 +1,5 @@
 import { Plural, Trans } from "@trans";
+import morphdom from "morphdom";
 
 import { Avatar } from "../../../components/avatar";
 import { Banner } from "../../../components/Banner";
@@ -12,7 +13,12 @@ import { storeEmitter } from "../../../utils/EventEmitter";
 import { getFont } from "../../../utils/font";
 import { router } from "../../../utils/router";
 import { getAppHeader, type RouteContext } from "../AppPage";
-import { Settings, type Page } from "./Settings";
+import {
+  Settings,
+  type HeaderOverrides,
+  type Page,
+  type SettingsContext,
+} from "./Settings";
 
 import style from "./createSettingsRoute.module.css";
 
@@ -86,7 +92,7 @@ const Stats = () => {
   );
 };
 
-const Header = () => {
+const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
   const user = accountStore.currentUser;
   if (!user) return null;
 
@@ -96,11 +102,17 @@ const Header = () => {
         <Banner user={user} />
       </div>
       <div class={style.overlayInfo}>
-        <Avatar user={user} size={128} />
+        <Avatar user={user} size={128} image={overrides.avatar} />
       </div>
 
       <div class={[style.section, style.detailsSection]}>
-        <NameAndTag user={user} />
+        <NameAndTag
+          user={{
+            ...user,
+            username: overrides.username ?? user.username,
+            tag: overrides.tag ?? user.tag,
+          }}
+        />
 
         <Stats />
       </div>
@@ -112,12 +124,34 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
+  const headerContainerEl = (<div></div>) as HTMLDivElement;
+
   const serverChannelList = createSettingsDrawer();
 
   const innerContent = (<div></div>) as HTMLDivElement;
   let page: Page | undefined = undefined;
-  const context = { content: innerContent };
 
+  let headerOverride: HeaderOverrides = {};
+
+  const context: SettingsContext = {
+    content: innerContent,
+    overrideHeader(override) {
+      headerOverride = { ...headerOverride, ...override };
+      renderHeader();
+    },
+  };
+
+  const renderHeader = () => {
+    morphdom(
+      headerContainerEl,
+      <div>
+        <Header overrides={headerOverride} />
+      </div>,
+      {
+        childrenOnly: true,
+      },
+    );
+  };
   const renderPage = () => {
     const matchedRoute = Settings.find((s) =>
       router.match("/app/settings" + s.path),
@@ -138,9 +172,10 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   };
 
   const render = () => {
+    renderHeader();
     content.replaceChildren(
       <div class={style.content}>
-        <Header />
+        {headerContainerEl}
         {innerContent}
       </div>,
     );

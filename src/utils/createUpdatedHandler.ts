@@ -1,27 +1,35 @@
-type Handler<T> = { type: "input"; el: HTMLInputElement; key: T };
+type ValueMap = Record<string, unknown>;
 
-export function createUpdatedHandler<T extends string, V>(
-  initialValue: () => Record<T, V>,
+type KeysOfType<T extends ValueMap, V> = {
+  [K in keyof T]: T[K] extends V ? K : never;
+}[keyof T];
+
+type Handler<T extends ValueMap> = {
+  type: "input";
+  el: HTMLInputElement;
+  key: keyof T;
+};
+
+export function createUpdatedHandler<T extends ValueMap>(
+  initialValue: () => T,
   signal: AbortSignal,
 ) {
-  let changedValues: Partial<Record<T, V>> = {};
+  let changedValues: Partial<T> = {};
 
   const handlers: Handler<T>[] = [];
 
   let onUpdateHandler:
     | undefined
-    | ((
-        changedValues: Partial<Record<T, V>>,
-        hasChangedValues: boolean,
-      ) => void) = undefined;
+    | ((changedValues: Partial<T>, hasChangedValues: boolean) => void) =
+    undefined;
 
   const onUpdate = (cb: typeof onUpdateHandler) => {
     onUpdateHandler = cb;
   };
 
   const check = () => {
-    const updatedValues: Partial<Record<T, V>> = {};
-    const entries = Object.entries(initialValue()) as [T, V][];
+    const updatedValues: Partial<T> = {};
+    const entries = Object.entries(initialValue()) as [keyof T, T[keyof T]][];
     for (const [key, val] of entries) {
       const changedVal = changedValues[key];
       if (changedVal === undefined) continue;
@@ -32,7 +40,15 @@ export function createUpdatedHandler<T extends string, V>(
     onUpdateHandler?.(updatedValues, !!Object.keys(updatedValues).length);
   };
 
-  const handleInput = (inputContainer: HTMLDivElement, key: T) => {
+  const update = <K extends keyof T>(key: K, value: T[K]) => {
+    changedValues[key] = value;
+    check();
+  };
+
+  const handleInput = <K extends KeysOfType<T, string>>(
+    inputContainer: HTMLDivElement,
+    key: K,
+  ) => {
     const inputEl = inputContainer.querySelector("input")! as HTMLInputElement;
     handlers.push({ type: "input", el: inputEl, key });
 
@@ -40,20 +56,14 @@ export function createUpdatedHandler<T extends string, V>(
       "input",
       (e) => {
         const t = e.target as HTMLInputElement;
-        update(key, t.value as V);
+        update(key, t.value as T[K]);
       },
       { signal },
     );
   };
 
-  const changeValue = (key: T, value: V) => {
-    changedValues[key] = value;
-    check();
-  };
-
   const undo = () => {
-    for (let i = 0; i < handlers.length; i++) {
-      const handler = handlers[i]!;
+    for (const handler of handlers) {
       if (changedValues[handler.key] === undefined) continue;
       if (handler.type === "input") {
         handler.el.value = initialValue()[handler.key] as string;
@@ -63,10 +73,5 @@ export function createUpdatedHandler<T extends string, V>(
     check();
   };
 
-  const update = (key: T, value: V) => {
-    changedValues[key] = value;
-    check();
-  };
-
-  return { handleInput, onUpdate, undo, changeValue };
+  return { handleInput, onUpdate, undo, changeValue: update };
 }
