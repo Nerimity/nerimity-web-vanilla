@@ -13,630 +13,640 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/BanMemberModal.tsx:32
+#: src/components/BanMemberModal.tsx:31
 msgid "Delete messages sent in the past 7 hours."
 msgstr "Delete messages sent in the past 7 hours."
 
-#: src/components/BanMemberModal.tsx:38
+#: src/components/BanMemberModal.tsx:37
 msgid "Are you sure you want to ban <0>{username}</0>"
 msgstr "Are you sure you want to ban <0>{username}</0>"
 
-#: src/components/BanMemberModal.tsx:43
+#: src/components/BanMemberModal.tsx:42
 msgid "Reason (optional)"
 msgstr "Reason (optional)"
 
-#: src/components/BanMemberModal.tsx:59
+#: src/components/BanMemberModal.tsx:58
 msgid "Ban {username}"
 msgstr "Ban {username}"
 
-#: src/components/BanMemberModal.tsx:65
+#: src/components/BanMemberModal.tsx:64
 msgid "Don't Ban"
 msgstr "Don't Ban"
 
-#: src/components/BanMemberModal.tsx:72
-#: src/components/BanMemberModal.tsx:98
+#: src/components/BanMemberModal.tsx:71
+#: src/components/BanMemberModal.tsx:97
 msgid "Ban"
 msgstr "Ban"
 
-#: src/components/BanMemberModal.tsx:86
+#: src/components/BanMemberModal.tsx:85
 msgid "Banning..."
 msgstr "Banning..."
 
-#: src/components/EditServerRolesModal.tsx:57
+#: src/components/EditServerRolesModal.tsx:56
 msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
 
-#: src/components/EditServerRolesModal.tsx:153
+#: src/components/EditServerRolesModal.tsx:152
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 
-#: src/components/EmojiPicker.tsx:171
+#: src/components/EmojiPicker.tsx:170
 msgid "Search Emojis..."
 msgstr "Search Emojis..."
 
-#: src/components/EmojiPicker.tsx:464
+#: src/components/EmojiPicker.tsx:463
 msgid "Recent Emojis"
 msgstr "Recent Emojis"
 
-#: src/components/ExpressionPicker.tsx:70
+#: src/components/ExpressionPicker.tsx:69
 msgid "GIFs"
 msgstr "GIFs"
 
-#: src/components/ExpressionPicker.tsx:79
+#: src/components/ExpressionPicker.tsx:78
 msgid "Emojis"
 msgstr "Emojis"
 
-#: src/components/KickMemberModal.tsx:30
+#: src/components/KickMemberModal.tsx:29
 msgid "Are you sure you want to kick <0>{username}</0>"
 msgstr "Are you sure you want to kick <0>{username}</0>"
 
-#: src/components/KickMemberModal.tsx:41
+#: src/components/KickMemberModal.tsx:40
 msgid "Kick {username}"
 msgstr "Kick {username}"
 
-#: src/components/KickMemberModal.tsx:47
+#: src/components/KickMemberModal.tsx:46
 msgid "Don't Kick"
 msgstr "Don't Kick"
 
-#: src/components/KickMemberModal.tsx:54
-#: src/components/KickMemberModal.tsx:75
+#: src/components/KickMemberModal.tsx:53
+#: src/components/KickMemberModal.tsx:74
 msgid "Kick"
 msgstr "Kick"
 
-#: src/components/KickMemberModal.tsx:68
+#: src/components/KickMemberModal.tsx:67
 msgid "Kicking..."
 msgstr "Kicking..."
 
-#: src/components/LinkWarnModal.tsx:14
+#: src/components/LinkWarnModal.tsx:13
 msgid "External link"
 msgstr "External link"
 
-#: src/components/LinkWarnModal.tsx:17
+#: src/components/LinkWarnModal.tsx:16
 msgid "You are about to visit an external link."
 msgstr "You are about to visit an external link."
 
-#: src/components/LinkWarnModal.tsx:22
+#: src/components/LinkWarnModal.tsx:21
 msgid "Don't visit"
 msgstr "Don't visit"
 
-#: src/components/LinkWarnModal.tsx:25
+#: src/components/LinkWarnModal.tsx:24
 msgid "Visit site"
 msgstr "Visit site"
 
-#: src/components/LogoutModal.tsx:21
+#: src/components/LogoutModal.tsx:20
 msgid "Are you sure you want to logout?"
 msgstr "Are you sure you want to logout?"
 
-#: src/components/LogoutModal.tsx:24
+#: src/components/LogoutModal.tsx:23
 msgid "Clear local settings"
 msgstr "Clear local settings"
 
-#: src/components/LogoutModal.tsx:40
-#: src/components/LogoutModal.tsx:53
-#: src/components/createAuthErrorModal.tsx:53
-#: src/components/miniProfile.tsx:303
+#: src/components/LogoutModal.tsx:39
+#: src/components/LogoutModal.tsx:52
+#: src/components/createAuthErrorModal.tsx:52
+#: src/components/miniProfile.tsx:302
 msgid "Logout"
 msgstr "Logout"
 
-#: src/components/LogoutModal.tsx:46
+#: src/components/LogoutModal.tsx:45
 msgid "Don't Logout"
 msgstr "Don't Logout"
 
-#: src/components/UserContextMenu.tsx:124
+#: src/components/UserContextMenu.tsx:123
 msgid "View Profile"
 msgstr "View Profile"
 
-#: src/components/UserContextMenu.tsx:128
-#: src/components/miniProfile.tsx:266
-#: src/components/miniProfile.tsx:290
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
+#: src/components/UserContextMenu.tsx:127
+#: src/components/miniProfile.tsx:265
+#: src/components/miniProfile.tsx:289
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:238
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/UserContextMenu.tsx:128
-#: src/components/miniProfile.tsx:266
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
+#: src/components/UserContextMenu.tsx:127
+#: src/components/miniProfile.tsx:265
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:238
 msgid "Message"
 msgstr "Message"
 
-#: src/components/UserContextMenu.tsx:133
+#: src/components/UserContextMenu.tsx:132
 msgid "Edit Roles"
 msgstr "Edit Roles"
 
-#: src/components/UserContextMenu.tsx:140
+#: src/components/UserContextMenu.tsx:139
 msgid "Ban Member"
 msgstr "Ban Member"
 
-#: src/components/UserContextMenu.tsx:146
+#: src/components/UserContextMenu.tsx:145
 msgid "Kick Member"
 msgstr "Kick Member"
 
-#: src/components/UserContextMenu.tsx:152
-#: src/components/message-pane/messagePane.tsx:613
+#: src/components/UserContextMenu.tsx:151
+#: src/components/message-pane/messagePane.tsx:612
 msgid "Copy ID"
 msgstr "Copy ID"
 
-#: src/components/UserContextMenu.tsx:156
-#: src/components/message-pane/messagePane.tsx:617
+#: src/components/UserContextMenu.tsx:155
+#: src/components/message-pane/messagePane.tsx:616
 msgid "Copy Object"
 msgstr "Copy Object"
 
-#: src/components/appHeader.tsx:35
-#: src/components/miniProfile.tsx:283
+#: src/components/appHeader.tsx:34
+#: src/components/miniProfile.tsx:282
 #: src/pages/app-page/settings/Settings.ts:35
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/appHeader.tsx:35
+#: src/components/appHeader.tsx:34
 msgid "Home"
 msgstr "Home"
 
-#: src/components/createAuthErrorModal.tsx:24
+#: src/components/createAuthErrorModal.tsx:23
 msgid "Suspended"
 msgstr "Suspended"
 
-#: src/components/createAuthErrorModal.tsx:25
+#: src/components/createAuthErrorModal.tsx:24
 msgid "IP Banned"
 msgstr "IP Banned"
 
-#: src/components/createAuthErrorModal.tsx:26
+#: src/components/createAuthErrorModal.tsx:25
 msgid "Authentication Error"
 msgstr "Authentication Error"
 
-#: src/components/createAuthErrorModal.tsx:30
+#: src/components/createAuthErrorModal.tsx:29
 msgid "Token not provided."
 msgstr "Token not provided."
 
-#: src/components/createAuthErrorModal.tsx:31
+#: src/components/createAuthErrorModal.tsx:30
 msgid "You are suspended."
 msgstr "You are suspended."
 
-#: src/components/createAuthErrorModal.tsx:55
-#: src/components/createAuthErrorModal.tsx:60
-#: src/components/createWarnModal.tsx:90
+#: src/components/createAuthErrorModal.tsx:54
+#: src/components/createAuthErrorModal.tsx:59
+#: src/components/createWarnModal.tsx:89
 msgid "Dismiss"
 msgstr "Dismiss"
 
-#: src/components/createAuthErrorModal.tsx:65
-#: src/pages/LoginPage.tsx:23
-#: src/pages/LoginPage.tsx:58
+#: src/components/createAuthErrorModal.tsx:64
+#: src/pages/LoginPage.tsx:22
+#: src/pages/LoginPage.tsx:57
 msgid "Login"
 msgstr "Login"
 
-#: src/components/createAuthErrorModal.tsx:82
-#: src/components/createAuthErrorModal.tsx:115
+#: src/components/createAuthErrorModal.tsx:81
+#: src/components/createAuthErrorModal.tsx:114
 msgid "<0>Expires: </0><1>{date}</1>"
 msgstr "<0>Expires: </0><1>{date}</1>"
 
-#: src/components/createAuthErrorModal.tsx:86
-#: src/components/createAuthErrorModal.tsx:119
+#: src/components/createAuthErrorModal.tsx:85
+#: src/components/createAuthErrorModal.tsx:118
 msgid "Never"
 msgstr "Never"
 
-#: src/components/createAuthErrorModal.tsx:93
+#: src/components/createAuthErrorModal.tsx:92
 msgid "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
 msgstr "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
 
-#: src/components/createAuthErrorModal.tsx:105
-#: src/components/createWarnModal.tsx:41
+#: src/components/createAuthErrorModal.tsx:104
+#: src/components/createWarnModal.tsx:40
 msgid "<0>Reason: </0><1>{reason}</1>"
 msgstr "<0>Reason: </0><1>{reason}</1>"
 
-#: src/components/createAuthErrorModal.tsx:109
-#: src/components/createWarnModal.tsx:45
+#: src/components/createAuthErrorModal.tsx:108
+#: src/components/createWarnModal.tsx:44
 msgid "Violating the Terms of Servie."
 msgstr "Violating the Terms of Servie."
 
-#: src/components/createAuthErrorModal.tsx:125
-#: src/components/createWarnModal.tsx:52
+#: src/components/createAuthErrorModal.tsx:124
+#: src/components/createWarnModal.tsx:51
 msgid "<0>By: </0><1>{username}</1>"
 msgstr "<0>By: </0><1>{username}</1>"
 
-#: src/components/createAuthErrorModal.tsx:129
-#: src/components/createWarnModal.tsx:56
+#: src/components/createAuthErrorModal.tsx:128
+#: src/components/createWarnModal.tsx:55
 msgid "Not Provided"
 msgstr "Not Provided"
 
-#: src/components/createAuthErrorModal.tsx:137
+#: src/components/createAuthErrorModal.tsx:136
 msgid "Your account and data will be deleted in 15 days."
 msgstr "Your account and data will be deleted in 15 days."
 
-#: src/components/createWarnModal.tsx:16
+#: src/components/createWarnModal.tsx:15
 msgid "Warning"
 msgstr "Warning"
 
-#: src/components/createWarnModal.tsx:18
+#: src/components/createWarnModal.tsx:17
 msgid "You have been warned."
 msgstr "You have been warned."
 
-#: src/components/createWarnModal.tsx:63
+#: src/components/createWarnModal.tsx:62
 msgid "if you continue with this behavior, your account will be suspended."
 msgstr "if you continue with this behavior, your account will be suspended."
 
-#: src/components/createWarnModal.tsx:89
+#: src/components/createWarnModal.tsx:88
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/inboxDrawer.tsx:318
+#: src/components/inboxDrawer.tsx:317
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/inboxDrawer.tsx:321
+#: src/components/inboxDrawer.tsx:320
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/inboxDrawer.tsx:324
+#: src/components/inboxDrawer.tsx:323
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/inboxDrawer.tsx:391
+#: src/components/inboxDrawer.tsx:390
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:397
+#: src/components/inboxDrawer.tsx:396
 msgid "Friends"
 msgstr "Friends"
 
-#: src/components/markup/Emoji.tsx:88
+#: src/components/markup/Emoji.tsx:87
 msgid "Custom Emoji"
 msgstr "Custom Emoji"
 
-#: src/components/markup/Emoji.tsx:88
+#: src/components/markup/Emoji.tsx:87
 msgid "Default Emoji"
 msgstr "Default Emoji"
 
-#: src/components/markup/QuoteMessage.tsx:61
+#: src/components/markup/QuoteMessage.tsx:60
 msgid "Invalid Quote"
 msgstr "Invalid Quote"
 
-#: src/components/markup/QuoteMessage.tsx:65
+#: src/components/markup/QuoteMessage.tsx:64
 msgid "Hidden Quote"
 msgstr "Hidden Quote"
 
-#: src/components/message-pane/HtmlEmbed.tsx:30
+#: src/components/message-pane/HtmlEmbed.tsx:29
 msgid "Embed not supported by your browser."
 msgstr "Embed not supported by your browser."
 
 #. placeholder {0}: inviteItem.memberCount
 #. placeholder {1}: inviteItem.memberCount.toLocaleString()
 #. placeholder {2}: inviteItem.memberCount.toLocaleString()
-#: src/components/message-pane/InviteEmbed.tsx:80
+#: src/components/message-pane/InviteEmbed.tsx:79
 msgid "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 msgstr "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 
-#: src/components/message-pane/InviteEmbed.tsx:113
+#: src/components/message-pane/InviteEmbed.tsx:112
 msgid "Visit"
 msgstr "Visit"
 
-#: src/components/message-pane/InviteEmbed.tsx:113
+#: src/components/message-pane/InviteEmbed.tsx:112
 msgid "Join"
 msgstr "Join"
 
-#: src/components/message-pane/InviteEmbed.tsx:152
+#: src/components/message-pane/InviteEmbed.tsx:151
 msgid "Emoji from a private server."
 msgstr "Emoji from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:154
+#: src/components/message-pane/InviteEmbed.tsx:153
 msgid "Clan from a private server."
 msgstr "Clan from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:155
+#: src/components/message-pane/InviteEmbed.tsx:154
 msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
-#: src/components/message-pane/JumpToPresent.tsx:23
-#: src/components/message-pane/messageItem.tsx:113
+#: src/components/message-pane/JumpToPresent.tsx:22
+#: src/components/message-pane/messageItem.tsx:112
 msgid "New Messages"
 msgstr "New Messages"
 
-#: src/components/message-pane/SystemMessage.tsx:30
+#: src/components/message-pane/SystemMessage.tsx:29
 msgid "{username} has been added."
 msgstr "{username} has been added."
 
-#: src/components/message-pane/SystemMessage.tsx:32
+#: src/components/message-pane/SystemMessage.tsx:31
 msgid "{username} has joined."
 msgstr "{username} has joined."
 
-#: src/components/message-pane/SystemMessage.tsx:39
+#: src/components/message-pane/SystemMessage.tsx:38
 msgid "{username} has left."
 msgstr "{username} has left."
 
-#: src/components/message-pane/SystemMessage.tsx:46
+#: src/components/message-pane/SystemMessage.tsx:45
 msgid "{username} has been kicked."
 msgstr "{username} has been kicked."
 
-#: src/components/message-pane/SystemMessage.tsx:53
+#: src/components/message-pane/SystemMessage.tsx:52
 msgid "{username} has been banned."
 msgstr "{username} has been banned."
 
-#: src/components/message-pane/SystemMessage.tsx:60
+#: src/components/message-pane/SystemMessage.tsx:59
 msgid "{username} started a call."
 msgstr "{username} started a call."
 
-#: src/components/message-pane/SystemMessage.tsx:67
+#: src/components/message-pane/SystemMessage.tsx:66
 msgid "{username} bumped the server."
 msgstr "{username} bumped the server."
 
-#: src/components/message-pane/SystemMessage.tsx:74
+#: src/components/message-pane/SystemMessage.tsx:73
 msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name
-#: src/components/message-pane/chatbar.tsx:268
+#: src/components/message-pane/chatbar.tsx:267
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:273
+#: src/components/message-pane/chatbar.tsx:272
 msgid "Message {0}"
 msgstr "Message {0}"
 
-#: src/components/message-pane/deleteMessageModal.tsx:28
+#: src/components/message-pane/deleteMessageModal.tsx:27
 msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
-#: src/components/message-pane/deleteMessageModal.tsx:40
-#: src/components/message-pane/messagePane.tsx:603
+#: src/components/message-pane/deleteMessageModal.tsx:39
+#: src/components/message-pane/messagePane.tsx:602
 msgid "Delete Message"
 msgstr "Delete Message"
 
-#: src/components/message-pane/deleteMessageModal.tsx:46
+#: src/components/message-pane/deleteMessageModal.tsx:45
 msgid "Don't Delete"
 msgstr "Don't Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:53
-#: src/components/message-pane/deleteMessageModal.tsx:74
+#: src/components/message-pane/deleteMessageModal.tsx:52
+#: src/components/message-pane/deleteMessageModal.tsx:73
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/message-pane/deleteMessageModal.tsx:67
+#: src/components/message-pane/deleteMessageModal.tsx:66
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/inputSuggestions.tsx:238
-#: src/components/message-pane/inputSuggestions.tsx:272
+#: src/components/message-pane/inputSuggestions.tsx:237
+#: src/components/message-pane/inputSuggestions.tsx:271
 msgid "Silent message."
 msgstr "Silent message."
 
-#: src/components/message-pane/inputSuggestions.tsx:239
-#: src/components/message-pane/inputSuggestions.tsx:273
+#: src/components/message-pane/inputSuggestions.tsx:238
+#: src/components/message-pane/inputSuggestions.tsx:272
 msgid "Mentions a random user."
 msgstr "Mentions a random user."
 
-#: src/components/message-pane/inputSuggestions.tsx:241
+#: src/components/message-pane/inputSuggestions.tsx:240
 msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
-#: src/components/message-pane/inputSuggestions.tsx:551
+#: src/components/message-pane/inputSuggestions.tsx:550
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:153
+#: src/components/message-pane/messageItem.tsx:152
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
 
-#: src/components/message-pane/messageItem.tsx:173
+#: src/components/message-pane/messageItem.tsx:172
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:188
+#: src/components/message-pane/messageItem.tsx:187
 msgid "Pinned Message"
 msgstr "Pinned Message"
 
-#: src/components/message-pane/messageItem.tsx:197
+#: src/components/message-pane/messageItem.tsx:196
 msgid "Webhook"
 msgstr "Webhook"
 
-#: src/components/message-pane/messageItem.tsx:199
+#: src/components/message-pane/messageItem.tsx:198
 #: src/utils/UserBadgeFlag.ts:298
 msgid "Bot"
 msgstr "Bot"
 
-#: src/components/message-pane/messageItem.tsx:200
+#: src/components/message-pane/messageItem.tsx:199
 msgid "Owner"
 msgstr "Owner"
 
-#: src/components/message-pane/messageItem.tsx:208
+#: src/components/message-pane/messageItem.tsx:207
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:350
+#: src/components/message-pane/messageItem.tsx:349
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messagePane.tsx:593
+#: src/components/message-pane/messagePane.tsx:592
 msgid "Edit Message"
 msgstr "Edit Message"
 
-#: src/components/message-pane/messagePane.tsx:598
+#: src/components/message-pane/messagePane.tsx:597
 msgid "Reply Message"
 msgstr "Reply Message"
 
-#: src/components/message-pane/messagePane.tsx:609
+#: src/components/message-pane/messagePane.tsx:608
 msgid "Copy Content"
 msgstr "Copy Content"
 
-#: src/components/message-pane/repliesIndicator.tsx:74
+#: src/components/message-pane/repliesIndicator.tsx:73
 msgid "Mention"
 msgstr "Mention"
 
 #. placeholder {0}: names.length
-#: src/components/message-pane/typingIndicator.tsx:196
+#: src/components/message-pane/typingIndicator.tsx:195
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:213
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:152
+#: src/components/miniProfile.tsx:212
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:151
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
-#: src/components/miniProfile.tsx:221
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:363
+#: src/components/miniProfile.tsx:220
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:362
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:244
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:386
+#: src/components/miniProfile.tsx:243
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:385
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:256
+#: src/components/miniProfile.tsx:255
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:296
-#: src/components/settings/createSettingsDrawer.tsx:15
+#: src/components/miniProfile.tsx:295
+#: src/components/settings/createSettingsDrawer.tsx:14
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/miniProfile.tsx:316
+#: src/components/miniProfile.tsx:315
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:330
+#: src/components/miniProfile.tsx:329
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:347
+#: src/components/miniProfile.tsx:346
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:600
-#: src/components/right-drawer/DrawerChannelNotice.tsx:17
+#: src/components/miniProfile.tsx:599
+#: src/components/right-drawer/DrawerChannelNotice.tsx:16
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/miniProfile.tsx:650
+#: src/components/miniProfile.tsx:649
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:737
-#: src/components/miniProfile.tsx:780
+#: src/components/miniProfile.tsx:736
+#: src/components/miniProfile.tsx:779
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:785
+#: src/components/miniProfile.tsx:784
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:789
+#: src/components/miniProfile.tsx:788
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:790
+#: src/components/miniProfile.tsx:789
+#: src/components/settings-actions/SettingsActions.tsx:25
+#: src/components/settings-actions/SettingsActions.tsx:40
 msgid "Save"
 msgstr "Save"
 
-#: src/components/right-drawer/RightDrawer.tsx:25
+#: src/components/right-drawer/RightDrawer.tsx:24
 msgid "Info"
 msgstr "Info"
 
-#: src/components/right-drawer/RightDrawer.tsx:26
+#: src/components/right-drawer/RightDrawer.tsx:25
 msgid "Files"
 msgstr "Files"
 
-#: src/components/right-drawer/RightDrawer.tsx:27
+#: src/components/right-drawer/RightDrawer.tsx:26
 msgid "Search"
 msgstr "Search"
 
-#: src/components/right-drawer/ServerInfoDrawer.tsx:43
+#: src/components/right-drawer/ServerInfoDrawer.tsx:42
 #: src/store/userPresenceStore.ts:33
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/serverClanItem.tsx:47
+#: src/components/serverClanItem.tsx:46
 msgid "Server Clan"
 msgstr "Server Clan"
 
+#: src/components/settings-actions/SettingsActions.tsx:21
+msgid "Undo"
+msgstr "Undo"
+
+#: src/components/settings-actions/SettingsActions.tsx:60
+msgid "Saving..."
+msgstr "Saving..."
+
 #. placeholder {0}: formatTimestamp(user.lastOnlineAt)
-#: src/components/userPresence.tsx:61
+#: src/components/userPresence.tsx:60
 msgid "Last online {0}"
 msgstr "Last online {0}"
 
-#: src/pages/LoginPage.tsx:15
-#: src/pages/app-page/settings/accountSettingsPage.tsx:9
+#: src/pages/LoginPage.tsx:14
+#: src/pages/app-page/settings/accountSettingsPage.tsx:14
 msgid "Email"
 msgstr "Email"
 
-#: src/pages/LoginPage.tsx:18
+#: src/pages/LoginPage.tsx:17
 msgid "Password"
 msgstr "Password"
 
-#: src/pages/LoginPage.tsx:30
+#: src/pages/LoginPage.tsx:29
 msgid "Login to continue"
 msgstr "Login to continue"
 
-#: src/pages/LoginPage.tsx:66
+#: src/pages/LoginPage.tsx:65
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:176
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:175
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:181
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:180
 msgid "Accept Request"
 msgstr "Accept Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:187
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:186
 msgid "Remove Request"
 msgstr "Remove Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:194
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:193
 msgid "Remove Friend"
 msgstr "Remove Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:197
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:196
 msgid "Add Friend"
 msgstr "Add Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:220
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:219
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:230
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:229
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:464
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:463
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:486
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:486
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:562
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:561
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:606
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:605
 msgid "Badges"
 msgstr "Badges"
 
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:24
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:23
 msgid "Are you sure you want to unfriend this user?"
 msgstr "Are you sure you want to unfriend this user?"
 
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:37
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:36
 msgid "Unfriend {username}?"
 msgstr "Unfriend {username}?"
 
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:45
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:44
 msgid "Don't Unfriend"
 msgstr "Don't Unfriend"
 
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:52
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:70
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:51
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:69
 msgid "Unfriend"
 msgstr "Unfriend"
 
-#: src/pages/app-page/profile-pane/removeFriendModal.tsx:66
+#: src/pages/app-page/profile-pane/removeFriendModal.tsx:65
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
@@ -644,35 +654,39 @@ msgstr "Unfriending..."
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:10
+#: src/pages/app-page/settings/accountSettingsPage.tsx:15
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:47
+#: src/pages/app-page/settings/accountSettingsPage.tsx:16
+msgid "Tag"
+msgstr "Tag"
+
+#: src/pages/app-page/settings/createSettingsRoute.tsx:46
 msgid "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
 msgstr "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:67
+#: src/pages/app-page/settings/createSettingsRoute.tsx:66
 msgid "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
 
-#: src/store/accountStore.ts:125
+#: src/store/accountStore.ts:126
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:129
+#: src/store/accountStore.ts:130
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:133
+#: src/store/accountStore.ts:134
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:136
+#: src/store/accountStore.ts:137
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:138
+#: src/store/accountStore.ts:139
 msgid "Connected!"
 msgstr "Connected!"
 
