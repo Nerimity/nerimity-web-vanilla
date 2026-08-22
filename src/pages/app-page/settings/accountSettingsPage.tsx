@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { Button } from "../../../components/button";
 import { createFileInput } from "../../../components/FileInput";
 import { type CropPoints } from "../../../components/ImageCropModal";
+import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -153,15 +154,13 @@ const accountSettingsPage = (context: SettingsContext) => {
       updateHandler.changeValue("avatar", url || null);
 
       if (!url) return;
-      (await import("../../../components/ImageCropModal")).createImageCropModal(
-        {
-          src: url,
-          type: "avatar",
-          onCrop(points) {
-            updateHandler.changeValue("avatarCropPoints", points);
-          },
+      createImageCropModalLazy({
+        src: url,
+        type: "avatar",
+        onCrop(points) {
+          updateHandler.changeValue("avatarCropPoints", points);
         },
-      );
+      });
     },
   });
 
