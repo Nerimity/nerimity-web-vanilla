@@ -1,4 +1,3 @@
-import { h } from "../h";
 import { ChannelType } from "../Types";
 import { unicodeToShortcode, unicodeToTwemojiUrl } from "../utils/emojis";
 import { buildImageUrl } from "../utils/image";

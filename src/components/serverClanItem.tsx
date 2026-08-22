@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../h";
 import type { ServerClan } from "../Types";
 import { CdnIcon } from "./cdnIcon";
 import { InviteEmbed } from "./message-pane/InviteEmbed";

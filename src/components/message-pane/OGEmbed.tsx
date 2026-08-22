@@ -1,4 +1,3 @@
-import { h } from "../../h";
 import type { RawMessageEmbed } from "../../Types";
 import { MarkupLink } from "../markup/MarkupLink";
 import { ImageEmbed } from "./imageEmbed";

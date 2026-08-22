@@ -1,4 +1,3 @@
-import { h } from "../h";
 import { Icon } from "./icon";
 
 import style from "./checkbox.module.css";

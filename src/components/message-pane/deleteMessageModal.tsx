@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
 import { deleteMessage } from "../../services/messageService";
 import type { Message } from "../../store/messageStore";
 import { Button } from "../button";

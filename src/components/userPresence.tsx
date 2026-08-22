@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h, Fragment } from "../h";
 import {
   UserPresenceDetails,
   userPresenceStore,

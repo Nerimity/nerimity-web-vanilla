@@ -1,5 +1,4 @@
 import { Dynamic } from "../dynamic";
-import { h } from "../h";
 import { createResizeObserver } from "../utils/observer";
 
 import style from "./input.module.css";

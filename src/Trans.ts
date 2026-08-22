@@ -1,7 +1,6 @@
 import { i18n, type MessageId } from "@lingui/core";
 import type { PluralChoiceProps } from "@lingui/react/macro";
-
-import { Fragment } from "./h";
+import { Fragment } from "@nerimity/jsx/jsx-runtime";
 
 const tagRe = /<([a-zA-Z0-9]+)>([\s\S]*?)<\/\1>|<([a-zA-Z0-9]+)\/>/;
 

@@ -1,4 +1,4 @@
-import { h, Fragment } from "../../h";
+import { h } from "../../h";
 import { resolveGradient } from "../../utils/color";
 import { Avatar } from "../avatar";
 import { GradientText } from "../gradientText";

@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../h";
 import { logout } from "../utils/logout";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";

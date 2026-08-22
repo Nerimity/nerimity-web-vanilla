@@ -1,6 +1,5 @@
 import morphdom from "morphdom";
 
-import { h } from "../h";
 import { Channel } from "../store/channelStore";
 import type { Server } from "../store/serverStore";
 import type { User } from "../store/userStore";

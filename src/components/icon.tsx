@@ -1,4 +1,3 @@
-import { h } from "../h";
 export const Icon = (props: {
   name: string;
   outlined?: boolean;

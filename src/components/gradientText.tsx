@@ -1,5 +1,4 @@
 import { Dynamic } from "../dynamic";
-import { h } from "../h";
 
 import style from "./gradientText.module.css";
 

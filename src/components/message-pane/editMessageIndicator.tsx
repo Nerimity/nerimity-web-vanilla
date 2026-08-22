@@ -1,4 +1,3 @@
-import { h } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";

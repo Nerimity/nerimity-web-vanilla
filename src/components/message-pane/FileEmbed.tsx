@@ -1,5 +1,4 @@
 import { cdnUrl } from "../../config";
-import { h } from "../../h";
 import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment } from "../../store/messageStore";
 import { formatExpiry } from "../../utils/date";

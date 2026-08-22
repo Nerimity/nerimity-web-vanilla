@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       "@trans": "/src/macro.ts",
       "@trans-runtime": "/src/Trans.ts",
+      "@nerimity/jsx": "/src/jsx-runtime",
     },
   },
   plugins: [

@@ -2,7 +2,6 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
 import { Dynamic } from "../../dynamic";
-import { h } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { Channel, channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";

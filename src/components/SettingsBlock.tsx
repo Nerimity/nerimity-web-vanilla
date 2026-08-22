@@ -1,4 +1,3 @@
-import { h } from "../h";
 import { Icon as MaterialIcon } from "./icon";
 
 import style from "./SettingsBlock.module.css";

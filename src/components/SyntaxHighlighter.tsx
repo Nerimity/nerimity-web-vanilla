@@ -1,5 +1,3 @@
-import { h } from "../h";
-
 import style from "./SyntaxHighlighter.module.css";
 
 let counter = 0;

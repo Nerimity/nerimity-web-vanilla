@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
-import { h } from "../../h";
 import type { RouteContext } from "../../pages/app-page/AppPage";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";

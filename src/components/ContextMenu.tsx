@@ -1,4 +1,3 @@
-import { h } from "../h";
 import { portalElement } from "../utils/portal";
 import { Icon } from "./icon";
 import { createModal, Modal } from "./modal";

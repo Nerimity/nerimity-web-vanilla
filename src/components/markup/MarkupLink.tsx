@@ -1,4 +1,3 @@
-import { h } from "../../h";
 import { addHttps } from "../../utils/url";
 import { createLinkWarnModal } from "../LinkWarnModal";
 

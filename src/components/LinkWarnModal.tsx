@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../h";
 import { Button } from "./button";
 import { createModal, Modal } from "./modal";
 

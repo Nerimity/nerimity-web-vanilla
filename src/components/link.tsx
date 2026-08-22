@@ -1,5 +1,3 @@
-import { h } from "../h";
-
 import style from "./link.module.css";
 
 type LinkProps = Partial<Omit<HTMLAnchorElement, keyof HTMLElement>> & {

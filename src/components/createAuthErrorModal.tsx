@@ -1,7 +1,6 @@
 import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { h, Fragment } from "../h";
 import { accountStore } from "../store/accountStore";
 import { formatTimestamp } from "../utils/date";
 import { getLocalItem } from "../utils/localStorage";

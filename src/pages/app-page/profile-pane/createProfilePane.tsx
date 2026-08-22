@@ -13,7 +13,6 @@ import { updateActivity, UserActivity } from "../../../components/UserActivity";
 import { createUserContextMenuHandler } from "../../../components/UserContextMenu";
 import { UserPresence } from "../../../components/userPresence";
 import { Dynamic } from "../../../dynamic";
-import { h, Fragment } from "../../../h";
 import {
   acceptFriend,
   addFriend,

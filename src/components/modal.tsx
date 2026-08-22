@@ -1,5 +1,4 @@
 import { mobileWidth } from "../config";
-import { h } from "../h";
 import { createResizeObserver } from "../utils/observer";
 import { portalElement } from "../utils/portal";
 import { Button } from "./button";

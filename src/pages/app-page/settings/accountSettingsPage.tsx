@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Button } from "../../../components/button";
 import { Input } from "../../../components/input";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { h } from "../../../h";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import type { SettingsContext } from "./Settings";

@@ -6,7 +6,7 @@ import {
   type Span,
 } from "@nerimity/nevula";
 
-import { h, Fragment } from "../../h";
+import { h } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
 import { serverRoleStore } from "../../store/serverRoleStore";

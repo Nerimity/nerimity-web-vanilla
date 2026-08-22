@@ -1,6 +1,5 @@
 import { cdnUrl } from "../config";
 import { Dynamic } from "../dynamic";
-import { h } from "../h";
 import type { RawUserActivity } from "../Types";
 import {
   calculateTimeElapsedForActivityStatus,

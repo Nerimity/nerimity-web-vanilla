@@ -5,7 +5,6 @@ import { createMiniProfileHandler } from "../../components/miniProfile";
 import { createSidebar } from "../../components/sidebar";
 import { createUserContextMenuHandler } from "../../components/UserContextMenu";
 import { isMobileWidth } from "../../config";
-import { h, Fragment } from "../../h";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";

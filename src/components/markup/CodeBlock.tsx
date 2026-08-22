@@ -1,4 +1,3 @@
-import { h } from "../../h";
 import { Button } from "../button";
 import { SyntaxHighlighter } from "../SyntaxHighlighter";
 

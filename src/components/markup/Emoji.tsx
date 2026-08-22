@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
 import { unicodeToTwemojiUrl } from "../../utils/emojis";
 import { buildImageUrl } from "../../utils/image";
 import { InviteEmbed } from "../message-pane/InviteEmbed";

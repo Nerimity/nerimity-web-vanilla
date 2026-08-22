@@ -1,5 +1,3 @@
-import { h } from "../h";
-
 import style from "./skeleton.module.css";
 
 export const MessageSkeleton = (props: { wide?: boolean }) => (

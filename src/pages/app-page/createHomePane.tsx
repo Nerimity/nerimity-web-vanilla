@@ -7,7 +7,6 @@ import { buildEmojiUrl } from "../../components/markup/Emoji";
 import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
-import { h } from "../../h";
 import { friendStore } from "../../store/friendStore";
 import {
   UserPresenceDetails,

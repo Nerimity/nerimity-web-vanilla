@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { h } from "../h";
 import { banServerMember } from "../services/serverService";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";

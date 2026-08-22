@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
-import { h, Fragment } from "../../h";
 import { Settings, type Setting } from "../../pages/app-page/settings/Settings";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";

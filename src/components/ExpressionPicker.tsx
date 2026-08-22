@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 
 import { isMobileWidth } from "../config";
-import { h } from "../h";
 import type { CustomEmoji, EmojiData } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { portalElement } from "../utils/portal";

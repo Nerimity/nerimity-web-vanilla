@@ -1,5 +1,4 @@
 import { Dynamic } from "../dynamic";
-import { h } from "../h";
 import { Icon as MaterialIcon } from "./icon";
 import { Link } from "./link";
 

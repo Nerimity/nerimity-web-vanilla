@@ -2,7 +2,6 @@ import { t } from "@lingui/core/macro";
 
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
-import { h, Fragment } from "../../h";
 import { type HtmlNode } from "../../Types";
 import { Markup } from "../markup/markup";
 

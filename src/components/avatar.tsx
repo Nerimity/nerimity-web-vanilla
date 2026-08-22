@@ -1,4 +1,3 @@
-import { h } from "../h";
 import { buildImageUrl } from "../utils/image";
 
 import style from "./avatar.module.css";

@@ -1,4 +1,3 @@
-import { h, Fragment } from "../../h";
 import { getAttachments } from "../../services/channelService";
 import { channelStore } from "../../store/channelStore";
 import type { FullAttachment } from "../../Types";

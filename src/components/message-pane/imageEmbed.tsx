@@ -1,4 +1,3 @@
-import { h } from "../../h";
 import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment, LocalEmbed } from "../../store/messageStore";
 import { buildImageUrl, constrainDimensions } from "../../utils/image";

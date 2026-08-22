@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 
 import { Dynamic } from "../../dynamic";
-import { h, Fragment } from "../../h";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { friendStore } from "../../store/friendStore";

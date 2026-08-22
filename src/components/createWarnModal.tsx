@@ -1,7 +1,6 @@
 import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { h } from "../h";
 import { dismissNotice } from "../services/userService";
 import { accountStore } from "../store/accountStore";
 import type { RawNotice } from "../Types";

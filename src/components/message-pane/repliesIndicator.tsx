@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
 import { channelStore } from "../../store/channelStore";
 import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";

@@ -1,6 +1,5 @@
 import { Trans } from "@trans";
 
-import { h } from "../../h";
 import { type Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";

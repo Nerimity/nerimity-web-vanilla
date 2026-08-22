@@ -1,7 +1,6 @@
 import { plural, t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
-import { h } from "../h";
 import { updateServerMember } from "../services/serverService";
 import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
 import type { ServerRole } from "../store/serverRoleStore";

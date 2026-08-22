@@ -1,5 +1,4 @@
 import { mobileWidth } from "../config";
-import { h } from "../h";
 import { storeEmitter } from "../utils/EventEmitter";
 import { portalElement } from "../utils/portal";
 import { userAgent } from "../utils/userAgent";

@@ -1,7 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
-import { h, Fragment } from "../../h";
 import {
   getServerDetailsByCode,
   getServerDetailsByEmojiId,

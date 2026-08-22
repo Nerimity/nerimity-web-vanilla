@@ -1,6 +1,5 @@
 import { ph, t } from "@lingui/core/macro";
 
-import { h, Fragment } from "../h";
 import { acceptFriend, removeFriend } from "../services/friendService";
 import { Channel, channelStore } from "../store/channelStore";
 import { Friend, friendStore } from "../store/friendStore";

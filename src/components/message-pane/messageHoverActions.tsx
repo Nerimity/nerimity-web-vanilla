@@ -1,6 +1,5 @@
 import morphdom from "morphdom";
 
-import { h } from "../../h";
 import { addReaction } from "../../services/messageService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";

@@ -2,7 +2,6 @@ import { t } from "@lingui/core/macro";
 
 import type { Message } from "../../store/messageStore";
 import type { RawMessage } from "../../Types";
-import { h } from ".././../h";
 import { Avatar } from "../avatar";
 import { Link } from "../link";
 import { ImageEmbed } from "../message-pane/imageEmbed";

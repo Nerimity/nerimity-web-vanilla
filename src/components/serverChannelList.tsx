@@ -1,4 +1,3 @@
-import { h, Fragment } from "../h";
 import { channelStore, type Channel } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
 import { ChannelType } from "../Types";

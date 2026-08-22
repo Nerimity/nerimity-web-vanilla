@@ -3,7 +3,6 @@ import { ph, t } from "@lingui/core/macro";
 import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
 import { createModal, Modal } from "../../../components/modal";
-import { h } from "../../../h";
 import { removeFriend } from "../../../services/friendService";
 import { userStore } from "../../../store/userStore";
 

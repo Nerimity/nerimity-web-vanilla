@@ -1,6 +1,5 @@
 import { t } from "@lingui/core/macro";
 
-import { h } from "../../h";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Icon } from "../icon";

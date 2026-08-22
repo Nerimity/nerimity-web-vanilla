@@ -4,7 +4,6 @@ import { Avatar } from "../../../components/avatar";
 import { Banner } from "../../../components/Banner";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
-import { h } from "../../../h";
 import { accountStore } from "../../../store/accountStore";
 import { friendStore } from "../../../store/friendStore";
 import { serverStore } from "../../../store/serverStore";

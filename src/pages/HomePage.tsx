@@ -1,5 +1,4 @@
 import { Button } from "../components/button";
-import { h } from "../h";
 
 import style from "./HomePage.module.css";
 const createHomePage = () => {

@@ -1,4 +1,3 @@
-import { h } from "../h";
 export const LogoMono = () => {
   return (
     <svg viewBox="0 0 1000 1000" width="100%" height="100%" fill="currentColor">

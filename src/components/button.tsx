@@ -1,5 +1,4 @@
 import { Dynamic } from "../dynamic";
-import { h } from "../h";
 import { Icon } from "./icon";
 import { Link } from "./link";
 

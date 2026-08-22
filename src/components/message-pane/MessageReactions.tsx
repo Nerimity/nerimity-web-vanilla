@@ -1,6 +1,5 @@
 import morphdom from "morphdom";
 
-import { h, Fragment } from "../../h";
 import {
   addReaction,
   reactedUsers,

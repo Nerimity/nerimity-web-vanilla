@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@nerimity/jsx",
     "target": "es2023",
     "module": "esnext",
     "lib": ["ES2023", "ESNext.Temporal", "DOM"],
@@ -23,7 +22,8 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@trans": ["./src/Trans.ts"]
+      "@trans": ["./src/Trans.ts"],
+      "@nerimity/jsx/*": ["./src/jsx-runtime/*"]
     }
   },
   "include": ["src", "vite.config.ts", "zoomist.d.ts"]
