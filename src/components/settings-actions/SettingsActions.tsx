@@ -28,6 +28,8 @@ export const createSettingsActions = (props: { signal: AbortSignal }) => {
     </div>
   ) as HTMLDivElement;
 
+  let savePending = false;
+
   const setError = (message?: string) => {
     errorEl.style.display = message ? "flex" : "none";
     errorEl.textContent = message || "";
@@ -56,11 +58,17 @@ export const createSettingsActions = (props: { signal: AbortSignal }) => {
       if (!button) return;
       const action = button.dataset.action as "undo" | "save";
       if (action === "save") {
+        if (savePending) return;
+        savePending = true;
         setError();
         button.querySelector(".label")!.textContent = t`Saving...`;
-        saveHandlerCb?.(setError);
+        saveHandlerCb?.((err) => {
+          savePending = false;
+          setError(err);
+        });
       }
       if (action === "undo") {
+        if (savePending) return;
         undoHandlerCb?.();
       }
     },

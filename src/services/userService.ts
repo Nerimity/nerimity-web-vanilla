@@ -84,3 +84,28 @@ export async function dismissNotice(noticeId: string) {
     useToken: true,
   });
 }
+
+interface UpdateUserOptions {
+  email?: string;
+  username?: string;
+  avatarId?: string;
+  bannerId?: string;
+  tag?: string;
+  password?: string;
+  newPassword?: string;
+  bio?: string | null;
+  socketId?: string;
+  dmStatus?: number;
+  friendRequestStatus?: number;
+  lastOnlineStatus?: number;
+  hideFollowers?: boolean;
+  hideFollowing?: boolean;
+}
+
+export async function updateUser(body: UpdateUserOptions) {
+  return request<{ user: any; newToken?: string }>(`/users`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}

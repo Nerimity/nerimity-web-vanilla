@@ -7,6 +7,8 @@ import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { nerimityCDNUploadRequest } from "../../../services/cdnService";
+import { updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
@@ -34,10 +36,10 @@ const accountSettingsPage = (context: SettingsContext) => {
     username: currentUser?.username || "",
     tag: currentUser?.tag || "",
 
-    avatar: null as null | string,
+    avatar: null as null | { file: File; url: string },
     avatarCropPoints: null as null | CropPoints,
 
-    banner: null as null | string,
+    banner: null as null | { file: File; url: string },
     bannerCropPoints: null as null | CropPoints,
   });
 
@@ -141,7 +143,7 @@ const accountSettingsPage = (context: SettingsContext) => {
       ...(changes.avatar
         ? {
             avatar: {
-              url: changes.avatar,
+              url: changes.avatar.url,
               cropPoints: changes.avatarCropPoints || undefined,
             },
           }
@@ -149,7 +151,7 @@ const accountSettingsPage = (context: SettingsContext) => {
       ...(changes.banner
         ? {
             banner: {
-              url: changes.banner,
+              url: changes.banner.url,
               cropPoints: changes.bannerCropPoints || undefined,
             },
           }
@@ -161,12 +163,57 @@ const accountSettingsPage = (context: SettingsContext) => {
 
   actions.handleUndoClick(updateHandler.undo);
 
-  actions.handleSaveClick((done) => {
-    // await ...
+  actions.handleSaveClick(async (done) => {
+    const { avatar, avatarCropPoints, banner, bannerCropPoints, ...updates } =
+      updateHandler.changedValues;
+    const userId = accountStore.currentUser?.id!;
 
-    setTimeout(() => {
-      done("no");
-    }, 1000);
+    const passwordRequired = updates.email || updates.username || updates.tag;
+
+    if (passwordRequired) {
+      done("TODO: password verification modal not implemented :(");
+      return;
+    }
+
+    let avatarId: string | undefined = undefined;
+    let bannerId: string | undefined = undefined;
+
+    if (avatar) {
+      const [avatarRes, error] = await nerimityCDNUploadRequest({
+        type: "avatars",
+        groupId: userId,
+        file: avatar.file,
+        points: avatarCropPoints!,
+      });
+      if (error) {
+        return done("Avatar upload failed: " + error.message);
+      }
+      avatarId = avatarRes?.fileId!;
+    }
+    if (banner) {
+      const [bannerRes, error] = await nerimityCDNUploadRequest({
+        type: "profile_banners",
+        groupId: userId,
+        file: banner.file,
+        points: bannerCropPoints!,
+      });
+      if (error) {
+        return done("Banner upload failed: " + error.message);
+      }
+      bannerId = bannerRes?.fileId!;
+    }
+
+    const body = {
+      ...updates,
+      bannerId,
+      avatarId,
+    };
+
+    const [res, error] = await updateUser(body);
+    if (error) {
+      return done("Banner upload failed: " + error.message);
+    }
+    console.log(res);
   });
 
   let fileInputType: "avatar" | "banner" | null = null;
@@ -175,7 +222,7 @@ const accountSettingsPage = (context: SettingsContext) => {
     imageOnly: true,
     async onChange(file) {
       const url = file && (await fileToDataUrl(file));
-      updateHandler.changeValue(fileInputType!, url || null);
+      updateHandler.changeValue(fileInputType!, url ? { file, url } : null);
 
       if (!url) return;
       await createImageCropModalLazy({

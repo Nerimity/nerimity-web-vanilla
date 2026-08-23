@@ -73,5 +73,13 @@ export function createUpdatedHandler<T extends ValueMap>(
     check();
   };
 
-  return { handleInput, onUpdate, undo, changeValue: update };
+  return {
+    get changedValues() {
+      return changedValues;
+    },
+    handleInput,
+    onUpdate,
+    undo,
+    changeValue: update,
+  };
 }
