@@ -40,7 +40,7 @@ export function createUpdatedHandler<T extends ValueMap>(
     onUpdateHandler?.(updatedValues, !!Object.keys(updatedValues).length);
   };
 
-  const update = <K extends keyof T>(key: K, value: T[K]) => {
+  const update = <K extends keyof T>(key: K, value: T[K] | undefined) => {
     changedValues[key] = value;
     check();
   };

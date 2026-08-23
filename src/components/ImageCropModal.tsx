@@ -23,6 +23,7 @@ export interface ImageCropModalProps {
   src: string;
   type: "avatar" | "banner";
   onCrop?: (points: CropPoints) => void;
+  onDiscard?: () => void;
 }
 export const createImageCropModal = (props: ImageCropModalProps) => {
   abortController.abort();
@@ -63,7 +64,7 @@ export const createImageCropModal = (props: ImageCropModalProps) => {
   ) as HTMLDivElement;
 
   const modal = (
-    <Modal.Root ignoreBgClick>
+    <Modal.Root ignoreBgClick disableGestures fullHeight>
       <Modal.Header label={t`Crop Image`} icon="image" />
       {body}
       <Modal.Footer>
@@ -80,6 +81,7 @@ export const createImageCropModal = (props: ImageCropModalProps) => {
 
   const interval = setInterval(emitCropChange, 1000);
 
+  let cropClicked = false;
   modal.addEventListener(
     "click",
     async (e) => {
@@ -92,6 +94,8 @@ export const createImageCropModal = (props: ImageCropModalProps) => {
       }
       if (action === "crop") {
         emitCropChange();
+        cropClicked = true;
+
         return abortController.abort();
       }
     },
@@ -101,6 +105,9 @@ export const createImageCropModal = (props: ImageCropModalProps) => {
   signal.addEventListener(
     "abort",
     () => {
+      if (!cropClicked) {
+        props.onDiscard?.();
+      }
       clearInterval(interval);
       cropt.destroy();
     },

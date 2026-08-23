@@ -157,6 +157,10 @@ const accountSettingsPage = (context: SettingsContext) => {
       await createImageCropModalLazy({
         src: url,
         type: "avatar",
+        onDiscard() {
+          updateHandler.changeValue("avatar", undefined);
+          updateHandler.changeValue("avatarCropPoints", undefined);
+        },
         onCrop(points) {
           updateHandler.changeValue("avatarCropPoints", points);
         },

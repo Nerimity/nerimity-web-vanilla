@@ -30,6 +30,8 @@ const Root = (props: {
   children: any;
   pos?: { x: string; y: string; anchor?: ModalAnchor };
   ignoreBgClick?: boolean;
+  disableGestures?: boolean;
+  fullHeight?: boolean;
 }) => {
   const anchorOffsetX = () => {
     const a = props.pos?.anchor ?? "top-left";
@@ -54,6 +56,8 @@ const Root = (props: {
         data-x={props.pos?.x}
         data-y={props.pos?.y}
         data-ignore-bg-click={props.ignoreBgClick}
+        data-disable-gestures={props.disableGestures}
+        data-full-height={props.fullHeight}
         style={{
           "--x": props.pos?.x,
           "--y": props.pos?.y,
@@ -117,6 +121,9 @@ export const createModal = (
 
   const footerOriginalParent = footerElement?.parentElement;
   const footerPlaceholder = document.createComment("footer-placeholder");
+  const disableGestures = modal.dataset.disableGestures === "true";
+  const alwaysOpenFully = modal.dataset.fullHeight === "true";
+
   if (footerOriginalParent && footerElement) {
     footerOriginalParent.insertBefore(footerPlaceholder, footerElement);
   }
@@ -260,6 +267,8 @@ export const createModal = (
   window.addEventListener(
     "touchstart",
     (event) => {
+      if (disableGestures) return;
+
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       cancelInertia();
 
@@ -281,6 +290,8 @@ export const createModal = (
   window.addEventListener(
     "touchmove",
     (event) => {
+      if (disableGestures) return;
+
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       const touch = event.touches[0];
       if (!touch) return;
@@ -312,6 +323,8 @@ export const createModal = (
   window.addEventListener(
     "touchend",
     () => {
+      if (disableGestures) return;
+
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       const windowHeight = window.innerHeight;
       const modalHeight = modal.offsetHeight;
@@ -404,6 +417,8 @@ export const createModal = (
   );
 
   const initialY = () => {
+    if (alwaysOpenFully) return getMinY();
+
     const targetVisibility = 50;
 
     const modalHeight = getModalHeight();
