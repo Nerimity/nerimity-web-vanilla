@@ -42,7 +42,7 @@ const NameAndTag = ({ user }: { user: RawUser }) => {
 
 const Stats = () => {
   const serverCount = serverStore.servers.size;
-  const friendCount = [...friendStore.friends.values()].map(
+  const friendCount = [...friendStore.friends.values()].filter(
     (f) => f.status === FriendStatus.FRIENDS,
   ).length;
 
@@ -53,17 +53,17 @@ const Stats = () => {
           value={serverCount}
           _0={
             <Trans>
-              <span class={style.full}>No</span> servers
+              <span class={style.full}>No</span> Servers
             </Trans>
           }
           one={
             <Trans>
-              <span class={style.full}>#</span> server
+              <span class={style.full}>#</span> Server
             </Trans>
           }
           other={
             <Trans>
-              <span class={style.full}>#</span> servers
+              <span class={style.full}>#</span> Servers
             </Trans>
           }
         />
@@ -73,17 +73,17 @@ const Stats = () => {
           value={friendCount}
           _0={
             <Trans>
-              <span class={style.full}>No</span> friends
+              <span class={style.full}>No</span> Friends
             </Trans>
           }
           one={
             <Trans>
-              <span class={style.full}>#</span> friend
+              <span class={style.full}>#</span> Friend
             </Trans>
           }
           other={
             <Trans>
-              <span class={style.full}>#</span> friends
+              <span class={style.full}>#</span> Friends
             </Trans>
           }
         />

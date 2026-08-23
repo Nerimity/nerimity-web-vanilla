@@ -66,15 +66,15 @@ msgstr "GIFs"
 msgid "Emojis"
 msgstr "Emojis"
 
-#: src/components/ImageCropModal.tsx:65
+#: src/components/ImageCropModal.tsx:68
 msgid "Crop Image"
 msgstr "Crop Image"
 
-#: src/components/ImageCropModal.tsx:71
+#: src/components/ImageCropModal.tsx:74
 msgid "Don't Crop"
 msgstr "Don't Crop"
 
-#: src/components/ImageCropModal.tsx:74
+#: src/components/ImageCropModal.tsx:77
 msgid "Crop"
 msgstr "Crop"
 
@@ -175,7 +175,7 @@ msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
-#: src/pages/app-page/settings/Settings.ts:46
+#: src/pages/app-page/settings/Settings.ts:50
 msgid "Profile"
 msgstr "Profile"
 
@@ -538,7 +538,7 @@ msgstr "Don't save"
 
 #: src/components/miniProfile.tsx:789
 #: src/components/settings-actions/SettingsActions.tsx:25
-#: src/components/settings-actions/SettingsActions.tsx:40
+#: src/components/settings-actions/SettingsActions.tsx:42
 msgid "Save"
 msgstr "Save"
 
@@ -567,7 +567,7 @@ msgstr "Server Clan"
 msgid "Undo"
 msgstr "Undo"
 
-#: src/components/settings-actions/SettingsActions.tsx:60
+#: src/components/settings-actions/SettingsActions.tsx:64
 msgid "Saving..."
 msgstr "Saving..."
 
@@ -577,7 +577,7 @@ msgid "Last online {0}"
 msgstr "Last online {0}"
 
 #: src/pages/LoginPage.tsx:14
-#: src/pages/app-page/settings/accountSettingsPage.tsx:17
+#: src/pages/app-page/settings/accountSettingsPage.tsx:20
 msgid "Email"
 msgstr "Email"
 
@@ -662,33 +662,38 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/settings/Settings.ts:39
+#: src/pages/app-page/settings/Settings.ts:43
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:18
+#: src/pages/app-page/settings/accountSettingsPage.tsx:21
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:19
+#: src/pages/app-page/settings/accountSettingsPage.tsx:22
 msgid "Tag"
 msgstr "Tag"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:20
+#: src/pages/app-page/settings/accountSettingsPage.tsx:23
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:95
+#: src/pages/app-page/settings/accountSettingsPage.tsx:24
+msgid "Banner"
+msgstr "Banner"
+
+#: src/pages/app-page/settings/accountSettingsPage.tsx:102
+#: src/pages/app-page/settings/accountSettingsPage.tsx:113
 msgid "Browse"
 msgstr "Browse"
 
 #: src/pages/app-page/settings/createSettingsRoute.tsx:52
-msgid "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
-msgstr "{serverCount, plural, =0 {<0>No</0> servers} one {<1>#</1> server} other {<2>#</2> servers}}"
+msgid "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
+msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 
 #: src/pages/app-page/settings/createSettingsRoute.tsx:72
-msgid "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
-msgstr "{friendCount, plural, =0 {<0>No</0> friends} one {<1>#</1> friend} other {<2>#</2> friends}}"
+msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
+msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
 #: src/store/accountStore.ts:126
 msgid "Invalid token."
