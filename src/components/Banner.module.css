@@ -18,7 +18,6 @@
   position: absolute;
   overflow: hidden;
   inset: 0;
-  /* no width/height here — sized by inset:0 filling .banner, which is already 30/12 */
 }
 
 .croppedImage {
