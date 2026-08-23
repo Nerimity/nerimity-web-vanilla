@@ -19,6 +19,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "sell",
+        "panorama",
         "image",
         "undo",
         "person",

@@ -2,7 +2,7 @@ import { Plural, Trans } from "@trans";
 import morphdom from "morphdom";
 
 import { Avatar } from "../../../components/avatar";
-import { Banner } from "../../../components/Banner";
+import { Banner, bannerCroppedHandler } from "../../../components/Banner";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
 import { accountStore } from "../../../store/accountStore";
@@ -92,14 +92,26 @@ const Stats = () => {
   );
 };
 
+let headerAc: AbortController | null = null;
 const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
   const user = accountStore.currentUser;
   if (!user) return null;
 
+  headerAc?.abort();
+  headerAc = new AbortController();
+  const { signal } = headerAc;
+
+  requestAnimationFrame(() => {
+    bannerCroppedHandler(
+      document.querySelector(`.${style.banner!}`) as HTMLDivElement,
+      signal,
+    );
+  });
+
   return (
     <div class={style.header}>
       <div class={style.banner}>
-        <Banner user={user} />
+        <Banner user={user} image={overrides.banner} />
       </div>
       <div class={style.overlayInfo}>
         <Avatar user={user} size={128} image={overrides.avatar} />

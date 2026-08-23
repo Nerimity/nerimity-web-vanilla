@@ -13,3 +13,24 @@
     object-fit: cover;
   }
 }
+
+.bannerWrap {
+  position: absolute;
+  overflow: hidden;
+  inset: 0;
+  /* no width/height here — sized by inset:0 filling .banner, which is already 30/12 */
+}
+
+.croppedImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  height: auto;
+  transform: scale(
+      calc(var(--w) / ((var(--endX) - var(--startX)) * 1px)),
+      calc(var(--h) / ((var(--endY) - var(--startY)) * 1px))
+    )
+    translate(calc(var(--startX) * -1px), calc(var(--startY) * -1px));
+  transform-origin: 0 0;
+}

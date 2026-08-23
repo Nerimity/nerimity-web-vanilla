@@ -19,6 +19,7 @@ const getStrings = () => ({
   username: t`Username`,
   tag: t`Tag`,
   avatar: t`Avatar`,
+  banner: t`Banner`,
 });
 
 const accountSettingsPage = (context: SettingsContext) => {
@@ -35,6 +36,9 @@ const accountSettingsPage = (context: SettingsContext) => {
 
     avatar: null as null | string,
     avatarCropPoints: null as null | CropPoints,
+
+    banner: null as null | string,
+    bannerCropPoints: null as null | CropPoints,
   });
 
   const actions = createSettingsActions({ signal });
@@ -77,7 +81,7 @@ const accountSettingsPage = (context: SettingsContext) => {
 
       {/* Tag */}
       <SettingsBlock.Root>
-        <SettingsBlock.Icon name="face" />
+        <SettingsBlock.Icon name="sell" />
         <SettingsBlock.Details title={strings.tag} />
         <Input
           maxLength={4}
@@ -92,6 +96,17 @@ const accountSettingsPage = (context: SettingsContext) => {
         <SettingsBlock.Details title={strings.avatar} />
         <Button
           data-action="browseAvatar"
+          icon="attach_file"
+          label={t`Browse`}
+        />
+      </SettingsBlock.Root>
+
+      {/* Banner */}
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="panorama" />
+        <SettingsBlock.Details title={strings.banner} />
+        <Button
+          data-action="browseBanner"
           icon="attach_file"
           label={t`Browse`}
         />
@@ -131,6 +146,14 @@ const accountSettingsPage = (context: SettingsContext) => {
             },
           }
         : { avatar: undefined }),
+      ...(changes.banner
+        ? {
+            banner: {
+              url: changes.banner,
+              cropPoints: changes.bannerCropPoints || undefined,
+            },
+          }
+        : { banner: undefined }),
     });
 
     actions.setVisibility(hasChanges);
@@ -146,23 +169,24 @@ const accountSettingsPage = (context: SettingsContext) => {
     }, 1000);
   });
 
+  let fileInputType: "avatar" | "banner" | null = null;
   const fileInput = createFileInput({
     signal,
     imageOnly: true,
     async onChange(file) {
       const url = file && (await fileToDataUrl(file));
-      updateHandler.changeValue("avatar", url || null);
+      updateHandler.changeValue(fileInputType!, url || null);
 
       if (!url) return;
       await createImageCropModalLazy({
         src: url,
-        type: "avatar",
+        type: fileInputType!,
         onDiscard() {
-          updateHandler.changeValue("avatar", undefined);
-          updateHandler.changeValue("avatarCropPoints", undefined);
+          updateHandler.changeValue(fileInputType!, undefined);
+          updateHandler.changeValue(`${fileInputType!}CropPoints`, undefined);
         },
         onCrop(points) {
-          updateHandler.changeValue("avatarCropPoints", points);
+          updateHandler.changeValue(`${fileInputType!}CropPoints`, points);
         },
       });
     },
@@ -176,6 +200,11 @@ const accountSettingsPage = (context: SettingsContext) => {
       if (!button) return;
       const action = button.dataset.action;
       if (action === "browseAvatar") {
+        fileInputType = "avatar";
+        fileInput.trigger();
+      }
+      if (action === "browseBanner") {
+        fileInputType = "banner";
         fileInput.trigger();
       }
     },

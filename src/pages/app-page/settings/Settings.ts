@@ -14,6 +14,10 @@ export interface HeaderOverrides {
     url: string;
     cropPoints?: CropPoints;
   };
+  banner?: {
+    url: string;
+    cropPoints?: CropPoints;
+  };
 }
 
 export interface SettingsContext {
