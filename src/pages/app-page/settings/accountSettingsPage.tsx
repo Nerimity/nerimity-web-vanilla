@@ -6,6 +6,7 @@ import { createFileInput } from "../../../components/FileInput";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
 import { Input } from "../../../components/input";
+import { alert } from "../../../components/modal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
@@ -23,6 +24,8 @@ const getStrings = () => ({
   tag: t`Tag`,
   avatar: t`Avatar`,
   banner: t`Banner`,
+  changePassword: t`Change Password`,
+  forgotPassword: t`Forgot Password`,
 });
 
 const accountSettingsPage = (context: SettingsContext) => {
@@ -64,56 +67,82 @@ const accountSettingsPage = (context: SettingsContext) => {
   let emailRevealed = false;
   const el = (
     <div class={style.page}>
-      {/* Email */}
-      <SettingsBlock.Root>
-        <SettingsBlock.Icon name="email" />
-        <SettingsBlock.Details title={strings.email} />
-        <Input
-          class="emailInput"
-          value={hiddenEmail()}
-          suffix={<Button class={style.editEmailButton} icon="edit" />}
-        />
-      </SettingsBlock.Root>
+      <SettingsBlock.Group>
+        {/* Email */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="email" />
+          <SettingsBlock.Details title={strings.email} />
+          <Input
+            class="emailInput"
+            value={hiddenEmail()}
+            suffix={<Button class={style.editEmailButton} icon="edit" />}
+          />
+        </SettingsBlock.Root>
 
-      {/* Username */}
-      <SettingsBlock.Root>
-        <SettingsBlock.Icon name="face" />
-        <SettingsBlock.Details title={strings.username} />
-        <Input class="usernameInput" value={initialValues().username} />
-      </SettingsBlock.Root>
+        {/* Username */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="face" />
+          <SettingsBlock.Details title={strings.username} />
+          <Input class="usernameInput" value={initialValues().username} />
+        </SettingsBlock.Root>
 
-      {/* Tag */}
-      <SettingsBlock.Root>
-        <SettingsBlock.Icon name="sell" />
-        <SettingsBlock.Details title={strings.tag} />
-        <Input
-          maxLength={4}
-          class={style.tagInput}
-          value={initialValues().tag}
-        />
-      </SettingsBlock.Root>
+        {/* Tag */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="sell" />
+          <SettingsBlock.Details title={strings.tag} />
+          <Input
+            maxLength={4}
+            class={style.tagInput}
+            value={initialValues().tag}
+          />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
 
-      {/* Avatar */}
-      <SettingsBlock.Root>
-        <SettingsBlock.Icon name="image" />
-        <SettingsBlock.Details title={strings.avatar} />
-        <Button
-          data-action="browseAvatar"
-          icon="attach_file"
-          label={t`Browse`}
-        />
-      </SettingsBlock.Root>
+      <SettingsBlock.Group>
+        {/* Avatar */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="wallpaper" />
+          <SettingsBlock.Details title={strings.avatar} />
+          <Button
+            data-action="browseAvatar"
+            icon="attach_file"
+            label={t`Browse`}
+          />
+        </SettingsBlock.Root>
 
-      {/* Banner */}
-      <SettingsBlock.Root>
-        <SettingsBlock.Icon name="panorama" />
-        <SettingsBlock.Details title={strings.banner} />
-        <Button
-          data-action="browseBanner"
-          icon="attach_file"
-          label={t`Browse`}
-        />
-      </SettingsBlock.Root>
+        {/* Banner */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="panorama" />
+          <SettingsBlock.Details
+            title={strings.banner}
+            description="JPG, PNG, GIF or WEBP. Max 12MB"
+          />
+          <Button
+            data-action="browseBanner"
+            icon="attach_file"
+            label={t`Browse`}
+          />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
+
+      <SettingsBlock.Group>
+        {/* Change Password */}
+        <SettingsBlock.Root clickable>
+          <SettingsBlock.Icon name="password" />
+          <SettingsBlock.Details
+            title={strings.changePassword}
+            description="JPG, PNG, GIF or WEBP. Max 12MB"
+          />
+        </SettingsBlock.Root>
+
+        <SettingsBlock.Root clickable data-action="forgor">
+          <SettingsBlock.Icon name="cognition" />
+          <SettingsBlock.Details
+            title={strings.forgotPassword}
+            description={t`Send a password reset link to your email.`}
+          />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
 
       {actions.el}
     </div>
@@ -255,6 +284,18 @@ const accountSettingsPage = (context: SettingsContext) => {
     },
   });
 
+  let requestingForgotPassword = false;
+  const handleForgotPassword = () => {
+    if (requestingForgotPassword) return;
+    requestingForgotPassword = true;
+    alert({
+      icon: "skull",
+      alert: false,
+      title: t`Forgot Password`,
+      message: t`Email Sent. Please check your email to reset your password.`,
+    });
+  };
+
   el.addEventListener(
     "click",
     (event) => {
@@ -269,6 +310,10 @@ const accountSettingsPage = (context: SettingsContext) => {
       if (action === "browseBanner") {
         fileInputType = "banner";
         fileInput.trigger();
+      }
+
+      if (action === "forgor") {
+        handleForgotPassword();
       }
     },
     { signal },

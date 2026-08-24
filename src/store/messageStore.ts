@@ -118,7 +118,7 @@ function createMessageStore() {
       around: opts?.around,
     });
     if (error) {
-      alert(error.message);
+      alert({ message: error.message });
       return undefined;
     }
 

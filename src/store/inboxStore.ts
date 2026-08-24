@@ -1,3 +1,4 @@
+import { alert } from "../components/modal";
 import { closeInbox, openInbox } from "../services/inboxService";
 import type { RawInbox } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -59,7 +60,8 @@ function createInboxStore() {
   const loadInbox = async (userId: string) => {
     const [inbox, error] = await openInbox(userId);
     if (error) {
-      alert(error.message);
+      alert({ message: error.message });
+
       return;
     }
     const newInbox = setInbox(inbox);
@@ -68,7 +70,7 @@ function createInboxStore() {
   const close = async (channelId: string) => {
     const [, error] = await closeInbox(channelId);
     if (error) {
-      alert(error.message);
+      alert({ message: error.message });
       return;
     }
     if (channelStore.currentChannelId === channelId) {

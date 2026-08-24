@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+
 import { mobileWidth } from "../config";
 import { createResizeObserver } from "../utils/observer";
 import { portalElement } from "../utils/portal";
@@ -711,4 +713,48 @@ export const createModal = (
   });
 
   return { destroy };
+};
+
+export const alert = (opts: {
+  title?: string;
+  icon?: string;
+  alert?: boolean;
+  message: string;
+}) => {
+  const ac = new AbortController();
+  createModal(() => {
+    const el = (
+      <Modal.Root ignoreBgClick>
+        <Modal.Header
+          alert={opts.alert === undefined ? true : opts.alert}
+          label={opts.title || "Alert"}
+          icon={opts.icon}
+        />
+        <Modal.Body>
+          <div>{opts.message}</div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            alert={opts.alert === undefined ? true : opts.alert}
+            label={t`Understood`}
+            data-action="close"
+          />
+        </Modal.Footer>
+      </Modal.Root>
+    );
+
+    el.addEventListener(
+      "click",
+      (e) => {
+        const target = e.target as HTMLDivElement;
+        const action = target.closest("[data-action]") as HTMLDivElement;
+        if (action?.dataset.action === "close") {
+          ac.abort();
+        }
+      },
+      { signal: ac.signal },
+    );
+
+    return el;
+  }, ac);
 };

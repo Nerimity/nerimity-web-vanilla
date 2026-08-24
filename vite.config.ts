@@ -19,6 +19,10 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "skull",
+        "wallpaper",
+        "cognition",
+        "password",
         "sell",
         "panorama",
         "image",

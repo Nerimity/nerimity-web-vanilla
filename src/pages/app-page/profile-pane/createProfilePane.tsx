@@ -8,6 +8,7 @@ import { Drawer } from "../../../components/drawer";
 import { Icon } from "../../../components/icon";
 import { Link } from "../../../components/link";
 import { Markup } from "../../../components/markup/markup";
+import { alert } from "../../../components/modal";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { updateActivity, UserActivity } from "../../../components/UserActivity";
 import { createUserContextMenuHandler } from "../../../components/UserContextMenu";
@@ -257,7 +258,7 @@ const Actions = ({
       if (action === "follow") {
         const [, error] = await followUser(user?.id!);
         if (error) {
-          alert(error.message);
+          alert({ message: error.message });
         }
         if (details) {
           details.user.followers = [1];
@@ -271,7 +272,7 @@ const Actions = ({
       if (action === "unfollow") {
         const [, error] = await unfollowUser(user?.id!);
         if (error) {
-          alert(error.message);
+          alert({ message: error.message });
         }
         if (details) {
           details.user.followers = [];

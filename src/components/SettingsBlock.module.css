@@ -20,18 +20,26 @@
 .settingsBlock {
   display: flex;
   align-items: center;
+  min-height: 62px;
   padding: 12px;
   border-radius: var(--radius-16);
   background-color: var(--gray-900);
   gap: 12px;
+  &.clickable {
+    cursor: pointer;
+    &:hover {
+      background-color: var(--gray-800);
+    }
+  }
 }
 
 .details {
   display: flex;
   flex: 1;
   flex-direction: column;
+  gap: 2px;
   .description {
     color: var(--gray-400);
-    font-size: 14px;
+    font-size: 12px;
   }
 }
