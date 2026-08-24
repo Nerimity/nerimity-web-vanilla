@@ -123,6 +123,7 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    border-radius: var(--radius-max);
   }
 }
 
