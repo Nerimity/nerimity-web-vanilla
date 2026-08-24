@@ -109,3 +109,11 @@ export async function updateUser(body: UpdateUserOptions) {
     body,
   });
 }
+
+export async function postResetPassword(email: string) {
+  return request<{ message: string }>(`/users/reset-password/send-code`, {
+    method: "POST",
+    useToken: true,
+    body: { email },
+  });
+}

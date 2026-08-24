@@ -10,7 +10,7 @@ import { alert } from "../../../components/modal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
-import { updateUser } from "../../../services/userService";
+import { postResetPassword, updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
@@ -285,9 +285,17 @@ const accountSettingsPage = (context: SettingsContext) => {
   });
 
   let requestingForgotPassword = false;
-  const handleForgotPassword = () => {
+  const handleForgotPassword = async () => {
     if (requestingForgotPassword) return;
     requestingForgotPassword = true;
+
+    const [, error] = await postResetPassword(accountStore.currentUser?.email!);
+    requestingForgotPassword = false;
+    if (error) {
+      alert({ message: error.message });
+      return;
+    }
+
     alert({
       icon: "skull",
       alert: false,
