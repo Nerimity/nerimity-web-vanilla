@@ -16,8 +16,7 @@
     }
   }
   .input {
-    flex: 1;
-    min-width: 0;
+    width: 100%;
     padding: 8px;
     border: none;
     outline: none;
