@@ -1,6 +1,9 @@
 .editEmailButton {
-  padding: 4px;
-  margin-right: 2px;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  margin: 4px;
   border-radius: var(--radius-2);
   :global(.icon) {
     font-size: 17px;
