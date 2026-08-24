@@ -102,7 +102,10 @@ const accountSettingsPage = (context: SettingsContext) => {
         {/* Avatar */}
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="wallpaper" />
-          <SettingsBlock.Details title={strings.avatar} />
+          <SettingsBlock.Details
+            title={strings.avatar}
+            description="JPG, PNG, GIF or WEBP. Max 12MB"
+          />
           <Button
             data-action="browseAvatar"
             icon="attach_file"
@@ -129,10 +132,7 @@ const accountSettingsPage = (context: SettingsContext) => {
         {/* Change Password */}
         <SettingsBlock.Root clickable>
           <SettingsBlock.Icon name="password" />
-          <SettingsBlock.Details
-            title={strings.changePassword}
-            description="JPG, PNG, GIF or WEBP. Max 12MB"
-          />
+          <SettingsBlock.Details title={strings.changePassword} />
         </SettingsBlock.Root>
 
         <SettingsBlock.Root clickable data-action="forgor">
