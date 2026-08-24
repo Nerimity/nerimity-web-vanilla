@@ -1,7 +1,7 @@
 .editEmailButton {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 23px;
+  height: 23px;
   padding: 0;
   margin: 4px;
   border-radius: var(--radius-2);
