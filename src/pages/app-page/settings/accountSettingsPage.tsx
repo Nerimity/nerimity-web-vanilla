@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
+import { createConfirmPasswordModal } from "../../../components/ConfirmPasswordModal";
 import { createFileInput } from "../../../components/FileInput";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
@@ -163,17 +164,14 @@ const accountSettingsPage = (context: SettingsContext) => {
 
   actions.handleUndoClick(updateHandler.undo);
 
-  actions.handleSaveClick(async (done) => {
+  const handleSave = async (
+    done: (msg?: string) => void,
+    password?: string,
+  ) => {
     const { avatar, avatarCropPoints, banner, bannerCropPoints, ...updates } =
       updateHandler.changedValues;
+
     const userId = accountStore.currentUser?.id!;
-
-    const passwordRequired = updates.email || updates.username || updates.tag;
-
-    if (passwordRequired) {
-      done("TODO: password verification modal not implemented :(");
-      return;
-    }
 
     let avatarId: string | undefined = undefined;
     let bannerId: string | undefined = undefined;
@@ -207,13 +205,31 @@ const accountSettingsPage = (context: SettingsContext) => {
       ...updates,
       bannerId,
       avatarId,
+      password,
     };
 
     const [res, error] = await updateUser(body);
     if (error) {
-      return done("Banner upload failed: " + error.message);
+      return done(error.message);
     }
     console.log(res);
+  };
+
+  actions.handleSaveClick(async (done) => {
+    const updates = updateHandler.changedValues;
+
+    const passwordRequired = updates.email || updates.username || updates.tag;
+
+    if (passwordRequired) {
+      createConfirmPasswordModal({
+        onConfirm(password) {
+          if (password === undefined) return done();
+          handleSave(done, password);
+        },
+      });
+      return;
+    }
+    handleSave(done);
   });
 
   let fileInputType: "avatar" | "banner" | null = null;
