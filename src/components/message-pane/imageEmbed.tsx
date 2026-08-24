@@ -8,6 +8,14 @@ import style from "./imageEmbed.module.css";
 
 let DefaultHorizPadding = 74;
 
+const originalSrc = (embed: LocalEmbed) => {
+  const unsafeUrl = embed.imageUrl!;
+  if (unsafeUrl.startsWith("https://") || unsafeUrl.startsWith("http://")) {
+    return unsafeUrl;
+  }
+  return `http://${unsafeUrl}`;
+};
+
 export const ImageEmbed = (props: {
   attachment?: LocalAttachment;
   embed?: LocalEmbed;
@@ -31,14 +39,11 @@ export const ImageEmbed = (props: {
       : props.embed?.imageHeight!;
 
   let src = props.attachment?.path!;
+
+  let origSrc = props.embed?.imageUrl ? originalSrc(props.embed) : undefined;
+
   if (props.embed?.imageUrl) {
-    const unsafeUrl = props.embed.imageUrl!;
-    if (unsafeUrl.startsWith("https://") || unsafeUrl.startsWith("http://")) {
-      src = unsafeUrl;
-    } else {
-      src = `http://${unsafeUrl}`;
-    }
-    src = `proxy/${encodeURIComponent(src)}/embed.webp`;
+    src = `proxy/${encodeURIComponent(originalSrc(props.embed))}/embed.webp`;
   }
 
   const cached = item?.cached;
@@ -49,6 +54,7 @@ export const ImageEmbed = (props: {
   const img = (
     <img
       src={props.attachmentProperty ? props.attachmentProperty.image?.src : url}
+      data-orig-src={origSrc}
       {...(animated && { "data-img-anim": "" })}
       loading="lazy"
       fetchpriority="high"

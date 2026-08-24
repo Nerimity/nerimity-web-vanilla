@@ -4,6 +4,7 @@ import "zoomist/css";
 
 import { transitionViewIfSupported } from "../utils/viewTransition";
 import { Button } from "./button";
+import { createLinkWarnModal } from "./LinkWarnModal";
 
 import style from "./ImagePreviewModal.module.css";
 
@@ -36,6 +37,8 @@ const createImagePreviewModal = (opts: {
       ? "embed-image"
       : "";
   };
+
+  const origSrc = opts.imageEl?.dataset.origSrc;
 
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -115,11 +118,15 @@ const createImagePreviewModal = (opts: {
           break;
         }
         case "open": {
+          if (origSrc) {
+            createLinkWarnModal(origSrc);
+            return;
+          }
           window.open(opts.src, "_blank");
           break;
         }
         case "copy": {
-          copyClipboard(opts.src);
+          copyClipboard(origSrc || opts.src);
           break;
         }
       }
