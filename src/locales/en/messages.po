@@ -42,6 +42,22 @@ msgstr "Ban"
 msgid "Banning..."
 msgstr "Banning..."
 
+#: src/components/ConfirmPasswordModal.tsx:16
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: src/components/ConfirmPasswordModal.tsx:19
+msgid "Enter your password to continue."
+msgstr "Enter your password to continue."
+
+#: src/components/ConfirmPasswordModal.tsx:27
+msgid "Don't Confirm"
+msgstr "Don't Confirm"
+
+#: src/components/ConfirmPasswordModal.tsx:34
+msgid "Confirm"
+msgstr "Confirm"
+
 #: src/components/EditServerRolesModal.tsx:56
 msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
@@ -577,7 +593,7 @@ msgid "Last online {0}"
 msgstr "Last online {0}"
 
 #: src/pages/LoginPage.tsx:14
-#: src/pages/app-page/settings/accountSettingsPage.tsx:20
+#: src/pages/app-page/settings/accountSettingsPage.tsx:21
 msgid "Email"
 msgstr "Email"
 
@@ -666,24 +682,24 @@ msgstr "Unfriending..."
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:21
+#: src/pages/app-page/settings/accountSettingsPage.tsx:22
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:22
+#: src/pages/app-page/settings/accountSettingsPage.tsx:23
 msgid "Tag"
 msgstr "Tag"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:23
+#: src/pages/app-page/settings/accountSettingsPage.tsx:24
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:24
+#: src/pages/app-page/settings/accountSettingsPage.tsx:25
 msgid "Banner"
 msgstr "Banner"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:102
-#: src/pages/app-page/settings/accountSettingsPage.tsx:113
+#: src/pages/app-page/settings/accountSettingsPage.tsx:103
+#: src/pages/app-page/settings/accountSettingsPage.tsx:114
 msgid "Browse"
 msgstr "Browse"
 

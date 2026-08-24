@@ -12,7 +12,7 @@ export const createConfirmPasswordModal = (opts: {
   const abortController = new AbortController();
 
   const modal = (
-    <Modal.Root>
+    <Modal.Root ignoreBgClick>
       <Modal.Header label={t`Confirm Password`} icon="shield" />
       <Modal.Body maxWidth="500px">
         <div class={style.body}>
