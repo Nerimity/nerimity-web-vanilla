@@ -140,7 +140,7 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   const serverChannelList = createSettingsDrawer();
 
-  const innerContent = (<div></div>) as HTMLDivElement;
+  let innerContent = (<div></div>) as HTMLDivElement;
   let page: Page | undefined = undefined;
 
   let headerOverride: HeaderOverrides = {};
@@ -207,6 +207,8 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const destroy = () => {
     abortController.abort();
     getAppHeader()?.updateHeader({ trigger: false });
+    innerContent.remove();
+    (innerContent as any) = null;
 
     serverChannelList.destroy();
   };
