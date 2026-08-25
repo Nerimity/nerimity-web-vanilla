@@ -163,17 +163,18 @@ const accountSettingsPage = (context: SettingsContext) => {
 
   const emailInput = el.querySelector(".emailInput") as HTMLDivElement;
 
-  emailInput?.addEventListener(
-    "click",
-    () => {
-      if (emailRevealed) return;
-      emailRevealed = true;
-      emailInput.querySelector("button")?.remove();
-      emailInput.querySelector("input")!.value =
-        accountStore.currentUser?.email || "";
-    },
-    { signal },
-  );
+  const revealEmail = () => {
+    if (emailRevealed) return;
+    emailRevealed = true;
+    emailInput.querySelector("button")?.remove();
+    emailInput.querySelector("input")!.value =
+      accountStore.currentUser?.email || "";
+  };
+
+  emailInput?.addEventListener("click", revealEmail, { signal });
+  emailInput
+    .querySelector("input")
+    ?.addEventListener("focus", revealEmail, { signal });
 
   updateHandler.handleInput(emailInput, "email");
   updateHandler.handleInput(el.querySelector(".usernameInput")!, "username");
