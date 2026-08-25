@@ -23,6 +23,15 @@ export function createUpdatedHandler<T extends ValueMap>(
     | ((changedValues: Partial<T>, hasChangedValues: boolean) => void) =
     undefined;
 
+  const cleanup = () => {
+    handlers.length = 0;
+    changedValues = {};
+    onUpdateHandler = undefined;
+  };
+
+  if (signal.aborted) cleanup();
+  else signal.addEventListener("abort", cleanup, { once: true });
+
   const onUpdate = (cb: typeof onUpdateHandler) => {
     onUpdateHandler = cb;
   };

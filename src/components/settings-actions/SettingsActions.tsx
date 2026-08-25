@@ -5,12 +5,12 @@ import { Button } from "../button";
 import style from "./SettingsActions.module.css";
 
 export const createSettingsActions = (props: { signal: AbortSignal }) => {
-  const errorEl = (
+  let errorEl = (
     <div class={style.error} style={{ display: "none" }}>
       Error
     </div>
   ) as HTMLDivElement;
-  const el = (
+  let el = (
     <div class={[style.container, style.hide]}>
       <div class={style.innerContainer}>
         {errorEl}
@@ -83,5 +83,26 @@ export const createSettingsActions = (props: { signal: AbortSignal }) => {
     el.classList.toggle(style.hide!, !visibility);
   };
 
-  return { el, setVisibility, handleSaveClick, handleUndoClick };
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      console.log("uuf");
+      errorEl.remove();
+      el.remove();
+      (errorEl as any) = null;
+      (el as any) = null;
+      saveHandlerCb = undefined;
+      undoHandlerCb = undefined;
+    },
+    { once: true },
+  );
+
+  return {
+    get el() {
+      return el;
+    },
+    setVisibility,
+    handleSaveClick,
+    handleUndoClick,
+  };
 };

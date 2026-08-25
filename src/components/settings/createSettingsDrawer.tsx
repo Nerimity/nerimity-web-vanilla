@@ -77,7 +77,7 @@ export const createSettingsDrawer = () => {
     </div>
   ) as HTMLDivElement;
 
-  const searchInputEl = containerEl.querySelector(
+  let searchInputEl = containerEl.querySelector(
     ".searchInput input",
   ) as HTMLInputElement;
 
@@ -122,6 +122,7 @@ export const createSettingsDrawer = () => {
 
     containerEl?.remove();
     (containerEl as any) = null;
+    (searchInputEl as any) = null;
   };
 
   return {

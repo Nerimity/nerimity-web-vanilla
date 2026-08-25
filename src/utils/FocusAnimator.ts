@@ -1,7 +1,7 @@
 export class FocusAnimator {
   private controller: AbortController;
   private image: string;
-  private container: HTMLElement;
+  private container: HTMLElement | null;
 
   constructor(container: HTMLElement, image: string) {
     this.container = container;
@@ -16,6 +16,7 @@ export class FocusAnimator {
   }
 
   private update(hovered: boolean) {
+    if (!this.container) return;
     this.container
       .querySelectorAll<HTMLImageElement>(this.image)
       .forEach((img) => {
@@ -44,5 +45,6 @@ export class FocusAnimator {
 
   destroy() {
     this.controller.abort();
+    this.container = null;
   }
 }

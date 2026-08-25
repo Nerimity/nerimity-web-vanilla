@@ -67,7 +67,7 @@ const accountSettingsPage = (context: SettingsContext) => {
   };
 
   let emailRevealed = false;
-  const el = (
+  let el = (
     <div class={style.page}>
       <SettingsBlock.Group>
         {/* Email */}
@@ -167,7 +167,7 @@ const accountSettingsPage = (context: SettingsContext) => {
     </div>
   ) as HTMLDivElement;
 
-  const emailInput = el.querySelector(".emailInput") as HTMLDivElement;
+  let emailInput = el.querySelector(".emailInput") as HTMLDivElement;
 
   const revealEmail = () => {
     if (emailRevealed) return;
@@ -357,6 +357,9 @@ const accountSettingsPage = (context: SettingsContext) => {
   const destroy = () => {
     ac.abort();
     el.remove();
+    emailInput.remove();
+    (emailInput as any) = null;
+    (el as any) = null;
   };
 
   return { destroy };

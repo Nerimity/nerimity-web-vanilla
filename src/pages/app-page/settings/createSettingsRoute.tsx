@@ -180,6 +180,7 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
     const user = accountStore.currentUser;
     if (!user) return;
+    console.log("page create");
     page?.destroy();
     page = matchedRoute.load.create(context);
   };
@@ -201,11 +202,16 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   router.createMatchListener("/app/settings/*", renderPage, {
     signal,
     always: true,
+    defer: true,
   });
 
   storeEmitter.on("ws:authStateUpdate", render, signal);
 
   const destroy = () => {
+    page?.destroy();
+    page = undefined;
+
+    headerAc?.abort();
     abortController.abort();
     getAppHeader()?.updateHeader({ trigger: false });
     serverChannelList.destroy();

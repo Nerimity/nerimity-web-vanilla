@@ -8,7 +8,7 @@ export const createFileInput = (opts: {
   imageOnly?: boolean;
   maxSize?: number;
 }) => {
-  const input = document.createElement("input");
+  let input = document.createElement("input");
   input.type = "file";
   if (opts.imageOnly) {
     input.accept = "image/gif, image/webp, image/png, image/jpeg, image/avif";
@@ -33,5 +33,16 @@ export const createFileInput = (opts: {
     { signal: opts.signal },
   );
   const trigger = () => input.click();
-  return { input, trigger };
+
+  opts.signal.addEventListener(
+    "abort",
+    () => {
+      console.log("kms");
+      input.remove();
+      (input as any) = null;
+    },
+    { once: true },
+  );
+
+  return { trigger };
 };
