@@ -15,29 +15,37 @@ export const createChangePasswordModal = () => {
     <Modal.Root ignoreBgClick>
       <Modal.Header label={t`Change Password`} icon="shield" />
       <Modal.Body width="280px">
-        <div class={style.body}>
+        <form class={style.body}>
           <div class={style.details}>
             {t`You'll be logged out everywhere else.`}
           </div>
           <Input
+            id="currentPassword"
             class={[style.currentPassword!, "current"]}
+            autocomplete="current-password"
+
             label={t`Current Password`}
             type="password"
             placeholder="*******"
           />
           <Input
+            id="newPassword"
+            autocomplete="new-password"
+
             class={"new"}
             label={t`New Password`}
             type="password"
             placeholder="*******"
           />
           <Input
+            id="newPasswordConfirm"
+            autocomplete="new-password"
             class={"newConfirm"}
             label={t`Confirm New Password`}
             type="password"
             placeholder="*******"
           />
-        </div>
+        </form>
         <div class={style.error}></div>
       </Modal.Body>
       <Modal.Footer>
@@ -110,6 +118,14 @@ export const createChangePasswordModal = () => {
       if (button.dataset.action === "close") {
         abortController.abort();
       }
+    },
+    { signal: abortController.signal },
+  );
+
+  modal.querySelector("form")?.addEventListener(
+    "submit",
+    (e) => {
+      e.preventDefault();
     },
     { signal: abortController.signal },
   );

@@ -24,7 +24,7 @@ interface InfiniteScrollParams {
 export const createInfiniteScroll = (params: InfiniteScrollParams) => {
   const query = router.query<{ messageId: string }>();
 
-  const {
+  let {
     el,
     logs,
     skeletonsTop,
@@ -248,6 +248,17 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     }, 100);
   };
   router.createQueryListener(() => scrollToMessage(), { signal, defer: true });
+
+  signal.addEventListener(
+    "abort",
+    () => {
+      (el as any) = null;
+      (skeletonsBottom as any) = null;
+      (skeletonsTop as any) = null;
+      (logs as any) = null;
+    },
+    { once: true },
+  );
 
   return { onBottomSkeletonIntersect };
 };

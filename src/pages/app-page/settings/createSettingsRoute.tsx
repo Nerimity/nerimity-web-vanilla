@@ -145,7 +145,7 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   let headerOverride: HeaderOverrides = {};
 
-  const context: SettingsContext = {
+  let context: SettingsContext = {
     content: innerContent,
     overrideHeader(override) {
       headerOverride = { ...headerOverride, ...override };
@@ -207,13 +207,15 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const destroy = () => {
     abortController.abort();
     getAppHeader()?.updateHeader({ trigger: false });
+    serverChannelList.destroy();
+
     innerContent.remove();
     (innerContent as any) = null;
 
     headerContainerEl.remove();
     (headerContainerEl as any) = null;
 
-    serverChannelList.destroy();
+    (context as any) = null;
   };
 
   return { destroy };

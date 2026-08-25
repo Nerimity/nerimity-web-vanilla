@@ -66,6 +66,7 @@ export const createSettingsDrawer = () => {
           <HeaderPill />
         </div>
         <Input
+          id="searchSettings"
           prefix={<Icon class={style.searchIcon} name="search" />}
           class="searchInput"
           placeholder="Search Settings"

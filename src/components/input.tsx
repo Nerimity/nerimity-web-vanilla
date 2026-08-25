@@ -9,7 +9,7 @@ interface InputProps {
   suffix?: any;
   label?: any;
   type?: "text" | "password" | "textarea";
-  autocomplete?: "current-password" | "email";
+  autocomplete?: "current-password" | "new-password" | "email";
   placeholder?: string;
   id?: string;
   value?: string;

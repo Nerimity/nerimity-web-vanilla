@@ -75,6 +75,7 @@ const accountSettingsPage = (context: SettingsContext) => {
           <SettingsBlock.Icon name="email" />
           <SettingsBlock.Details title={strings.email} />
           <Input
+            id="emailInput"
             class="emailInput"
             value={hiddenEmail()}
             suffix={<Button class={style.editEmailButton} icon="edit" />}
@@ -85,7 +86,11 @@ const accountSettingsPage = (context: SettingsContext) => {
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="face" />
           <SettingsBlock.Details title={strings.username} />
-          <Input class="usernameInput" value={initialValues().username} />
+          <Input
+            id="usernameInput"
+            class="usernameInput"
+            value={initialValues().username}
+          />
         </SettingsBlock.Root>
 
         {/* Tag */}
@@ -93,6 +98,7 @@ const accountSettingsPage = (context: SettingsContext) => {
           <SettingsBlock.Icon name="sell" />
           <SettingsBlock.Details title={strings.tag} />
           <Input
+            id="tagInput"
             maxLength={4}
             class={style.tagInput}
             value={initialValues().tag}
