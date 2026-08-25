@@ -9,6 +9,7 @@ import { Input } from "../../../components/input";
 import { alert } from "../../../components/modal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
 import { postResetPassword, updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
@@ -265,6 +266,7 @@ const accountSettingsPage = (context: SettingsContext) => {
   const fileInput = createFileInput({
     signal,
     imageOnly: true,
+    maxSize: MAX_IMAGE_UPLOAD_SIZE,
     async onChange(file) {
       const url = file && (await fileToDataUrl(file));
       updateHandler.changeValue(fileInputType!, url ? { file, url } : null);

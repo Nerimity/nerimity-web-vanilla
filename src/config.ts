@@ -4,6 +4,9 @@ export const cdnUrl = "https://cdn.nerimity.com/";
 export const emojiUrl = "https://nerimity.com/twemojis/";
 export const mobileWidth = 800;
 
+export const MAX_IMAGE_UPLOAD_SIZE = 12 * 1024 * 1024; // 12 MB
+export const MAX_FILE_UPLOAD_SIZE = 50 * 1024 * 1024; // 50MB
+
 export const isMobileWidth = () => {
   return window.innerWidth < mobileWidth;
 };

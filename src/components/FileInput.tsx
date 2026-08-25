@@ -1,7 +1,12 @@
+import { ph, t } from "@lingui/core/macro";
+
+import { alert } from "./modal";
+
 export const createFileInput = (opts: {
   signal: AbortSignal;
   onChange: (file?: File) => void;
   imageOnly?: boolean;
+  maxSize?: number;
 }) => {
   const input = document.createElement("input");
   input.type = "file";
@@ -14,7 +19,15 @@ export const createFileInput = (opts: {
     (event) => {
       const target = event.target as HTMLInputElement;
       const file = target.files?.[0];
-      opts.onChange(file);
+
+      if (file && opts.maxSize && file?.size > opts.maxSize) {
+        alert({
+          message: t`Maximum file size allowed is ${ph({ size: opts.maxSize / (1024 * 1024) })} MB`,
+        });
+      } else {
+        opts.onChange(file);
+      }
+
       target.value = "";
     },
     { signal: opts.signal },

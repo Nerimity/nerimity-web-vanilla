@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { MAX_FILE_UPLOAD_SIZE } from "../../config";
 import { postTyping } from "../../services/channelService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
@@ -105,7 +106,11 @@ export const createChatbar = () => {
     channelStore.updateAttachment(channelStore.currentChannelId!, file);
   };
 
-  const fileInput = createFileInput({ signal, onChange: handleFileInput });
+  const fileInput = createFileInput({
+    signal,
+    onChange: handleFileInput,
+    maxSize: MAX_FILE_UPLOAD_SIZE,
+  });
   const handleAttachClick = () => {
     fileInput.trigger();
   };
