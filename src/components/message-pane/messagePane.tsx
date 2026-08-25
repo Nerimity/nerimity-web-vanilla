@@ -78,7 +78,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   let chatbarEl = chatbar.render();
   const scrollContainer = Drawer().content as HTMLDivElement;
 
-  const el = (
+  let el = (
     <div class={style.messagePane}>
       {skeletonsTop}
       {logs}
@@ -475,6 +475,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     (chatbar as any) = null;
     (chatbarEl as any) = null;
     (logs as any) = null;
+    (el as any) = null;
     contentEl.replaceChildren();
   };
   render();
