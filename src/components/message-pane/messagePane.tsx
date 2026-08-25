@@ -36,7 +36,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let chatbar = createChatbar();
-  const logs = (<div class={style.logs}></div>) as unknown as HTMLDivElement;
+  let logs = (<div class={style.logs}></div>) as unknown as HTMLDivElement;
 
   const getChannelProperty = () => {
     return channelStore.currentChannelProperty();
@@ -474,6 +474,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     chatbarEl.remove();
     (chatbar as any) = null;
     (chatbarEl as any) = null;
+    (logs as any) = null;
     contentEl.replaceChildren();
   };
   render();
