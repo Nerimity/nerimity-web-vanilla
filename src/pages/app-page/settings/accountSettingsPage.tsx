@@ -145,6 +145,14 @@ const accountSettingsPage = (context: SettingsContext) => {
         </SettingsBlock.Root>
       </SettingsBlock.Group>
 
+      <SettingsBlock.Root href="/app/settings/profile">
+        <SettingsBlock.Icon name="person" />
+        <SettingsBlock.Details
+          title={t`Profile`}
+          description={t`Customize your profile bio, colors and more.`}
+        />
+      </SettingsBlock.Root>
+
       {actions.el}
     </div>
   ) as HTMLDivElement;

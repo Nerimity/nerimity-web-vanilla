@@ -83,7 +83,7 @@
     margin-right: 4px;
     margin-left: 4px;
     border-radius: var(--radius-10);
-    background-color: var(--gray-900);
+    background-color: var(--gray-850);
     gap: 12px;
     .title {
       margin-bottom: 8px;
@@ -215,7 +215,7 @@
   padding: 6px;
   margin-left: 4px;
   border-radius: var(--radius-6);
-  background-color: var(--gray-900);
+  background-color: var(--gray-850);
   &.hide {
     display: none;
   }

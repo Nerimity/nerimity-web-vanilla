@@ -1,4 +1,6 @@
+import { Dynamic } from "../dynamic";
 import { Icon, Icon as MaterialIcon } from "./icon";
+import { Link } from "./link";
 
 import style from "./SettingsBlock.module.css";
 
@@ -13,16 +15,20 @@ export const SettingsBlock = {
   }: {
     children: any;
     clickable?: boolean;
+    href?: string;
     [key: string]: any;
   }) => {
+    const isClickable = clickable || props.href;
+
     return (
-      <div
-        class={[style.settingsBlock, clickable && style.clickable]}
+      <Dynamic
+        component={props.href ? Link : "div"}
+        class={[style.settingsBlock, isClickable && style.clickable]}
         {...props}
       >
         {children}
-        {clickable && <Icon name="chevron_forward" />}
-      </div>
+        {isClickable && <Icon name="chevron_forward" />}
+      </Dynamic>
     );
   },
   Icon: (props: { name: string }) => {
