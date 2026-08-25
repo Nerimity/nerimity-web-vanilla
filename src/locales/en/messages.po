@@ -43,22 +43,18 @@ msgid "Banning..."
 msgstr "Banning..."
 
 #: src/components/ConfirmPasswordModal.tsx:16
-#: src/pages/app-page/settings/ChangePasswordModal.tsx:16
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
 #: src/components/ConfirmPasswordModal.tsx:19
-#: src/pages/app-page/settings/ChangePasswordModal.tsx:19
 msgid "Enter your password to continue."
 msgstr "Enter your password to continue."
 
 #: src/components/ConfirmPasswordModal.tsx:27
-#: src/pages/app-page/settings/ChangePasswordModal.tsx:27
 msgid "Don't Confirm"
 msgstr "Don't Confirm"
 
 #: src/components/ConfirmPasswordModal.tsx:34
-#: src/pages/app-page/settings/ChangePasswordModal.tsx:34
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -85,6 +81,10 @@ msgstr "GIFs"
 #: src/components/ExpressionPicker.tsx:78
 msgid "Emojis"
 msgstr "Emojis"
+
+#: src/components/FileInput.tsx:25
+msgid "Maximum file size allowed is {size} MB"
+msgstr "Maximum file size allowed is {size} MB"
 
 #: src/components/ImageCropModal.tsx:68
 msgid "Crop Image"
@@ -196,6 +196,7 @@ msgstr "Copy Object"
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
 #: src/pages/app-page/settings/Settings.ts:50
+#: src/pages/app-page/settings/accountSettingsPage.tsx:155
 msgid "Profile"
 msgstr "Profile"
 
@@ -394,12 +395,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name
-#: src/components/message-pane/chatbar.tsx:267
+#: src/components/message-pane/chatbar.tsx:272
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:272
+#: src/components/message-pane/chatbar.tsx:277
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -601,7 +602,7 @@ msgid "Last online {0}"
 msgstr "Last online {0}"
 
 #: src/pages/LoginPage.tsx:14
-#: src/pages/app-page/settings/accountSettingsPage.tsx:22
+#: src/pages/app-page/settings/accountSettingsPage.tsx:24
 msgid "Email"
 msgstr "Email"
 
@@ -686,45 +687,87 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:16
+#: src/pages/app-page/settings/accountSettingsPage.tsx:29
+msgid "Change Password"
+msgstr "Change Password"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:20
+msgid "You'll be logged out everywhere else."
+msgstr "You'll be logged out everywhere else."
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:24
+msgid "Current Password"
+msgstr "Current Password"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:30
+msgid "New Password"
+msgstr "New Password"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:36
+msgid "Confirm New Password"
+msgstr "Confirm New Password"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:47
+msgid "Don't Change"
+msgstr "Don't Change"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:51
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:97
+msgid "Change"
+msgstr "Change"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:80
+msgid "All fields must be filled"
+msgstr "All fields must be filled"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:84
+msgid "Passwords don't match"
+msgstr "Passwords don't match"
+
+#: src/pages/app-page/settings/ChangePasswordModal.tsx:90
+msgid "Changing..."
+msgstr "Changing..."
+
 #: src/pages/app-page/settings/Settings.ts:43
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:23
+#: src/pages/app-page/settings/accountSettingsPage.tsx:25
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:24
+#: src/pages/app-page/settings/accountSettingsPage.tsx:26
 msgid "Tag"
 msgstr "Tag"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:25
+#: src/pages/app-page/settings/accountSettingsPage.tsx:27
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:26
+#: src/pages/app-page/settings/accountSettingsPage.tsx:28
 msgid "Banner"
 msgstr "Banner"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:27
-msgid "Change Password"
-msgstr "Change Password"
-
-#: src/pages/app-page/settings/accountSettingsPage.tsx:28
-#: src/pages/app-page/settings/accountSettingsPage.tsx:302
+#: src/pages/app-page/settings/accountSettingsPage.tsx:30
+#: src/pages/app-page/settings/accountSettingsPage.tsx:316
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:109
-#: src/pages/app-page/settings/accountSettingsPage.tsx:123
+#: src/pages/app-page/settings/accountSettingsPage.tsx:114
+#: src/pages/app-page/settings/accountSettingsPage.tsx:128
 msgid "Browse"
 msgstr "Browse"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:142
+#: src/pages/app-page/settings/accountSettingsPage.tsx:147
 msgid "Send a password reset link to your email."
 msgstr "Send a password reset link to your email."
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:303
+#: src/pages/app-page/settings/accountSettingsPage.tsx:156
+msgid "Customize your profile bio, colors and more."
+msgstr "Customize your profile bio, colors and more."
+
+#: src/pages/app-page/settings/accountSettingsPage.tsx:317
 msgid "Email Sent. Please check your email to reset your password."
 msgstr "Email Sent. Please check your email to reset your password."
 
