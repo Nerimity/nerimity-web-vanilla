@@ -136,7 +136,7 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
-  const headerContainerEl = (<div></div>) as HTMLDivElement;
+  let headerContainerEl = (<div></div>) as HTMLDivElement;
 
   const serverChannelList = createSettingsDrawer();
 
@@ -209,6 +209,9 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
     getAppHeader()?.updateHeader({ trigger: false });
     innerContent.remove();
     (innerContent as any) = null;
+
+    headerContainerEl.remove();
+    (headerContainerEl as any) = null;
 
     serverChannelList.destroy();
   };
