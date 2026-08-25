@@ -15,6 +15,7 @@ import { postResetPassword, updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
+import { createChangePasswordModal } from "./ChangePasswordModal";
 import type { SettingsContext } from "./Settings";
 
 import style from "./accountSettingsPage.module.css";
@@ -131,9 +132,12 @@ const accountSettingsPage = (context: SettingsContext) => {
 
       <SettingsBlock.Group>
         {/* Change Password */}
-        <SettingsBlock.Root clickable>
+        <SettingsBlock.Root clickable data-action="change-password">
           <SettingsBlock.Icon name="password" />
-          <SettingsBlock.Details title={strings.changePassword} />
+          <SettingsBlock.Details
+            title={strings.changePassword}
+            description="You'll need to enter your current password to set a new one."
+          />
         </SettingsBlock.Root>
 
         <SettingsBlock.Root clickable data-action="forgor">
@@ -332,6 +336,10 @@ const accountSettingsPage = (context: SettingsContext) => {
 
       if (action === "forgor") {
         handleForgotPassword();
+      }
+
+      if (action === "change-password") {
+        createChangePasswordModal();
       }
     },
     { signal },
