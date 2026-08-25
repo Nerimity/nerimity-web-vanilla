@@ -55,7 +55,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     return property.canLoadTop;
   };
 
-  const skeletonsTop = (
+  let skeletonsTop = (
     <div class={[shouldShowTopSkel() ? "" : style.hide]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
@@ -63,7 +63,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     </div>
   ) as HTMLDivElement;
 
-  const skeletonsBottom = (
+  let skeletonsBottom = (
     <div class={[shouldShowBottomSkel() ? "" : style.hide]}>
       {Array.from({ length: 26 }, () => (
         <MessageSkeleton />
@@ -71,9 +71,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     </div>
   ) as HTMLDivElement;
 
-  const bottomSentinel = (
-    <div class={style.bottomSentinel} />
-  ) as HTMLDivElement;
+  let bottomSentinel = (<div class={style.bottomSentinel} />) as HTMLDivElement;
 
   let chatbarEl = chatbar.render();
   const scrollContainer = Drawer().content as HTMLDivElement;
@@ -472,10 +470,17 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     el.remove();
     logs.remove();
     chatbarEl.remove();
+    skeletonsTop.remove();
+    skeletonsBottom.remove();
+    bottomSentinel.remove();
+
     (chatbar as any) = null;
     (chatbarEl as any) = null;
     (logs as any) = null;
     (el as any) = null;
+    (skeletonsTop as any) = null;
+    (skeletonsBottom as any) = null;
+    (bottomSentinel as any) = null;
     contentEl.replaceChildren();
   };
   render();
