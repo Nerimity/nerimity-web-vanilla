@@ -86,7 +86,6 @@ export const createSettingsActions = (props: { signal: AbortSignal }) => {
   props.signal.addEventListener(
     "abort",
     () => {
-      console.log("uuf");
       errorEl.remove();
       el.remove();
       (errorEl as any) = null;

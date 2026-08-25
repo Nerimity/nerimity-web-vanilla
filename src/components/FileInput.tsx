@@ -37,7 +37,6 @@ export const createFileInput = (opts: {
   opts.signal.addEventListener(
     "abort",
     () => {
-      console.log("kms");
       input.remove();
       (input as any) = null;
     },

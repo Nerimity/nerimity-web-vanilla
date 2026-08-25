@@ -180,7 +180,6 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
     const user = accountStore.currentUser;
     if (!user) return;
-    console.log("page create");
     page?.destroy();
     page = matchedRoute.load.create(context);
   };
