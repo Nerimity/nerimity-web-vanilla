@@ -74,7 +74,7 @@
   align-items: center;
   flex: 1;
   justify-content: center;
-  padding: 6px 8px;
+  padding: 10px 8px;
   border: none;
   border-radius: var(--radius-max);
   color: var(--gray-300);

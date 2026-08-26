@@ -80,38 +80,3 @@
   flex-shrink: 0;
   border-radius: var(--radius-6);
 }
-
-.tabs {
-  display: flex;
-  align-self: center;
-  margin: 8px 4px;
-  margin-left: 8px;
-  border-radius: var(--radius-max);
-  background-color: var(--gray-800);
-  gap: 4px;
-}
-.tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px 8px;
-  border: none;
-  border-radius: var(--radius-max);
-  color: var(--gray-400);
-  background-color: transparent;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-  gap: 4px;
-  &:hover {
-    color: var(--text-color);
-    background-color: var(--gray-700);
-  }
-  &:first-child {
-    color: var(--text-color);
-    background-color: var(--primary-color);
-  }
-  .icon {
-    font-size: 16px;
-  }
-}
