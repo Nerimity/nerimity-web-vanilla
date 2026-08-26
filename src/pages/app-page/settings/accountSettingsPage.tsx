@@ -376,7 +376,7 @@ const accountSettingsPage = (context: SettingsContext) => {
         createUpdateDMNoticeModal();
       }
       if (action === "delete-account") {
-        alert({ message: "Account delete. JK not implemented yet." });
+        alert({ message: "Account deleted. JK not implemented yet." });
       }
     },
     { signal },
