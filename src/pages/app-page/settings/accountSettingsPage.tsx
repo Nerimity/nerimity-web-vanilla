@@ -13,6 +13,7 @@ import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
 import { postResetPassword, updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
+import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
 import { createChangePasswordModal } from "./ChangePasswordModal";
@@ -35,19 +36,20 @@ const accountSettingsPage = (context: SettingsContext) => {
   const { signal } = ac;
   const strings = getStrings();
 
-  const currentUser = accountStore.currentUser;
+  const initialValues = () => {
+    const currentUser = accountStore.currentUser;
+    return {
+      email: currentUser?.email || "",
+      username: currentUser?.username || "",
+      tag: currentUser?.tag || "",
 
-  const initialValues = () => ({
-    email: currentUser?.email || "",
-    username: currentUser?.username || "",
-    tag: currentUser?.tag || "",
+      avatar: null as null | { file: File; url: string },
+      avatarCropPoints: null as null | CropPoints,
 
-    avatar: null as null | { file: File; url: string },
-    avatarCropPoints: null as null | CropPoints,
-
-    banner: null as null | { file: File; url: string },
-    bannerCropPoints: null as null | CropPoints,
-  });
+      banner: null as null | { file: File; url: string },
+      bannerCropPoints: null as null | CropPoints,
+    };
+  };
 
   const actions = createSettingsActions({ signal });
 
@@ -261,7 +263,9 @@ const accountSettingsPage = (context: SettingsContext) => {
     if (error) {
       return done(error.message);
     }
-    console.log(res);
+
+    userStore.users.get(userId)?.update(res.user);
+    updateHandler.undo();
   };
 
   actions.handleSaveClick(async (done) => {

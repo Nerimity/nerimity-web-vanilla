@@ -139,11 +139,6 @@ function onUserPresenceUpdate(payload: {
 }
 
 function onUserSelfUpdated(payload: Partial<CurrentUser>) {
-  accountStore.setCurrentUser({
-    ...accountStore.currentUser!,
-    ...payload,
-  } as CurrentUser);
-
   const user = userStore.users.get(accountStore.currentUser?.id!);
   user?.update(payload);
 }

@@ -5,7 +5,7 @@ import {
   LastOnlineStatus,
   FriendStatus,
 } from "../Types";
-import { accountStore } from "./accountStore";
+import { accountStore, type CurrentUser } from "./accountStore";
 import { friendStore } from "./friendStore";
 
 export const userStore = createUserStore();
@@ -41,6 +41,13 @@ export class User {
   }
 
   update(updated: Partial<RawUser>) {
+    if (this.id === accountStore.currentUser?.id) {
+      accountStore.setCurrentUser({
+        ...accountStore.currentUser!,
+        ...updated,
+      } as CurrentUser);
+    }
+
     this.username = updated.username ?? this.username;
     this.tag = updated.tag ?? this.tag;
     this.avatar = updated.avatar ?? this.avatar;
