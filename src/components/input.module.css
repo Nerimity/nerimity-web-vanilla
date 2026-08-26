@@ -11,6 +11,7 @@
 
     background-color: var(--input-background-color);
     transition: 0.2s border-bottom-color;
+    &:has(textarea:focus),
     &:has(input:focus) {
       border-bottom-color: var(--primary-color);
     }
