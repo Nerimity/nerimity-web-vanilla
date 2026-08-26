@@ -21,13 +21,7 @@ export const createConfirmPasswordModal = (opts: {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <Button
-          data-button
-          alert
-          label={t`Don't Confirm`}
-          icon="close"
-          hoverBorder
-        />
+        <Button data-button label={t`Don't Confirm`} icon="close" hoverBorder />
         <Button
           data-action="confirm"
           data-button

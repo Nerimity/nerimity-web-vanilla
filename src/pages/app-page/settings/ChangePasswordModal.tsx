@@ -51,7 +51,6 @@ export const createChangePasswordModal = () => {
       <Modal.Footer>
         <Button
           data-action="close"
-          alert
           label={t`Don't Change`}
           icon="close"
           hoverBorder

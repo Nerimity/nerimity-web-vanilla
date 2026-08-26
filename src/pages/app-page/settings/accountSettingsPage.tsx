@@ -18,6 +18,7 @@ import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
 import { createChangePasswordModal } from "./ChangePasswordModal";
 import type { SettingsContext } from "./Settings";
+import { createUpdateDMNoticeModal } from "./UpdateDMNoticeModal";
 
 import style from "./accountSettingsPage.module.css";
 
@@ -29,6 +30,7 @@ const getStrings = () => ({
   banner: t`Banner`,
   changePassword: t`Change Password`,
   forgotPassword: t`Forgot Password`,
+  dmNotice: t`DM Notice`,
 });
 
 const accountSettingsPage = (context: SettingsContext) => {
@@ -156,6 +158,14 @@ const accountSettingsPage = (context: SettingsContext) => {
           />
         </SettingsBlock.Root>
       </SettingsBlock.Group>
+
+      <SettingsBlock.Root clickable data-action="update-dm-notice">
+        <SettingsBlock.Icon name="info" />
+        <SettingsBlock.Details
+          title={strings.dmNotice}
+          description={t`Show a notice when a user DMs you for the first time.`}
+        />
+      </SettingsBlock.Root>
 
       <SettingsBlock.Root href="/app/settings/profile">
         <SettingsBlock.Icon name="person" />
@@ -351,6 +361,9 @@ const accountSettingsPage = (context: SettingsContext) => {
 
       if (action === "change-password") {
         createChangePasswordModal();
+      }
+      if (action === "update-dm-notice") {
+        createUpdateDMNoticeModal();
       }
     },
     { signal },

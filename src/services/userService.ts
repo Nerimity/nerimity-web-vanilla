@@ -117,3 +117,23 @@ export async function postResetPassword(email: string) {
     body: { email },
   });
 }
+
+export const getUserChannelNotice = async () => {
+  return request<{ notice: { content: string } }>(`/users/channel-notice`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+export const updateUserChannelNotice = async (content: string) => {
+  return request<{ notice: { content: string } }>(`/users/channel-notice`, {
+    useToken: true,
+    method: "PUT",
+    body: { content },
+  });
+};
+export const deleteUserChannelNotice = async () => {
+  return request<{ notice: { content: string } }>(`/users/channel-notice`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};
