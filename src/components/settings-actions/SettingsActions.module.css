@@ -2,6 +2,7 @@
   position: sticky;
   bottom: 4px;
   display: flex;
+  overflow: hidden;
   justify-content: end;
   margin-top: 12px;
   &.hide {
