@@ -33,6 +33,12 @@
   }
 }
 
+.icon {
+  &.alert {
+    color: var(--alert-color);
+  }
+}
+
 .details {
   display: flex;
   flex: 1;

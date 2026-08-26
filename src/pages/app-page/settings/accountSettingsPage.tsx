@@ -31,6 +31,7 @@ const getStrings = () => ({
   changePassword: t`Change Password`,
   forgotPassword: t`Forgot Password`,
   dmNotice: t`DM Notice`,
+  deleteAccount: t`Delete Account`,
 });
 
 const accountSettingsPage = (context: SettingsContext) => {
@@ -175,6 +176,15 @@ const accountSettingsPage = (context: SettingsContext) => {
         />
       </SettingsBlock.Root>
 
+      <div class={style.separator}></div>
+
+      <SettingsBlock.Root data-action="delete-account" clickable>
+        <SettingsBlock.Icon name="delete" alert />
+        <SettingsBlock.Details
+          title={strings.deleteAccount}
+          description={t`Permanently delete your account and all associated data.`}
+        />
+      </SettingsBlock.Root>
       {actions.el}
     </div>
   ) as HTMLDivElement;
@@ -364,6 +374,9 @@ const accountSettingsPage = (context: SettingsContext) => {
       }
       if (action === "update-dm-notice") {
         createUpdateDMNoticeModal();
+      }
+      if (action === "delete-account") {
+        alert({ message: "Account delete. JK not implemented yet." });
       }
     },
     { signal },

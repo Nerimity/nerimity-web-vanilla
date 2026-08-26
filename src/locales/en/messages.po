@@ -196,7 +196,7 @@ msgstr "Copy Object"
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
 #: src/pages/app-page/settings/Settings.ts:50
-#: src/pages/app-page/settings/accountSettingsPage.tsx:173
+#: src/pages/app-page/settings/accountSettingsPage.tsx:174
 msgid "Profile"
 msgstr "Profile"
 
@@ -769,28 +769,36 @@ msgid "Banner"
 msgstr "Banner"
 
 #: src/pages/app-page/settings/accountSettingsPage.tsx:32
-#: src/pages/app-page/settings/accountSettingsPage.tsx:337
+#: src/pages/app-page/settings/accountSettingsPage.tsx:347
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:124
-#: src/pages/app-page/settings/accountSettingsPage.tsx:138
+#: src/pages/app-page/settings/accountSettingsPage.tsx:34
+msgid "Delete Account"
+msgstr "Delete Account"
+
+#: src/pages/app-page/settings/accountSettingsPage.tsx:125
+#: src/pages/app-page/settings/accountSettingsPage.tsx:139
 msgid "Browse"
 msgstr "Browse"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:157
+#: src/pages/app-page/settings/accountSettingsPage.tsx:158
 msgid "Send a password reset link to your email."
 msgstr "Send a password reset link to your email."
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:166
+#: src/pages/app-page/settings/accountSettingsPage.tsx:167
 msgid "Show a notice when a user DMs you for the first time."
 msgstr "Show a notice when a user DMs you for the first time."
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:174
+#: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Customize your profile bio, colors and more."
 msgstr "Customize your profile bio, colors and more."
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:338
+#: src/pages/app-page/settings/accountSettingsPage.tsx:185
+msgid "Permanently delete your account and all associated data."
+msgstr "Permanently delete your account and all associated data."
+
+#: src/pages/app-page/settings/accountSettingsPage.tsx:348
 msgid "Email Sent. Please check your email to reset your password."
 msgstr "Email Sent. Please check your email to reset your password."
 

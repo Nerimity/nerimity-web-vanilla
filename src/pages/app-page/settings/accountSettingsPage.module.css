@@ -19,3 +19,12 @@
 .tagInput {
   width: 5em;
 }
+
+.separator {
+  align-self: center;
+  width: 96%;
+  height: 1px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  background-color: var(--gray-700);
+}
