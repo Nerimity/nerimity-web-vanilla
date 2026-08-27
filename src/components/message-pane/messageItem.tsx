@@ -248,12 +248,12 @@ const MessageEmbeds = (props: {
 
   const embed = props.message.embed;
 
-  const imageAttachment =
-    attachment?.width || attachment?.mime?.startsWith("image/") == true;
-
+  const imageAttachment = !!attachment?.width;
   const attachmentProperty = props.message.attachmentProperty;
+  const imageEmbed = embed?.type === "image" && embed?.imageHeight !== null;
 
-  const imageEmbed = embed?.type == "image" && embed?.imageHeight != null;
+  const isVideo = attachment?.mime?.startsWith("video/");
+  const isAudio = attachment?.mime?.startsWith("audio/");
 
   const inviteCode = props.message.content?.match(inviteLinkRegex)?.[1];
 
@@ -263,7 +263,9 @@ const MessageEmbeds = (props: {
 
   if (
     (attachment && !imageAttachment) ||
-    (attachmentProperty && !attachmentProperty.image)
+    (attachmentProperty && !attachmentProperty.image) ||
+    isVideo ||
+    isAudio
   )
     return (
       <FileEmbed
