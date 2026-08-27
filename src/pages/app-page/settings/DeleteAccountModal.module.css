@@ -1,0 +1,36 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.error {
+  margin-top: 4px;
+  color: var(--alert-color);
+  font-size: 12px;
+}
+
+.deleteListTitle {
+  margin-top: 10px;
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+.deleteList {
+  padding-left: 22px;
+  margin: 0;
+}
+
+.checkbox {
+  margin-top: 8px;
+  margin-bottom: 12px;
+}
+
+.input {
+  margin-top: 12px;
+}

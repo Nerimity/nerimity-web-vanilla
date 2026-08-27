@@ -7,7 +7,7 @@ import style from "./button.module.css";
 interface ButtonProps {
   icon?: string;
   label?: string;
-  class?: string | string[];
+  class?: string | (string | false | undefined)[];
   hoverBorder?: boolean;
   primary?: boolean;
   href?: string;

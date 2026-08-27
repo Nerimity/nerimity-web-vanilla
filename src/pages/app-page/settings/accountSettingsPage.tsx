@@ -17,6 +17,7 @@ import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
 import { createChangePasswordModal } from "./ChangePasswordModal";
+import { createDeleteAccountModal } from "./DeleteAccountModal";
 import type { SettingsContext } from "./Settings";
 import { createUpdateDMNoticeModal } from "./UpdateDMNoticeModal";
 
@@ -376,7 +377,7 @@ const accountSettingsPage = (context: SettingsContext) => {
         createUpdateDMNoticeModal();
       }
       if (action === "delete-account") {
-        alert({ message: "Account deleted. JK not implemented yet." });
+        createDeleteAccountModal();
       }
     },
     { signal },

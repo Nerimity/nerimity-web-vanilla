@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  border-radius: var(--radius-12);
+  background-color: var(--gray-850);
+  gap: 4px;
+  .icon {
+    font-size: 18px;
+  }
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  color: var(--color);
+  gap: 6px;
+}
+
+.description {
+}
