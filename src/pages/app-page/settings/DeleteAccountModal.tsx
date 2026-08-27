@@ -20,7 +20,7 @@ export const createDeleteAccountModal = () => {
   let deletePostsAndMessages = true;
 
   const modal = (
-    <Modal.Root ignoreBgClick disableGestures>
+    <Modal.Root ignoreBgClick disableGestures fullHeight>
       <Modal.Header label={t`Delete Account`} alert icon="delete" />
 
       <Modal.Body width="400px">
