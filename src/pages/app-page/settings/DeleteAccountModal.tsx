@@ -5,7 +5,9 @@ import { Checkbox } from "../../../components/checkbox";
 import { Input } from "../../../components/input";
 import { createModal, Modal } from "../../../components/modal";
 import { Notice } from "../../../components/Notice";
+import { deleteAccount } from "../../../services/userService";
 import { serverStore } from "../../../store/serverStore";
+import { logout } from "../../../utils/logout";
 
 import style from "./DeleteAccountModal.module.css";
 
@@ -13,7 +15,7 @@ export const createDeleteAccountModal = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
-  const isInServers = !serverStore.servers.size;
+  const isInServers = !!serverStore.servers.size;
 
   let deletePostsAndMessages = true;
 
@@ -84,11 +86,13 @@ export const createDeleteAccountModal = () => {
     </Modal.Root>
   ) as HTMLDivElement;
 
-  // const setError = (val?: string) => {
-  //   const el = modal.querySelector(`.${style.error}`) as HTMLDivElement;
-  //   el.style.display = val ? "flex" : "none";
-  //   el.textContent = val || "";
-  // };
+  const setError = (val?: string) => {
+    const el = modal.querySelector(`.${style.error}`) as HTMLDivElement;
+    el.style.display = val ? "flex" : "none";
+    el.textContent = val || "";
+  };
+
+  let requesting = false;
 
   modal.addEventListener(
     "click",
@@ -96,8 +100,27 @@ export const createDeleteAccountModal = () => {
       const target = event.target as HTMLElement;
       const button = target.closest(`[data-action]`) as HTMLElement;
       if (!button) return;
+      const buttonLabel = button.querySelector(".label") as HTMLDivElement;
 
-      if (button.dataset.action === "update") {
+      if (button.dataset.action === "delete") {
+        if (requesting) return;
+        requesting = true;
+        buttonLabel.textContent = t`Deleting...`;
+
+        const passwordEl = modal.querySelector("#password") as HTMLInputElement;
+
+        const [, error] = await deleteAccount({
+          password: passwordEl.value,
+          deleteContent: deletePostsAndMessages,
+        });
+        requesting = false;
+        buttonLabel.textContent = t`Delete Account`;
+
+        if (error) {
+          setError(error.message);
+          return;
+        }
+        logout({ keepCache: false, redirect: true });
       }
       if (button.dataset.action === "close") {
         abortController.abort();

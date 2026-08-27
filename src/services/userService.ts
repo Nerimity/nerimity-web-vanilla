@@ -137,3 +137,13 @@ export const deleteUserChannelNotice = async () => {
     method: "DELETE",
   });
 };
+export const deleteAccount = async (opts: {
+  password: string;
+  deleteContent: boolean;
+}) => {
+  return request(`/users/delete-account`, {
+    useToken: true,
+    method: "DELETE",
+    body: opts,
+  });
+};
