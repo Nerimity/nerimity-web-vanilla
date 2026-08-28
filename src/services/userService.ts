@@ -168,3 +168,11 @@ export const getSessions = async () => {
     method: "GET",
   });
 };
+
+export const destroySession = async (password: string, sessionId?: string) => {
+  return request(`/users/sessions/${sessionId || ""}`, {
+    useToken: true,
+    body: { password },
+    method: "DELETE",
+  });
+};

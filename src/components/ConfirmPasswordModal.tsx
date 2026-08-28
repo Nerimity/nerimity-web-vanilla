@@ -1,23 +1,50 @@
 import { t } from "@lingui/core/macro";
 
 import { Button } from "./button";
+import { Checkbox } from "./checkbox";
 import { Input } from "./input";
 import { createModal, Modal } from "./modal";
 
 import style from "./ConfirmPasswordModal.module.css";
 
+let password: string | undefined = undefined;
+let savePassword = false;
+
+export type ConfirmPasswordModal = ReturnType<
+  typeof createConfirmPasswordModal
+>;
+
 export const createConfirmPasswordModal = (opts: {
   onConfirm: (password?: string) => void;
+  alert: boolean;
+  disableAutoclose?: boolean;
+  allowSavePassword?: boolean;
 }) => {
+  if (!opts.allowSavePassword) {
+    password = undefined;
+  }
   const abortController = new AbortController();
+
+  const error = (<div class={style.error}></div>) as HTMLDivElement;
 
   const modal = (
     <Modal.Root ignoreBgClick>
-      <Modal.Header label={t`Confirm Password`} icon="shield" />
+      <Modal.Header
+        alert={opts.alert}
+        label={t`Confirm Password`}
+        icon="shield"
+      />
       <Modal.Body maxWidth="500px">
         <div class={style.body}>
           <div>{t`Enter your password to continue.`}</div>
-          <Input type="password" placeholder="*******" />
+          <Input type="password" placeholder="*******" value={password || ""} />
+          {opts.allowSavePassword && (
+            <Checkbox.Root checked={savePassword}>
+              <Checkbox.Box />
+              <Checkbox.Label>{t`Remember for 5 minutes`}</Checkbox.Label>
+            </Checkbox.Root>
+          )}
+          {error}
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -28,12 +55,26 @@ export const createConfirmPasswordModal = (opts: {
           label={t`Confirm`}
           icon="check"
           primary
+          alert={opts.alert}
         />
       </Modal.Footer>
     </Modal.Root>
   ) as HTMLDivElement;
 
-  let password: string | undefined = undefined;
+  Checkbox.createHandler({
+    el: modal,
+    onChange(checked) {
+      savePassword = checked;
+    },
+    signal: abortController.signal,
+  });
+
+  let requesting = false;
+
+  const buttonLabel = modal.querySelector(
+    '[data-action="confirm"] .label',
+  ) as HTMLDivElement;
+
   modal.addEventListener(
     "click",
     (event) => {
@@ -43,7 +84,21 @@ export const createConfirmPasswordModal = (opts: {
 
       password = undefined;
       if (button.dataset.action === "confirm") {
+        if (requesting) return;
+        requesting = true;
+
+        setError();
+
         password = modal.querySelector("input")?.value;
+        opts.onConfirm(password);
+        if (!opts.disableAutoclose) {
+          abortController.abort();
+          return;
+        }
+
+        buttonLabel.textContent = t`Confirming...`;
+
+        return;
       }
 
       abortController.abort();
@@ -54,7 +109,9 @@ export const createConfirmPasswordModal = (opts: {
   abortController.signal.addEventListener(
     "abort",
     () => {
-      opts.onConfirm(password);
+      if (!savePassword || !opts.allowSavePassword) {
+        password = undefined;
+      }
     },
     { once: true },
   );
@@ -62,4 +119,18 @@ export const createConfirmPasswordModal = (opts: {
   createModal(() => {
     return modal;
   }, abortController);
+
+  const setError = (message?: string) => {
+    if (message) {
+      requesting = false;
+      buttonLabel.textContent = t`Confirm`;
+    }
+    error.textContent = message || "";
+  };
+
+  const close = () => {
+    abortController.abort();
+  };
+
+  return { setError, close };
 };

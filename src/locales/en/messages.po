@@ -42,22 +42,31 @@ msgstr "Ban"
 msgid "Banning..."
 msgstr "Banning..."
 
-#: src/components/ConfirmPasswordModal.tsx:16
+#: src/components/ConfirmPasswordModal.tsx:34
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:62
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
-#: src/components/ConfirmPasswordModal.tsx:19
+#: src/components/ConfirmPasswordModal.tsx:39
 msgid "Enter your password to continue."
 msgstr "Enter your password to continue."
 
-#: src/components/ConfirmPasswordModal.tsx:24
+#: src/components/ConfirmPasswordModal.tsx:44
+msgid "Remember for 5 minutes"
+msgstr "Remember for 5 minutes"
+
+#: src/components/ConfirmPasswordModal.tsx:51
 msgid "Don't Confirm"
 msgstr "Don't Confirm"
 
-#: src/components/ConfirmPasswordModal.tsx:28
+#: src/components/ConfirmPasswordModal.tsx:55
+#: src/components/ConfirmPasswordModal.tsx:126
 msgid "Confirm"
 msgstr "Confirm"
+
+#: src/components/ConfirmPasswordModal.tsx:99
+msgid "Confirming..."
+msgstr "Confirming..."
 
 #: src/components/EditServerRolesModal.tsx:56
 msgid "Edit Roles - {username}"
@@ -872,40 +881,40 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:20
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:25
 msgid "Destroy All Sessions"
 msgstr "Destroy All Sessions"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:42
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:47
 msgid "You will be logged out everywhere."
 msgstr "You will be logged out everywhere."
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:53
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:59
 msgid "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
 msgstr "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:116
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:122
 msgid "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
 msgstr "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:132
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:138
 msgid "Session (Current)"
 msgstr "Session (Current)"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:133
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:139
 msgid "Session"
 msgstr "Session"
 
 #. placeholder {0}: g.sessions.length
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:144
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:150
 msgid "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {date}"
 msgstr "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {date}"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:150
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:160
 msgid "Destroy"
 msgstr "Destroy"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:195
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:238
 msgid "Last seen {date}"
 msgstr "Last seen {date}"
 

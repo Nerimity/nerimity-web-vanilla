@@ -1,10 +1,15 @@
 import { ph, plural, t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
+import {
+  createConfirmPasswordModal,
+  type ConfirmPasswordModal,
+} from "../../../components/ConfirmPasswordModal";
 import { Icon } from "../../../components/icon";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
+  destroySession,
   DeviceType,
   getSessions,
   type DeviceTypeId,
@@ -42,6 +47,7 @@ const sessionsSettingsPage = (context: SettingsContext) => {
           description={t`You will be logged out everywhere.`}
         />
         <Button
+          data-action="destroy"
           icon="delete"
           primary
           alert
@@ -147,7 +153,12 @@ const sessionsSettingsPage = (context: SettingsContext) => {
                   other: "# devices",
                 })} ~ Last seen ${ph({ date: formatTimestamp(g.lastSeen) })}`}
               />
-              <Button alert icon="key_off" label={t`Destroy`} />
+              <Button
+                data-action="destroy"
+                alert
+                icon="key_off"
+                label={t`Destroy`}
+              />
             </SettingsBlock.Root>
           </SettingsBlock.Group>
         ))}
@@ -155,18 +166,50 @@ const sessionsSettingsPage = (context: SettingsContext) => {
     );
   };
 
-  sessionsContainer.addEventListener(
+  let deletingSessionId: string | undefined = undefined;
+  let confirmModal: ConfirmPasswordModal | null = null;
+
+  const onPasswordConfirm = async (password?: string) => {
+    const [, error] = await destroySession(password || "", deletingSessionId);
+    if (error) {
+      confirmModal?.setError(error.message);
+      return;
+    }
+    confirmModal?.close();
+
+    if (deletingSessionId) {
+      sessions = sessions.filter((s) => s.sessionId !== deletingSessionId);
+    } else {
+      sessions = [];
+    }
+    renderSessions();
+  };
+
+  el.addEventListener(
     "click",
     (e) => {
       const target = e.target as HTMLDivElement;
 
-      const button = target.closest(".button");
-      if (button) return;
+      const group = target.closest(".settingsBlockGroup") as HTMLDivElement;
+      const sessionId = group?.dataset.sid;
+      const button = target.closest(".button") as HTMLDivElement;
+
+      if (button) {
+        if (button.dataset.action !== "destroy") return;
+        deletingSessionId = sessionId;
+
+        confirmModal = createConfirmPasswordModal({
+          alert: true,
+          allowSavePassword: true,
+          disableAutoclose: true,
+          onConfirm: onPasswordConfirm,
+        });
+
+        return;
+      }
 
       const container = target.closest(".settingsBlock") as HTMLDivElement;
       if (!container) return;
-      const group = target.closest(".settingsBlockGroup") as HTMLDivElement;
-      const sessionId = group.dataset.sid;
 
       if (!sessionId) return;
 
