@@ -2,6 +2,7 @@ import { plural, t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { Icon } from "../../../components/icon";
+import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
   DeviceType,
@@ -47,6 +48,10 @@ const sessionsSettingsPage = (context: SettingsContext) => {
           label={strings.destroyAllSessions}
         />
       </SettingsBlock.Root>
+      <Notice
+        type="info"
+        description={t`A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months.`}
+      />
       <div>
         {sessionsCountContainer}
         {sessionsContainer}
@@ -98,7 +103,6 @@ const sessionsSettingsPage = (context: SettingsContext) => {
 
       group.sessions.push(session);
     }
-    console.log(groupedSessions);
 
     return groupedSessions;
   };
@@ -135,7 +139,7 @@ const sessionsSettingsPage = (context: SettingsContext) => {
                   ))}
                 </div>
               }
-              description={t`${plural(g.devices.size, {
+              description={t`${plural(g.sessions.length, {
                 0: "No devices",
                 one: "# device",
                 other: "# devices",

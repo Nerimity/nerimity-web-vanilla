@@ -43,7 +43,7 @@ msgid "Banning..."
 msgstr "Banning..."
 
 #: src/components/ConfirmPasswordModal.tsx:16
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:60
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:62
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
@@ -223,7 +223,7 @@ msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
-#: src/pages/app-page/settings/Settings.ts:50
+#: src/pages/app-page/settings/Settings.ts:51
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
 msgstr "Profile"
@@ -438,7 +438,7 @@ msgid "Delete Message"
 msgstr "Delete Message"
 
 #: src/components/message-pane/deleteMessageModal.tsx:45
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:71
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:73
 msgid "Don't Delete"
 msgstr "Don't Delete"
 
@@ -449,6 +449,7 @@ msgid "Delete"
 msgstr "Delete"
 
 #: src/components/message-pane/deleteMessageModal.tsx:66
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:108
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
 msgid "Deleting..."
 msgstr "Deleting..."
@@ -752,52 +753,57 @@ msgstr "Passwords don't match"
 msgid "Changing..."
 msgstr "Changing..."
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:22
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:78
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:24
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:80
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:117
 #: src/pages/app-page/settings/accountSettingsPage.tsx:35
 msgid "Delete Account"
 msgstr "Delete Account"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:29
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:31
 msgid "You must leave or delete all servers you're in before deleting your account."
 msgstr "You must leave or delete all servers you're in before deleting your account."
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:34
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:36
 msgid "Sorry to see you go :( If something didn't work for you, let us know in the official server."
 msgstr "Sorry to see you go :( If something didn't work for you, let us know in the official server."
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:36
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:38
 msgid "What will get deleted:"
 msgstr "What will get deleted:"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:38
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:40
 msgid "Email Address"
 msgstr "Email Address"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:39
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:41
 #: src/pages/app-page/settings/accountSettingsPage.tsx:28
 msgid "Username"
 msgstr "Username"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:40
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:42
 msgid "IP Address"
 msgstr "IP Address"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:41
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:43
 msgid "Your Bio"
 msgstr "Your Bio"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:49
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:51
 msgid "Also delete my posts and messages"
 msgstr "Also delete my posts and messages"
 
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:54
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:56
 msgid "Your posts and messages may take weeks to delete."
 msgstr "Your posts and messages may take weeks to delete."
 
-#: src/pages/app-page/settings/Settings.ts:43
+#: src/pages/app-page/settings/Settings.ts:44
 msgid "Account"
 msgstr "Account"
+
+#: src/pages/app-page/settings/Settings.ts:65
+msgid "Sessions"
+msgstr "Sessions"
 
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
 msgid "Updating..."
@@ -866,23 +872,57 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/store/accountStore.ts:126
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:20
+msgid "Destroy All Sessions"
+msgstr "Destroy All Sessions"
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:42
+msgid "You will be logged out everywhere."
+msgstr "You will be logged out everywhere."
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:53
+msgid "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
+msgstr "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:115
+msgid "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
+msgstr "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:130
+msgid "Session (Current)"
+msgstr "Session (Current)"
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:131
+msgid "Session"
+msgstr "Session"
+
+#. placeholder {0}: g.sessions.length
+#. placeholder {1}: formatTimestamp(g.lastSeen)
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:142
+msgid "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {1}"
+msgstr "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {1}"
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:148
+msgid "Destroy session"
+msgstr "Destroy session"
+
+#: src/store/accountStore.ts:127
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:130
+#: src/store/accountStore.ts:131
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:134
+#: src/store/accountStore.ts:135
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:137
+#: src/store/accountStore.ts:138
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:139
+#: src/store/accountStore.ts:140
 msgid "Connected!"
 msgstr "Connected!"
 
