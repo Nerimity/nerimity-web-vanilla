@@ -884,27 +884,30 @@ msgstr "You will be logged out everywhere."
 msgid "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
 msgstr "A new session is created each time you log in. Normally a session is tied to one device, additional devices usually mean your IP address changed or your account was compromised. Inactive sessions expire automatically after 3 months."
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:115
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:116
 msgid "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
 msgstr "{count, plural, =0 {No sessions} one {# session} other {# sessions}}"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:130
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:132
 msgid "Session (Current)"
 msgstr "Session (Current)"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:131
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:133
 msgid "Session"
 msgstr "Session"
 
 #. placeholder {0}: g.sessions.length
-#. placeholder {1}: formatTimestamp(g.lastSeen)
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:142
-msgid "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {1}"
-msgstr "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {1}"
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:144
+msgid "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {date}"
+msgstr "{0, plural, =0 {No devices} one {# device} other {# devices}} ~ Last seen {date}"
 
-#: src/pages/app-page/settings/sessionsSettingsPage.tsx:148
-msgid "Destroy session"
-msgstr "Destroy session"
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:150
+msgid "Destroy"
+msgstr "Destroy"
+
+#: src/pages/app-page/settings/sessionsSettingsPage.tsx:195
+msgid "Last seen {date}"
+msgstr "Last seen {date}"
 
 #: src/store/accountStore.ts:127
 msgid "Invalid token."

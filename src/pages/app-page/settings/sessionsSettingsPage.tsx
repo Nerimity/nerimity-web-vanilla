@@ -1,4 +1,4 @@
-import { plural, t } from "@lingui/core/macro";
+import { ph, plural, t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { Icon } from "../../../components/icon";
@@ -22,7 +22,7 @@ const getStrings = () => ({
 
 const sessionsSettingsPage = (context: SettingsContext) => {
   const ac = new AbortController();
-  // const { signal } = ac;
+  const { signal } = ac;
   const strings = getStrings();
 
   let sessionsContainer = (
@@ -108,6 +108,7 @@ const sessionsSettingsPage = (context: SettingsContext) => {
   };
 
   const renderSessions = () => {
+    if (signal.aborted) return;
     const grouped = groupedSessions();
 
     const count = grouped.length;
@@ -121,36 +122,86 @@ const sessionsSettingsPage = (context: SettingsContext) => {
     sessionsContainer.replaceChildren(
       <>
         {grouped.map((g) => (
-          <SettingsBlock.Root expandable>
-            <SettingsBlock.Icon name="key" />
-            <SettingsBlock.Details
-              title={
-                <div class={style.sessionTitle}>
-                  {g.id === accountStore.sessionId
-                    ? t`Session (Current)`
-                    : t`Session`}
+          <SettingsBlock.Group data-sid={g.id}>
+            <SettingsBlock.Root expandable>
+              <SettingsBlock.Icon name="key" />
+              <SettingsBlock.Details
+                title={
+                  <div class={style.sessionTitle}>
+                    {g.id === accountStore.sessionId
+                      ? t`Session (Current)`
+                      : t`Session`}
 
-                  {[...g.devices].map((d) => (
-                    <Icon
-                      title={deviceTypeToIcon(d)}
-                      class={style.icon}
-                      name={deviceTypeToIcon(d)}
-                    />
-                  ))}
-                </div>
-              }
-              description={t`${plural(g.sessions.length, {
-                0: "No devices",
-                one: "# device",
-                other: "# devices",
-              })} ~ Last seen ${formatTimestamp(g.lastSeen)}`}
-            />
-            <Button alert icon="key_off" label={t`Destroy session`} />
-          </SettingsBlock.Root>
+                    {[...g.devices].map((d) => (
+                      <Icon
+                        title={deviceTypeToIcon(d)}
+                        class={style.icon}
+                        name={deviceTypeToIcon(d)}
+                      />
+                    ))}
+                  </div>
+                }
+                description={t`${plural(g.sessions.length, {
+                  0: "No devices",
+                  one: "# device",
+                  other: "# devices",
+                })} ~ Last seen ${ph({ date: formatTimestamp(g.lastSeen) })}`}
+              />
+              <Button alert icon="key_off" label={t`Destroy`} />
+            </SettingsBlock.Root>
+          </SettingsBlock.Group>
         ))}
       </>,
     );
   };
+
+  sessionsContainer.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+
+      const button = target.closest(".button");
+      if (button) return;
+
+      const container = target.closest(".settingsBlock") as HTMLDivElement;
+      if (!container) return;
+      const group = target.closest(".settingsBlockGroup") as HTMLDivElement;
+      const sessionId = group.dataset.sid;
+
+      if (!sessionId) return;
+
+      const dataset = container.dataset;
+      const expanded = !(dataset.expanded === "true");
+      dataset.expanded = String(expanded);
+
+      if (!expanded) {
+        [...group.children].slice(1).forEach((el) => el.remove());
+      }
+
+      const sessions = groupedSessions().find(
+        (s) => s.id === sessionId,
+      )?.sessions;
+
+      if (!sessions?.length) return;
+
+      if (expanded) {
+        group.appendChild(
+          <>
+            {sessions.map((s) => (
+              <SettingsBlock.Root>
+                <SettingsBlock.Icon name={deviceTypeToIcon(s.deviceType)} />
+                <SettingsBlock.Details
+                  title={s.location || "Unknown"}
+                  description={t`Last seen ${ph({ date: formatTimestamp(s.lastSeenAt) })}`}
+                />
+              </SettingsBlock.Root>
+            ))}
+          </>,
+        );
+      }
+    },
+    { signal },
+  );
 
   (async () => {
     const [res] = await getSessions();

@@ -27,11 +27,13 @@
   gap: 12px;
 
   &.expandable {
-    .icon {
-      rotate: 0deg;
+    &[data-expanded="true"] {
+      .actionIcon {
+        rotate: 180deg;
+      }
     }
-    [data-expanded="true"] {
-      rotate: 180deg;
+    .actionIcon {
+      rotate: 0deg;
     }
   }
 

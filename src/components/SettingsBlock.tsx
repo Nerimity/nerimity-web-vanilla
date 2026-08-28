@@ -5,8 +5,15 @@ import { Link } from "./link";
 import style from "./SettingsBlock.module.css";
 
 export const SettingsBlock = {
-  Group: (props: { children: any }) => {
-    return <div class={style.settingsBlockGroup}>{props.children}</div>;
+  Group: ({ children, ...props }: { children: any; [key: string]: any }) => {
+    return (
+      <div
+        {...props}
+        class={[style.settingsBlockGroup, "settingsBlockGroup", props.class]}
+      >
+        {children}
+      </div>
+    );
   },
   Root: ({
     children,
@@ -25,17 +32,19 @@ export const SettingsBlock = {
     return (
       <Dynamic
         component={props.href ? Link : "div"}
+        data-expanded={false}
         class={[
           style.settingsBlock,
           isClickable && style.clickable,
           expandable && style.expandable,
+          "settingsBlock",
         ]}
         {...props}
       >
         {children}
         {isClickable && (
           <Icon
-            data-expanded={false}
+            class={style.actionIcon}
             name={expandable ? "keyboard_arrow_down" : "chevron_forward"}
           />
         )}
