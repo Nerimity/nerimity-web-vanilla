@@ -23,6 +23,7 @@ export type CurrentUser = User & {
 };
 
 function createAccountStore() {
+  let sessionId = "";
   let connected = false;
   let authenticated = false;
   let authError: {
@@ -159,7 +160,14 @@ function createAccountStore() {
     return false;
   };
 
+  const setSessionId = (id: string) => {
+    sessionId = id;
+  };
+
   return {
+    get sessionId() {
+      return sessionId;
+    },
     get authenticated() {
       return authenticated;
     },
@@ -176,6 +184,7 @@ function createAccountStore() {
     get authError() {
       return authError;
     },
+    setSessionId,
     setAuthError,
     setConnected,
     setCurrentUser,

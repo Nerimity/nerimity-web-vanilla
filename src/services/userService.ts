@@ -147,3 +147,24 @@ export const deleteAccount = async (opts: {
     body: opts,
   });
 };
+
+export const DeviceType = {
+  Browser: 0,
+  Desktop: 1,
+  Mobile: 2,
+} as const;
+
+export type DeviceTypeId = (typeof DeviceType)[keyof typeof DeviceType];
+
+export interface UserSession {
+  lastSeenAt: number;
+  location: string;
+  sessionId: string;
+  deviceType: DeviceTypeId;
+}
+export const getSessions = async () => {
+  return request<UserSession[]>(`/users/sessions`, {
+    useToken: true,
+    method: "GET",
+  });
+};

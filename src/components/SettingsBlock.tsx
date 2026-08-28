@@ -11,23 +11,34 @@ export const SettingsBlock = {
   Root: ({
     children,
     clickable,
+    expandable,
     ...props
   }: {
     children: any;
     clickable?: boolean;
+    expandable?: boolean;
     href?: string;
     [key: string]: any;
   }) => {
-    const isClickable = clickable || props.href;
+    const isClickable = expandable || clickable || props.href;
 
     return (
       <Dynamic
         component={props.href ? Link : "div"}
-        class={[style.settingsBlock, isClickable && style.clickable]}
+        class={[
+          style.settingsBlock,
+          isClickable && style.clickable,
+          expandable && style.expandable,
+        ]}
         {...props}
       >
         {children}
-        {isClickable && <Icon name="chevron_forward" />}
+        {isClickable && (
+          <Icon
+            data-expanded={false}
+            name={expandable ? "keyboard_arrow_down" : "chevron_forward"}
+          />
+        )}
       </Dynamic>
     );
   },
@@ -39,7 +50,7 @@ export const SettingsBlock = {
       />
     );
   },
-  Details: (props: { title: string; description?: string }) => {
+  Details: (props: { title: any; description?: string }) => {
     return (
       <div class={style.details}>
         <div>{props.title}</div>

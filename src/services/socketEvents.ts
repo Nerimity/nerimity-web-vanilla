@@ -117,6 +117,7 @@ function onAuthenticated(payload: any) {
   channelStore.notificationsMemo.rerun();
   serverStore.notificationsMemo.rerun();
   accountStore.setAuthenticated(true);
+  accountStore.setSessionId(payload.sessionId);
 
   showWarnModal();
 }

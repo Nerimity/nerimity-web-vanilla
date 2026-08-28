@@ -19,6 +19,12 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "mobile",
+        "computer",
+        "globe",
+        "key",
+        "key_off",
+        "data_loss_prevention",
         "skull",
         "wallpaper",
         "cognition",

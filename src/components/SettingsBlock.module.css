@@ -25,6 +25,16 @@
   border-radius: var(--radius-16);
   background-color: var(--gray-850);
   gap: 12px;
+
+  &.expandable {
+    .icon {
+      rotate: 0deg;
+    }
+    [data-expanded="true"] {
+      rotate: 180deg;
+    }
+  }
+
   &.clickable {
     cursor: pointer;
     &:hover {
