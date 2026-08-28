@@ -16,7 +16,7 @@ export type ConfirmPasswordModal = ReturnType<
 
 export const createConfirmPasswordModal = (opts: {
   onConfirm: (password?: string) => void;
-  alert: boolean;
+  alert?: boolean;
   disableAutoclose?: boolean;
   allowSavePassword?: boolean;
 }) => {
