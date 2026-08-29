@@ -19,3 +19,12 @@
   overflow: hidden;
   border-radius: var(--radius-12);
 }
+
+.updateBioBody {
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    height: 220px;
+  }
+}

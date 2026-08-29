@@ -28,9 +28,11 @@ export const Input = (props: InputProps) => {
           class={["input", style.input]}
           component={props.type === "textarea" ? "textarea" : "input"}
           type={props.type || "text"}
-          value={props.value}
+          value={props.type != "textarea" ? props.value : undefined}
           autocomplete={props.autocomplete}
-        />
+        >
+          {props.type === "textarea" ? props.value || "" : ""}
+        </Dynamic>
         {props.suffix}
       </div>
     </div>
