@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import type { CropPoints } from "../../../components/ImageCropModal";
 import * as accountSettingsPage from "./accountSettingsPage";
+import * as profileSettingsPage from "./profileSettingsPage";
 import * as sessionsSettingsPage from "./sessionsSettingsPage";
 
 export interface Page {
@@ -50,14 +51,7 @@ export const Settings: Setting[] = [
     icon: "person",
     name: () => t`Profile`,
     path: "/profile",
-    load: {
-      create() {
-        return { destroy() {} };
-      },
-      getStrings() {
-        return {};
-      },
-    },
+    load: profileSettingsPage,
   },
   {
     id: "sessions",

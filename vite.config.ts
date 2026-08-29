@@ -19,6 +19,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "font_download",
+        "palette",
         "mobile",
         "computer",
         "globe",
