@@ -69,9 +69,13 @@ export const createConfirmPasswordModal = (opts: {
   ) as HTMLDivElement;
 
   if (encPassword) {
-    decrypt(encPassword, secret).then((pwd) => {
-      modal.querySelector("input")!.value = pwd;
-    });
+    try {
+      decrypt(encPassword, secret).then((pwd) => {
+        modal.querySelector("input")!.value = pwd;
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   Checkbox.createHandler({
