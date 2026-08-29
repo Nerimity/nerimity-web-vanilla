@@ -42,29 +42,29 @@ msgstr "Ban"
 msgid "Banning..."
 msgstr "Banning..."
 
-#: src/components/ConfirmPasswordModal.tsx:34
+#: src/components/ConfirmPasswordModal.tsx:41
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:62
 msgid "Confirm Password"
 msgstr "Confirm Password"
 
-#: src/components/ConfirmPasswordModal.tsx:39
+#: src/components/ConfirmPasswordModal.tsx:46
 msgid "Enter your password to continue."
 msgstr "Enter your password to continue."
 
-#: src/components/ConfirmPasswordModal.tsx:44
+#: src/components/ConfirmPasswordModal.tsx:51
 msgid "Remember for 5 minutes"
 msgstr "Remember for 5 minutes"
 
-#: src/components/ConfirmPasswordModal.tsx:51
+#: src/components/ConfirmPasswordModal.tsx:58
 msgid "Don't Confirm"
 msgstr "Don't Confirm"
 
-#: src/components/ConfirmPasswordModal.tsx:55
-#: src/components/ConfirmPasswordModal.tsx:126
+#: src/components/ConfirmPasswordModal.tsx:62
+#: src/components/ConfirmPasswordModal.tsx:151
 msgid "Confirm"
 msgstr "Confirm"
 
-#: src/components/ConfirmPasswordModal.tsx:99
+#: src/components/ConfirmPasswordModal.tsx:124
 msgid "Confirming..."
 msgstr "Confirming..."
 
@@ -232,7 +232,7 @@ msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:282
-#: src/pages/app-page/settings/Settings.ts:51
+#: src/pages/app-page/settings/Settings.ts:52
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
 msgstr "Profile"
@@ -806,11 +806,11 @@ msgstr "Also delete my posts and messages"
 msgid "Your posts and messages may take weeks to delete."
 msgstr "Your posts and messages may take weeks to delete."
 
-#: src/pages/app-page/settings/Settings.ts:44
+#: src/pages/app-page/settings/Settings.ts:45
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/Settings.ts:65
+#: src/pages/app-page/settings/Settings.ts:59
 msgid "Sessions"
 msgstr "Sessions"
 
@@ -880,6 +880,30 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 #: src/pages/app-page/settings/createSettingsRoute.tsx:72
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:13
+msgid "Clan Tag"
+msgstr "Clan Tag"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:14
+msgid "Gradient Color 1"
+msgstr "Gradient Color 1"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:15
+msgid "Gradient Color 2"
+msgstr "Gradient Color 2"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:16
+msgid "Primary Color"
+msgstr "Primary Color"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:17
+msgid "Username Font"
+msgstr "Username Font"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:18
+msgid "Bio"
+msgstr "Bio"
 
 #: src/pages/app-page/settings/sessionsSettingsPage.tsx:25
 msgid "Destroy All Sessions"

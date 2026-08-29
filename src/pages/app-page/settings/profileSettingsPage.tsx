@@ -11,8 +11,8 @@ import style from "./profileSettingsPage.module.css";
 
 const getStrings = () => ({
   clanTag: t`Clan Tag`,
-  gradientColour1: t`Gradient Colour 1`,
-  gradientColour2: t`Gradient Colour 2`,
+  gradientColor1: t`Gradient Color 1`,
+  gradientColor2: t`Gradient Color 2`,
   primaryColor: t`Primary Color`,
   usernameFont: t`Username Font`,
   bio: t`Bio`,
@@ -59,12 +59,12 @@ const profileSettingsPage = (context: SettingsContext) => {
             {/* Gradient 1 */}
             <SettingsBlock.Root>
               <SettingsBlock.Icon name="palette" />
-              <SettingsBlock.Details title={strings.gradientColour1} />
+              <SettingsBlock.Details title={strings.gradientColor1} />
             </SettingsBlock.Root>
             {/* Gradient 2 */}
             <SettingsBlock.Root>
               <SettingsBlock.Icon name="palette" />
-              <SettingsBlock.Details title={strings.gradientColour2} />
+              <SettingsBlock.Details title={strings.gradientColor2} />
             </SettingsBlock.Root>
           </SettingsBlock.Group>
         </div>
