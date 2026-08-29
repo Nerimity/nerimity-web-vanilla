@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { decrypt, encrypt, generateSecret } from "../utils/encryption";
 import { Button } from "./button";
 import { Checkbox } from "./checkbox";
 import { Input } from "./input";
@@ -7,8 +8,11 @@ import { createModal, Modal } from "./modal";
 
 import style from "./ConfirmPasswordModal.module.css";
 
-let password: string | undefined = undefined;
+let secret = generateSecret();
+
+let encPassword: string | undefined = undefined;
 let savePassword = false;
+let savedAt = 0;
 
 export type ConfirmPasswordModal = ReturnType<
   typeof createConfirmPasswordModal
@@ -20,8 +24,11 @@ export const createConfirmPasswordModal = (opts: {
   disableAutoclose?: boolean;
   allowSavePassword?: boolean;
 }) => {
+  if (Date.now() - savedAt >= 5 * 60_000) {
+    encPassword = undefined;
+  }
   if (!opts.allowSavePassword) {
-    password = undefined;
+    encPassword = undefined;
   }
   const abortController = new AbortController();
 
@@ -37,7 +44,7 @@ export const createConfirmPasswordModal = (opts: {
       <Modal.Body maxWidth="500px">
         <div class={style.body}>
           <div>{t`Enter your password to continue.`}</div>
-          <Input type="password" placeholder="*******" value={password || ""} />
+          <Input type="password" placeholder="*******" />
           {opts.allowSavePassword && (
             <Checkbox.Root checked={savePassword}>
               <Checkbox.Box />
@@ -61,6 +68,12 @@ export const createConfirmPasswordModal = (opts: {
     </Modal.Root>
   ) as HTMLDivElement;
 
+  if (encPassword) {
+    decrypt(encPassword, secret).then((pwd) => {
+      modal.querySelector("input")!.value = pwd;
+    });
+  }
+
   Checkbox.createHandler({
     el: modal,
     onChange(checked) {
@@ -77,19 +90,27 @@ export const createConfirmPasswordModal = (opts: {
 
   modal.addEventListener(
     "click",
-    (event) => {
+    async (event) => {
       const target = event.target as HTMLElement;
       const button = target.closest(`[data-button]`) as HTMLElement;
       if (!button?.dataset?.button) return;
 
-      password = undefined;
+      encPassword = undefined;
       if (button.dataset.action === "confirm") {
         if (requesting) return;
         requesting = true;
 
         setError();
 
-        password = modal.querySelector("input")?.value;
+        const password = modal.querySelector("input")?.value;
+
+        try {
+          encPassword = await encrypt(password || "", secret);
+          savedAt = Date.now();
+        } catch (err) {
+          console.error(err);
+        }
+
         opts.onConfirm(password);
         if (!opts.disableAutoclose) {
           abortController.abort();
@@ -110,7 +131,7 @@ export const createConfirmPasswordModal = (opts: {
     "abort",
     () => {
       if (!savePassword || !opts.allowSavePassword) {
-        password = undefined;
+        encPassword = undefined;
       }
     },
     { once: true },
