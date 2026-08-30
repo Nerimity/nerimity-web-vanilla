@@ -20,6 +20,7 @@ import {
 import { accountStore } from "../../../store/accountStore";
 import { Server, serverStore } from "../../../store/serverStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { FocusAnimator } from "../../../utils/FocusAnimator";
 import { createResizeObserver } from "../../../utils/observer";
 import { type SettingsContext } from "./Settings";
 
@@ -50,6 +51,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     if (!userDetails) return {};
     return {
       bio: userDetails.profile?.bio,
+      clanServerId: userDetails.profile?.clan?.serverId,
     };
   };
 
@@ -60,6 +62,7 @@ const profileSettingsPage = (context: SettingsContext) => {
 
   const overrides: () => MiniProfileOverrides = () => ({
     bio: updateHandler.changedValues.bio,
+    clanServerId: updateHandler.changedValues.clanServerId,
   });
 
   const renderMiniProfile = () => {
@@ -114,6 +117,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     userDetails = res;
     updateHandler.undo();
     page = createPage();
+    clanDropdown.update();
     context.content.replaceChildren(page);
 
     page.addEventListener(
@@ -142,30 +146,44 @@ const profileSettingsPage = (context: SettingsContext) => {
     );
   });
 
-  const clanServers = serverStore
-    .orderedServers()
-    .servers.filter((s) => s.type === "s" && s.server.clan);
-
-  const dropdownEl = Dropdown.create({
+  const clanDropdown = Dropdown.create({
     signal,
-    items: () => (
-      <>
-        <Dropdown.Item>
+    onChange(id) {
+      updateHandler.changeValue("clanServerId", id);
+    },
+    initialSelectedId: () =>
+      updateHandler.changedValues.clanServerId ||
+      userDetails?.profile?.clan?.serverId ||
+      "none",
+    items: () => {
+      const clanServers = serverStore
+        .orderedServers()
+        .servers.filter((s) => s.type === "s" && s.server.clan);
+
+      return [
+        <Dropdown.Item id="none">
           <Dropdown.Label>{t`None`}</Dropdown.Label>
-        </Dropdown.Item>
-        {clanServers.map((s) => {
+        </Dropdown.Item>,
+        ...clanServers.map((s) => {
           const server = (s as any).server as Server;
           return (
-            <Dropdown.Item>
+            <Dropdown.Item id={server.id}>
               <Avatar server={server} size={16} />
               <Dropdown.Label>{server.name}</Dropdown.Label>
-              <ServerClanItem clan={server.clan!} />
+              <div class={style.dropdownClanContainer}>
+                <ServerClanItem initialAnimate clan={server.clan!} />
+              </div>
             </Dropdown.Item>
           );
-        })}
-      </>
-    ),
+        }),
+      ];
+    },
   });
+
+  const focusAnimator = new FocusAnimator(
+    document.body,
+    `.${style.dropdownClanContainer} img, .${style.options} img`,
+  );
 
   let createPage = () =>
     (
@@ -181,7 +199,7 @@ const profileSettingsPage = (context: SettingsContext) => {
             <SettingsBlock.Root>
               <SettingsBlock.Icon name="sell" />
               <SettingsBlock.Details title={strings.clanTag} />
-              {dropdownEl}
+              {clanDropdown.el}
             </SettingsBlock.Root>
             {/* Username Font */}
             <SettingsBlock.Root>
@@ -220,9 +238,13 @@ const profileSettingsPage = (context: SettingsContext) => {
       </div>
     ) as HTMLDivElement;
 
-  actions.handleUndoClick(updateHandler.undo);
+  actions.handleUndoClick(() => {
+    updateHandler.undo();
+    clanDropdown.update();
+  });
 
   const destroy = () => {
+    focusAnimator.destroy();
     miniProfileAc.abort();
     ac.abort();
     page?.remove();

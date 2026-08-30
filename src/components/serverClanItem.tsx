@@ -9,13 +9,17 @@ import style from "./serverClanItem.module.css";
 
 const elementToClan = new WeakMap<HTMLDivElement, ServerClan>();
 
-export const ServerClanItem = (props: { clan: ServerClan }) => {
+export const ServerClanItem = (props: {
+  clan: ServerClan;
+  initialAnimate?: boolean;
+}) => {
   const clanEl = (
     <span class={style.clanItem}>
       <CdnIcon
         clan={props.clan}
         class={[style.clanIcon, "clanIcon"]}
         size={14}
+        animate={props.initialAnimate}
       />
       <span class={style.clanName}>{props.clan.tag}</span>
     </span>

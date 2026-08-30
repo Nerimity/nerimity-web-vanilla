@@ -1,18 +1,31 @@
-import { portalElement } from "../utils/portal";
 import { Icon } from "./icon";
+import { createModal, Modal } from "./modal";
 
 import style from "./createDropdown.module.css";
 
-const createDropdown = (opts: { signal: AbortSignal; items: () => any }) => {
+const createDropdown = (opts: {
+  signal: AbortSignal;
+  initialSelectedId: () => string;
+  items: () => any[];
+  onChange: (id: string) => void;
+}) => {
   let popupEl: HTMLDivElement | null = null;
 
-  const el = (
-    <div>
-      <DropdownItem _main>
-        <Dropdown.Label>Test</Dropdown.Label>
-      </DropdownItem>
-    </div>
-  ) as HTMLDivElement;
+  const mainContainer = (<div class={style.main}></div>) as HTMLDivElement;
+
+  const el = (<div>{mainContainer}</div>) as HTMLDivElement;
+
+  const selectedId = opts.initialSelectedId;
+  const selectedIdToIndex = () =>
+    opts
+      .items()
+      .findIndex((item: HTMLDivElement) => item.dataset.id === selectedId());
+
+  const rerenderSelected = () => {
+    mainContainer.replaceChildren(opts.items()[selectedIdToIndex()] ?? []);
+  };
+
+  rerenderSelected();
 
   const buildPopup = () => {
     return (
@@ -20,16 +33,22 @@ const createDropdown = (opts: { signal: AbortSignal; items: () => any }) => {
     ) as HTMLDivElement;
   };
 
+  let popupAc: AbortController | null = null;
   document.addEventListener(
     "click",
     (event) => {
-      if (popupEl) {
-        popupEl.remove();
-        popupEl = null;
+      const target = event.target as HTMLDivElement;
+      const clickedPopupEl = target.closest(
+        `.${style.dropdownPopup} .${style.item}`,
+      ) as HTMLDivElement;
+
+      if (clickedPopupEl) {
+        opts.onChange(clickedPopupEl.dataset.id!);
+        rerenderSelected();
+        popupAc?.abort();
         return;
       }
 
-      const target = event.target as HTMLDivElement;
       const mainEl = target.closest(`.${style.main}`);
       if (mainEl?.parentElement != el) return;
 
@@ -37,11 +56,52 @@ const createDropdown = (opts: { signal: AbortSignal; items: () => any }) => {
 
       const mainRect = el.getBoundingClientRect();
 
-      popupEl.style.top = `${mainRect.top + mainRect.height}px`;
-      popupEl.style.left = `${mainRect.left}px`;
       popupEl.style.minWidth = `${mainRect.width}px`;
 
-      portalElement().appendChild(popupEl);
+      const selectedEl = popupEl.querySelector(
+        `[data-id="${selectedId()}"]`,
+      ) as HTMLDivElement;
+      if (selectedEl) {
+        requestAnimationFrame(() => {
+          const modalRoot = selectedEl.closest(".modalRoot") as HTMLDivElement;
+          if (!modalRoot || !popupEl) return;
+
+          selectedEl.scrollIntoView({ block: "center" });
+
+          const itemRect = selectedEl.getBoundingClientRect();
+          const popupRect = popupEl.getBoundingClientRect();
+
+          const offsetInPopup = itemRect.top - popupRect.top;
+          let newY = mainRect.top - offsetInPopup;
+
+          const padding = 8;
+          const popupHeight = popupRect.height;
+
+          if (newY < padding) newY = padding;
+          if (newY + popupHeight > window.innerHeight - padding) {
+            newY = window.innerHeight - padding - popupHeight;
+          }
+
+          modalRoot.style.setProperty("--y", `${newY}px`);
+          popupEl.style.visibility = "visible";
+        });
+      }
+
+      popupAc = new AbortController();
+
+      createModal(
+        () => (
+          <Modal.Root
+            pos={{
+              x: `${mainRect.left}px`,
+              y: `${mainRect.top + mainRect.height}px`,
+            }}
+          >
+            {popupEl}
+          </Modal.Root>
+        ),
+        popupAc,
+      );
     },
     { signal: opts.signal },
   );
@@ -49,22 +109,21 @@ const createDropdown = (opts: { signal: AbortSignal; items: () => any }) => {
   opts.signal.addEventListener(
     "abort",
     () => {
+      popupAc?.abort();
       popupEl?.remove();
       popupEl = null;
     },
     { once: true },
   );
 
-  return el;
+  return { el, update: rerenderSelected };
 };
 
-const DropdownItem = (props: { _main?: boolean; children: any }) => {
+const DropdownItem = (props: { children: any; id: string }) => {
   return (
-    <div class={[style.item, props._main && style.main]}>
+    <div class={style.item} data-id={props.id}>
       {props.children}
-      {props._main && (
-        <Icon class={style.expandIcon} name="keyboard_arrow_down" />
-      )}
+      <Icon class={style.expandIcon} name="keyboard_arrow_down" />
     </div>
   );
 };

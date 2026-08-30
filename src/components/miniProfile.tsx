@@ -50,6 +50,7 @@ import style from "./miniProfile.module.css";
 
 export interface MiniProfileOverrides {
   bio?: string;
+  clanServerId?: string;
 }
 export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
   document.addEventListener(
@@ -224,8 +225,13 @@ export const MiniProfile = (props: {
               <span class={[font?.class, "font"]}>{user?.username}</span>
               <span class={style.tag}>:{user?.tag}</span>
             </span>
-            {details?.profile?.clan && (
-              <ServerClanItem clan={details.profile.clan} />
+            {(props.overrides?.clanServerId || details?.profile?.clan) && (
+              <ServerClanItem
+                clan={
+                  serverStore.servers.get(props.overrides?.clanServerId!)
+                    ?.clan! || details?.profile?.clan!
+                }
+              />
             )}
             {details?.followsYou && (
               <span class={style.followsYou}>{t`Follows You`}</span>

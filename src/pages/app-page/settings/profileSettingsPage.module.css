@@ -35,3 +35,6 @@
 .previewButton {
   align-self: flex-end;
 }
+.dropdownClanContainer {
+  pointer-events: none;
+}
