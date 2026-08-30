@@ -18,17 +18,24 @@ import style from "./InviteEmbed.module.css";
 
 const inviteCache = new Map<string, ServerWithMemberCount | false>();
 
+const localServer = (serverId: string) => {
+  const server = serverStore.servers.get(serverId);
+  if (server) {
+    return {
+      memberCount: serverMemberStore.serverMembers.get(serverId)?.size,
+      ...server,
+    };
+  }
+};
+
 const serverDetailsByEmoji = async (emojiId: string) => {
   const cachedEmoji = await customEmojiById(emojiId);
 
   const serverId = cachedEmoji?.serverId;
   if (serverId) {
-    const server = serverStore.servers.get(serverId);
+    const server = localServer(serverId);
     if (server) {
-      return {
-        memberCount: serverMemberStore.serverMembers.get(serverId)?.size,
-        ...server,
-      };
+      return server;
     }
   }
 
@@ -39,6 +46,18 @@ const serverDetailsByEmoji = async (emojiId: string) => {
       ...exploreItem.server,
     };
   }
+};
+const serverDetailsByCode = async (code: string) => {
+  const serverId = code;
+  if (serverId) {
+    const server = localServer(serverId);
+    if (server) {
+      return server;
+    }
+  }
+
+  const [server] = await getServerDetailsByCode(code);
+  return server;
 };
 
 export const InviteEmbed = (props: {
@@ -120,19 +139,16 @@ export const InviteEmbed = (props: {
 
   if (!inviteItem) {
     if (props.emojiId) {
+      console.log("test");
       serverDetailsByEmoji(props.emojiId).then((details) => {
         inviteItem = (details as ServerWithMemberCount) || null;
         inviteCache.set(cacheId, inviteItem);
         render();
       });
     } else if (props.code) {
-      getServerDetailsByCode(props.code).then(([server]) => {
-        if (!server) inviteItem = null;
-        else {
-          inviteItem = server;
-          inviteCache.set(cacheId, server);
-        }
-
+      serverDetailsByCode(props.code).then((server) => {
+        inviteItem = (server as ServerWithMemberCount) || null;
+        inviteCache.set(cacheId, inviteItem);
         render();
       });
     }
