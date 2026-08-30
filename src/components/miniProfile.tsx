@@ -208,6 +208,17 @@ export const MiniProfile = (props: {
 
     const font = getFont(localUser?.profile?.font);
 
+    const clan = (() => {
+      if (props.overrides?.clanServerId) {
+        const server = serverStore.servers.get(props.overrides?.clanServerId!);
+        if (server?.clan) {
+          return { ...server.clan, serverId: server.id };
+        }
+      }
+
+      return details?.profile?.clan;
+    })();
+
     return (
       <>
         <Banner
@@ -225,14 +236,7 @@ export const MiniProfile = (props: {
               <span class={[font?.class, "font"]}>{user?.username}</span>
               <span class={style.tag}>:{user?.tag}</span>
             </span>
-            {(props.overrides?.clanServerId || details?.profile?.clan) && (
-              <ServerClanItem
-                clan={
-                  serverStore.servers.get(props.overrides?.clanServerId!)
-                    ?.clan! || details?.profile?.clan!
-                }
-              />
-            )}
+            {clan && <ServerClanItem clan={clan} />}
             {details?.followsYou && (
               <span class={style.followsYou}>{t`Follows You`}</span>
             )}
