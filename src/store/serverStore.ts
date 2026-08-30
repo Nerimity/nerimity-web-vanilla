@@ -6,6 +6,7 @@ import {
   type RawBotCommand,
   type RawServer,
   type RawServerFolder,
+  type ServerClan,
 } from "../Types";
 import { hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
@@ -39,6 +40,7 @@ export class Server {
   createdAt: number;
   verified?: boolean;
   botCommands?: RawBotCommand[];
+  clan?: ServerClan;
   /**
    * @description if true, server members are not loaded yet.
    */
@@ -54,6 +56,7 @@ export class Server {
     this.createdAt = data.createdAt;
     this.banner = data.banner;
     this.verified = data.verified;
+    this.clan = data.clan;
   }
   getOrLoadBotCommands() {
     return getBotCommandsQueue.add(async () => {

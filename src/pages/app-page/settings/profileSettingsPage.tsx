@@ -1,6 +1,8 @@
 import { t } from "@lingui/core/macro";
 
+import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
+import { Dropdown } from "../../../components/createDropdown";
 import { Input } from "../../../components/input";
 import {
   createMiniProfileModal,
@@ -8,6 +10,7 @@ import {
   type MiniProfileOverrides,
 } from "../../../components/miniProfile";
 import { createModal, Modal } from "../../../components/modal";
+import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
@@ -15,6 +18,7 @@ import {
   type UserDetails,
 } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
+import { Server, serverStore } from "../../../store/serverStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { createResizeObserver } from "../../../utils/observer";
 import { type SettingsContext } from "./Settings";
@@ -138,6 +142,31 @@ const profileSettingsPage = (context: SettingsContext) => {
     );
   });
 
+  const clanServers = serverStore
+    .orderedServers()
+    .servers.filter((s) => s.type === "s" && s.server.clan);
+
+  const dropdownEl = Dropdown.create({
+    signal,
+    items: () => (
+      <>
+        <Dropdown.Item>
+          <Dropdown.Label>{t`None`}</Dropdown.Label>
+        </Dropdown.Item>
+        {clanServers.map((s) => {
+          const server = (s as any).server as Server;
+          return (
+            <Dropdown.Item>
+              <Avatar server={server} size={16} />
+              <Dropdown.Label>{server.name}</Dropdown.Label>
+              <ServerClanItem clan={server.clan!} />
+            </Dropdown.Item>
+          );
+        })}
+      </>
+    ),
+  });
+
   let createPage = () =>
     (
       <div class={style.page}>
@@ -152,6 +181,7 @@ const profileSettingsPage = (context: SettingsContext) => {
             <SettingsBlock.Root>
               <SettingsBlock.Icon name="sell" />
               <SettingsBlock.Details title={strings.clanTag} />
+              {dropdownEl}
             </SettingsBlock.Root>
             {/* Username Font */}
             <SettingsBlock.Root>

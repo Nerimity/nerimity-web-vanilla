@@ -85,6 +85,7 @@ export interface RawServer {
   defaultRoleId: string;
   createdById: string;
   createdAt: number;
+  clan?: ServerClan;
   avatar?: string;
   banner?: string;
   serverId: string;

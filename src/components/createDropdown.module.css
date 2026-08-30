@@ -1,0 +1,32 @@
+.item {
+  display: flex;
+  align-items: center;
+  padding: 6px;
+  border-radius: var(--radius-10);
+  cursor: pointer;
+  user-select: none;
+  gap: 6px;
+  &:hover {
+    background-color: var(--gray-800);
+  }
+
+  &.main {
+    border: solid 1px var(--gray-600);
+  }
+
+  .expandIcon {
+    margin-left: 2px;
+    transform: translateY(1px);
+    font-size: 16px;
+  }
+}
+
+.dropdownPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 4px;
+  border: solid 1px var(--gray-700);
+  border-radius: var(--radius-14);
+  background: var(--background);
+}
