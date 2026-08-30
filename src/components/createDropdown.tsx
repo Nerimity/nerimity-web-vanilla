@@ -62,6 +62,8 @@ const createDropdown = (opts: {
         `[data-id="${selectedId()}"]`,
       ) as HTMLDivElement;
       if (selectedEl) {
+        selectedEl.dataset.selected = "true";
+
         requestAnimationFrame(() => {
           const modalRoot = selectedEl.closest(".modalRoot") as HTMLDivElement;
           if (!modalRoot || !popupEl) return;
