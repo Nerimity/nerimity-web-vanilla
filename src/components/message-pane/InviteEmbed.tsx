@@ -139,7 +139,6 @@ export const InviteEmbed = (props: {
 
   if (!inviteItem) {
     if (props.emojiId) {
-      console.log("test");
       serverDetailsByEmoji(props.emojiId).then((details) => {
         inviteItem = (details as ServerWithMemberCount) || null;
         inviteCache.set(cacheId, inviteItem);
