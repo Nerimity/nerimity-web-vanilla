@@ -156,7 +156,7 @@ msgstr "Clear local settings"
 #: src/components/LogoutModal.tsx:39
 #: src/components/LogoutModal.tsx:52
 #: src/components/createAuthErrorModal.tsx:52
-#: src/components/miniProfile.tsx:302
+#: src/components/miniProfile.tsx:327
 msgid "Logout"
 msgstr "Logout"
 
@@ -196,14 +196,14 @@ msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:265
-#: src/components/miniProfile.tsx:289
+#: src/components/miniProfile.tsx:290
+#: src/components/miniProfile.tsx:314
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:239
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:265
+#: src/components/miniProfile.tsx:290
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:239
 msgid "Message"
 msgstr "Message"
@@ -231,7 +231,7 @@ msgid "Copy Object"
 msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
-#: src/components/miniProfile.tsx:282
+#: src/components/miniProfile.tsx:307
 #: src/pages/app-page/settings/Settings.ts:52
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
@@ -535,66 +535,66 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:212
+#: src/components/miniProfile.tsx:237
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:152
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
-#: src/components/miniProfile.tsx:220
+#: src/components/miniProfile.tsx:245
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:363
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:243
+#: src/components/miniProfile.tsx:268
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:386
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:255
+#: src/components/miniProfile.tsx:280
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:295
+#: src/components/miniProfile.tsx:320
 #: src/components/settings/createSettingsDrawer.tsx:14
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/miniProfile.tsx:315
+#: src/components/miniProfile.tsx:340
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:329
+#: src/components/miniProfile.tsx:354
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:346
+#: src/components/miniProfile.tsx:371
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:599
+#: src/components/miniProfile.tsx:627
 #: src/components/right-drawer/DrawerChannelNotice.tsx:16
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/miniProfile.tsx:649
+#: src/components/miniProfile.tsx:677
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:736
-#: src/components/miniProfile.tsx:779
+#: src/components/miniProfile.tsx:764
+#: src/components/miniProfile.tsx:807
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:784
+#: src/components/miniProfile.tsx:812
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:788
+#: src/components/miniProfile.tsx:816
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:789
+#: src/components/miniProfile.tsx:817
 #: src/components/settings-actions/SettingsActions.tsx:25
 #: src/components/settings-actions/SettingsActions.tsx:42
 msgid "Save"
@@ -617,7 +617,7 @@ msgstr "Search"
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/serverClanItem.tsx:46
+#: src/components/serverClanItem.tsx:50
 msgid "Server Clan"
 msgstr "Server Clan"
 
@@ -828,6 +828,7 @@ msgid "DM Notice"
 msgstr "DM Notice"
 
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:53
+#: src/pages/app-page/settings/profileSettingsPage.tsx:280
 msgid "Don't Update"
 msgstr "Don't Update"
 
@@ -881,29 +882,42 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:13
+#: src/pages/app-page/settings/profileSettingsPage.tsx:30
 msgid "Clan Tag"
 msgstr "Clan Tag"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:14
+#: src/pages/app-page/settings/profileSettingsPage.tsx:31
 msgid "Gradient Color 1"
 msgstr "Gradient Color 1"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:15
+#: src/pages/app-page/settings/profileSettingsPage.tsx:32
 msgid "Gradient Color 2"
 msgstr "Gradient Color 2"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:16
+#: src/pages/app-page/settings/profileSettingsPage.tsx:33
 msgid "Primary Color"
 msgstr "Primary Color"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:17
+#: src/pages/app-page/settings/profileSettingsPage.tsx:34
 msgid "Username Font"
 msgstr "Username Font"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:18
+#: src/pages/app-page/settings/profileSettingsPage.tsx:35
+#: src/pages/app-page/settings/profileSettingsPage.tsx:266
 msgid "Bio"
 msgstr "Bio"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:165
+msgid "None"
+msgstr "None"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:227
+msgid "Preview"
+msgstr "Preview"
+
+#: src/pages/app-page/settings/profileSettingsPage.tsx:284
+msgid "Done"
+msgstr "Done"
 
 #: src/pages/app-page/settings/sessionsSettingsPage.tsx:25
 msgid "Destroy All Sessions"
