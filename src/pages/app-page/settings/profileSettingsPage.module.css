@@ -15,9 +15,12 @@
   flex-direction: column;
   gap: 8px;
 }
-.miniProfile {
+.miniProfileContainer {
   overflow: hidden;
   border-radius: var(--radius-12);
+  .miniProfile {
+    width: 300px;
+  }
 }
 
 .updateBioBody {
@@ -27,4 +30,8 @@
   textarea {
     height: 220px;
   }
+}
+
+.previewButton {
+  align-self: flex-end;
 }

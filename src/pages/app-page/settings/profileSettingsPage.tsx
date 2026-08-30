@@ -2,7 +2,11 @@ import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { Input } from "../../../components/input";
-import { MiniProfile } from "../../../components/miniProfile";
+import {
+  createMiniProfileModal,
+  MiniProfile,
+  type MiniProfileOverrides,
+} from "../../../components/miniProfile";
 import { createModal, Modal } from "../../../components/modal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -12,6 +16,7 @@ import {
 } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { createResizeObserver } from "../../../utils/observer";
 import { type SettingsContext } from "./Settings";
 
 import style from "./profileSettingsPage.module.css";
@@ -30,6 +35,11 @@ const profileSettingsPage = (context: SettingsContext) => {
   const { signal } = ac;
   const strings = getStrings();
 
+  const miniProfileContainer = (
+    <div class={style.miniProfileContainer}></div>
+  ) as HTMLDivElement;
+  let miniProfileAc = new AbortController();
+
   let userDetails: UserDetails | null = null;
 
   const initialValues = () => {
@@ -42,11 +52,57 @@ const profileSettingsPage = (context: SettingsContext) => {
   const actions = createSettingsActions({ signal });
   const updateHandler = createUpdatedHandler(initialValues, signal);
 
+  let isMobileWidth: boolean | null = null;
+
+  const overrides: () => MiniProfileOverrides = () => ({
+    bio: updateHandler.changedValues.bio,
+  });
+
+  const renderMiniProfile = () => {
+    miniProfileAc.abort();
+    const button = page?.querySelector(
+      `.${style.previewButton}`,
+    ) as HTMLDivElement;
+    if (button) {
+      button.style.display = isMobileWidth ? "flex" : "none";
+    }
+
+    miniProfileContainer.style.display = isMobileWidth ? "none" : "block";
+
+    if (isMobileWidth) {
+      miniProfileContainer.replaceChildren();
+      return;
+    }
+    miniProfileAc = new AbortController();
+    miniProfileContainer.replaceChildren(
+      <MiniProfile
+        abort={miniProfileAc}
+        class={style.miniProfile}
+        userId={accountStore.currentUser?.id!}
+        overrides={overrides()}
+        animationMode="focus"
+      />,
+    );
+  };
+
   updateHandler.onUpdate((_, hasChanges) => {
+    renderMiniProfile();
     actions.setVisibility(hasChanges);
   });
 
   let page: HTMLDivElement | null = null;
+
+  const MOBILE_WIDTH = 628;
+  createResizeObserver(
+    context.content,
+    (event) => {
+      const isMobile = event.width <= MOBILE_WIDTH;
+      if (isMobileWidth === isMobile) return;
+      isMobileWidth = isMobile;
+      renderMiniProfile();
+    },
+    { signal },
+  );
 
   getUserDetails({ userId: accountStore.currentUser?.id! }).then(([res]) => {
     if (ac.signal.aborted) return;
@@ -62,14 +118,21 @@ const profileSettingsPage = (context: SettingsContext) => {
         const target = event.target as HTMLDivElement;
         const button = target.closest("[data-action]") as HTMLDivElement;
         if (!button) return;
-        console.log();
-        if (button.dataset.action === "updateBio")
+        if (button.dataset.action === "updateBio") {
           createUpdateBioModal({
             value: updateHandler.changedValues.bio || initialValues().bio || "",
             done(value) {
               updateHandler.changeValue("bio", value);
             },
           });
+        }
+        if (button.dataset.action === "preview") {
+          createMiniProfileModal({
+            overrides: overrides(),
+            userId: accountStore.currentUser?.id!,
+            triggerEl: button,
+          });
+        }
       },
       { signal },
     );
@@ -112,15 +175,17 @@ const profileSettingsPage = (context: SettingsContext) => {
                 <SettingsBlock.Details title={strings.gradientColor2} />
               </SettingsBlock.Root>
             </SettingsBlock.Group>
+            <Button
+              label={t`Preview`}
+              data-action="preview"
+              icon="visibility"
+              class={style.previewButton}
+              style={{ display: isMobileWidth ? "flex" : "none" }}
+            />
             {actions.el}
           </div>
 
-          <MiniProfile
-            class={style.miniProfile}
-            abort={ac}
-            userId={accountStore.currentUser?.id!}
-            animationMode="focus"
-          />
+          {miniProfileContainer}
         </div>
       </div>
     ) as HTMLDivElement;
@@ -128,6 +193,7 @@ const profileSettingsPage = (context: SettingsContext) => {
   actions.handleUndoClick(updateHandler.undo);
 
   const destroy = () => {
+    miniProfileAc.abort();
     ac.abort();
     page?.remove();
     (page as any) = null;

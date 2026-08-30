@@ -48,6 +48,9 @@ import { UserPresence } from "./userPresence";
 
 import style from "./miniProfile.module.css";
 
+export interface MiniProfileOverrides {
+  bio?: string;
+}
 export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
   document.addEventListener(
     "click",
@@ -62,8 +65,6 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
         const noMini = anchorEl.dataset.noMini;
         if (noMini) return;
 
-        const modalAbortController = new AbortController();
-
         const isProfilePath = router.match<{ id: string }>(
           "/app/profile/:id",
           href,
@@ -72,21 +73,36 @@ export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
         if (isProfilePath) {
           e.preventDefault();
           e.stopPropagation();
-          createModal(
-            () => (
-              <MiniProfileModal
-                userId={isProfilePath.params.id}
-                triggerEl={anchorEl!}
-                options={options}
-                abort={modalAbortController}
-              />
-            ),
-            modalAbortController,
-          );
+          createMiniProfileModal({
+            userId: isProfilePath.params.id,
+            triggerEl: anchorEl,
+            options,
+          });
         }
       }
     },
     { signal: opts.signal, capture: true },
+  );
+};
+
+export const createMiniProfileModal = (opts: {
+  userId: string;
+  triggerEl?: HTMLElement;
+  options?: boolean;
+  overrides?: MiniProfileOverrides;
+}) => {
+  const modalAbortController = new AbortController();
+  createModal(
+    () => (
+      <MiniProfileModal
+        userId={opts.userId}
+        triggerEl={opts.triggerEl}
+        options={opts.options}
+        abort={modalAbortController}
+        overrides={opts.overrides}
+      />
+    ),
+    modalAbortController,
   );
 };
 
@@ -95,6 +111,7 @@ const MiniProfileModal = (props: {
   triggerEl?: HTMLElement;
   options?: boolean;
   abort: AbortController;
+  overrides?: MiniProfileOverrides;
 }) => {
   const rect = props.triggerEl?.getBoundingClientRect();
 
@@ -111,6 +128,7 @@ const MiniProfileModal = (props: {
       <Modal.Body width="400px">
         <MiniProfile
           animationMode="focus"
+          overrides={props.overrides}
           abort={props.abort}
           options={props.options}
           userId={props.userId}
@@ -134,6 +152,7 @@ export const MiniProfile = (props: {
   abort: AbortController;
   animationMode: "hover" | "focus";
   options?: boolean;
+  overrides?: MiniProfileOverrides;
   showChannelNotice?: boolean;
 }) => {
   let contentAbort: AbortController | undefined;
@@ -345,7 +364,10 @@ export const MiniProfile = (props: {
               <div>
                 <div class={style.title}>{t`About Me`}</div>
                 <div>
-                  <Markup class={style.bio} text={details?.profile?.bio} />
+                  <Markup
+                    class={style.bio}
+                    text={props.overrides?.bio ?? details?.profile?.bio}
+                  />
                 </div>
               </div>
             )}
