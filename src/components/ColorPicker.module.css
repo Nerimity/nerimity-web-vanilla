@@ -1,0 +1,36 @@
+.colorPicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: solid 1px var(--gray-600);
+  border-radius: var(--radius-8);
+  cursor: pointer;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--gray-800);
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-shrink: 0;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    gap: 3px;
+
+    .colorLine {
+      flex-shrink: 0;
+      width: 100%;
+      height: 6px;
+      border-radius: var(--radius-max);
+      outline: solid 1px var(--gray-700);
+    }
+    .icon {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+}

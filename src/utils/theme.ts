@@ -1,4 +1,4 @@
-const DefaultTheme = {
+export const DefaultTheme = {
   background: "black",
   "text-color": "#ffffff",
   "text-muted": "hsl(220, 6%, 50%)",

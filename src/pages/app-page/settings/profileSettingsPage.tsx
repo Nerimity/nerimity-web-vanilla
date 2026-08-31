@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
+import { ColorPicker } from "../../../components/ColorPicker";
 import { Dropdown } from "../../../components/createDropdown";
 import { Input } from "../../../components/input";
 import { formatMessage } from "../../../components/message-pane/utils";
@@ -26,6 +27,7 @@ import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { FocusAnimator } from "../../../utils/FocusAnimator";
 import { Fonts } from "../../../utils/font";
 import { createResizeObserver } from "../../../utils/observer";
+import { DefaultTheme } from "../../../utils/theme";
 import { type SettingsContext } from "./Settings";
 
 import style from "./profileSettingsPage.module.css";
@@ -57,6 +59,8 @@ const profileSettingsPage = (context: SettingsContext) => {
       bio: userDetails.profile?.bio,
       clanServerId: userDetails.profile?.clan?.serverId,
       font: userDetails.profile?.font || 0,
+      primaryColor:
+        userDetails.profile?.primaryColor || DefaultTheme["primary-color"],
     };
   };
 
@@ -242,6 +246,7 @@ const profileSettingsPage = (context: SettingsContext) => {
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.primaryColor} />
+                <ColorPicker initialColor={initialValues().primaryColor!} />
               </SettingsBlock.Root>
               {/* Gradient 1 */}
               <SettingsBlock.Root>
