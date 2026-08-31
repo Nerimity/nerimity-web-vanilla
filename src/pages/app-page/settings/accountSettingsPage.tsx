@@ -286,6 +286,7 @@ const accountSettingsPage = (context: SettingsContext) => {
     }
 
     userStore.users.get(userId)?.update(res.user);
+    done();
     updateHandler.undo();
   };
 

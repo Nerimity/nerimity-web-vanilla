@@ -4,6 +4,7 @@ import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
 import { Dropdown } from "../../../components/createDropdown";
 import { Input } from "../../../components/input";
+import { formatMessage } from "../../../components/message-pane/utils";
 import {
   createMiniProfileModal,
   MiniProfile,
@@ -15,10 +16,12 @@ import { createSettingsActions } from "../../../components/settings-actions/Sett
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
   getUserDetails,
+  updateUser,
   type UserDetails,
 } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { Server, serverStore } from "../../../store/serverStore";
+import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { FocusAnimator } from "../../../utils/FocusAnimator";
 import { Fonts } from "../../../utils/font";
@@ -265,6 +268,46 @@ const profileSettingsPage = (context: SettingsContext) => {
         </div>
       </div>
     ) as HTMLDivElement;
+
+  actions.handleSaveClick(async (done) => {
+    const userId = accountStore.currentUser?.id!;
+
+    const values = updateHandler.changedValues;
+
+    const formattedBio =
+      values.bio !== undefined
+        ? formatMessage({ content: values.bio?.trim() || "" })
+        : undefined;
+
+    const [res, error] = await updateUser({
+      ...(values.clanServerId !== undefined && values.clanServerId === "none"
+        ? { clanServerId: null }
+        : { clanServerId: values.clanServerId }),
+      ...(values.bio !== undefined && values.bio.trim() === ""
+        ? { bio: null }
+        : { bio: formattedBio }),
+      // ...(values.bgColorOne !== undefined && values.bgColorOne === ""
+      //   ? { bgColorOne: null }
+      //   : { bgColorOne: values.bgColorOne }),
+      // ...(values.bgColorTwo !== undefined && values.bgColorTwo === ""
+      //   ? { bgColorTwo: null }
+      //   : { bgColorTwo: values.bgColorTwo }),
+      // ...(values.primaryColor !== undefined && values.primaryColor === ""
+      //   ? { primaryColor: null }
+      //   : { primaryColor: values.primaryColor }),
+      ...(values.font !== undefined && values.font === null
+        ? { font: null }
+        : { font: values.font }),
+    });
+    if (error) {
+      return done(error.message);
+    }
+
+    userStore.users.get(userId)?.update(res.user);
+    userDetails = { ...userDetails!, profile: res.user.profile };
+    done();
+    updateHandler.undo();
+  });
 
   actions.handleUndoClick(() => {
     updateHandler.undo();
