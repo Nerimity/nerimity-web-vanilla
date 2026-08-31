@@ -38,19 +38,21 @@ const createDropdown = (opts: {
     "click",
     (event) => {
       const target = event.target as HTMLDivElement;
-      const clickedPopupEl = target.closest(
-        `.${style.dropdownPopup} .${style.item}`,
-      ) as HTMLDivElement;
 
-      if (clickedPopupEl) {
-        opts.onChange(clickedPopupEl.dataset.id!);
-        rerenderSelected();
-        popupAc?.abort();
+      if (popupEl && popupEl.contains(target)) {
+        const clickedPopupEl = target.closest(
+          `.${style.item}`,
+        ) as HTMLDivElement;
+        if (clickedPopupEl) {
+          opts.onChange(clickedPopupEl.dataset.id!);
+          rerenderSelected();
+          popupAc?.abort();
+        }
         return;
       }
 
       const mainEl = target.closest(`.${style.main}`);
-      if (mainEl?.parentElement != el) return;
+      if (mainEl?.parentElement !== el) return;
 
       popupEl = buildPopup();
 

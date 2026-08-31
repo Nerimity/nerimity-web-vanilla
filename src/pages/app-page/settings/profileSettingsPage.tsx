@@ -21,6 +21,7 @@ import { accountStore } from "../../../store/accountStore";
 import { Server, serverStore } from "../../../store/serverStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { FocusAnimator } from "../../../utils/FocusAnimator";
+import { Fonts } from "../../../utils/font";
 import { createResizeObserver } from "../../../utils/observer";
 import { type SettingsContext } from "./Settings";
 
@@ -52,6 +53,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     return {
       bio: userDetails.profile?.bio,
       clanServerId: userDetails.profile?.clan?.serverId,
+      font: userDetails.profile?.font || 0,
     };
   };
 
@@ -60,10 +62,12 @@ const profileSettingsPage = (context: SettingsContext) => {
 
   let isMobileWidth: boolean | null = null;
 
-  const overrides: () => MiniProfileOverrides = () => ({
-    bio: updateHandler.changedValues.bio,
-    clanServerId: updateHandler.changedValues.clanServerId,
-  });
+  const overrides = () =>
+    ({
+      bio: updateHandler.changedValues.bio,
+      clanServerId: updateHandler.changedValues.clanServerId,
+      font: updateHandler.changedValues.font,
+    }) satisfies MiniProfileOverrides;
 
   const renderMiniProfile = () => {
     miniProfileAc.abort();
@@ -118,33 +122,33 @@ const profileSettingsPage = (context: SettingsContext) => {
     updateHandler.undo();
     page = createPage();
     clanDropdown.update();
+    fontDropdown.update();
     context.content.replaceChildren(page);
-
-    page.addEventListener(
-      "click",
-      (event) => {
-        const target = event.target as HTMLDivElement;
-        const button = target.closest("[data-action]") as HTMLDivElement;
-        if (!button) return;
-        if (button.dataset.action === "updateBio") {
-          createUpdateBioModal({
-            value: updateHandler.changedValues.bio || initialValues().bio || "",
-            done(value) {
-              updateHandler.changeValue("bio", value);
-            },
-          });
-        }
-        if (button.dataset.action === "preview") {
-          createMiniProfileModal({
-            overrides: overrides(),
-            userId: accountStore.currentUser?.id!,
-            triggerEl: button,
-          });
-        }
-      },
-      { signal },
-    );
   });
+  context.content.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const button = target.closest("[data-action]") as HTMLDivElement;
+      if (!button) return;
+      if (button.dataset.action === "updateBio") {
+        createUpdateBioModal({
+          value: updateHandler.changedValues.bio || initialValues().bio || "",
+          done(value) {
+            updateHandler.changeValue("bio", value);
+          },
+        });
+      }
+      if (button.dataset.action === "preview") {
+        createMiniProfileModal({
+          overrides: overrides(),
+          userId: accountStore.currentUser?.id!,
+          triggerEl: button,
+        });
+      }
+    },
+    { signal },
+  );
 
   const clanDropdown = Dropdown.create({
     signal,
@@ -153,7 +157,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     },
     initialSelectedId: () =>
       updateHandler.changedValues.clanServerId ||
-      userDetails?.profile?.clan?.serverId ||
+      initialValues().clanServerId ||
       "none",
     items: () => {
       const clanServers = serverStore
@@ -177,6 +181,29 @@ const profileSettingsPage = (context: SettingsContext) => {
           );
         }),
       ];
+    },
+  });
+  const fontDropdown = Dropdown.create({
+    signal,
+    onChange(id) {
+      updateHandler.changeValue("font", parseInt(id));
+    },
+    initialSelectedId: () =>
+      (
+        updateHandler.changedValues.font ??
+        initialValues().font ??
+        "0"
+      ).toString(),
+    items: () => {
+      return Fonts.map((f, i) => {
+        return (
+          <Dropdown.Item id={i.toString()}>
+            <Dropdown.Label>
+              <span class={[f.class, "font"]}>{f.name}</span>
+            </Dropdown.Label>
+          </Dropdown.Item>
+        );
+      });
     },
   });
 
@@ -205,6 +232,7 @@ const profileSettingsPage = (context: SettingsContext) => {
             <SettingsBlock.Root>
               <SettingsBlock.Icon name="font_download" />
               <SettingsBlock.Details title={strings.usernameFont} />
+              {fontDropdown.el}
             </SettingsBlock.Root>
             <SettingsBlock.Group>
               {/* Primary Color */}
@@ -241,6 +269,7 @@ const profileSettingsPage = (context: SettingsContext) => {
   actions.handleUndoClick(() => {
     updateHandler.undo();
     clanDropdown.update();
+    fontDropdown.update();
   });
 
   const destroy = () => {

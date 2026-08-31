@@ -51,6 +51,7 @@ import style from "./miniProfile.module.css";
 export interface MiniProfileOverrides {
   bio?: string;
   clanServerId?: string;
+  font?: number;
 }
 export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
   document.addEventListener(
@@ -206,7 +207,7 @@ export const MiniProfile = (props: {
       .get(server?.id!)
       ?.get(props.userId);
 
-    const font = getFont(localUser?.profile?.font);
+    const font = getFont(props.overrides?.font ?? localUser?.profile?.font);
 
     const clan = (() => {
       if (props.overrides?.clanServerId) {
