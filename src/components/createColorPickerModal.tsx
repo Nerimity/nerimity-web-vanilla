@@ -1,3 +1,6 @@
+// TODO:
+// This library kinda sucks and memory leaks. Maybe make your own color picker, it doesn't seem hard.
+
 import "@melloware/coloris/dist/coloris.css";
 import Coloris from "@melloware/coloris";
 
@@ -16,7 +19,9 @@ Coloris.init();
 export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
   const ac = new AbortController();
 
-  let input = (<input class={style.input} type="text" />) as HTMLInputElement;
+  let input = (
+    <input name="coloris" class={style.input} type="text" />
+  ) as HTMLInputElement;
   let colorisEl = (
     <div class={style.colorisContainer}></div>
   ) as HTMLDivElement;
@@ -67,6 +72,7 @@ export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
   ac.signal.addEventListener(
     "abort",
     () => {
+      Coloris.close();
       opts.onChange(currentColor);
       clearInterval(updatePosInterval);
       input.remove();

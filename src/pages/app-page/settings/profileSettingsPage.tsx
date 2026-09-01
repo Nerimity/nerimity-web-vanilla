@@ -79,19 +79,21 @@ const profileSettingsPage = (context: SettingsContext) => {
 
   const renderMiniProfile = () => {
     miniProfileAc.abort();
+
     const button = page?.querySelector(
       `.${style.previewButton}`,
-    ) as HTMLDivElement;
-    if (button) {
+    ) as HTMLButtonElement | null;
+    if (button && button.isConnected) {
       button.style.display = isMobileWidth ? "flex" : "none";
     }
 
     miniProfileContainer.style.display = isMobileWidth ? "none" : "block";
 
-    if (isMobileWidth) {
-      miniProfileContainer.replaceChildren();
+    if (!page || !page.isConnected || isMobileWidth) {
+      if (isMobileWidth) miniProfileContainer.replaceChildren();
       return;
     }
+
     miniProfileAc = new AbortController();
     miniProfileContainer.replaceChildren(
       <MiniProfile
@@ -133,6 +135,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     fontDropdown.update();
     primaryColorPicker.update();
     context.content.replaceChildren(page);
+    renderMiniProfile();
   });
   context.content.addEventListener(
     "click",

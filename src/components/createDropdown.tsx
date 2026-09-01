@@ -11,9 +11,9 @@ const createDropdown = (opts: {
 }) => {
   let popupEl: HTMLDivElement | null = null;
 
-  const mainContainer = (<div class={style.main}></div>) as HTMLDivElement;
+  let mainContainer = (<div class={style.main}></div>) as HTMLDivElement;
 
-  const el = (<div>{mainContainer}</div>) as HTMLDivElement;
+  let el = (<div>{mainContainer}</div>) as HTMLDivElement;
 
   const selectedId = opts.initialSelectedId;
   const selectedIdToIndex = () =>
@@ -113,9 +113,16 @@ const createDropdown = (opts: {
   opts.signal.addEventListener(
     "abort",
     () => {
+      mainContainer.remove();
+
       popupAc?.abort();
       popupEl?.remove();
+
+      el.remove();
+
       popupEl = null;
+      (mainContainer as any) = null;
+      (el as any) = null;
     },
     { once: true },
   );

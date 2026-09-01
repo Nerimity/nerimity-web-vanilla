@@ -24,9 +24,9 @@ const ColorPicker = (props: ColorPickerProps) => {
 };
 
 export const createColorPicker = (props: ColorPickerProps) => {
-  const colorPickerEl = (<ColorPicker {...props} />) as HTMLDivElement;
+  let colorPickerEl = (<ColorPicker {...props} />) as HTMLDivElement;
 
-  const line = colorPickerEl.querySelector(
+  let line = colorPickerEl.querySelector(
     `.${style.colorLine}`,
   ) as HTMLDivElement;
 
@@ -49,5 +49,21 @@ export const createColorPicker = (props: ColorPickerProps) => {
     { signal: props.signal },
   );
 
-  return { el: colorPickerEl, update };
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      colorPickerEl.remove();
+      line.remove();
+      (line as any) = null;
+      (colorPickerEl as any) = null;
+    },
+    { once: true },
+  );
+
+  return {
+    get el() {
+      return colorPickerEl;
+    },
+    update,
+  };
 };
