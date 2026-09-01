@@ -140,7 +140,7 @@ const profileSettingsPage = (context: SettingsContext) => {
       if (!button) return;
       if (button.dataset.action === "updateBio") {
         createUpdateBioModal({
-          value: updateHandler.changedValues.bio || initialValues().bio || "",
+          value: updateHandler.values.bio || "",
           done(value) {
             updateHandler.changeValue("bio", value);
           },
@@ -162,10 +162,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     onChange(id) {
       updateHandler.changeValue("clanServerId", id);
     },
-    initialSelectedId: () =>
-      updateHandler.changedValues.clanServerId ||
-      initialValues().clanServerId ||
-      "none",
+    initialSelectedId: () => updateHandler.values.clanServerId || "none",
     items: () => {
       const clanServers = serverStore
         .orderedServers()
@@ -195,12 +192,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     onChange(id) {
       updateHandler.changeValue("font", parseInt(id));
     },
-    initialSelectedId: () =>
-      (
-        updateHandler.changedValues.font ??
-        initialValues().font ??
-        "0"
-      ).toString(),
+    initialSelectedId: () => (updateHandler.values.font ?? "0").toString(),
     items: () => {
       return Fonts.map((f, i) => {
         return (
@@ -246,7 +238,9 @@ const profileSettingsPage = (context: SettingsContext) => {
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.primaryColor} />
-                <ColorPicker initialColor={initialValues().primaryColor!} />
+                <ColorPicker
+                  initialColor={updateHandler.values.primaryColor!}
+                />
               </SettingsBlock.Root>
               {/* Gradient 1 */}
               <SettingsBlock.Root>
