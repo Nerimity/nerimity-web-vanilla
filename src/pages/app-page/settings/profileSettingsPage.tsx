@@ -46,7 +46,7 @@ const profileSettingsPage = (context: SettingsContext) => {
   const { signal } = ac;
   const strings = getStrings();
 
-  const miniProfileContainer = (
+  let miniProfileContainer = (
     <div class={style.miniProfileContainer}></div>
   ) as HTMLDivElement;
   let miniProfileAc = new AbortController();
@@ -327,6 +327,8 @@ const profileSettingsPage = (context: SettingsContext) => {
     focusAnimator.destroy();
     miniProfileAc.abort();
     ac.abort();
+    miniProfileContainer.remove();
+    (miniProfileContainer as any) = null;
     page?.remove();
     (page as any) = null;
   };
