@@ -2,7 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
-import { ColorPicker } from "../../../components/ColorPicker";
+import { createColorPicker } from "../../../components/ColorPicker";
 import { Dropdown } from "../../../components/createDropdown";
 import { Input } from "../../../components/input";
 import { formatMessage } from "../../../components/message-pane/utils";
@@ -74,6 +74,7 @@ const profileSettingsPage = (context: SettingsContext) => {
       bio: updateHandler.changedValues.bio,
       clanServerId: updateHandler.changedValues.clanServerId,
       font: updateHandler.changedValues.font,
+      primaryColor: updateHandler.changedValues.primaryColor,
     }) satisfies MiniProfileOverrides;
 
   const renderMiniProfile = () => {
@@ -130,6 +131,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     page = createPage();
     clanDropdown.update();
     fontDropdown.update();
+    primaryColorPicker.update();
     context.content.replaceChildren(page);
   });
   context.content.addEventListener(
@@ -206,6 +208,14 @@ const profileSettingsPage = (context: SettingsContext) => {
     },
   });
 
+  const primaryColorPicker = createColorPicker({
+    initialColor: () => updateHandler.values.primaryColor,
+    signal,
+    onChange(color) {
+      updateHandler.changeValue("primaryColor", color);
+    },
+  });
+
   const focusAnimator = new FocusAnimator(
     document.body,
     `.${style.dropdownClanContainer} img, .${style.options} img`,
@@ -238,9 +248,7 @@ const profileSettingsPage = (context: SettingsContext) => {
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.primaryColor} />
-                <ColorPicker
-                  initialColor={updateHandler.values.primaryColor!}
-                />
+                {primaryColorPicker.el}
               </SettingsBlock.Root>
               {/* Gradient 1 */}
               <SettingsBlock.Root>
@@ -312,6 +320,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     updateHandler.undo();
     clanDropdown.update();
     fontDropdown.update();
+    primaryColorPicker.update();
   });
 
   const destroy = () => {

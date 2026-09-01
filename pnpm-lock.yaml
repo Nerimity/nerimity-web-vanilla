@@ -41,6 +41,9 @@ importers:
       '@lingui/core':
         specifier: ^6.6.0
         version: 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@melloware/coloris':
+        specifier: ^0.25.0
+        version: 0.25.0
       '@nerimity/nevula':
         specifier: ^0.15.1
         version: 0.15.1
@@ -324,6 +327,9 @@ packages:
         optional: true
       rolldown:
         optional: true
+
+  '@melloware/coloris@0.25.0':
+    resolution: {integrity: sha512-RBWVFLjWbup7GRkOXb9g3+ZtR9AevFtJinrRz2cYPLjZ3TCkNRGMWuNbmQWbZ5cF3VU7aQDZwUsYgIY/bGrh2g==}
 
   '@messageformat/date-skeleton@1.1.0':
     resolution: {integrity: sha512-rmGAfB1tIPER+gh3p/RgA+PVeRE/gxuQ2w4snFWPF5xtb5mbWR7Cbw7wCOftcUypbD6HVoxrVdyyghPm3WzP5A==}
@@ -1776,6 +1782,8 @@ snapshots:
       - babel-plugin-macros
       - esbuild
       - supports-color
+
+  '@melloware/coloris@0.25.0': {}
 
   '@messageformat/date-skeleton@1.1.0': {}
 

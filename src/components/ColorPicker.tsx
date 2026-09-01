@@ -1,21 +1,53 @@
+import { createColorPickerModalLazy } from "./createColorPickerLazy";
 import { Icon } from "./icon";
 
 import style from "./ColorPicker.module.css";
 
 interface ColorPickerProps {
-  initialColor: string;
+  initialColor: () => string | undefined;
+  signal: AbortSignal;
+  onChange: (color: string) => void;
 }
 
-export const ColorPicker = (props: ColorPickerProps) => {
+const ColorPicker = (props: ColorPickerProps) => {
   return (
     <div class={style.colorPicker}>
       <div class={style.container}>
         <Icon class={style.icon} name="brush" />
         <div
           class={style.colorLine}
-          style={{ background: props.initialColor }}
+          style={{ background: props.initialColor() }}
         ></div>
       </div>
     </div>
   );
+};
+
+export const createColorPicker = (props: ColorPickerProps) => {
+  const colorPickerEl = (<ColorPicker {...props} />) as HTMLDivElement;
+
+  const line = colorPickerEl.querySelector(
+    `.${style.colorLine}`,
+  ) as HTMLDivElement;
+
+  const update = () => {
+    line.style.background = props.initialColor()!;
+  };
+
+  colorPickerEl.addEventListener(
+    "click",
+    () => {
+      createColorPickerModalLazy({
+        color: props.initialColor() || "black",
+        triggerEl: colorPickerEl,
+        onChange: (color) => {
+          props.onChange(color);
+          update();
+        },
+      });
+    },
+    { signal: props.signal },
+  );
+
+  return { el: colorPickerEl, update };
 };

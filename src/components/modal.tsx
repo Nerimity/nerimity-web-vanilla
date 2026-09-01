@@ -34,6 +34,7 @@ const Root = (props: {
   ignoreBgClick?: boolean;
   disableGestures?: boolean;
   fullHeight?: boolean;
+  backdropClass?: string;
 }) => {
   const anchorOffsetX = () => {
     const a = props.pos?.anchor ?? "top-left";
@@ -52,7 +53,7 @@ const Root = (props: {
     return "0%";
   };
   return (
-    <div class={style.modalBackdrop}>
+    <div class={[style.modalBackdrop, props.backdropClass]}>
       <div
         class={[style.modalRoot, "modalRoot", props.pos && style.hasPos]}
         data-x={props.pos?.x}
@@ -86,10 +87,15 @@ const Header = (props: {
     </div>
   );
 };
-const Body = (props: { children?: any; width?: string; maxWidth?: string }) => {
+const Body = (props: {
+  class?: string;
+  children?: any;
+  width?: string;
+  maxWidth?: string;
+}) => {
   return (
     <div
-      class={[style.body, "modalBody", "scrollbarHover"]}
+      class={[style.body, "modalBody", "scrollbarHover", props.class]}
       style={{ "--width": props.width, "--max-width": props.maxWidth }}
     >
       {props.children}

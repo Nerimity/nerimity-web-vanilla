@@ -1,0 +1,46 @@
+.input {
+  display: none;
+}
+
+body .modalBody {
+  --padding-right: 0;
+  overflow: hidden !important;
+  overflow-y: auto !important;
+  padding-right: 0 !important;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+:global(body.desktopWidth) {
+  .modalBackdrop {
+    background-color: transparent;
+  }
+  .colorisContainer {
+    min-width: 400px;
+  }
+}
+
+:global body .clr-picker {
+  width: 100%;
+}
+:global .clr-picker .clr-gradient {
+  height: 300px;
+}
+
+:global #coloris {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+:global .clr-field {
+  display: none;
+}
+
+:global .clr-dark {
+  background-color: transparent;
+}
+
+:global .clr-dark input.clr-color {
+  background-color: transparent;
+}

@@ -26,6 +26,7 @@
     "@fontsource/sora": "^5.3.0",
     "@formatjs/intl-durationformat": "^0.10.18",
     "@lingui/core": "^6.6.0",
+    "@melloware/coloris": "^0.25.0",
     "@nerimity/nevula": "^0.15.1",
     "@shikijs/langs": "^4.4.3",
     "@shikijs/themes": "^4.4.3",
