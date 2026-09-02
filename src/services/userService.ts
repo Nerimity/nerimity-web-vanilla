@@ -85,7 +85,7 @@ export async function dismissNotice(noticeId: string) {
   });
 }
 
-interface UpdateUserOptions {
+export interface UpdateUserOptions {
   email?: string;
   username?: string;
   avatarId?: string;
@@ -94,6 +94,11 @@ interface UpdateUserOptions {
   password?: string;
   newPassword?: string;
   bio?: string | null;
+  clanServerId?: string | null;
+  bgColorOne?: string | null;
+  bgColorTwo?: string | null;
+  primaryColor?: string | null;
+  font?: number | null;
   socketId?: string;
   dmStatus?: number;
   friendRequestStatus?: number;

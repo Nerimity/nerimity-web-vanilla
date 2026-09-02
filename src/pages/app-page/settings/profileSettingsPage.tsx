@@ -17,6 +17,7 @@ import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
   getUserDetails,
   updateUser,
+  type UpdateUserOptions,
   type UserDetails,
 } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
@@ -338,36 +339,57 @@ const profileSettingsPage = (context: SettingsContext) => {
       </div>
     ) as HTMLDivElement;
 
+  const buildProfileUpdatePayload = (
+    values: Partial<UpdateUserOptions>,
+  ): Partial<UpdateUserOptions> => {
+    const normalized: Partial<UpdateUserOptions> = {};
+
+    if (values.clanServerId !== undefined) {
+      normalized.clanServerId =
+        values.clanServerId === "none" ? null : values.clanServerId;
+    }
+
+    if (values.bio !== undefined && values.bio !== null) {
+      const trimmed = values.bio.trim();
+      normalized.bio =
+        trimmed === "" ? null : formatMessage({ content: trimmed });
+    }
+
+    const normalizeColor = (
+      value: string | null | undefined,
+      defaultValue: string,
+    ) => {
+      if (value === undefined) return undefined;
+      if (value === "") return null;
+      if (value === defaultValue) return null;
+      return value;
+    };
+
+    normalized.bgColorOne = normalizeColor(
+      values.bgColorOne,
+      DefaultValues.bgColorOne,
+    );
+    normalized.bgColorTwo = normalizeColor(
+      values.bgColorTwo,
+      DefaultValues.bgColorTwo,
+    );
+    normalized.primaryColor = normalizeColor(
+      values.primaryColor,
+      DefaultValues.primaryColor,
+    );
+
+    if (values.font !== undefined) {
+      normalized.font = values.font === null ? null : values.font;
+    }
+
+    return normalized;
+  };
+
   actions.handleSaveClick(async (done) => {
     const userId = accountStore.currentUser?.id!;
+    const payload = buildProfileUpdatePayload(updateHandler.changedValues);
 
-    const values = updateHandler.changedValues;
-
-    const formattedBio =
-      values.bio !== undefined
-        ? formatMessage({ content: values.bio?.trim() || "" })
-        : undefined;
-
-    const [res, error] = await updateUser({
-      ...(values.clanServerId !== undefined && values.clanServerId === "none"
-        ? { clanServerId: null }
-        : { clanServerId: values.clanServerId }),
-      ...(values.bio !== undefined && values.bio.trim() === ""
-        ? { bio: null }
-        : { bio: formattedBio }),
-      ...(values.bgColorOne !== undefined && values.bgColorOne === ""
-        ? { bgColorOne: null }
-        : { bgColorOne: values.bgColorOne }),
-      ...(values.bgColorTwo !== undefined && values.bgColorTwo === ""
-        ? { bgColorTwo: null }
-        : { bgColorTwo: values.bgColorTwo }),
-      ...(values.primaryColor !== undefined && values.primaryColor === ""
-        ? { primaryColor: null }
-        : { primaryColor: values.primaryColor }),
-      ...(values.font !== undefined && values.font === null
-        ? { font: null }
-        : { font: values.font }),
-    });
+    const [res, error] = await updateUser(payload);
     if (error) {
       return done(error.message);
     }
