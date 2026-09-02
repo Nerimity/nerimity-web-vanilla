@@ -38,7 +38,9 @@
   .section.info {
     gap: 4px;
     .name {
-      display: flex;
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 6px;
     }
     .followsYou {
@@ -242,6 +244,30 @@
   flex-direction: column;
 
   .content {
+    font-size: 12px;
+  }
+}
+
+.badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.badgeItem {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  width: 22px;
+  height: 18px;
+  border-radius: var(--radius-max);
+  cursor: pointer;
+  user-select: none;
+  &:hover {
+    opacity: 0.8;
+  }
+  .icon {
+    color: var(--text-color);
     font-size: 12px;
   }
 }

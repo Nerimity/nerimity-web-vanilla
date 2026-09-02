@@ -21,6 +21,7 @@ import {
 } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
 import type { RawUser } from "../Types";
+import { hasBit } from "../utils/bitwise";
 import { resolveGradient } from "../utils/color";
 import { friendlyTimestamp } from "../utils/date";
 import { storeEmitter } from "../utils/EventEmitter";
@@ -29,6 +30,7 @@ import { getFont } from "../utils/font";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { portalElement } from "../utils/portal";
 import { router } from "../utils/router";
+import { UserBadgeValues, type UserBadge } from "../utils/UserBadgeFlag";
 import { Avatar } from "./avatar";
 import { Banner } from "./Banner";
 import { Button } from "./button";
@@ -237,13 +239,16 @@ export const MiniProfile = (props: {
         <div class={[style.section, style.info]}>
           <span class={style.name}>
             <span>
-              <span class={[font?.class, "font"]}>{user?.username}</span>
+              <span class={[style.username, font?.class, "font"]}>
+                {user?.username}
+              </span>
               <span class={style.tag}>:{user?.tag}</span>
             </span>
             {clan && <ServerClanItem clan={clan} />}
             {details?.followsYou && (
               <span class={style.followsYou}>{t`Follows You`}</span>
             )}
+            {details?.user.badges && <Badges details={details} />}
           </span>
           {userPresenceContainer}
           {showStats && (
@@ -873,4 +878,40 @@ const createCustomStatusModal = () => {
   );
 
   createModal(() => el, abortController);
+};
+
+const Badges = (props: { details: UserDetails }) => {
+  const enabledBadges = UserBadgeValues.filter((b) =>
+    hasBit(props.details.user.badges, b.bit),
+  );
+
+  if (!enabledBadges.length) return null;
+
+  const totalBadges = [...enabledBadges].sort((a, b) =>
+    a.type === b.type ? 0 : a.type === "earned" ? -1 : 1,
+  );
+
+  return (
+    <span class={style.badges}>
+      {totalBadges.map((b) => (
+        <BadgeItem badge={b} />
+      ))}
+    </span>
+  );
+};
+
+const BadgeItem = (props: { badge: UserBadge }) => {
+  return (
+    <div
+      data-bit={props.badge.bit}
+      style={{
+        background: props.badge.color,
+        "--text-color": props.badge.textColor || "var(--gray-800)",
+      }}
+      title={props.badge.name()}
+      class={style.badgeItem}
+    >
+      {props.badge.icon && <Icon class={style.icon} name={props.badge.icon} />}
+    </div>
+  );
 };

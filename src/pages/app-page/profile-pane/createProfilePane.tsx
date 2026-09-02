@@ -410,7 +410,10 @@ const BadgeItem = (props: { badge: UserBadge }) => {
   return (
     <div
       data-bit={props.badge.bit}
-      style={{ background: props.badge.color, color: props.badge.textColor }}
+      style={{
+        background: props.badge.color,
+        "--text-color": props.badge.textColor || "var(--gray-800)",
+      }}
       class={style.badgeItem}
     >
       {props.badge.icon && <Icon class={style.icon} name={props.badge.icon} />}
