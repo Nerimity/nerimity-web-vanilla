@@ -9,7 +9,6 @@ import { formatMessage } from "../../../components/message-pane/utils";
 import {
   createMiniProfileModal,
   MiniProfile,
-  type MiniProfileOverrides,
 } from "../../../components/miniProfile";
 import { createModal, Modal } from "../../../components/modal";
 import { ServerClanItem } from "../../../components/serverClanItem";
@@ -61,6 +60,8 @@ const profileSettingsPage = (context: SettingsContext) => {
       font: userDetails.profile?.font || 0,
       primaryColor:
         userDetails.profile?.primaryColor || DefaultTheme["primary-color"],
+      bgColorOne: userDetails.profile?.bgColorOne || "#000000",
+      bgColorTwo: userDetails.profile?.bgColorTwo || "#000000",
     };
   };
 
@@ -68,14 +69,6 @@ const profileSettingsPage = (context: SettingsContext) => {
   const updateHandler = createUpdatedHandler(initialValues, signal);
 
   let isMobileWidth: boolean | null = null;
-
-  const overrides = () =>
-    ({
-      bio: updateHandler.changedValues.bio,
-      clanServerId: updateHandler.changedValues.clanServerId,
-      font: updateHandler.changedValues.font,
-      primaryColor: updateHandler.changedValues.primaryColor,
-    }) satisfies MiniProfileOverrides;
 
   const renderMiniProfile = () => {
     miniProfileAc.abort();
@@ -100,7 +93,7 @@ const profileSettingsPage = (context: SettingsContext) => {
         abort={miniProfileAc}
         class={style.miniProfile}
         userId={accountStore.currentUser?.id!}
-        overrides={overrides()}
+        overrides={updateHandler.values}
         animationMode="focus"
       />,
     );
@@ -125,15 +118,22 @@ const profileSettingsPage = (context: SettingsContext) => {
     { signal },
   );
 
+  const updateValues = () => {
+    clanDropdown.update();
+    fontDropdown.update();
+    primaryColorPicker.update();
+    gradientColorOnePicker.update();
+    gradientColorTwoPicker.update();
+  };
+
   getUserDetails({ userId: accountStore.currentUser?.id! }).then(([res]) => {
     if (ac.signal.aborted) return;
     if (!res) return;
     userDetails = res;
     updateHandler.undo();
     page = createPage();
-    clanDropdown.update();
-    fontDropdown.update();
-    primaryColorPicker.update();
+    updateValues();
+
     context.content.replaceChildren(page);
     renderMiniProfile();
   });
@@ -153,7 +153,7 @@ const profileSettingsPage = (context: SettingsContext) => {
       }
       if (button.dataset.action === "preview") {
         createMiniProfileModal({
-          overrides: overrides(),
+          overrides: updateHandler.values,
           userId: accountStore.currentUser?.id!,
           triggerEl: button,
         });
@@ -218,6 +218,20 @@ const profileSettingsPage = (context: SettingsContext) => {
       updateHandler.changeValue("primaryColor", color);
     },
   });
+  const gradientColorOnePicker = createColorPicker({
+    initialColor: () => updateHandler.values.bgColorOne,
+    signal,
+    onChange(color) {
+      updateHandler.changeValue("bgColorOne", color);
+    },
+  });
+  const gradientColorTwoPicker = createColorPicker({
+    initialColor: () => updateHandler.values.bgColorTwo,
+    signal,
+    onChange(color) {
+      updateHandler.changeValue("bgColorTwo", color);
+    },
+  });
 
   const focusAnimator = new FocusAnimator(
     document.body,
@@ -257,11 +271,13 @@ const profileSettingsPage = (context: SettingsContext) => {
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.gradientColor1} />
+                {gradientColorOnePicker.el}
               </SettingsBlock.Root>
               {/* Gradient 2 */}
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.gradientColor2} />
+                {gradientColorTwoPicker.el}
               </SettingsBlock.Root>
             </SettingsBlock.Group>
             <Button
@@ -296,15 +312,15 @@ const profileSettingsPage = (context: SettingsContext) => {
       ...(values.bio !== undefined && values.bio.trim() === ""
         ? { bio: null }
         : { bio: formattedBio }),
-      // ...(values.bgColorOne !== undefined && values.bgColorOne === ""
-      //   ? { bgColorOne: null }
-      //   : { bgColorOne: values.bgColorOne }),
-      // ...(values.bgColorTwo !== undefined && values.bgColorTwo === ""
-      //   ? { bgColorTwo: null }
-      //   : { bgColorTwo: values.bgColorTwo }),
-      // ...(values.primaryColor !== undefined && values.primaryColor === ""
-      //   ? { primaryColor: null }
-      //   : { primaryColor: values.primaryColor }),
+      ...(values.bgColorOne !== undefined && values.bgColorOne === ""
+        ? { bgColorOne: null }
+        : { bgColorOne: values.bgColorOne }),
+      ...(values.bgColorTwo !== undefined && values.bgColorTwo === ""
+        ? { bgColorTwo: null }
+        : { bgColorTwo: values.bgColorTwo }),
+      ...(values.primaryColor !== undefined && values.primaryColor === ""
+        ? { primaryColor: null }
+        : { primaryColor: values.primaryColor }),
       ...(values.font !== undefined && values.font === null
         ? { font: null }
         : { font: values.font }),
@@ -321,9 +337,7 @@ const profileSettingsPage = (context: SettingsContext) => {
 
   actions.handleUndoClick(() => {
     updateHandler.undo();
-    clanDropdown.update();
-    fontDropdown.update();
-    primaryColorPicker.update();
+    updateValues();
   });
 
   const destroy = () => {

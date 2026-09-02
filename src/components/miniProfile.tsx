@@ -53,6 +53,8 @@ export interface MiniProfileOverrides {
   clanServerId?: string;
   font?: number;
   primaryColor?: string;
+  bgColorOne?: string;
+  bgColorTwo?: string;
 }
 export const createMiniProfileHandler = (opts: { signal: AbortSignal }) => {
   document.addEventListener(
@@ -410,16 +412,17 @@ export const MiniProfile = (props: {
 
   miniProfileEl.appendChild(<Content />);
 
-  const primaryColor =
-    props.overrides?.primaryColor ?? details?.profile?.primaryColor;
-
   const render = () => {
+    const primaryColor =
+      props.overrides?.primaryColor ?? details?.profile?.primaryColor;
     if (primaryColor) {
       miniProfileEl.style.setProperty("--primary-color", primaryColor);
     }
 
-    const colorOne = details?.profile?.bgColorOne || "#000000";
-    const colorTwo = details?.profile?.bgColorTwo || "#000000";
+    const colorOne =
+      props.overrides?.bgColorOne || details?.profile?.bgColorOne || "#000000";
+    const colorTwo =
+      props.overrides?.bgColorTwo || details?.profile?.bgColorTwo || "#000000";
 
     const bg = `linear-gradient(180deg, ${colorOne}, ${colorTwo})`;
     miniProfileEl.style.background = bg;
