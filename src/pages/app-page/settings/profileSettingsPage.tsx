@@ -52,6 +52,12 @@ const profileSettingsPage = (context: SettingsContext) => {
 
   let userDetails: UserDetails | null = null;
 
+  const DefaultValues = {
+    primaryColor: DefaultTheme["primary-color"],
+    bgColorOne: "#000000",
+    bgColorTwo: "#000000",
+  };
+
   const initialValues = () => {
     if (!userDetails) return {};
     return {
@@ -59,9 +65,9 @@ const profileSettingsPage = (context: SettingsContext) => {
       clanServerId: userDetails.profile?.clan?.serverId,
       font: userDetails.profile?.font || 0,
       primaryColor:
-        userDetails.profile?.primaryColor || DefaultTheme["primary-color"],
-      bgColorOne: userDetails.profile?.bgColorOne || "#000000",
-      bgColorTwo: userDetails.profile?.bgColorTwo || "#000000",
+        userDetails.profile?.primaryColor || DefaultValues.primaryColor,
+      bgColorOne: userDetails.profile?.bgColorOne || DefaultValues.bgColorOne,
+      bgColorTwo: userDetails.profile?.bgColorTwo || DefaultValues.bgColorTwo,
     };
   };
 
@@ -102,6 +108,8 @@ const profileSettingsPage = (context: SettingsContext) => {
   updateHandler.onUpdate((_, hasChanges) => {
     renderMiniProfile();
     actions.setVisibility(hasChanges);
+    updateDeleteButtons();
+    updateValues();
   });
 
   let page: HTMLDivElement | null = null;
@@ -133,6 +141,7 @@ const profileSettingsPage = (context: SettingsContext) => {
     updateHandler.undo();
     page = createPage();
     updateValues();
+    updateDeleteButtons();
 
     context.content.replaceChildren(page);
     renderMiniProfile();
@@ -141,7 +150,9 @@ const profileSettingsPage = (context: SettingsContext) => {
     "click",
     (event) => {
       const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = target.closest(
+        "[data-action], [data-delete]",
+      ) as HTMLDivElement;
       if (!button) return;
       if (button.dataset.action === "updateBio") {
         createUpdateBioModal({
@@ -157,6 +168,12 @@ const profileSettingsPage = (context: SettingsContext) => {
           userId: accountStore.currentUser?.id!,
           triggerEl: button,
         });
+      }
+      if (button.dataset.delete) {
+        const deleteKey = button.dataset.delete as keyof typeof DefaultValues;
+        const deleteVal = DefaultValues[deleteKey];
+        console.log(deleteKey, deleteVal);
+        updateHandler.changeValue(deleteKey, deleteVal);
       }
     },
     { signal },
@@ -265,19 +282,45 @@ const profileSettingsPage = (context: SettingsContext) => {
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.primaryColor} />
-                {primaryColorPicker.el}
+                <div class={style.blockContainer}>
+                  <Button
+                    data-delete="primaryColor"
+                    icon="delete"
+                    alert
+                    class={style.deleteButton}
+                  />
+                  {primaryColorPicker.el}
+                </div>
               </SettingsBlock.Root>
               {/* Gradient 1 */}
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.gradientColor1} />
-                {gradientColorOnePicker.el}
+
+                <div class={style.blockContainer}>
+                  <Button
+                    data-delete="bgColorOne"
+                    icon="delete"
+                    alert
+                    class={style.deleteButton}
+                  />
+                  {gradientColorOnePicker.el}
+                </div>
               </SettingsBlock.Root>
               {/* Gradient 2 */}
               <SettingsBlock.Root>
                 <SettingsBlock.Icon name="palette" />
                 <SettingsBlock.Details title={strings.gradientColor2} />
-                {gradientColorTwoPicker.el}
+
+                <div class={style.blockContainer}>
+                  <Button
+                    data-delete="bgColorTwo"
+                    icon="delete"
+                    alert
+                    class={style.deleteButton}
+                  />
+                  {gradientColorTwoPicker.el}
+                </div>
               </SettingsBlock.Root>
             </SettingsBlock.Group>
             <Button
@@ -338,7 +381,23 @@ const profileSettingsPage = (context: SettingsContext) => {
   actions.handleUndoClick(() => {
     updateHandler.undo();
     updateValues();
+    updateDeleteButtons();
   });
+
+  const updateDeleteButtons = () => {
+    const buttons = page?.querySelectorAll("[data-delete]");
+    buttons?.forEach((b) => {
+      const el = b as HTMLDivElement;
+      const key = el.dataset.delete || "";
+      const value =
+        updateHandler.values[key as keyof typeof updateHandler.values];
+
+      const hasChanges =
+        value !== DefaultValues[key as keyof typeof DefaultValues];
+
+      el.style.display = hasChanges ? "flex" : "none";
+    });
+  };
 
   const destroy = () => {
     focusAnimator.destroy();

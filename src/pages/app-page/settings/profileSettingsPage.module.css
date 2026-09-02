@@ -38,3 +38,13 @@
 .dropdownClanContainer {
   pointer-events: none;
 }
+
+.blockContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.deleteButton {
+  display: none;
+  padding: 4px;
+}
