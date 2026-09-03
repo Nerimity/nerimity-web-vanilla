@@ -156,7 +156,7 @@ msgstr "Clear local settings"
 #: src/components/LogoutModal.tsx:39
 #: src/components/LogoutModal.tsx:52
 #: src/components/createAuthErrorModal.tsx:52
-#: src/components/miniProfile.tsx:327
+#: src/components/miniProfile.tsx:340
 msgid "Logout"
 msgstr "Logout"
 
@@ -196,14 +196,14 @@ msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:290
-#: src/components/miniProfile.tsx:314
+#: src/components/miniProfile.tsx:303
+#: src/components/miniProfile.tsx:327
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:239
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:290
+#: src/components/miniProfile.tsx:303
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:239
 msgid "Message"
 msgstr "Message"
@@ -231,8 +231,8 @@ msgid "Copy Object"
 msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
-#: src/components/miniProfile.tsx:307
-#: src/pages/app-page/settings/Settings.ts:52
+#: src/components/miniProfile.tsx:320
+#: src/pages/app-page/settings/Settings.ts:53
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
 msgstr "Profile"
@@ -366,27 +366,27 @@ msgstr "Embed not supported by your browser."
 #. placeholder {0}: inviteItem.memberCount
 #. placeholder {1}: inviteItem.memberCount.toLocaleString()
 #. placeholder {2}: inviteItem.memberCount.toLocaleString()
-#: src/components/message-pane/InviteEmbed.tsx:79
+#: src/components/message-pane/InviteEmbed.tsx:98
 msgid "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 msgstr "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 
-#: src/components/message-pane/InviteEmbed.tsx:112
+#: src/components/message-pane/InviteEmbed.tsx:131
 msgid "Visit"
 msgstr "Visit"
 
-#: src/components/message-pane/InviteEmbed.tsx:112
+#: src/components/message-pane/InviteEmbed.tsx:131
 msgid "Join"
 msgstr "Join"
 
-#: src/components/message-pane/InviteEmbed.tsx:151
+#: src/components/message-pane/InviteEmbed.tsx:166
 msgid "Emoji from a private server."
 msgstr "Emoji from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:153
+#: src/components/message-pane/InviteEmbed.tsx:168
 msgid "Clan from a private server."
 msgstr "Clan from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:154
+#: src/components/message-pane/InviteEmbed.tsx:169
 msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
@@ -535,72 +535,72 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:237
+#: src/components/miniProfile.tsx:249
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:152
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
-#: src/components/miniProfile.tsx:245
+#: src/components/miniProfile.tsx:258
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:363
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:268
+#: src/components/miniProfile.tsx:281
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:386
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:280
+#: src/components/miniProfile.tsx:293
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:320
+#: src/components/miniProfile.tsx:333
 #: src/components/settings/createSettingsDrawer.tsx:14
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/miniProfile.tsx:340
+#: src/components/miniProfile.tsx:353
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:354
+#: src/components/miniProfile.tsx:367
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:371
+#: src/components/miniProfile.tsx:384
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:627
+#: src/components/miniProfile.tsx:641
 #: src/components/right-drawer/DrawerChannelNotice.tsx:16
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/miniProfile.tsx:677
+#: src/components/miniProfile.tsx:691
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:764
-#: src/components/miniProfile.tsx:807
+#: src/components/miniProfile.tsx:778
+#: src/components/miniProfile.tsx:821
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:812
+#: src/components/miniProfile.tsx:826
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:816
+#: src/components/miniProfile.tsx:830
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:817
+#: src/components/miniProfile.tsx:831
 #: src/components/settings-actions/SettingsActions.tsx:25
 #: src/components/settings-actions/SettingsActions.tsx:42
 msgid "Save"
 msgstr "Save"
 
-#: src/components/modal.tsx:739
+#: src/components/modal.tsx:745
 msgid "Understood"
 msgstr "Understood"
 
@@ -679,23 +679,24 @@ msgstr "Unfollow"
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:464
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:467
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:490
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:490
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:562
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:565
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:606
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:609
+#: src/pages/app-page/settings/Settings.ts:67
 msgid "Badges"
 msgstr "Badges"
 
@@ -806,11 +807,11 @@ msgstr "Also delete my posts and messages"
 msgid "Your posts and messages may take weeks to delete."
 msgstr "Your posts and messages may take weeks to delete."
 
-#: src/pages/app-page/settings/Settings.ts:45
+#: src/pages/app-page/settings/Settings.ts:46
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/Settings.ts:59
+#: src/pages/app-page/settings/Settings.ts:60
 msgid "Sessions"
 msgstr "Sessions"
 
@@ -828,7 +829,7 @@ msgid "DM Notice"
 msgstr "DM Notice"
 
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:53
-#: src/pages/app-page/settings/profileSettingsPage.tsx:280
+#: src/pages/app-page/settings/profileSettingsPage.tsx:460
 msgid "Don't Update"
 msgstr "Don't Update"
 
@@ -845,7 +846,7 @@ msgid "Banner"
 msgstr "Banner"
 
 #: src/pages/app-page/settings/accountSettingsPage.tsx:33
-#: src/pages/app-page/settings/accountSettingsPage.tsx:348
+#: src/pages/app-page/settings/accountSettingsPage.tsx:349
 msgid "Forgot Password"
 msgstr "Forgot Password"
 
@@ -870,9 +871,29 @@ msgstr "Customize your profile bio, colors and more."
 msgid "Permanently delete your account and all associated data."
 msgstr "Permanently delete your account and all associated data."
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:349
+#: src/pages/app-page/settings/accountSettingsPage.tsx:350
 msgid "Email Sent. Please check your email to reset your password."
 msgstr "Email Sent. Please check your email to reset your password."
+
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:19
+msgid "Owned Badges"
+msgstr "Owned Badges"
+
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:31
+msgid "Support Me"
+msgstr "Support Me"
+
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:32
+msgid "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
+msgstr "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
+
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:82
+msgid "Acquired {date}"
+msgstr "Acquired {date}"
+
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:134
+msgid "You cannot modify this badge."
+msgstr "You cannot modify this badge."
 
 #: src/pages/app-page/settings/createSettingsRoute.tsx:52
 msgid "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
@@ -882,40 +903,40 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:30
+#: src/pages/app-page/settings/profileSettingsPage.tsx:36
 msgid "Clan Tag"
 msgstr "Clan Tag"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:31
+#: src/pages/app-page/settings/profileSettingsPage.tsx:37
 msgid "Gradient Color 1"
 msgstr "Gradient Color 1"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:32
+#: src/pages/app-page/settings/profileSettingsPage.tsx:38
 msgid "Gradient Color 2"
 msgstr "Gradient Color 2"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:33
+#: src/pages/app-page/settings/profileSettingsPage.tsx:39
 msgid "Primary Color"
 msgstr "Primary Color"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:34
+#: src/pages/app-page/settings/profileSettingsPage.tsx:40
 msgid "Username Font"
 msgstr "Username Font"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:35
-#: src/pages/app-page/settings/profileSettingsPage.tsx:266
+#: src/pages/app-page/settings/profileSettingsPage.tsx:41
+#: src/pages/app-page/settings/profileSettingsPage.tsx:446
 msgid "Bio"
 msgstr "Bio"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:165
+#: src/pages/app-page/settings/profileSettingsPage.tsx:196
 msgid "None"
 msgstr "None"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:227
+#: src/pages/app-page/settings/profileSettingsPage.tsx:328
 msgid "Preview"
 msgstr "Preview"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:284
+#: src/pages/app-page/settings/profileSettingsPage.tsx:464
 msgid "Done"
 msgstr "Done"
 
