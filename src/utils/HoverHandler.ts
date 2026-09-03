@@ -2,6 +2,7 @@ export class HoverHandler {
   private targets: Array<{
     trigger?: string;
     selector: string;
+    hoverSelectorAttribute?: string;
     onHover?: (el: HTMLElement) => void;
     onBlur?: (el: HTMLElement) => void;
     crossAnimate?: {
@@ -23,6 +24,7 @@ export class HoverHandler {
     targets: Array<{
       trigger?: string;
       selector: string;
+      hoverSelectorAttribute?: string;
       onHover?: (el: HTMLElement) => void;
       onBlur?: (el: HTMLElement) => void;
       crossAnimate?: {
@@ -82,51 +84,87 @@ export class HoverHandler {
     relatedTarget: HTMLElement | null,
   ) {
     for (let i = 0; i < this.targets.length; i++) {
-      const { trigger, selector, onHover, onBlur, crossAnimate } =
-        this.targets[i]!;
-      const root = (
-        trigger ? target.closest(trigger) : target.closest(selector)
-      ) as HTMLElement | null;
-      if (!root) continue;
-      if (!hovered && relatedTarget && root.contains(relatedTarget)) continue;
+      const {
+        trigger,
+        selector,
+        hoverSelectorAttribute,
+        onHover,
+        onBlur,
+        crossAnimate,
+      } = this.targets[i]!;
 
-      let ruleState = this.hoveredStates.get(i);
-      if (!ruleState) {
-        ruleState = new Set<HTMLElement>();
-        this.hoveredStates.set(i, ruleState);
-      }
+      let roots: Array<{ root: HTMLElement; hoverRoot: HTMLElement }> = [];
+      if (hoverSelectorAttribute) {
+        roots = Array.from(
+          this.container.querySelectorAll<HTMLElement>(selector),
+        ).flatMap((candidate) => {
+          const hoverSelector = candidate.getAttribute(hoverSelectorAttribute);
+          if (!hoverSelector) return [];
 
-      if (hovered === ruleState.has(root)) continue;
-
-      if (hovered) ruleState.add(root);
-      else ruleState.delete(root);
-
-      if (hovered) {
-        onHover?.(root);
-      } else {
-        onBlur?.(root);
-      }
-
-      if (crossAnimate) {
-        const attrValue = (root as HTMLElement).getAttribute(crossAnimate.attr);
-        if (attrValue) {
-          if (relatedTarget) {
-            const relatedRoot = relatedTarget.closest(trigger ?? selector);
-            if (relatedRoot?.getAttribute(crossAnimate.attr) === attrValue)
-              continue;
+          try {
+            const hoverRoot = target.closest(
+              hoverSelector,
+            ) as HTMLElement | null;
+            return hoverRoot?.contains(candidate)
+              ? [{ root: candidate, hoverRoot }]
+              : [];
+          } catch {
+            return [];
           }
+        });
+      }
 
-          const crossRoots = this.container.querySelectorAll(
-            `[${crossAnimate.targetAttr ?? crossAnimate.attr}="${attrValue}"]`,
+      if (roots.length === 0) {
+        const root = (
+          trigger ? target.closest(trigger) : target.closest(selector)
+        ) as HTMLElement | null;
+        if (root) roots.push({ root, hoverRoot: root });
+      }
+
+      for (const { root, hoverRoot } of roots) {
+        if (!hovered && relatedTarget && hoverRoot.contains(relatedTarget))
+          continue;
+
+        let ruleState = this.hoveredStates.get(i);
+        if (!ruleState) {
+          ruleState = new Set<HTMLElement>();
+          this.hoveredStates.set(i, ruleState);
+        }
+
+        if (hovered === ruleState.has(root)) continue;
+
+        if (hovered) ruleState.add(root);
+        else ruleState.delete(root);
+
+        if (hovered) {
+          onHover?.(root);
+        } else {
+          onBlur?.(root);
+        }
+
+        if (crossAnimate) {
+          const attrValue = (root as HTMLElement).getAttribute(
+            crossAnimate.attr,
           );
-
-          crossRoots.forEach((cRoot) => {
-            if (hovered) {
-              crossAnimate.onHover?.(cRoot as HTMLElement);
-            } else {
-              crossAnimate.onBlur?.(cRoot as HTMLElement);
+          if (attrValue) {
+            if (relatedTarget) {
+              const relatedRoot = relatedTarget.closest(trigger ?? selector);
+              if (relatedRoot?.getAttribute(crossAnimate.attr) === attrValue)
+                continue;
             }
-          });
+
+            const crossRoots = this.container.querySelectorAll(
+              `[${crossAnimate.targetAttr ?? crossAnimate.attr}="${attrValue}"]`,
+            );
+
+            crossRoots.forEach((cRoot) => {
+              if (hovered) {
+                crossAnimate.onHover?.(cRoot as HTMLElement);
+              } else {
+                crossAnimate.onBlur?.(cRoot as HTMLElement);
+              }
+            });
+          }
         }
       }
     }

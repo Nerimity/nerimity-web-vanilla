@@ -140,7 +140,11 @@ export const MessageItem = (props: {
                     data-user-id={creator.id}
                     class={style.avatar}
                   >
-                    <Avatar user={creator} size={40} />
+                    <Avatar
+                      user={creator}
+                      size={40}
+                      hoverSelector={`.${style.messageItem}`}
+                    />
                   </Link>
                 )}
                 <div class={style.messageBody}>

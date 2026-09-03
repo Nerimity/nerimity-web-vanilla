@@ -1,7 +1,6 @@
 .messageItem {
   position: relative;
   display: flex;
-  overflow: hidden;
   flex-direction: column;
   flex-shrink: 0;
   padding-top: 2px;

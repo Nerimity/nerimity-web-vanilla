@@ -1,9 +1,15 @@
+import { BorderWithWings } from "../avatar-borders/BorderWithWings";
+import { Dynamic } from "../dynamic";
+import { hasBit } from "../utils/bitwise";
+import { HoverHandler } from "../utils/HoverHandler";
 import { buildImageUrl } from "../utils/image";
+import { UserBadges } from "../utils/UserBadgeFlag";
 import type { CropPoints } from "./ImageCropModal";
 
 import style from "./avatar.module.css";
 
 interface AvatarProps {
+  hoverSelector?: string;
   user?: {
     avatar?: string;
     avatarUrl?: string;
@@ -74,46 +80,75 @@ export const Avatar = (props: AvatarProps) => {
   const _hexColor = hexColor(props);
   const _firstLetter = firstLetter(props);
 
+  if (hasBit(props.user?.badges, UserBadges.FOUNDER.bit)) {
+    console.log(props.user?.username);
+  }
+
   return (
     <div
       class={["avatar", style.avatar, props.class]}
       style={{ "--size": props.size + "px" }}
+      {...(props.hoverSelector && {
+        "data-hover-selector": props.hoverSelector,
+      })}
     >
-      {url ? (
-        props.image ? (
-          <div class={style.avatarWrap}>
+      <Dynamic
+        component={
+          hasBit(props.user?.badges, UserBadges.FOUNDER.bit)
+            ? BorderWithWings
+            : "div"
+        }
+      >
+        {url ? (
+          props.image ? (
+            <div class={style.avatarWrap}>
+              <img
+                src={url}
+                class={style.croppedImage}
+                style={
+                  props.image.cropPoints
+                    ? {
+                        "--startX": props.image.cropPoints[0],
+                        "--startY": props.image.cropPoints[1],
+                        "--endX": props.image.cropPoints[2],
+                        "--endY": props.image.cropPoints[3],
+                      }
+                    : {}
+                }
+              />
+            </div>
+          ) : (
             <img
+              loading="lazy"
+              class={[style.avatarInner, style.image, props.imgClass]}
               src={url}
-              class={style.croppedImage}
-              style={
-                props.image.cropPoints
-                  ? {
-                      "--startX": props.image.cropPoints[0],
-                      "--startY": props.image.cropPoints[1],
-                      "--endX": props.image.cropPoints[2],
-                      "--endY": props.image.cropPoints[3],
-                    }
-                  : {}
-              }
+              alt=""
+              {...(animated && { "data-img-anim": "" })}
             />
-          </div>
+          )
         ) : (
-          <img
-            loading="lazy"
-            class={[style.avatarInner, style.image, props.imgClass]}
-            src={url}
-            alt=""
-            {...(animated && { "data-img-anim": "" })}
-          />
-        )
-      ) : (
-        <div
-          class={[style.avatarInner, style.avatarLetter]}
-          style={{ "--color": _hexColor }}
-        >
-          {_firstLetter}
-        </div>
-      )}
+          <div
+            class={[style.avatarInner, style.avatarLetter]}
+            style={{ "--color": _hexColor }}
+          >
+            {_firstLetter}
+          </div>
+        )}
+      </Dynamic>
     </div>
   );
 };
+
+new HoverHandler(document.body, [
+  {
+    selector: `.${style.avatar}`,
+    hoverSelectorAttribute: "data-hover-selector",
+
+    onHover(el) {
+      (el.firstChild as HTMLDivElement).dataset.hover = "true";
+    },
+    onBlur(el) {
+      delete (el.firstChild as HTMLDivElement).dataset.hover;
+    },
+  },
+]);
