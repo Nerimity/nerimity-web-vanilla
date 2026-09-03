@@ -89,7 +89,7 @@ export const createSettingsDrawer = () => {
         (item) => item.name(),
         (item) => Object.values(item.load.getStrings()),
       ],
-    });
+    }).sort((a, b) => Settings.indexOf(a) - Settings.indexOf(b));
 
     listEl.replaceChildren(
       <> {results.map((s) => itemHelper.create({ setting: s }))}</>,

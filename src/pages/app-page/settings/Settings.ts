@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import type { CropPoints } from "../../../components/ImageCropModal";
 import * as accountSettingsPage from "./accountSettingsPage";
+import * as badgeSettingsPage from "./badgeSettingsPage";
 import * as profileSettingsPage from "./profileSettingsPage";
 import * as sessionsSettingsPage from "./sessionsSettingsPage";
 
@@ -59,5 +60,12 @@ export const Settings: Setting[] = [
     name: () => t`Sessions`,
     path: "/sessions",
     load: sessionsSettingsPage,
+  },
+  {
+    id: "badges",
+    icon: "award_star",
+    name: () => t`Badges`,
+    path: "/badges",
+    load: badgeSettingsPage,
   },
 ];

@@ -35,6 +35,8 @@ const noticeType = () => ({
 interface NoticeProps {
   type: keyof ReturnType<typeof noticeType>;
   description?: string;
+  title?: string;
+  icon?: string;
 }
 
 export const Notice = (props: NoticeProps) => {
@@ -43,8 +45,8 @@ export const Notice = (props: NoticeProps) => {
   return (
     <div class={style.container}>
       <div class={style.title} style={{ "--color": type.color }}>
-        <Icon class={style.icon} name={type.icon} />
-        {type.title}
+        <Icon class={style.icon} name={props.icon || type.icon} />
+        {props.title || type.title}
       </div>
       <div class={style.description}>{props.description}</div>
     </div>

@@ -18,11 +18,13 @@ export const SettingsBlock = {
   Root: ({
     children,
     clickable,
+    hideArrow,
     expandable,
     ...props
   }: {
     children: any;
     clickable?: boolean;
+    hideArrow?: boolean;
     expandable?: boolean;
     href?: string;
     [key: string]: any;
@@ -42,7 +44,7 @@ export const SettingsBlock = {
         {...props}
       >
         {children}
-        {isClickable && (
+        {!hideArrow && isClickable && (
           <Icon
             class={style.actionIcon}
             name={expandable ? "keyboard_arrow_down" : "chevron_forward"}

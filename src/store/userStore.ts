@@ -48,6 +48,7 @@ export class User {
       } as CurrentUser);
     }
 
+    this.badges = updated.badges ?? this.badges;
     this.username = updated.username ?? this.username;
     this.tag = updated.tag ?? this.tag;
     this.avatar = updated.avatar ?? this.avatar;

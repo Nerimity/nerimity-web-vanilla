@@ -9,6 +9,7 @@ interface AvatarProps {
     avatarUrl?: string;
     username: string;
     hexColor: string;
+    badges?: number;
   } | null;
 
   image?: {

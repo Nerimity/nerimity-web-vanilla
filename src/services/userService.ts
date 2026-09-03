@@ -1,6 +1,7 @@
 import type {
   Profile,
   RawBotCommand,
+  RawInventoryItem,
   RawUser,
   RawUserPresence,
 } from "../Types";
@@ -179,5 +180,18 @@ export const destroySession = async (password: string, sessionId?: string) => {
     useToken: true,
     body: { password },
     method: "DELETE",
+  });
+};
+export const getInventory = async () => {
+  return request<RawInventoryItem[]>(`/users/inventory`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+export const toggleBadge = async (bit: number) => {
+  return request<{ badges: number }>(`/users/badges/toggle`, {
+    useToken: true,
+    body: { bit },
+    method: "POST",
   });
 };
