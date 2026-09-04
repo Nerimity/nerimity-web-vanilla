@@ -880,7 +880,7 @@ const createCustomStatusModal = () => {
   createModal(() => el, abortController);
 };
 
-const Badges = (props: { details?: UserDetails }) => {
+const Badges = (props: { details?: UserDetails | null }) => {
   if (!props.details?.user.badges) return null;
 
   const enabledBadges = UserBadgeValues.filter((b) =>
