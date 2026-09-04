@@ -31,7 +31,13 @@ const UserBadgeBits = {
   DEER_EARS_WHITE: 1 << 23,
 } as const;
 
-export interface UserBadge {
+export const BadgeStyle = {
+  Wings: 1,
+} as const;
+
+export type BadgeStyle = (typeof BadgeStyle)[keyof typeof BadgeStyle];
+
+type BaseBadge = {
   name: () => string;
   bit: (typeof UserBadgeBits)[keyof typeof UserBadgeBits];
   color: string;
@@ -42,7 +48,21 @@ export interface UserBadge {
   type?: "earned";
   icon?: string;
   removable?: boolean;
-}
+};
+
+type WingsBadge = BaseBadge & {
+  style: typeof BadgeStyle.Wings;
+  assets: {
+    border: string;
+  };
+};
+
+type PlainBadge = BaseBadge & {
+  style?: undefined;
+  assets?: undefined;
+};
+
+export type UserBadge = WingsBadge | PlainBadge;
 
 const createCredit = ({
   author,
@@ -217,6 +237,8 @@ export const UserBadges = {
     icon: "pets",
   },
 
+  // borders
+
   FOUNDER: {
     name: () => t`Founder`,
     bit: UserBadgeBits.FOUNDER,
@@ -226,6 +248,10 @@ export const UserBadges = {
     type: "earned",
     icon: "crown",
     removable: false,
+    style: BadgeStyle.Wings,
+    assets: {
+      border: "founder",
+    },
   },
 
   ADMIN: {
@@ -239,6 +265,10 @@ export const UserBadges = {
     type: "earned",
     icon: "verified_user",
     removable: false,
+    style: BadgeStyle.Wings,
+    assets: {
+      border: "admin",
+    },
   },
 
   MOD: {
@@ -251,6 +281,10 @@ export const UserBadges = {
     type: "earned",
     icon: "shield",
     removable: false,
+    style: BadgeStyle.Wings,
+    assets: {
+      border: "mod",
+    },
   },
 
   EMO_SUPPORTER: {
@@ -262,6 +296,10 @@ export const UserBadges = {
     credit: credits.upklyakEdited,
     type: "earned",
     icon: "favorite",
+    style: BadgeStyle.Wings,
+    assets: {
+      border: "emo-supporter",
+    },
   },
 
   SUPPORTER: {
@@ -273,6 +311,10 @@ export const UserBadges = {
     credit: credits.upklyak,
     type: "earned",
     icon: "favorite",
+    style: BadgeStyle.Wings,
+    assets: {
+      border: "supporter",
+    },
   },
 
   CONTRIBUTOR: {
@@ -292,6 +334,11 @@ export const UserBadges = {
     color: "linear-gradient(90deg, red, white, green)",
     credit: credits.upklyakEdited,
     icon: "volunteer_activism",
+    style: BadgeStyle.Wings,
+
+    assets: {
+      border: "palestine",
+    },
   },
 
   BOT: {

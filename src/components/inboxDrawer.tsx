@@ -73,7 +73,11 @@ const UserItem = (props: {
       alert={!!count || sentRequest || pendingRequest}
     >
       <Link href={`/app/profile/${props.user.id}`}>
-        <Avatar user={props.user} size={28} />
+        <Avatar
+          hoverSelector={`.${style.inboxItem}`}
+          user={props.user}
+          size={28}
+        />
       </Link>
       <div class={style.info}>
         <div class={[style.username, font?.class, "font"]}>

@@ -449,7 +449,12 @@ const memberItem = (cat: Categorized) => {
         data-user-id={user?.id}
         data-role-id={cat.role.id}
       >
-        <Avatar size={32} user={user!} imgClass="avatar" />
+        <Avatar
+          size={32}
+          user={user!}
+          imgClass="avatar"
+          hoverSelector={`.${style.memberItemContainer}`}
+        />
         <div class={style.info}>
           <span class={style.memberInfo}>
             <GradientText

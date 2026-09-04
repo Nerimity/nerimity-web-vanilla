@@ -3,7 +3,7 @@ import { Dynamic } from "../dynamic";
 import { hasBit } from "../utils/bitwise";
 import { HoverHandler } from "../utils/HoverHandler";
 import { buildImageUrl } from "../utils/image";
-import { UserBadges } from "../utils/UserBadgeFlag";
+import { BadgeStyle, UserBadgeValues } from "../utils/UserBadgeFlag";
 import type { CropPoints } from "./ImageCropModal";
 
 import style from "./avatar.module.css";
@@ -75,29 +75,31 @@ const firstLetter = (props: AvatarProps) => {
   return username[0]!.toUpperCase();
 };
 
+const BorderStyle = {
+  [BadgeStyle.Wings]: BorderWithWings,
+};
+
 export const Avatar = (props: AvatarProps) => {
   const [url, animated] = buildUrl(props);
   const _hexColor = hexColor(props);
   const _firstLetter = firstLetter(props);
 
-  if (hasBit(props.user?.badges, UserBadges.FOUNDER.bit)) {
-    console.log(props.user?.username);
-  }
+  const border = props.user?.badges
+    ? UserBadgeValues.find(
+        (b) => !b.overlay && hasBit(props.user?.badges, b.bit),
+      )
+    : undefined;
+  const BorderComponent = border ? BorderStyle[border.style!] : undefined;
 
   return (
     <div
       class={["avatar", style.avatar, props.class]}
       style={{ "--size": props.size + "px" }}
-      {...(props.hoverSelector && {
-        "data-hover-selector": props.hoverSelector,
-      })}
+      data-hover-selector={props.hoverSelector}
     >
       <Dynamic
-        component={
-          hasBit(props.user?.badges, UserBadges.FOUNDER.bit)
-            ? BorderWithWings
-            : "div"
-        }
+        component={BorderComponent ?? "div"}
+        border={BorderComponent && border}
       >
         {url ? (
           props.image ? (

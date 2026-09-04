@@ -75,6 +75,7 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
             <SettingsBlock.Root clickable hideArrow data-badge-bit={b.bit}>
               <Avatar
                 user={{ ...accountStore.currentUser!, badges: b.bit }}
+                hoverSelector={`[data-badge-bit]`}
                 size={42}
               />
               <SettingsBlock.Details
