@@ -248,7 +248,7 @@ export const MiniProfile = (props: {
             {details?.followsYou && (
               <span class={style.followsYou}>{t`Follows You`}</span>
             )}
-            {details?.user.badges && <Badges details={details} />}
+            <Badges details={details} />
           </span>
           {userPresenceContainer}
           {showStats && (
@@ -880,9 +880,11 @@ const createCustomStatusModal = () => {
   createModal(() => el, abortController);
 };
 
-const Badges = (props: { details: UserDetails }) => {
+const Badges = (props: { details?: UserDetails }) => {
+  if (!props.details?.user.badges) return null;
+
   const enabledBadges = UserBadgeValues.filter((b) =>
-    hasBit(props.details.user.badges, b.bit),
+    hasBit(props.details?.user.badges, b.bit),
   );
 
   if (!enabledBadges.length) return null;
