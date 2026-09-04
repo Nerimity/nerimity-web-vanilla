@@ -697,6 +697,7 @@ const createProfilePane = ({ content }: RouteContext) => {
   };
 
   const rerender = () => {
+    if (!getUser()) return;
     if (signal.aborted) return;
     const desktop = widthQuery.matches;
 
