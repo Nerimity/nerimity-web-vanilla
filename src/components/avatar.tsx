@@ -3,7 +3,12 @@ import { Dynamic } from "../dynamic";
 import { hasBit } from "../utils/bitwise";
 import { HoverHandler } from "../utils/HoverHandler";
 import { buildImageUrl } from "../utils/image";
-import { BadgeStyle, UserBadgeValues } from "../utils/UserBadgeFlag";
+import {
+  BadgeStyle,
+  UserBadgeValues,
+  type EarBadge,
+  type UserBadge,
+} from "../utils/UserBadgeFlag";
 import type { CropPoints } from "./ImageCropModal";
 
 import style from "./avatar.module.css";
@@ -89,7 +94,16 @@ export const Avatar = (props: AvatarProps) => {
         (b) => !b.overlay && hasBit(props.user?.badges, b.bit),
       )
     : undefined;
-  const BorderComponent = border ? BorderStyle[border.style!] : undefined;
+
+  const overlay = props.user?.badges
+    ? UserBadgeValues.find(
+        (b) => b.overlay && hasBit(props.user?.badges, b.bit),
+      )
+    : undefined;
+
+  const BorderComponent = border
+    ? BorderStyle[border.style! as keyof typeof BorderStyle]
+    : undefined;
 
   return (
     <div
@@ -100,7 +114,9 @@ export const Avatar = (props: AvatarProps) => {
       <Dynamic
         component={BorderComponent ?? "div"}
         border={BorderComponent && border}
+        class={style.container}
       >
+        {overlay && <Overlay overlay={overlay} border={border} />}
         {url ? (
           props.image ? (
             <div class={style.avatarWrap}>
@@ -138,6 +154,57 @@ export const Avatar = (props: AvatarProps) => {
         )}
       </Dynamic>
     </div>
+  );
+};
+
+const EarOverlay = (props: { overlay: EarBadge; border?: UserBadge }) => {
+  const offsetMap = props.overlay.assets.offset!;
+  const styleType = (props.border?.style ??
+    "default") as keyof typeof offsetMap;
+  const offset =
+    (offsetMap && styleType in offsetMap ? offsetMap[styleType] : undefined) ??
+    offsetMap?.default ??
+    0;
+
+  const scale = props.overlay.assets.scale;
+
+  const tail = props.overlay.assets.tail;
+  const tailOffsetMap = tail?.offset;
+  const tailOffset = tailOffsetMap?.[styleType]!;
+
+  return (
+    <div
+      class={style.earsOverlay}
+
+      data-name={props.overlay.assets.ear}
+    >
+      <img
+        class={style.earImage}
+        style={{
+          top: offset + "px",
+          transform: scale ? `scale(${scale})` : undefined,
+        }}
+        src={`/avatar/ears/${props.overlay.assets.ear}.webp`}
+        alt=""
+      />
+      {tail && (
+        <img
+          class={style.tailImage}
+          style={{
+            bottom: tailOffset.bottom + "px",
+            left: tailOffset.left + "px",
+          }}
+          src={`/avatar/ears/${tail.asset}.webp`}
+          alt=""
+        />
+      )}
+    </div>
+  );
+};
+
+const Overlay = (props: { overlay: UserBadge; border?: UserBadge }) => {
+  return (
+    <EarOverlay overlay={props.overlay as EarBadge} border={props.border} />
   );
 };
 

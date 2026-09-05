@@ -43,3 +43,26 @@
     transform-origin: 0 0;
   }
 }
+
+.container {
+  position: relative;
+}
+
+.earsOverlay {
+  position: absolute;
+  align-self: flex-start;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  .earImage {
+    position: absolute;
+    width: 100%;
+    object-fit: contain;
+    inset: 0;
+  }
+  .tailImage {
+    position: absolute;
+    width: 100%;
+    object-fit: contain;
+  }
+}

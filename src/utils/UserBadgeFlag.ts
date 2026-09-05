@@ -33,6 +33,7 @@ const UserBadgeBits = {
 
 export const BadgeStyle = {
   Wings: 1,
+  Ears: 2,
 } as const;
 
 export type BadgeStyle = (typeof BadgeStyle)[keyof typeof BadgeStyle];
@@ -50,7 +51,25 @@ type BaseBadge = {
   removable?: boolean;
 };
 
-type WingsBadge = BaseBadge & {
+export type EarBadge = BaseBadge & {
+  style: typeof BadgeStyle.Ears;
+  assets: {
+    ear: string;
+    tail?: {
+      asset: string;
+      offset?: {
+        default?: { left: number; bottom: number };
+        [BadgeStyle.Wings]?: { left: number; bottom: number };
+      };
+    };
+    scale?: number;
+    offset?: {
+      default?: number;
+      [BadgeStyle.Wings]?: number;
+    };
+  };
+};
+export type WingsBadge = BaseBadge & {
   style: typeof BadgeStyle.Wings;
   assets: {
     border: string;
@@ -62,7 +81,7 @@ type PlainBadge = BaseBadge & {
   assets?: undefined;
 };
 
-export type UserBadge = WingsBadge | PlainBadge;
+export type UserBadge = WingsBadge | EarBadge | PlainBadge;
 
 const createCredit = ({
   author,
@@ -103,6 +122,15 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Kawaii Pink Deer`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "deer-ears-white",
+      scale: 1.1,
+      offset: {
+        default: -25,
+        [BadgeStyle.Wings]: -22,
+      },
+    },
   },
   DEER_EARS_HORNS_DARK: {
     name: () => t`Deer`,
@@ -112,6 +140,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Emo Deer Antlers`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "deer-ears-horns-dark",
+      offset: {
+        default: -25,
+        [BadgeStyle.Wings]: -22,
+      },
+    },
   },
   DEER_EARS_HORNS: {
     name: () => t`Deer`,
@@ -121,6 +157,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Cute Deer Antlers`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "deer-ears-horns",
+      offset: {
+        default: -25,
+        [BadgeStyle.Wings]: -22,
+      },
+    },
   },
   GOAT_HORNS: {
     name: () => t`Goat`,
@@ -129,6 +173,15 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Goat Horns`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "goat-horns",
+      scale: 1.4,
+      offset: {
+        default: -3,
+        [BadgeStyle.Wings]: -3,
+      },
+    },
   },
   GOAT_EARS_WHITE: {
     name: () => t`Goat`,
@@ -138,6 +191,15 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Kawaii Goat Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "goat-ears-white",
+      scale: 1.4,
+      offset: {
+        default: -3,
+        [BadgeStyle.Wings]: -3,
+      },
+    },
   },
   WOLF_EARS: {
     name: () => t`Wolf`,
@@ -147,6 +209,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Wolfy Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "wolf-ears",
+      offset: {
+        default: -13,
+        [BadgeStyle.Wings]: -13,
+      },
+    },
   },
   DOG_SHIBA: {
     name: () => t`Doggy`,
@@ -156,6 +226,22 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Shiba Inu Doggy`,
     icon: "sound_detection_dog_barking",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "dog-ears-shiba",
+      scale: 1.2,
+      tail: {
+        asset: "dog-tail-shiba",
+        offset: {
+          default: { left: -29, bottom: -2 },
+          [BadgeStyle.Wings]: { left: -27, bottom: -6 },
+        },
+      },
+      offset: {
+        default: -6,
+        [BadgeStyle.Wings]: -6,
+      },
+    },
   },
   DOG_EARS_BROWN: {
     name: () => t`Doggy`,
@@ -164,6 +250,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Good Puppy Ears`,
     icon: "sound_detection_dog_barking",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "dog-ears-brown",
+      offset: {
+        default: 0,
+        [BadgeStyle.Wings]: -2,
+      },
+    },
   },
   BUNNY_EARS_MAID: {
     name: () => t`Bunny`,
@@ -173,6 +267,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Maid Bunny Ears`,
     icon: "cruelty_free",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "bunny-ears-maid",
+      offset: {
+        default: -23,
+        [BadgeStyle.Wings]: -23,
+      },
+    },
   },
   BUNNY_EARS_BLACK: {
     name: () => t`Bunny`,
@@ -182,6 +284,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Floppy Bunny Ears`,
     icon: "cruelty_free",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "bunny-ears-black",
+      offset: {
+        default: -23,
+        [BadgeStyle.Wings]: -22,
+      },
+    },
   },
   CAT_EARS_MAID: {
     name: () => t`Kitty`,
@@ -191,6 +301,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Kitty Maid Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "cat-ears-maid",
+      offset: {
+        default: -10,
+        [BadgeStyle.Wings]: -11,
+      },
+    },
   },
   CAT_EARS_PURPLE: {
     name: () => t`Kitty`,
@@ -200,6 +318,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Chesire Kitty Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "cat-ears-purple",
+      offset: {
+        default: -5,
+        [BadgeStyle.Wings]: -4,
+      },
+    },
   },
   CAT_EARS_BLUE: {
     name: () => t`Kitty`,
@@ -208,6 +334,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Arctic Kitty Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "cat-ears-blue",
+      offset: {
+        default: -5,
+        [BadgeStyle.Wings]: -4,
+      },
+    },
   },
 
   CAT_EARS_WHITE: {
@@ -217,6 +351,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Calico Kitty Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "cat-ears-white",
+      offset: {
+        default: -5,
+        [BadgeStyle.Wings]: -4,
+      },
+    },
   },
 
   FOX_EARS_GOLD: {
@@ -226,6 +368,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Golden Foxy Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "fox-ears-gold",
+      offset: {
+        default: -13,
+        [BadgeStyle.Wings]: -13,
+      },
+    },
   },
 
   FOX_EARS_BROWN: {
@@ -235,6 +385,14 @@ export const UserBadges = {
     overlay: true,
     description: () => t`Brown Foxy Ears`,
     icon: "pets",
+    style: BadgeStyle.Ears,
+    assets: {
+      ear: "fox-ears-brown",
+      offset: {
+        default: -13,
+        [BadgeStyle.Wings]: -13,
+      },
+    },
   },
 
   // borders

@@ -1,10 +1,10 @@
-import { UserBadges, type UserBadge } from "../utils/UserBadgeFlag";
+import { UserBadges, type WingsBadge } from "../utils/UserBadgeFlag";
 
 import style from "./BorderWithWings.module.css";
 
 export const BorderWithWings = (props: {
   children: any;
-  border?: UserBadge;
+  border?: WingsBadge;
 }) => {
   // data-d: disable animation
   return (
