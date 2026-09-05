@@ -89,7 +89,7 @@ const Content = (opts: {
         <Banner user={user} />
       </div>
       <div class={style.overlayInfo}>
-        <Avatar user={user} size={128} />
+        <Avatar user={user} size={opts.mobile ? 96 : 128} />
       </div>
       {!opts.mobile && (
         <Actions details={userDetails} user={opts.user} signal={signal} />

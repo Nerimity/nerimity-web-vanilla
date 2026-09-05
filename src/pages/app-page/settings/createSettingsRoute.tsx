@@ -5,6 +5,7 @@ import { Avatar } from "../../../components/avatar";
 import { Banner, bannerCroppedHandler } from "../../../components/Banner";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
+import { isMobileWidth } from "../../../config";
 import { accountStore } from "../../../store/accountStore";
 import { friendStore } from "../../../store/friendStore";
 import { serverStore } from "../../../store/serverStore";
@@ -115,7 +116,11 @@ const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
         <Banner user={user} image={overrides.banner} />
       </div>
       <div class={style.overlayInfo}>
-        <Avatar user={user} size={128} image={overrides.avatar} />
+        <Avatar
+          user={user}
+          size={isMobileWidth() ? 96 : 128}
+          image={overrides.avatar}
+        />
       </div>
 
       <div class={[style.section, style.detailsSection]}>
@@ -165,6 +170,9 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
       },
     );
   };
+
+  storeEmitter.on("drawer:modeChange", renderHeader, signal);
+
   const renderPage = () => {
     const matchedRoute = Settings.find((s) =>
       router.match("/app/settings" + s.path),
