@@ -56,12 +56,17 @@
   inset: 0;
   .earImage {
     position: absolute;
+    top: calc(var(--ear-offset) * var(--size));
+    right: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
     object-fit: contain;
-    inset: 0;
   }
   .tailImage {
     position: absolute;
+    bottom: calc(var(--tail-bottom) * var(--size));
+    left: calc(var(--tail-left) * var(--size));
     width: 100%;
     object-fit: contain;
   }

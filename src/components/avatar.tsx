@@ -13,6 +13,8 @@ import type { CropPoints } from "./ImageCropModal";
 
 import style from "./avatar.module.css";
 
+const overlayReferenceSize = 42;
+
 interface AvatarProps {
   hoverSelector?: string;
   user?: {
@@ -170,7 +172,7 @@ const EarOverlay = (props: { overlay: EarBadge; border?: UserBadge }) => {
 
   const tail = props.overlay.assets.tail;
   const tailOffsetMap = tail?.offset;
-  const tailOffset = tailOffsetMap?.[styleType]!;
+  const tailOffset = tailOffsetMap?.[styleType];
 
   return (
     <div
@@ -181,7 +183,7 @@ const EarOverlay = (props: { overlay: EarBadge; border?: UserBadge }) => {
       <img
         class={style.earImage}
         style={{
-          top: offset + "px",
+          "--ear-offset": offset / overlayReferenceSize,
           transform: scale ? `scale(${scale})` : undefined,
         }}
         src={`/avatar/ears/${props.overlay.assets.ear}.webp`}
@@ -191,8 +193,12 @@ const EarOverlay = (props: { overlay: EarBadge; border?: UserBadge }) => {
         <img
           class={style.tailImage}
           style={{
-            bottom: tailOffset.bottom + "px",
-            left: tailOffset.left + "px",
+            "--tail-bottom": tailOffset
+              ? tailOffset.bottom / overlayReferenceSize
+              : undefined,
+            "--tail-left": tailOffset
+              ? tailOffset.left / overlayReferenceSize
+              : undefined,
           }}
           src={`/avatar/ears/${tail.asset}.webp`}
           alt=""
