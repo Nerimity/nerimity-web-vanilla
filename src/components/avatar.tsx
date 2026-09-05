@@ -175,11 +175,7 @@ const EarOverlay = (props: { overlay: EarBadge; border?: UserBadge }) => {
   const tailOffset = tailOffsetMap?.[styleType];
 
   return (
-    <div
-      class={style.earsOverlay}
-
-      data-name={props.overlay.assets.ear}
-    >
+    <div class={style.earsOverlay}>
       <img
         class={style.earImage}
         style={{
