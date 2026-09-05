@@ -51,7 +51,7 @@
     );
   }
   &.withDetails {
-    margin-top: 8px;
+    margin-top: 18px;
   }
   .avatar {
     display: flex;
