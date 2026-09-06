@@ -63,7 +63,12 @@ const ServerItem = ({ server }: { server: Server }) => {
       title={server.name}
       href={`/app/servers/${server.id}/${getRecentServerChannelId(server.id)}`}
     >
-      <Avatar size={42} server={server} imgClass="avatar" />
+      <Avatar
+        size={42}
+        server={server}
+        imgClass="avatar"
+        hoverSelector={`.${style.sidebarItem}`}
+      />
     </SidebarItem>
   );
 };
@@ -329,7 +334,13 @@ const ProfileItem = (props: { signal: AbortSignal }) => {
   const rerender = () => {
     if (accountStore.authenticated) {
       el.setAttribute("href", `/app/profile/${accountStore.currentUser?.id}`);
-      el.replaceChildren(<Avatar user={accountStore.currentUser} size={42} />);
+      el.replaceChildren(
+        <Avatar
+          user={accountStore.currentUser}
+          size={42}
+          hoverSelector={`.${style.sidebarItem}`}
+        />,
+      );
     }
   };
 
@@ -385,7 +396,12 @@ const MentionItem = ({ mention }: { mention: MessageMention }) => {
       title={user.username}
       href={inbox ? `/app/inbox/${mention.channelId}` : undefined}
     >
-      <Avatar size={42} user={user} imgClass="avatar" />
+      <Avatar
+        size={42}
+        user={user}
+        imgClass="avatar"
+        hoverSelector={`.${style.sidebarItem}`}
+      />
     </SidebarItem>
   );
 };

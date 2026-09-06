@@ -1,0 +1,37 @@
+.container {
+  position: relative;
+  display: flex;
+  &[data-hover="true"] {
+    .border {
+      opacity: 0.8;
+    }
+    .icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.border {
+  position: absolute;
+  z-index: 11111;
+  border: solid calc(var(--size) / 17) var(--color);
+  border-radius: 50%;
+  transition: 0.2s ease-in-out;
+  inset: 0;
+}
+
+.icon {
+  position: absolute;
+  z-index: 11111;
+  right: 0;
+  bottom: 0;
+  padding: calc(var(--size) / 25);
+  border-radius: 50%;
+  opacity: 0;
+  color: black;
+  background: var(--color);
+  transition: 0.2s ease-in-out;
+  transform: scale(0.8);
+  font-size: calc(var(--size) / 4);
+}

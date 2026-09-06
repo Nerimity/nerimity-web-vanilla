@@ -1,3 +1,4 @@
+import { BasicBorder } from "../avatar-borders/BasicBorder";
 import { BorderWithWings } from "../avatar-borders/BorderWithWings";
 import { Dynamic } from "../dynamic";
 import { hasBit } from "../utils/bitwise";
@@ -6,6 +7,7 @@ import { buildImageUrl } from "../utils/image";
 import {
   BadgeStyle,
   UserBadgeValues,
+  VerifiedBadge,
   type EarBadge,
   type UserBadge,
 } from "../utils/UserBadgeFlag";
@@ -30,7 +32,12 @@ interface AvatarProps {
     cropPoints?: CropPoints;
   };
 
-  server?: { avatar?: string; name: string; hexColor: string } | null;
+  server?: {
+    avatar?: string;
+    name: string;
+    hexColor: string;
+    verified?: boolean;
+  } | null;
   class?: string;
 
   size:
@@ -84,6 +91,7 @@ const firstLetter = (props: AvatarProps) => {
 
 const BorderStyle = {
   [BadgeStyle.Wings]: BorderWithWings,
+  [BadgeStyle.Basic]: BasicBorder,
 };
 
 export const Avatar = (props: AvatarProps) => {
@@ -91,11 +99,15 @@ export const Avatar = (props: AvatarProps) => {
   const _hexColor = hexColor(props);
   const _firstLetter = firstLetter(props);
 
-  const border = props.user?.badges
+  let border = props.user?.badges
     ? UserBadgeValues.find(
         (b) => !b.overlay && hasBit(props.user?.badges, b.bit),
       )
     : undefined;
+
+  if (props.server?.verified) {
+    border = VerifiedBadge;
+  }
 
   const overlay = props.user?.badges
     ? UserBadgeValues.find(

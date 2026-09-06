@@ -1,4 +1,5 @@
 .avatar {
+  z-index: 1;
   width: var(--size);
   height: var(--size);
   user-select: none;
@@ -50,6 +51,7 @@
 
 .earsOverlay {
   position: absolute;
+  z-index: 11111;
   align-self: flex-start;
   width: 100%;
   height: 100%;

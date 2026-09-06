@@ -1,5 +1,7 @@
 import { ph, t } from "@lingui/core/macro";
 
+import { DefaultTheme } from "./theme";
+
 const UserBadgeBits = {
   FOUNDER: 1 << 0,
   ADMIN: 1 << 1,
@@ -34,6 +36,7 @@ const UserBadgeBits = {
 export const BadgeStyle = {
   Wings: 1,
   Ears: 2,
+  Basic: 3,
 } as const;
 
 export type BadgeStyle = (typeof BadgeStyle)[keyof typeof BadgeStyle];
@@ -75,13 +78,20 @@ export type WingsBadge = BaseBadge & {
     border: string;
   };
 };
+export type BasicBadge = BaseBadge & {
+  style: typeof BadgeStyle.Basic;
+  assets: {
+    color: string;
+    icon: string;
+  };
+};
 
 type PlainBadge = BaseBadge & {
   style?: undefined;
   assets?: undefined;
 };
 
-export type UserBadge = WingsBadge | EarBadge | PlainBadge;
+export type UserBadge = WingsBadge | EarBadge | BasicBadge | PlainBadge;
 
 const createCredit = ({
   author,
@@ -482,6 +492,11 @@ export const UserBadges = {
     color: "#ffffff",
     type: "earned",
     icon: "crowdsource",
+    style: BadgeStyle.Basic,
+    assets: {
+      icon: "crowdsource",
+      color: "white",
+    },
   },
 
   PALESTINE: {
@@ -509,5 +524,19 @@ export const UserBadges = {
     removable: false,
   },
 } satisfies Record<string, UserBadge>;
+
+export const VerifiedBadge = {
+  name: () => "",
+  description: () => "",
+  type: "earned",
+  bit: -1,
+  color: "",
+  icon: "",
+  style: BadgeStyle.Basic,
+  assets: {
+    icon: "check",
+    color: DefaultTheme["primary-color"],
+  },
+} as BasicBadge;
 
 export const UserBadgeValues = Object.values(UserBadges) as UserBadge[];
