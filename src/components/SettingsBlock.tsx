@@ -60,7 +60,7 @@ export const SettingsBlock = {
         {children}
         {!hideArrow && isClickable && (
           <Icon
-            class={style.actionIcon}
+            class={[style.actionIcon, external && style.external]}
             name={
               external
                 ? "open_in_new"
