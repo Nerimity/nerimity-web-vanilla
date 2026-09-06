@@ -31,10 +31,24 @@ export const SettingsBlock = {
   }) => {
     const isClickable = expandable || clickable || props.href;
 
+    const component = (() => {
+      if (props.href) {
+        const external =
+          props.href.startsWith("http://") || props.href.startsWith("https://");
+        if (external) return "a";
+        return Link;
+      }
+      return "div";
+    })();
+
+    const external = component === "a";
+
     return (
       <Dynamic
-        component={props.href ? Link : "div"}
+        component={component}
         data-expanded={false}
+        {...(external ? { target: "_blank" } : {})}
+
         class={[
           style.settingsBlock,
           isClickable && style.clickable,
@@ -47,7 +61,13 @@ export const SettingsBlock = {
         {!hideArrow && isClickable && (
           <Icon
             class={style.actionIcon}
-            name={expandable ? "keyboard_arrow_down" : "chevron_forward"}
+            name={
+              external
+                ? "open_in_new"
+                : expandable
+                  ? "keyboard_arrow_down"
+                  : "chevron_forward"
+            }
           />
         )}
       </Dynamic>

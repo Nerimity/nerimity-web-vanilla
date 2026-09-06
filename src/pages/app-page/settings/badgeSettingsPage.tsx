@@ -32,6 +32,7 @@ const badgeSettingsPage = (context: SettingsContext) => {
         description={t`Support my project by donating money. Badges are added manually. Please create a ticket after donating.`}
       />
       <OwnedBadges signal={signal} />
+      <SupportMethods />
     </div>
   ) as HTMLDivElement;
 
@@ -153,6 +154,31 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
   );
 
   return el;
+};
+
+const SupportMethods = () => {
+  return (
+    <div>
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="favorite" />
+          <SettingsBlock.Details title={t`Support Methods`} />
+        </SettingsBlock.Root>
+        <SettingsBlock.Root href="https://ko-fi.com/supertiger">
+          <img class={style.supportIcon} src="/third-party/kofi.svg" alt="" />
+          <SettingsBlock.Details title="Ko-Fi" />
+        </SettingsBlock.Root>
+        <SettingsBlock.Root href="https://boosty.to/supertigerdev/donate">
+          <img
+            class={[style.supportIcon, style.boosty]}
+            src="/third-party/boosty.jpg"
+            alt=""
+          />
+          <SettingsBlock.Details title="Boosty" />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
+    </div>
+  );
 };
 
 export { getStrings, badgeSettingsPage as create };

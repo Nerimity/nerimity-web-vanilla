@@ -3,3 +3,9 @@
   flex-direction: column;
   gap: 6px;
 }
+.supportIcon {
+  width: 24px;
+  &.boosty {
+    border-radius: 50%;
+  }
+}

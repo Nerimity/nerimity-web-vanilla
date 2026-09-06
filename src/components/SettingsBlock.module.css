@@ -23,8 +23,14 @@
   min-height: 62px;
   padding: 12px;
   border-radius: var(--radius-16);
+
+  color: var(--text-color);
   background-color: var(--gray-850);
+  text-decoration: none;
   gap: 12px;
+  &:hover {
+    text-decoration: none;
+  }
 
   &.expandable {
     &[data-expanded="true"] {
