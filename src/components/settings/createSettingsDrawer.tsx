@@ -3,6 +3,7 @@ import { matchSorter } from "match-sorter";
 
 import { Settings, type Setting } from "../../pages/app-page/settings/Settings";
 import { router } from "../../utils/router";
+import { Drawer } from "../drawer";
 import { Icon } from "../icon";
 import { Input } from "../input";
 import { Item } from "../item";
@@ -76,6 +77,18 @@ export const createSettingsDrawer = () => {
       </div>
     </div>
   ) as HTMLDivElement;
+
+  containerEl.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+
+      if (target.closest(`.${style.item}`)) {
+        Drawer().updatePage({ page: 1 });
+      }
+    },
+    { signal },
+  );
 
   let searchInputEl = containerEl.querySelector(
     ".searchInput input",
