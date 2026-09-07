@@ -213,6 +213,14 @@ const Actions = ({
     el.replaceChildren(
       <>
         <div class={style.actionsInner}>
+          {isCurrent && (
+            <ActionButton
+              action="edit_profile"
+              icon="edit"
+              href="/app/settings"
+              label={t`Edit Profile`}
+            />
+          )}
           {details && isFollowing && (
             <ActionButton
               action="unfollow"
@@ -326,12 +334,15 @@ const ActionButton = (props: {
   alert?: boolean;
   action: string;
   userId?: string;
+  href?: string;
 }) => {
   return (
     <Button
       hoverBorder
+      class={style.actionButton}
       data-action={props.action}
       label={props.label}
+      href={props.href}
       icon={props.icon}
       alert={props.alert}
       data-user-id={props.userId}

@@ -57,7 +57,7 @@
     border-radius: 22px;
     background-color: var(--gray-850);
     gap: 6px;
-    button {
+    .actionButton {
       z-index: 1111;
       border-radius: var(--radius-max);
       :global(.label) {
