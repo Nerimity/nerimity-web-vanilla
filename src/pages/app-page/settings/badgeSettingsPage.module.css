@@ -69,3 +69,6 @@
     justify-self: start;
   }
 }
+.ownedBadgesContainer {
+  margin-bottom: 18px;
+}

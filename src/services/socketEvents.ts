@@ -110,6 +110,7 @@ function onAuthenticated(payload: any) {
   userPresenceStore.setPresences(payload.presences);
   messageMentionStore.setMentions(payload.messageMentions);
   accountStore.setCurrentUser(payload.user);
+  userStore.addUser(payload.user);
   friendStore.setFriends(payload.friends);
 
   loadCustomEmojisFromServers(payload.servers);

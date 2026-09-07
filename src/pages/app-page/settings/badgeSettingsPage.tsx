@@ -88,7 +88,7 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
   const strings = getStrings();
 
   let badges: (UserBadge & {
-    acquiredAt: number;
+    acquiredAt?: number;
     enabled: () => boolean;
   })[] = [];
 
@@ -96,7 +96,7 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
 
   const rerender = () => {
     el.replaceChildren(
-      <div>
+      <div class={style.ownedBadgesContainer}>
         <SettingsBlock.Group>
           <SettingsBlock.Root>
             <SettingsBlock.Icon name="award_star" />
@@ -117,7 +117,10 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
                       <UserBadgeItem badge={b} />
                     </div>
                   }
-                  description={t`Acquired ${ph({ date: formatTimestamp(b.acquiredAt) })}`}
+                  description={
+                    !!b.acquiredAt &&
+                    t`Acquired ${ph({ date: formatTimestamp(b.acquiredAt) })}`
+                  }
                 />
                 {b.removable !== false && (
                   <Checkbox.Root checked={b.enabled()}>
@@ -136,21 +139,18 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
     const [inventory, error] = await getInventory();
     if (error) return;
 
-    badges = inventory
-      .filter((i) => i.itemType === "badge")
-      .map((b) => {
-        const badge = UserBadgeValues.find(
-          (badge) => badge.bit === parseInt(b.itemId),
-        );
-
-        return {
-          ...badge!,
-          acquiredAt: b.acquiredAt,
-          enabled: () =>
-            hasBit(accountStore.currentUser?.badges || 0, badge!.bit),
-        };
-      })
-      .sort((a, b) => b.acquiredAt - a.acquiredAt);
+    badges = UserBadgeValues.filter(
+      (b) =>
+        b.bit === UserBadges.PALESTINE.bit ||
+        inventory.find((i) => parseInt(i.itemId) === b.bit),
+    ).map((b) => {
+      const i = inventory.find((i) => parseInt(i.itemId) === b.bit);
+      return {
+        ...b,
+        acquiredAt: i?.acquiredAt,
+        enabled: () => hasBit(accountStore.currentUser?.badges || 0, b!.bit),
+      };
+    });
 
     if (!badges.length) return;
 
@@ -182,6 +182,7 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
         return;
       }
       const newBadges = res.badges;
+
       userStore.users
         .get(accountStore.currentUser?.id!)
         ?.update({ badges: newBadges });
