@@ -2,9 +2,11 @@ import { ph, t } from "@lingui/core/macro";
 
 import { Avatar } from "../../../components/avatar";
 import { Checkbox } from "../../../components/checkbox";
+import { Icon } from "../../../components/icon";
 import { alert } from "../../../components/modal";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { UserBadgeItem } from "../../../components/UserBadgeItem";
 import { getInventory, toggleBadge } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { userStore } from "../../../store/userStore";
@@ -72,24 +74,31 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
             <SettingsBlock.Icon name="award_star" />
             <SettingsBlock.Details title={strings.ownedBadges} />
           </SettingsBlock.Root>
-          {badges.map((b) => (
-            <SettingsBlock.Root clickable hideArrow data-badge-bit={b.bit}>
-              <Avatar
-                user={{ ...accountStore.currentUser!, badges: b.bit }}
-                hoverSelector={`[data-badge-bit]`}
-                size={42}
-              />
-              <SettingsBlock.Details
-                title={b.name()}
-                description={t`Acquired ${ph({ date: formatTimestamp(b.acquiredAt) })}`}
-              />
-              {b.removable !== false && (
-                <Checkbox.Root checked={b.enabled()}>
-                  <Checkbox.Box />
-                </Checkbox.Root>
-              )}
-            </SettingsBlock.Root>
-          ))}
+
+          <SettingsBlock.Root class={style.gridContainer}>
+            {badges.map((b) => (
+              <div class={style.gridItem} data-badge-bit={b.bit}>
+                <Avatar
+                  user={{ ...accountStore.currentUser!, badges: b.bit }}
+                  hoverSelector={`[data-badge-bit]`}
+                  size={42}
+                />
+                <SettingsBlock.Details
+                  title={
+                    <div class={style.badgeContainer}>
+                      <UserBadgeItem badge={b} />
+                    </div>
+                  }
+                  description={t`Acquired ${ph({ date: formatTimestamp(b.acquiredAt) })}`}
+                />
+                {b.removable !== false && (
+                  <Checkbox.Root checked={b.enabled()}>
+                    <Checkbox.Box />
+                  </Checkbox.Root>
+                )}
+              </div>
+            ))}
+          </SettingsBlock.Root>
         </SettingsBlock.Group>
       </div>,
     );
@@ -164,18 +173,37 @@ const SupportMethods = () => {
           <SettingsBlock.Icon name="favorite" />
           <SettingsBlock.Details title={t`Support Methods`} />
         </SettingsBlock.Root>
-        <SettingsBlock.Root href="https://ko-fi.com/supertiger">
-          <img class={style.supportIcon} src="/third-party/kofi.svg" alt="" />
-          <SettingsBlock.Details title="Ko-Fi" />
+        <SettingsBlock.Root class={style.gridContainer}>
+          <a
+            target="_blank"
+            href="https://ko-fi.com/supertiger"
+            class={style.gridItem}
+          >
+            <img class={style.supportIcon} src="/third-party/kofi.svg" alt="" />
+            <SettingsBlock.Details title="Ko-Fi" />
+            <Icon name="open_in_new" class={style.external} />
+          </a>
+          <a
+            target="_blank"
+            href="https://boosty.to/supertigerdev/donate"
+            class={style.gridItem}
+          >
+            <img
+              class={[style.supportIcon, style.boosty]}
+              src="/third-party/boosty.jpg"
+              alt=""
+            />
+            <SettingsBlock.Details title="Boosty" />
+            <Icon name="open_in_new" class={style.external} />
+          </a>
         </SettingsBlock.Root>
-        <SettingsBlock.Root href="https://boosty.to/supertigerdev/donate">
-          <img
-            class={[style.supportIcon, style.boosty]}
-            src="/third-party/boosty.jpg"
-            alt=""
-          />
-          <SettingsBlock.Details title="Boosty" />
+
+        {/* <SettingsBlock.Root href="">
+
         </SettingsBlock.Root>
+        <SettingsBlock.Root href="">
+
+        </SettingsBlock.Root> */}
       </SettingsBlock.Group>
     </div>
   );

@@ -26,6 +26,7 @@ export const SettingsBlock = {
     clickable?: boolean;
     hideArrow?: boolean;
     expandable?: boolean;
+    class?: string;
     href?: string;
     [key: string]: any;
   }) => {
@@ -49,13 +50,14 @@ export const SettingsBlock = {
         data-expanded={false}
         {...(external ? { target: "_blank" } : {})}
 
+        {...props}
         class={[
           style.settingsBlock,
           isClickable && style.clickable,
           expandable && style.expandable,
           "settingsBlock",
+          props.class,
         ]}
-        {...props}
       >
         {children}
         {!hideArrow && isClickable && (

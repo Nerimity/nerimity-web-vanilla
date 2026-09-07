@@ -11,6 +11,7 @@ import { Markup } from "../../../components/markup/markup";
 import { alert } from "../../../components/modal";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { updateActivity, UserActivity } from "../../../components/UserActivity";
+import { UserBadgeItem } from "../../../components/UserBadgeItem";
 import { createUserContextMenuHandler } from "../../../components/UserContextMenu";
 import { UserPresence } from "../../../components/userPresence";
 import { Dynamic } from "../../../dynamic";
@@ -406,21 +407,6 @@ const Stats = ({
   return el;
 };
 
-const BadgeItem = (props: { badge: UserBadge }) => {
-  return (
-    <div
-      data-bit={props.badge.bit}
-      style={{
-        background: props.badge.color,
-        "--text-color": props.badge.textColor || "var(--gray-800)",
-      }}
-      class={style.badgeItem}
-    >
-      {props.badge.icon && <Icon class={style.icon} name={props.badge.icon} />}
-      {props.badge.name()}
-    </div>
-  );
-};
 const Sidebar = (opts: {
   mobile?: boolean;
   userDetails?: UserDetails;
@@ -610,11 +596,11 @@ const SidebarBadges = (props: { user?: RawUser; signal: AbortSignal }) => {
       </div>
       <div class={style.badgesContainer}>
         {earnedBadges.map((b) => (
-          <BadgeItem badge={b} />
+          <UserBadgeItem badge={b} />
         ))}
         {showSeparator && <div class={style.separator} />}
         {Badges.map((b) => (
-          <BadgeItem badge={b} />
+          <UserBadgeItem badge={b} />
         ))}
       </div>
     </div>

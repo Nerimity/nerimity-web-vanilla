@@ -247,25 +247,4 @@
     border-radius: var(--radius-max);
     background-color: var(--gray-600);
   }
-  .badgeItem {
-    display: flex;
-    align-items: center;
-    padding-top: 2px;
-    padding-right: 6px;
-    padding-bottom: 2px;
-    padding-left: 6px;
-    border-radius: var(--radius-max);
-    color: var(--text-color);
-    cursor: pointer;
-    user-select: none;
-    font-size: 14px;
-    gap: 4px;
-    &:hover {
-      opacity: 0.8;
-    }
-    .icon {
-      color: var(--text-color);
-      font-size: 12px;
-    }
-  }
 }

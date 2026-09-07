@@ -9,3 +9,35 @@
     border-radius: 50%;
   }
 }
+
+.gridContainer {
+  display: grid;
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+.gridItem {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  height: 62px;
+  padding-right: 12px;
+  padding-left: 12px;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+  overflow-wrap: anywhere;
+  gap: 14px;
+  &:hover {
+    background-color: var(--gray-800);
+    text-decoration: none;
+  }
+  .external {
+    color: var(--gray-300);
+    font-size: 18px;
+  }
+}
+.badgeContainer {
+  justify-self: start;
+}
