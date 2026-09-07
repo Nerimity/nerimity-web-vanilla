@@ -40,8 +40,9 @@
   overflow-wrap: anywhere;
   gap: 14px;
   .badgeContainer {
+    display: flex;
+    justify-content: center;
     pointer-events: none;
-    justify-self: center;
   }
 }
 .gridItem {
@@ -65,6 +66,7 @@
     font-size: 18px;
   }
   .badgeContainer {
+    display: flex;
     pointer-events: none;
     justify-self: start;
   }
