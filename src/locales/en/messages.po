@@ -198,13 +198,13 @@ msgstr "View Profile"
 #: src/components/UserContextMenu.tsx:127
 #: src/components/miniProfile.tsx:303
 #: src/components/miniProfile.tsx:327
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:240
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
 #: src/components/miniProfile.tsx:303
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:240
 msgid "Message"
 msgstr "Message"
 
@@ -323,23 +323,23 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/inboxDrawer.tsx:317
+#: src/components/inboxDrawer.tsx:321
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/inboxDrawer.tsx:320
+#: src/components/inboxDrawer.tsx:324
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/inboxDrawer.tsx:323
+#: src/components/inboxDrawer.tsx:327
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/inboxDrawer.tsx:390
+#: src/components/inboxDrawer.tsx:394
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:396
+#: src/components/inboxDrawer.tsx:400
 msgid "Friends"
 msgstr "Friends"
 
@@ -481,36 +481,36 @@ msgstr "Mentions everyone."
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:152
+#: src/components/message-pane/messageItem.tsx:156
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
 
-#: src/components/message-pane/messageItem.tsx:172
+#: src/components/message-pane/messageItem.tsx:176
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:187
+#: src/components/message-pane/messageItem.tsx:191
 msgid "Pinned Message"
 msgstr "Pinned Message"
 
-#: src/components/message-pane/messageItem.tsx:196
+#: src/components/message-pane/messageItem.tsx:200
 msgid "Webhook"
 msgstr "Webhook"
 
-#: src/components/message-pane/messageItem.tsx:198
-#: src/utils/UserBadgeFlag.ts:298
+#: src/components/message-pane/messageItem.tsx:202
+#: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
 
-#: src/components/message-pane/messageItem.tsx:199
+#: src/components/message-pane/messageItem.tsx:203
 msgid "Owner"
 msgstr "Owner"
 
-#: src/components/message-pane/messageItem.tsx:207
+#: src/components/message-pane/messageItem.tsx:211
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:351
+#: src/components/message-pane/messageItem.tsx:355
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -536,18 +536,18 @@ msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
 #: src/components/miniProfile.tsx:249
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:152
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:153
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
 #: src/components/miniProfile.tsx:258
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:363
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:364
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
 #: src/components/miniProfile.tsx:281
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:386
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:387
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
@@ -651,51 +651,51 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:176
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:177
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:181
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:182
 msgid "Accept Request"
 msgstr "Accept Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:187
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:188
 msgid "Remove Request"
 msgstr "Remove Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:194
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:195
 msgid "Remove Friend"
 msgstr "Remove Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:197
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:198
 msgid "Add Friend"
 msgstr "Add Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:220
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:221
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:230
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:231
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:467
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:453
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:490
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:476
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:490
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:476
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:565
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:551
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:609
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:595
 #: src/pages/app-page/settings/Settings.ts:67
 msgid "Badges"
 msgstr "Badges"
@@ -875,31 +875,35 @@ msgstr "Permanently delete your account and all associated data."
 msgid "Email Sent. Please check your email to reset your password."
 msgstr "Email Sent. Please check your email to reset your password."
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:19
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:26
 msgid "Owned Badges"
 msgstr "Owned Badges"
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:31
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:57
 msgid "Support Me"
 msgstr "Support Me"
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:32
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:58
 msgid "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
 msgstr "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:82
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:120
 msgid "Acquired {date}"
 msgstr "Acquired {date}"
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:134
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:173
 msgid "You cannot modify this badge."
 msgstr "You cannot modify this badge."
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:52
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:202
+msgid "Support Methods"
+msgstr "Support Methods"
+
+#: src/pages/app-page/settings/createSettingsRoute.tsx:53
 msgid "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 
-#: src/pages/app-page/settings/createSettingsRoute.tsx:72
+#: src/pages/app-page/settings/createSettingsRoute.tsx:73
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
@@ -1013,157 +1017,157 @@ msgstr "Away From Keyboard"
 msgid "Do Not Disturb"
 msgstr "Do Not Disturb"
 
-#: src/utils/UserBadgeFlag.ts:57
+#: src/utils/UserBadgeFlag.ts:106
 msgid "Avatar Border by {author} on {platform}, edited by {editor}"
 msgstr "Avatar Border by {author} on {platform}, edited by {editor}"
 
-#: src/utils/UserBadgeFlag.ts:59
+#: src/utils/UserBadgeFlag.ts:108
 msgid "Avatar Border by {author} on {platform}"
 msgstr "Avatar Border by {author} on {platform}"
 
-#: src/utils/UserBadgeFlag.ts:79
-#: src/utils/UserBadgeFlag.ts:88
-#: src/utils/UserBadgeFlag.ts:97
+#: src/utils/UserBadgeFlag.ts:128
+#: src/utils/UserBadgeFlag.ts:146
+#: src/utils/UserBadgeFlag.ts:163
 msgid "Deer"
 msgstr "Deer"
 
-#: src/utils/UserBadgeFlag.ts:84
+#: src/utils/UserBadgeFlag.ts:133
 msgid "Kawaii Pink Deer"
 msgstr "Kawaii Pink Deer"
 
-#: src/utils/UserBadgeFlag.ts:93
+#: src/utils/UserBadgeFlag.ts:151
 msgid "Emo Deer Antlers"
 msgstr "Emo Deer Antlers"
 
-#: src/utils/UserBadgeFlag.ts:102
+#: src/utils/UserBadgeFlag.ts:168
 msgid "Cute Deer Antlers"
 msgstr "Cute Deer Antlers"
 
-#: src/utils/UserBadgeFlag.ts:106
-#: src/utils/UserBadgeFlag.ts:114
+#: src/utils/UserBadgeFlag.ts:180
+#: src/utils/UserBadgeFlag.ts:197
 msgid "Goat"
 msgstr "Goat"
 
-#: src/utils/UserBadgeFlag.ts:110
+#: src/utils/UserBadgeFlag.ts:184
 msgid "Goat Horns"
 msgstr "Goat Horns"
 
-#: src/utils/UserBadgeFlag.ts:119
+#: src/utils/UserBadgeFlag.ts:202
 msgid "Kawaii Goat Ears"
 msgstr "Kawaii Goat Ears"
 
-#: src/utils/UserBadgeFlag.ts:123
+#: src/utils/UserBadgeFlag.ts:215
 msgid "Wolf"
 msgstr "Wolf"
 
-#: src/utils/UserBadgeFlag.ts:128
+#: src/utils/UserBadgeFlag.ts:220
 msgid "Wolfy Ears"
 msgstr "Wolfy Ears"
 
-#: src/utils/UserBadgeFlag.ts:132
-#: src/utils/UserBadgeFlag.ts:141
+#: src/utils/UserBadgeFlag.ts:232
+#: src/utils/UserBadgeFlag.ts:257
 msgid "Doggy"
 msgstr "Doggy"
 
-#: src/utils/UserBadgeFlag.ts:137
+#: src/utils/UserBadgeFlag.ts:237
 msgid "Shiba Inu Doggy"
 msgstr "Shiba Inu Doggy"
 
-#: src/utils/UserBadgeFlag.ts:145
+#: src/utils/UserBadgeFlag.ts:261
 msgid "Good Puppy Ears"
 msgstr "Good Puppy Ears"
 
-#: src/utils/UserBadgeFlag.ts:149
-#: src/utils/UserBadgeFlag.ts:158
+#: src/utils/UserBadgeFlag.ts:273
+#: src/utils/UserBadgeFlag.ts:290
 msgid "Bunny"
 msgstr "Bunny"
 
-#: src/utils/UserBadgeFlag.ts:154
+#: src/utils/UserBadgeFlag.ts:278
 msgid "Maid Bunny Ears"
 msgstr "Maid Bunny Ears"
 
-#: src/utils/UserBadgeFlag.ts:163
+#: src/utils/UserBadgeFlag.ts:295
 msgid "Floppy Bunny Ears"
 msgstr "Floppy Bunny Ears"
 
-#: src/utils/UserBadgeFlag.ts:167
-#: src/utils/UserBadgeFlag.ts:176
-#: src/utils/UserBadgeFlag.ts:185
-#: src/utils/UserBadgeFlag.ts:194
+#: src/utils/UserBadgeFlag.ts:307
+#: src/utils/UserBadgeFlag.ts:324
+#: src/utils/UserBadgeFlag.ts:341
+#: src/utils/UserBadgeFlag.ts:358
 msgid "Kitty"
 msgstr "Kitty"
 
-#: src/utils/UserBadgeFlag.ts:172
+#: src/utils/UserBadgeFlag.ts:312
 msgid "Kitty Maid Ears"
 msgstr "Kitty Maid Ears"
 
-#: src/utils/UserBadgeFlag.ts:181
+#: src/utils/UserBadgeFlag.ts:329
 msgid "Chesire Kitty Ears"
 msgstr "Chesire Kitty Ears"
 
-#: src/utils/UserBadgeFlag.ts:189
+#: src/utils/UserBadgeFlag.ts:345
 msgid "Arctic Kitty Ears"
 msgstr "Arctic Kitty Ears"
 
-#: src/utils/UserBadgeFlag.ts:198
+#: src/utils/UserBadgeFlag.ts:362
 msgid "Calico Kitty Ears"
 msgstr "Calico Kitty Ears"
 
-#: src/utils/UserBadgeFlag.ts:203
-#: src/utils/UserBadgeFlag.ts:212
+#: src/utils/UserBadgeFlag.ts:375
+#: src/utils/UserBadgeFlag.ts:392
 msgid "Foxy"
 msgstr "Foxy"
 
-#: src/utils/UserBadgeFlag.ts:207
+#: src/utils/UserBadgeFlag.ts:379
 msgid "Golden Foxy Ears"
 msgstr "Golden Foxy Ears"
 
-#: src/utils/UserBadgeFlag.ts:216
+#: src/utils/UserBadgeFlag.ts:396
 msgid "Brown Foxy Ears"
 msgstr "Brown Foxy Ears"
 
-#: src/utils/UserBadgeFlag.ts:221
+#: src/utils/UserBadgeFlag.ts:411
 msgid "Founder"
 msgstr "Founder"
 
-#: src/utils/UserBadgeFlag.ts:223
+#: src/utils/UserBadgeFlag.ts:413
 msgid "Creator of Nerimity"
 msgstr "Creator of Nerimity"
 
-#: src/utils/UserBadgeFlag.ts:245
+#: src/utils/UserBadgeFlag.ts:443
 msgid "Moderator"
 msgstr "Moderator"
 
-#: src/utils/UserBadgeFlag.ts:247
+#: src/utils/UserBadgeFlag.ts:445
 msgid "Moderator of Nerimity"
 msgstr "Moderator of Nerimity"
 
-#: src/utils/UserBadgeFlag.ts:257
+#: src/utils/UserBadgeFlag.ts:459
 msgid "Emo Supporter"
 msgstr "Emo Supporter"
 
-#: src/utils/UserBadgeFlag.ts:258
-#: src/utils/UserBadgeFlag.ts:269
+#: src/utils/UserBadgeFlag.ts:460
+#: src/utils/UserBadgeFlag.ts:475
 msgid "Supported this project by donating money"
 msgstr "Supported this project by donating money"
 
-#: src/utils/UserBadgeFlag.ts:268
+#: src/utils/UserBadgeFlag.ts:474
 msgid "Supporter"
 msgstr "Supporter"
 
-#: src/utils/UserBadgeFlag.ts:279
+#: src/utils/UserBadgeFlag.ts:489
 msgid "Contributor"
 msgstr "Contributor"
 
-#: src/utils/UserBadgeFlag.ts:280
+#: src/utils/UserBadgeFlag.ts:490
 msgid "Helped with this project in some way"
 msgstr "Helped with this project in some way"
 
-#: src/utils/UserBadgeFlag.ts:288
+#: src/utils/UserBadgeFlag.ts:503
 msgid "Palestine"
 msgstr "Palestine"
 
-#: src/utils/UserBadgeFlag.ts:299
+#: src/utils/UserBadgeFlag.ts:519
 msgid "This user is a bot"
 msgstr "This user is a bot"
 

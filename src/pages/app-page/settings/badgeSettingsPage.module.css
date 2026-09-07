@@ -15,7 +15,34 @@
   overflow: hidden;
   width: 100%;
   padding: 0;
+  gap: 0;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.previewGridContainer {
+  display: grid;
+  width: 100%;
+  padding: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  gap: 42px;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+}
+.previewGridItem {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  min-width: 0;
+
+  color: var(--text-color);
+  user-select: none;
+  text-align: center;
+  overflow-wrap: anywhere;
+  gap: 14px;
+  .badgeContainer {
+    pointer-events: none;
+    justify-self: center;
+  }
 }
 .gridItem {
   display: flex;
@@ -37,7 +64,8 @@
     color: var(--gray-300);
     font-size: 18px;
   }
-}
-.badgeContainer {
-  justify-self: start;
+  .badgeContainer {
+    pointer-events: none;
+    justify-self: start;
+  }
 }

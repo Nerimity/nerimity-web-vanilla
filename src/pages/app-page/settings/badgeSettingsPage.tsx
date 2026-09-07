@@ -3,6 +3,7 @@ import { ph, t } from "@lingui/core/macro";
 import { Avatar } from "../../../components/avatar";
 import { Checkbox } from "../../../components/checkbox";
 import { Icon } from "../../../components/icon";
+import { Markup } from "../../../components/markup/markup";
 import { alert } from "../../../components/modal";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -12,7 +13,11 @@ import { accountStore } from "../../../store/accountStore";
 import { userStore } from "../../../store/userStore";
 import { hasBit } from "../../../utils/bitwise";
 import { formatTimestamp } from "../../../utils/date";
-import { UserBadgeValues, type UserBadge } from "../../../utils/UserBadgeFlag";
+import {
+  UserBadges,
+  UserBadgeValues,
+  type UserBadge,
+} from "../../../utils/UserBadgeFlag";
 import { type SettingsContext } from "./Settings";
 
 import style from "./badgeSettingsPage.module.css";
@@ -20,6 +25,25 @@ import style from "./badgeSettingsPage.module.css";
 const getStrings = () => ({
   ownedBadges: t`Owned Badges`,
 });
+
+const availableBadges = [
+  UserBadges.DEER_EARS_WHITE,
+  UserBadges.DEER_EARS_HORNS_DARK,
+  UserBadges.DEER_EARS_HORNS,
+  UserBadges.GOAT_HORNS,
+  UserBadges.GOAT_EARS_WHITE,
+  UserBadges.WOLF_EARS,
+  UserBadges.DOG_SHIBA,
+  UserBadges.DOG_EARS_BROWN,
+  UserBadges.BUNNY_EARS_MAID,
+  UserBadges.BUNNY_EARS_BLACK,
+  UserBadges.CAT_EARS_PURPLE,
+  UserBadges.CAT_EARS_BLUE,
+  UserBadges.CAT_EARS_WHITE,
+  UserBadges.CAT_EARS_MAID,
+  UserBadges.FOX_EARS_GOLD,
+  UserBadges.FOX_EARS_BROWN,
+];
 
 const badgeSettingsPage = (context: SettingsContext) => {
   const ac = new AbortController();
@@ -35,6 +59,10 @@ const badgeSettingsPage = (context: SettingsContext) => {
       />
       <OwnedBadges signal={signal} />
       <SupportMethods />
+
+      <BadgePreview price={9.99} badges={[UserBadges.SUPPORTER]} />
+      <BadgePreview price={4.99} badges={availableBadges} />
+      <BadgePreview price={0} badges={[UserBadges.PALESTINE]} />
     </div>
   ) as HTMLDivElement;
 
@@ -197,13 +225,38 @@ const SupportMethods = () => {
             <Icon name="open_in_new" class={style.external} />
           </a>
         </SettingsBlock.Root>
+      </SettingsBlock.Group>
+    </div>
+  );
+};
 
-        {/* <SettingsBlock.Root href="">
-
+const BadgePreview = (props: { price: number; badges: UserBadge[] }) => {
+  return (
+    <div>
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="favorite" />
+          <SettingsBlock.Details title={`$${props.price}`} />
         </SettingsBlock.Root>
-        <SettingsBlock.Root href="">
-
-        </SettingsBlock.Root> */}
+        <SettingsBlock.Root class={style.previewGridContainer}>
+          {props.badges.map((b) => (
+            <div class={style.previewGridItem} data-badge-bit={b.bit}>
+              <Avatar
+                user={{ ...accountStore.currentUser!, badges: b.bit }}
+                hoverSelector={`[data-badge-bit]`}
+                size={72}
+              />
+              <SettingsBlock.Details
+                title={
+                  <div class={style.badgeContainer}>
+                    <UserBadgeItem badge={b} />
+                  </div>
+                }
+                description={<Markup text={b.description()} />}
+              />
+            </div>
+          ))}
+        </SettingsBlock.Root>
       </SettingsBlock.Group>
     </div>
   );

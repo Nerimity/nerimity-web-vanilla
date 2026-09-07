@@ -83,7 +83,7 @@ export const SettingsBlock = {
       />
     );
   },
-  Details: (props: { title: any; description?: string }) => {
+  Details: (props: { title: any; description?: any }) => {
     return (
       <div class={style.details}>
         <div>{props.title}</div>
