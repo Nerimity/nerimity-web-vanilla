@@ -45,9 +45,9 @@
     "@lingui/conf": "^6.6.0",
     "@lingui/react": "^6.6.0",
     "@lingui/vite-plugin": "^6.6.0",
-    "@rolldown/plugin-babel": "^0.2.3",
-    "oxfmt": "^0.66.0",
-    "oxlint": "^1.81.0",
+    "@rolldown/plugin-babel": "^0.2.4",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
     "typescript": "~7.0.2",
     "vite": "^8.2.2"
   }

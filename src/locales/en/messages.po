@@ -915,54 +915,70 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:10
+#: src/pages/app-page/settings/privacySettingsPage.tsx:14
 msgid "Last Online Time"
 msgstr "Last Online Time"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:11
+#: src/pages/app-page/settings/privacySettingsPage.tsx:15
 msgid "Direct Message"
 msgstr "Direct Message"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:12
+#: src/pages/app-page/settings/privacySettingsPage.tsx:16
 msgid "Friend Requests"
 msgstr "Friend Requests"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:13
+#: src/pages/app-page/settings/privacySettingsPage.tsx:17
 msgid "Profile Options"
 msgstr "Profile Options"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:27
+#: src/pages/app-page/settings/privacySettingsPage.tsx:35
 msgid "Set who can see your last online time."
 msgstr "Set who can see your last online time."
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:28
-#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+#: src/pages/app-page/settings/privacySettingsPage.tsx:36
+#: src/pages/app-page/settings/privacySettingsPage.tsx:53
 msgid "Nobody"
 msgstr "Nobody"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:28
-#: src/pages/app-page/settings/privacySettingsPage.tsx:35
+#: src/pages/app-page/settings/privacySettingsPage.tsx:36
+#: src/pages/app-page/settings/privacySettingsPage.tsx:45
 msgid "Friends Only"
 msgstr "Friends Only"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:28
-#: src/pages/app-page/settings/privacySettingsPage.tsx:35
+#: src/pages/app-page/settings/privacySettingsPage.tsx:36
+#: src/pages/app-page/settings/privacySettingsPage.tsx:45
 msgid "Friends and Servers"
 msgstr "Friends and Servers"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:34
-#: src/pages/app-page/settings/privacySettingsPage.tsx:41
+#: src/pages/app-page/settings/privacySettingsPage.tsx:44
+#: src/pages/app-page/settings/privacySettingsPage.tsx:52
 msgid "Set who can send you friend requests."
 msgstr "Set who can send you friend requests."
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:35
-#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+#: src/pages/app-page/settings/privacySettingsPage.tsx:45
+#: src/pages/app-page/settings/privacySettingsPage.tsx:53
 msgid "Anybody"
 msgstr "Anybody"
 
-#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+#: src/pages/app-page/settings/privacySettingsPage.tsx:53
 msgid "Servers Only"
 msgstr "Servers Only"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:69
+msgid "Hide Followers"
+msgstr "Hide Followers"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:70
+msgid "Hide your followers from your profile."
+msgstr "Hide your followers from your profile."
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:84
+msgid "Hide Following"
+msgstr "Hide Following"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:85
+msgid "Hide users you are following from your profile."
+msgstr "Hide users you are following from your profile."
 
 #: src/pages/app-page/settings/profileSettingsPage.tsx:36
 msgid "Clan Tag"
@@ -1038,23 +1054,23 @@ msgstr "Destroy"
 msgid "Last seen {date}"
 msgstr "Last seen {date}"
 
-#: src/store/accountStore.ts:127
+#: src/store/accountStore.ts:158
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:131
+#: src/store/accountStore.ts:162
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:135
+#: src/store/accountStore.ts:166
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:138
+#: src/store/accountStore.ts:169
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:140
+#: src/store/accountStore.ts:171
 msgid "Connected!"
 msgstr "Connected!"
 
