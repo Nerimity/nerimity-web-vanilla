@@ -81,8 +81,10 @@ const Header = (props: {
 }) => {
   return (
     <div class={style.header} data-alert={props.alert} data-warn={props.warn}>
-      {props.icon && <Icon class={style.icon} name={props.icon} />}
-      <span class={style.label}>{props.label}</span>
+      <div class={style.headerDetails}>
+        {props.icon && <Icon class={style.icon} name={props.icon} />}
+        <span class={style.label}>{props.label}</span>
+      </div>
       <Button class={style.closeButton} icon="close" hoverBorder alert />
     </div>
   );
