@@ -15,11 +15,42 @@ import { User } from "./userStore";
 
 export const accountStore = createAccountStore();
 
+export const LastOnlineStatus = {
+  HIDDEN: 0,
+  FRIENDS: 1,
+  FRIENDS_AND_SERVERS: 2,
+} as const;
+
+export type LastOnlineStatus =
+  (typeof LastOnlineStatus)[keyof typeof LastOnlineStatus];
+
+export const DmStatus = {
+  OPEN: 0,
+  FRIENDS_AND_SERVERS: 1,
+  FRIENDS: 2,
+} as const;
+
+export type DmStatus = (typeof DmStatus)[keyof typeof DmStatus];
+
+export const FriendRequestStatus = {
+  OPEN: 0,
+  SERVERS: 1,
+  CLOSED: 2,
+} as const;
+
+export type FriendRequestStatus =
+  (typeof FriendRequestStatus)[keyof typeof FriendRequestStatus];
+
 export type CurrentUser = User & {
   orderedServerIds: string[];
   serverFolders: RawServerFolder[];
   notices: RawNotice[];
   email?: string;
+  dmStatus: DmStatus;
+  friendRequestStatus: FriendRequestStatus;
+  lastOnlineStatus?: number;
+  hideFollowers: boolean;
+  hideFollowing: boolean;
 };
 
 function createAccountStore() {

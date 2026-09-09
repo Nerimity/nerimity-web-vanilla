@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import * as accountSettingsPage from "./accountSettingsPage";
 import * as badgeSettingsPage from "./badgeSettingsPage";
+import * as privacySettingsPage from "./privacySettingsPage";
 import * as profileSettingsPage from "./profileSettingsPage";
 import * as sessionsSettingsPage from "./sessionsSettingsPage";
 
@@ -67,5 +68,12 @@ export const Settings: Setting[] = [
     name: () => t`Badges`,
     path: "/badges",
     load: badgeSettingsPage,
+  },
+  {
+    id: "privacy",
+    icon: "shield",
+    name: () => t`Privacy`,
+    path: "/privacy",
+    load: privacySettingsPage,
   },
 ];

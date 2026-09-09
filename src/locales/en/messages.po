@@ -198,13 +198,13 @@ msgstr "View Profile"
 #: src/components/UserContextMenu.tsx:127
 #: src/components/miniProfile.tsx:303
 #: src/components/miniProfile.tsx:327
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:240
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:248
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
 #: src/components/miniProfile.tsx:303
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:240
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:248
 msgid "Message"
 msgstr "Message"
 
@@ -232,7 +232,7 @@ msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:320
-#: src/pages/app-page/settings/Settings.ts:53
+#: src/pages/app-page/settings/Settings.ts:54
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
 msgstr "Profile"
@@ -542,12 +542,12 @@ msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
 #: src/components/miniProfile.tsx:258
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:364
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:375
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
 #: src/components/miniProfile.tsx:281
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:387
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:398
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
@@ -556,7 +556,7 @@ msgid "Full Profile"
 msgstr "Full Profile"
 
 #: src/components/miniProfile.tsx:333
-#: src/components/settings/createSettingsDrawer.tsx:14
+#: src/components/settings/createSettingsDrawer.tsx:15
 msgid "Settings"
 msgstr "Settings"
 
@@ -600,7 +600,7 @@ msgstr "Don't save"
 msgid "Save"
 msgstr "Save"
 
-#: src/components/modal.tsx:745
+#: src/components/modal.tsx:747
 msgid "Understood"
 msgstr "Understood"
 
@@ -672,31 +672,35 @@ msgid "Add Friend"
 msgstr "Add Friend"
 
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:221
+msgid "Edit Profile"
+msgstr "Edit Profile"
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:229
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:231
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:453
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:464
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:476
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:476
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:551
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:562
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:595
-#: src/pages/app-page/settings/Settings.ts:67
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:606
+#: src/pages/app-page/settings/Settings.ts:68
 msgid "Badges"
 msgstr "Badges"
 
@@ -807,13 +811,17 @@ msgstr "Also delete my posts and messages"
 msgid "Your posts and messages may take weeks to delete."
 msgstr "Your posts and messages may take weeks to delete."
 
-#: src/pages/app-page/settings/Settings.ts:46
+#: src/pages/app-page/settings/Settings.ts:47
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/app-page/settings/Settings.ts:60
+#: src/pages/app-page/settings/Settings.ts:61
 msgid "Sessions"
 msgstr "Sessions"
+
+#: src/pages/app-page/settings/Settings.ts:75
+msgid "Privacy"
+msgstr "Privacy"
 
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
 msgid "Updating..."
@@ -887,7 +895,7 @@ msgstr "Support Me"
 msgid "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
 msgstr "Support my project by donating money. Badges are added manually. Please create a ticket after donating."
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:120
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:122
 msgid "Acquired {date}"
 msgstr "Acquired {date}"
 
@@ -895,7 +903,7 @@ msgstr "Acquired {date}"
 msgid "You cannot modify this badge."
 msgstr "You cannot modify this badge."
 
-#: src/pages/app-page/settings/badgeSettingsPage.tsx:202
+#: src/pages/app-page/settings/badgeSettingsPage.tsx:203
 msgid "Support Methods"
 msgstr "Support Methods"
 
@@ -906,6 +914,55 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 #: src/pages/app-page/settings/createSettingsRoute.tsx:73
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:10
+msgid "Last Online Time"
+msgstr "Last Online Time"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:11
+msgid "Direct Message"
+msgstr "Direct Message"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:12
+msgid "Friend Requests"
+msgstr "Friend Requests"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:13
+msgid "Profile Options"
+msgstr "Profile Options"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:27
+msgid "Set who can see your last online time."
+msgstr "Set who can see your last online time."
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:28
+#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+msgid "Nobody"
+msgstr "Nobody"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:28
+#: src/pages/app-page/settings/privacySettingsPage.tsx:35
+msgid "Friends Only"
+msgstr "Friends Only"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:28
+#: src/pages/app-page/settings/privacySettingsPage.tsx:35
+msgid "Friends and Servers"
+msgstr "Friends and Servers"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:34
+#: src/pages/app-page/settings/privacySettingsPage.tsx:41
+msgid "Set who can send you friend requests."
+msgstr "Set who can send you friend requests."
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:35
+#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+msgid "Anybody"
+msgstr "Anybody"
+
+#: src/pages/app-page/settings/privacySettingsPage.tsx:42
+msgid "Servers Only"
+msgstr "Servers Only"
 
 #: src/pages/app-page/settings/profileSettingsPage.tsx:36
 msgid "Clan Tag"

@@ -5,6 +5,7 @@ import {
   LastOnlineStatus,
   FriendStatus,
 } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore, type CurrentUser } from "./accountStore";
 import { friendStore } from "./friendStore";
 
@@ -55,6 +56,8 @@ export class User {
     this.banner = updated.banner ?? this.banner;
     this.lastOnlineAt = updated.lastOnlineAt ?? this.lastOnlineAt;
     this.lastOnlineStatus = updated.lastOnlineStatus ?? this.lastOnlineStatus;
+
+    storeEmitter.emit("user:update", { user: this });
   }
 
   updateLastOnlineAt() {

@@ -1,0 +1,41 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.radioboxContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  gap: 8px;
+  &:hover {
+    .box {
+      outline: solid 1px var(--gray-500);
+      background: var(--gray-300);
+      .icon {
+        opacity: 0.2;
+      }
+    }
+  }
+
+  &[data-checked="true"] {
+    .box {
+      outline: solid 1px var(--gray-400);
+      background: var(--primary-color);
+    }
+  }
+  .box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 4px;
+    border: solid 2px var(--gray-800);
+    border-radius: var(--radius-max);
+    outline: solid 1px var(--gray-600);
+    background: var(--gray-800);
+  }
+}

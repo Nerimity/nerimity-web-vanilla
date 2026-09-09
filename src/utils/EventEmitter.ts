@@ -4,6 +4,7 @@ import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
 import type { UserPresence } from "../store/userPresenceStore";
+import type { User } from "../store/userStore";
 import type { RawBotCommand, RawMessage, RawServer } from "../Types";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
@@ -16,6 +17,7 @@ type StoreEvents = {
   "navigate:channelId": string | null;
   "navigate:serverId": string | null;
   "user:presence_update": { userId: string; presence?: UserPresence };
+  "user:update": { user: User };
   "message:created": Message;
   "message:created_raw": RawMessage;
   "message:deleted": { id: string; channelId: string };
