@@ -35,6 +35,7 @@ import {
   loadCustomEmojisFromServers,
 } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
+import { handleMessageNotifications } from "../utils/notifications";
 import { socket } from "./socket";
 
 const handlers: Record<string, (payload: any) => void> = {
@@ -152,6 +153,9 @@ function onUserUpdated(payload: { userId: string; updated: Partial<RawUser> }) {
 }
 
 function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
+  if (payload.message.channelId !== channelStore.currentChannelId) {
+    handleMessageNotifications(payload.message);
+  }
   storeEmitter.emit("message:created_raw", payload.message);
   if (payload.socketId && payload.socketId === socket.socketId) return;
   const message = payload.message;

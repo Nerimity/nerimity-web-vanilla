@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import type { RawUserActivity, RawUserPresence } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
+import { accountStore } from "./accountStore";
 
 export const UserPresenceType = {
   OFFLINE: 0,
@@ -82,5 +83,11 @@ function createPresenceStore() {
     });
   };
 
-  return { presences, setPresences, updatePresence };
+  const getCurrentUserPresence = () => {
+    const userId = accountStore.currentUser?.id;
+    if (!userId) return;
+    return presences.get(userId);
+  };
+
+  return { presences, setPresences, updatePresence, getCurrentUserPresence };
 }

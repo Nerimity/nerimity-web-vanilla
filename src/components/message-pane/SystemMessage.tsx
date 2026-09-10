@@ -19,7 +19,7 @@ interface MessageTypeDetails {
   Message: (props: { username: any; bot?: boolean }) => any;
 }
 
-const MessageTypes: (MessageTypeDetails | null)[] = [
+export const MessageTypes: (MessageTypeDetails | null)[] = [
   null,
   {
     color: "var(--success-color)",

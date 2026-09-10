@@ -104,5 +104,11 @@ function createUserStore() {
     return newUser;
   };
 
-  return { users, addUser };
+  const getCurrentUser = () => {
+    const userId = accountStore.currentUser?.id;
+    if (!userId) return;
+    return users.get(userId);
+  };
+
+  return { users, addUser, getCurrentUser };
 }
