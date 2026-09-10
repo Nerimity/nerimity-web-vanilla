@@ -61,50 +61,51 @@ export const isMentioned = (opts: {
   const { message, member, server } = opts;
 
   const currentUserId = accountStore.currentUser?.id;
-  const currentMember = server && serverMemberStore.currentMember(server.id);
+  if (!currentUserId) return false;
 
+  const currentMember = server
+    ? serverMemberStore.currentMember(server.id)
+    : null;
   const authorPerms =
     server && member
       ? serverMemberStore.createPermChecker(member.serverId, member.userId)
       : null;
 
-  const isEveryoneMentioned = message.content?.includes("[@:e]");
-  if (isEveryoneMentioned) {
+  if (message.content?.includes("[@:e]")) {
     if (!member) return true;
-    const hasEveryonePerm = authorPerms?.hasPermission(
-      RolePermissionFlag.mentionEveryone.bit,
-    );
-    if (hasEveryonePerm) return true;
-  }
-
-  const isQuoted = message.quotedMessages?.find(
-    (m) => m.createdBy?.id === currentUserId,
-  );
-  if (isQuoted) return true;
-
-  const isReplied =
-    message.mentionReplies &&
-    message.replyMessages?.find(
-      (m) => m.replyToMessage?.createdBy?.id === currentUserId,
-    );
-  if (isReplied) return true;
-
-  if (currentMember && member) {
-    const roleMentioned = message.roleMentions.find(
-      (r) =>
-        r.id !== server?.defaultRoleId && currentMember.roleIds.includes(r.id),
-    );
-    if (roleMentioned) {
-      const hasMentionRolePerms = authorPerms?.hasPermission(
-        RolePermissionFlag.mentionRoles.bit,
-      );
-      if (hasMentionRolePerms) return true;
+    if (authorPerms?.hasPermission(RolePermissionFlag.mentionEveryone.bit)) {
+      return true;
     }
   }
 
-  const isMentioned = message.mentions?.find((u) => u.id === currentUserId);
+  if (
+    message.quotedMessages?.some((m) => m.createdBy?.id === currentUserId) ||
+    (message.mentionReplies &&
+      message.replyMessages?.some(
+        (m) => m.replyToMessage?.createdBy?.id === currentUserId,
+      ))
+  ) {
+    return true;
+  }
 
-  return !!isMentioned;
+  if (currentMember && member && message.roleMentions?.length) {
+    const hasMentionRolePerms = authorPerms?.hasPermission(
+      RolePermissionFlag.mentionRoles.bit,
+    );
+
+    if (
+      hasMentionRolePerms &&
+      message.roleMentions.some(
+        (r) =>
+          r.id !== server?.defaultRoleId &&
+          currentMember.roleIds.includes(r.id),
+      )
+    ) {
+      return true;
+    }
+  }
+
+  return !!message.mentions?.some((u) => u.id === currentUserId);
 };
 
 function randomIndex(arrLength: number) {
