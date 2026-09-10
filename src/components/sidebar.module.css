@@ -51,6 +51,7 @@
   }
   .notifyPill {
     position: absolute;
+    z-index: 1111;
     top: 6px;
     right: 6px;
   }

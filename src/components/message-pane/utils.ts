@@ -9,7 +9,7 @@ import {
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { Server, serverStore } from "../../store/serverStore";
 import { userStore, type User } from "../../store/userStore";
-import { MessageType } from "../../Types";
+import { MessageType, type RawMessage } from "../../Types";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { randomKaomoji } from "../../utils/kaomoji";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
@@ -54,7 +54,7 @@ export const isNewUser = (user?: User) => {
 };
 
 export const isMentioned = (opts: {
-  message: Message;
+  message: Message | RawMessage;
   server?: Server;
   member?: ServerMember;
 }) => {
@@ -82,9 +82,11 @@ export const isMentioned = (opts: {
   );
   if (isQuoted) return true;
 
-  const isReplied = message.replyMessages?.find(
-    (m) => m.replyToMessage?.createdBy?.id === currentUserId,
-  );
+  const isReplied =
+    message.mentionReplies &&
+    message.replyMessages?.find(
+      (m) => m.replyToMessage?.createdBy?.id === currentUserId,
+    );
   if (isReplied) return true;
 
   if (currentMember && member) {

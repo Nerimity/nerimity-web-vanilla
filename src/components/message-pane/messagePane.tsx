@@ -10,6 +10,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
+import { handleMessageNotifications } from "../../utils/notifications";
 import {
   createIntersectionObserver,
   createResizeObserver,
@@ -337,6 +338,16 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     signal,
     passive: true,
   });
+
+  storeEmitter.on(
+    "message:created_raw",
+    (message) => {
+      if (message.channelId !== channelStore.currentChannelId) return;
+      if (isFocusedAtBottom()) return;
+      handleMessageNotifications(message);
+    },
+    signal,
+  );
 
   storeEmitter.on(
     "message:created",

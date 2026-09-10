@@ -12,6 +12,7 @@ interface LocalStorageData {
     createdAt: number;
   }[];
   recentEmojis: RecentEmoji[];
+  desktopNotification: boolean;
 }
 
 export const getLocalItem = <T extends keyof LocalStorageData>(

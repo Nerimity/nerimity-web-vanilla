@@ -209,6 +209,7 @@ export interface RawMessage {
   attachments?: Attachment[];
   embed?: RawMessageEmbed;
   htmlEmbed?: HtmlNode | HtmlNode[];
+  mentionReplies?: boolean;
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   reactions?: RawMessageReaction[];

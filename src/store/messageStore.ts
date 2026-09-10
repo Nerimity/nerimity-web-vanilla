@@ -63,6 +63,7 @@ export class Message {
   attachmentProperty?: AttachmentProperty;
   attachments: LocalAttachment[];
   embed?: LocalEmbed;
+  mentionReplies?: boolean;
   replyMessages?: RawReplyMessage[];
   type: MessageType;
   editedAt?: number;
@@ -94,6 +95,7 @@ export class Message {
     this.silent = data.silent;
     this.webhookId = data.webhookId;
     this.pinned = data.pinned;
+    this.mentionReplies = data.mentionReplies;
   }
 }
 
@@ -184,6 +186,10 @@ function createMessageStore() {
       quotedMessages: rawMessage.quotedMessages ?? existing.quotedMessages,
       roleMentions: rawMessage.roleMentions ?? existing.roleMentions,
       htmlEmbed: rawMessage.htmlEmbed ?? existing.htmlEmbed,
+      pinned: rawMessage.pinned ?? existing.pinned,
+      mentionReplies: existing.mentionReplies,
+      silent: existing.silent,
+      webhookId: existing.webhookId,
 
       ...rawMessage,
     });

@@ -1,5 +1,6 @@
 // TODO: On server join event, if its a bot, flush bot commands cache for that server.
 
+import { isMentioned } from "../components/message-pane/utils";
 import { accountStore, type CurrentUser } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { friendStore } from "../store/friendStore";
@@ -160,9 +161,19 @@ function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
   const createdByMe = message.createdBy.id == currentUserId;
   const isDmMessage = !channel || !channel?.serverId;
   const isServerMessage = channel && channel?.serverId;
-  const isMentioned = payload.message.mentions?.find(
-    (m) => m.id === currentUserId,
-  );
+  const server = channel?.serverId
+    ? serverStore.servers.get(channel?.serverId)
+    : undefined;
+
+  const messageMember = server
+    ? serverMemberStore.getMember(server.id, message.createdBy.id)
+    : undefined;
+
+  const mentioned = isMentioned({
+    message: payload.message,
+    server,
+    member: messageMember,
+  });
 
   const isSystemMessage = payload.message.type !== MessageType.CONTENT;
 
@@ -179,7 +190,7 @@ function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
 
   channelStore.updateLastMessagedAt(message.channelId, message.createdAt);
   if (!createdByMe) {
-    if (isDmMessage || isMentioned) {
+    if (isDmMessage || mentioned) {
       const mention = messageMentionStore.incrementMention({
         channelId: message.channelId,
         mentionedBy: message.createdBy,
