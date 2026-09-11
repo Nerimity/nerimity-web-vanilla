@@ -23,8 +23,6 @@ export const handleMessageNotifications = (message: RawMessage) => {
   const currentUserPresence = userPresenceStore.getCurrentUserPresence();
   if (currentUserPresence?.status === UserPresenceType.DO_NOT_DISTURB) return;
 
-  if (!getLocalItem("desktopNotification")) return;
-
   const channel = channelStore.channels.get(message.channelId);
 
   if (channel?.serverId) {
@@ -35,6 +33,10 @@ export const handleMessageNotifications = (message: RawMessage) => {
 
 const handleDMNotification = (message: RawMessage) => {
   const creator = message.createdBy;
+
+  handleNotificationSound();
+
+  if (!getLocalItem("desktopNotification")) return;
 
   const [url] = buildImageUrl(creator.avatar, { size: 120 });
 
@@ -82,6 +84,10 @@ const handleServerNotification = (message: RawMessage, channel: Channel) => {
   if (pingMode === NotificationMode.MENTIONS_ONLY) {
     if (!mentioned) return;
   }
+
+  handleNotificationSound(mentioned);
+
+  if (!getLocalItem("desktopNotification")) return;
 
   const [url] = buildImageUrl(server?.avatar, { size: 120 });
 
@@ -144,3 +150,8 @@ function formatMessage(message: RawMessage) {
 
   return commandReplace;
 }
+
+const handleNotificationSound = (mentioned?: boolean) => {
+  // TODO: handle notification sound
+  console.log(mentioned);
+};

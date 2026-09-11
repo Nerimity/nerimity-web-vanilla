@@ -55,7 +55,7 @@ const notificationSettingsPage = (context: SettingsContext) => {
       const state = await Notification.requestPermission();
       if (state === "denied") {
         return alert({
-          message: t`Browser notification permission denied.`,
+          message: t`Desktop notification permission denied.`,
         });
       }
 
