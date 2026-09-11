@@ -125,6 +125,7 @@
   overflow: hidden;
   justify-content: center;
   min-width: 0;
+  line-height: 1;
   padding: 4px;
   padding-right: 6px;
   border-radius: var(--radius-max);
