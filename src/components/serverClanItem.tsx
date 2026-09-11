@@ -12,9 +12,10 @@ const elementToClan = new WeakMap<HTMLDivElement, ServerClan>();
 export const ServerClanItem = (props: {
   clan: ServerClan;
   initialAnimate?: boolean;
+  class?: string;
 }) => {
   const clanEl = (
-    <span class={style.clanItem}>
+    <span class={[style.clanItem, props.class]}>
       <CdnIcon
         clan={props.clan}
         class={[style.clanIcon, "clanIcon"]}

@@ -54,9 +54,11 @@ export const UserPresence = (props: {
     label = presence.custom;
   }
 
+  let lastOnlineShowing = false;
   if (!presence?.status) {
     const user = userStore.users.get(props.userId);
     if (user?.lastOnlineAt) {
+      lastOnlineShowing = true;
       label = t`Last online ${formatTimestamp(user.lastOnlineAt)}`;
     } else {
       if (!props.showOffline) return null;
@@ -101,7 +103,7 @@ export const UserPresence = (props: {
         </>
       ) : (
         <>
-          <div class={[style.dot, "dot"]}></div>
+          {!lastOnlineShowing && <div class={[style.dot, "dot"]}></div>}
           {countEl}
           <Markup class={[style.text, "text"]} text={label} inline />
         </>

@@ -465,7 +465,7 @@ const memberItem = (cat: Categorized) => {
             </GradientText>
             {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
           </span>
-          <UserPresence userId={cat.member.userId} />
+          <UserPresence class={style.presence} userId={cat.member.userId} />
         </div>
       </Link>
     );

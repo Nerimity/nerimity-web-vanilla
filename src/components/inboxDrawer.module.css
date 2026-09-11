@@ -34,19 +34,48 @@
   gap: 8px;
 
   &:hover {
+    .username {
+      opacity: 1;
+    }
     .closeButton {
       display: flex;
     }
   }
+
+  &[data-selected="true"] {
+    .username {
+      opacity: 1;
+    }
+  }
+
+  .clan {
+    pointer-events: none;
+  }
+
+  .presence {
+    color: var(--gray-300);
+  }
+  .username {
+    overflow: hidden;
+    flex-shrink: 1;
+    opacity: 0.6;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
   .info {
     display: flex;
     overflow: hidden;
     flex-direction: column;
     font-size: 14px;
-    > div {
+
+    .outerUsername {
+      display: inline-flex;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      align-items: center;
+      flex: 1;
+      gap: 4px;
     }
   }
   .right {

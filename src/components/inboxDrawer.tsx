@@ -24,6 +24,7 @@ import { Icon } from "./icon";
 import { Item } from "./item";
 import { Link } from "./link";
 import { NotificationPill } from "./NotificationPill";
+import { ServerClanItem } from "./serverClanItem";
 import { UserPresence as UserPresenceItem } from "./userPresence";
 
 import style from "./inboxDrawer.module.css";
@@ -80,10 +81,18 @@ const UserItem = (props: {
         />
       </Link>
       <div class={style.info}>
-        <div class={[style.username, font?.class, "font"]}>
-          {props.user?.username}
+        <div class={style.outerUsername}>
+          <div class={[style.username, font?.class, "font"]}>
+            {props.user?.username}
+          </div>
+          {props.user.profile?.clan && (
+            <ServerClanItem
+              class={style.clan}
+              clan={props.user.profile?.clan}
+            />
+          )}
         </div>
-        <UserPresenceItem userId={props.user.id} />
+        <UserPresenceItem class={style.presence} userId={props.user.id} />
       </div>
       <div class={style.right}>
         {count && <NotificationPill class={style.pill} count={count} />}
@@ -434,6 +443,7 @@ const createInboxDrawer = () => {
   };
 
   const hoverAnimator = new HoverAnimator(containerEl, [
+    { trigger: `.${style.inboxItem}`, image: ".clanIcon img" },
     {
       trigger: `.${style.inboxItem}`,
       image: ".avatar img",

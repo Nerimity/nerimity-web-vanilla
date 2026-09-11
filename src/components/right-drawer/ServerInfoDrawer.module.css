@@ -27,6 +27,10 @@
     gap: 4px;
   }
 
+  .presence {
+    color: var(--gray-300);
+  }
+
   .memberName {
     overflow: hidden;
     flex-shrink: 1;

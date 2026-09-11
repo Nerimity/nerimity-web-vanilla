@@ -5,18 +5,19 @@
     flex-shrink: 0;
     width: 10px;
     height: 10px;
+    margin-right: 4px;
     border-radius: 50%;
     background: var(--color);
   }
 
   .icon {
+    margin-right: 4px;
     color: var(--color);
     font-size: 12px;
   }
 
   .text {
     overflow: hidden;
-    margin-left: 4px;
     text-overflow: ellipsis;
     white-space: nowrap;
     font-size: 12px;
