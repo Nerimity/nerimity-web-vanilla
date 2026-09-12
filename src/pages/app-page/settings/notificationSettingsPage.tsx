@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { Checkbox } from "../../../components/checkbox";
 import { alert } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { accountStore } from "../../../store/accountStore";
 import { getLocalItem, setLocalItem } from "../../../utils/localStorage";
 import { type SettingsContext } from "./Settings";
 
@@ -14,34 +13,54 @@ const getStrings = () => ({
 });
 
 const notificationSettingsPage = (context: SettingsContext) => {
-  const strings = getStrings();
   const ac = new AbortController();
   const { signal } = ac;
 
-  const render = () => {
-    const user = accountStore.currentUser;
-    if (!user) return;
-    let el = (
-      <div class={style.page}>
-        <SettingsBlock.Root
-          clickable
-          hideArrow
-          data-action="toggle_desktop_notifications"
-        >
-          <SettingsBlock.Icon name="branding_watermark" />
-          <SettingsBlock.Details
-            title={strings.desktopNotifications}
-            description={t`Show desktop notifications even when the app is minimized.`}
-          />
-          <Checkbox.Root checked={getLocalItem("desktopNotification") || false}>
-            <Checkbox.Box />
-          </Checkbox.Root>
-        </SettingsBlock.Root>
-      </div>
-    ) as HTMLDivElement;
-    context.content.replaceChildren(el);
+  let desktopNotifications = createDesktopNotifications(
+    context,
+    signal,
+  ) as HTMLDivElement;
+
+  let el = (
+    <div class={style.page}>{desktopNotifications}</div>
+  ) as HTMLDivElement;
+  context.content.replaceChildren(el);
+
+  const destroy = () => {
+    ac.abort();
+
+    desktopNotifications.remove();
+    (desktopNotifications as any) = null;
+    context.content.replaceChildren();
   };
-  render();
+  return { destroy };
+};
+
+const createDesktopNotifications = (
+  context: SettingsContext,
+  signal: AbortSignal,
+) => {
+  const strings = getStrings();
+
+  const el = (
+    <SettingsBlock.Root
+      clickable
+      hideArrow
+      data-action="toggle_desktop_notifications"
+    >
+      <SettingsBlock.Icon name="branding_watermark" />
+      <SettingsBlock.Details
+        title={strings.desktopNotifications}
+        description={t`Show desktop notifications even when the app is minimized.`}
+      />
+      <Checkbox.Root
+        class="checkbox"
+        checked={getLocalItem("desktopNotification") || false}
+      >
+        <Checkbox.Box />
+      </Checkbox.Root>
+    </SettingsBlock.Root>
+  ) as HTMLDivElement;
 
   let notification: Notification | undefined = undefined;
   const handleToggleDesktopNotifications = async () => {
@@ -65,7 +84,8 @@ const notificationSettingsPage = (context: SettingsContext) => {
       });
     }
     setLocalItem("desktopNotification", newVal);
-    render();
+    const cb = el.querySelector(".checkbox") as HTMLDivElement;
+    cb.dataset.checked = newVal + "";
   };
 
   context.content.addEventListener(
@@ -83,11 +103,7 @@ const notificationSettingsPage = (context: SettingsContext) => {
     { signal },
   );
 
-  const destroy = () => {
-    ac.abort();
-    context.content.replaceChildren();
-  };
-  return { destroy };
+  return el;
 };
 
 export { getStrings, notificationSettingsPage as create };
