@@ -58,6 +58,7 @@
 }
 
 .folderItem {
+  overflow: hidden;
   height: initial;
   min-height: 64px;
   padding: 0;
