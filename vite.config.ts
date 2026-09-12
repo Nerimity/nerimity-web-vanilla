@@ -19,6 +19,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "notifications_active",
+        "brand_awareness",
         "branding_watermark",
         "notification_settings",
         "chat",

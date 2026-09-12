@@ -13,6 +13,7 @@ import {
 import { NotificationMode, type RawMessage } from "../Types";
 import { buildImageUrl } from "./image";
 import { getLocalItem } from "./localStorage";
+import { playSoundByType } from "./sounds";
 import { userAgent } from "./userAgent";
 
 export const handleMessageNotifications = (message: RawMessage) => {
@@ -65,10 +66,12 @@ const handleServerNotification = (message: RawMessage, channel: Channel) => {
   if (!channel.serverId) return;
   const creator = message.createdBy;
 
-  const pingMode = accountStore.getCombinedNotification(
+  const modes = accountStore.getCombinedNotification(
     channel.serverId,
     channel.id,
-  )?.notificationPingMode;
+  );
+  const pingMode = modes?.notificationPingMode;
+  const soundMode = modes?.notificationSoundMode;
 
   if (pingMode === NotificationMode.MUTE) return;
 
@@ -84,6 +87,9 @@ const handleServerNotification = (message: RawMessage, channel: Channel) => {
   if (pingMode === NotificationMode.MENTIONS_ONLY) {
     if (!mentioned) return;
   }
+
+  if (soundMode === NotificationMode.MUTE) return;
+  if (soundMode === NotificationMode.MENTIONS_ONLY && !mentioned) return;
 
   handleNotificationSound(mentioned);
 
@@ -152,6 +158,5 @@ function formatMessage(message: RawMessage) {
 }
 
 const handleNotificationSound = (mentioned?: boolean) => {
-  // TODO: handle notification sound
-  console.log(mentioned);
+  playSoundByType(mentioned ? "MESSAGE_MENTION" : "MESSAGE");
 };

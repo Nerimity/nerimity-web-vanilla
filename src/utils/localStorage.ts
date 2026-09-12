@@ -1,3 +1,5 @@
+import type { Sound, SoundType } from "./sounds";
+
 export interface RecentEmoji {
   type: "default" | "custom";
   id: string;
@@ -13,14 +15,27 @@ interface LocalStorageData {
   }[];
   recentEmojis: RecentEmoji[];
   desktopNotification: boolean;
+  soundNotification: boolean;
+  soundNotificationVolume: number;
+  soundNotificationTypes: Partial<Record<SoundType, Sound>>;
 }
+
+const defaultValues: Partial<LocalStorageData> = {
+  soundNotification: true,
+  soundNotificationVolume: 10,
+  soundNotificationTypes: {},
+};
 
 export const getLocalItem = <T extends keyof LocalStorageData>(
   key: T,
   defaultValue?: LocalStorageData[T],
 ): LocalStorageData[T] | null => {
   const value = localStorage.getItem(key);
-  if (value === null) return defaultValue ?? null;
+  if (value === null) {
+    return (defaultValue ?? defaultValues[key] ?? null) as
+      | LocalStorageData[T]
+      | null;
+  }
   try {
     return JSON.parse(value) as LocalStorageData[T] | null;
   } catch {

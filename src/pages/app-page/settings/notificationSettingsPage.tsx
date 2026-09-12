@@ -4,12 +4,15 @@ import { Checkbox } from "../../../components/checkbox";
 import { alert } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { getLocalItem, setLocalItem } from "../../../utils/localStorage";
+import { playSoundByType } from "../../../utils/sounds";
 import { type SettingsContext } from "./Settings";
 
 import style from "./notificationSettingsPage.module.css";
 
 const getStrings = () => ({
   desktopNotifications: t`Desktop Notifications`,
+  sounds: t`Sounds`,
+  volume: t`Volume`,
 });
 
 const notificationSettingsPage = (context: SettingsContext) => {
@@ -18,7 +21,8 @@ const notificationSettingsPage = (context: SettingsContext) => {
 
   let el = (
     <div class={style.page}>
-      <DesktopNotifications context={context} signal={signal} />
+      <DesktopNotifications signal={signal} />
+      <NotificationSound signal={signal} />
     </div>
   ) as HTMLDivElement;
   context.content.replaceChildren(el);
@@ -31,10 +35,7 @@ const notificationSettingsPage = (context: SettingsContext) => {
   return { destroy };
 };
 
-const DesktopNotifications = (props: {
-  context: SettingsContext;
-  signal: AbortSignal;
-}) => {
+const DesktopNotifications = (props: { signal: AbortSignal }) => {
   const strings = getStrings();
 
   const el = (
@@ -83,16 +84,107 @@ const DesktopNotifications = (props: {
     cb.dataset.checked = newVal + "";
   };
 
-  props.context.content.addEventListener(
+  el.addEventListener(
     "click",
     async (e) => {
       const target = e.target as HTMLDivElement;
 
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      if (!actionEl) return;
       const action = actionEl.dataset.action;
 
       if (action === "toggle_desktop_notifications") {
         handleToggleDesktopNotifications();
+      }
+    },
+    { signal: props.signal },
+  );
+
+  return el;
+};
+
+const NotificationSound = (props: { signal: AbortSignal }) => {
+  const strings = getStrings();
+
+  const el = (
+    <SettingsBlock.Group>
+      <SettingsBlock.Root
+        clickable
+        hideArrow
+        data-action="toggle_desktop_sounds"
+      >
+        <SettingsBlock.Icon name="notifications_active" />
+        <SettingsBlock.Details
+          title={strings.sounds}
+          description={t`If the notification sounds are too annoying, you can disable them.`}
+        />
+        <Checkbox.Root
+          class="checkbox"
+          checked={getLocalItem("soundNotification")!}
+        >
+          <Checkbox.Box />
+        </Checkbox.Root>
+      </SettingsBlock.Root>
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="brand_awareness" />
+        <SettingsBlock.Details
+          title={strings.volume}
+          description={t`Change the volume of the notification sounds.`}
+        />
+        <input
+          value={getLocalItem("soundNotificationVolume")!}
+          type="range"
+          id="notificationVolume"
+          min={0}
+          max={100}
+        />
+        <div class={style.volumeValue}>
+          {getLocalItem("soundNotificationVolume")}
+        </div>
+      </SettingsBlock.Root>
+    </SettingsBlock.Group>
+  ) as HTMLDivElement;
+
+  const handleToggleNotificationSounds = async () => {
+    const newVal = !getLocalItem("soundNotification")!;
+    setLocalItem("soundNotification", newVal);
+    const cb = el.querySelector(".checkbox") as HTMLDivElement;
+    cb.dataset.checked = newVal + "";
+  };
+
+  const volumeSlider = el.querySelector(
+    "#notificationVolume",
+  ) as HTMLInputElement;
+
+  const volumeVal = el.querySelector(`.${style.volumeValue}`) as HTMLDivElement;
+
+  volumeSlider.addEventListener(
+    "input",
+    () => {
+      volumeVal.innerText = volumeSlider.value;
+    },
+    { signal: props.signal },
+  );
+  volumeSlider.addEventListener(
+    "change",
+    () => {
+      setLocalItem("soundNotificationVolume", parseInt(volumeSlider.value));
+      playSoundByType("MESSAGE");
+    },
+    { signal: props.signal },
+  );
+
+  el.addEventListener(
+    "click",
+    async (e) => {
+      const target = e.target as HTMLDivElement;
+
+      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      if (!actionEl) return;
+      const action = actionEl.dataset.action;
+
+      if (action === "toggle_desktop_sounds") {
+        handleToggleNotificationSounds();
       }
     },
     { signal: props.signal },
