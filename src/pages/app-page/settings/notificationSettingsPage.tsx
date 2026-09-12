@@ -16,30 +16,25 @@ const notificationSettingsPage = (context: SettingsContext) => {
   const ac = new AbortController();
   const { signal } = ac;
 
-  let desktopNotifications = createDesktopNotifications(
-    context,
-    signal,
-  ) as HTMLDivElement;
-
   let el = (
-    <div class={style.page}>{desktopNotifications}</div>
+    <div class={style.page}>
+      <DesktopNotifications context={context} signal={signal} />
+    </div>
   ) as HTMLDivElement;
   context.content.replaceChildren(el);
 
   const destroy = () => {
     ac.abort();
 
-    desktopNotifications.remove();
-    (desktopNotifications as any) = null;
     context.content.replaceChildren();
   };
   return { destroy };
 };
 
-const createDesktopNotifications = (
-  context: SettingsContext,
-  signal: AbortSignal,
-) => {
+const DesktopNotifications = (props: {
+  context: SettingsContext;
+  signal: AbortSignal;
+}) => {
   const strings = getStrings();
 
   const el = (
@@ -88,7 +83,7 @@ const createDesktopNotifications = (
     cb.dataset.checked = newVal + "";
   };
 
-  context.content.addEventListener(
+  props.context.content.addEventListener(
     "click",
     async (e) => {
       const target = e.target as HTMLDivElement;
@@ -100,7 +95,7 @@ const createDesktopNotifications = (
         handleToggleDesktopNotifications();
       }
     },
-    { signal },
+    { signal: props.signal },
   );
 
   return el;
