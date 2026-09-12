@@ -1,10 +1,17 @@
 import { t } from "@lingui/core/macro";
 
+import { Button } from "../../../components/button";
 import { Checkbox } from "../../../components/checkbox";
+import { Dropdown } from "../../../components/createDropdown";
 import { alert } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { getLocalItem, setLocalItem } from "../../../utils/localStorage";
-import { playSoundByType } from "../../../utils/sounds";
+import {
+  playSound,
+  playSoundByType,
+  Sound,
+  SoundTypeInfo,
+} from "../../../utils/sounds";
 import { type SettingsContext } from "./Settings";
 
 import style from "./notificationSettingsPage.module.css";
@@ -13,6 +20,7 @@ const getStrings = () => ({
   desktopNotifications: t`Desktop Notifications`,
   sounds: t`Sounds`,
   volume: t`Volume`,
+  customizeSounds: t`Customize Sounds`,
 });
 
 const notificationSettingsPage = (context: SettingsContext) => {
@@ -23,6 +31,7 @@ const notificationSettingsPage = (context: SettingsContext) => {
     <div class={style.page}>
       <DesktopNotifications signal={signal} />
       <NotificationSound signal={signal} />
+      <NotificationSoundCustomize signal={signal} />
     </div>
   ) as HTMLDivElement;
   context.content.replaceChildren(el);
@@ -193,4 +202,87 @@ const NotificationSound = (props: { signal: AbortSignal }) => {
   return el;
 };
 
+const NotificationSoundCustomize = (props: { signal: AbortSignal }) => {
+  const strings = getStrings();
+
+  const el = (
+    <SettingsBlock.Group>
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="music_note" />
+        <SettingsBlock.Details
+          title={strings.customizeSounds}
+          description={t`Change the sound of notifications.`}
+        />
+      </SettingsBlock.Root>
+
+      {SoundTypeInfo.map((t) => (
+        <SoundCustomizeItem item={t} signal={props.signal} />
+      ))}
+    </SettingsBlock.Group>
+  ) as HTMLDivElement;
+
+  document.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const playButton = target.closest(
+        `.${style.playButton}`,
+      ) as HTMLDivElement;
+      if (!playButton) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const soundId = playButton.parentElement?.dataset.id as Sound;
+      if (!soundId) return;
+
+      playSound(soundId);
+    },
+    { capture: true },
+  );
+
+  return el;
+};
+
 export { getStrings, notificationSettingsPage as create };
+
+const capitalizeFirstLetter = (val: string) => {
+  return val.charAt(0).toUpperCase() + val.slice(1);
+};
+
+const SoundCustomizeItem = (props: {
+  item: (typeof SoundTypeInfo)[number];
+  signal: AbortSignal;
+}) => {
+  const dropdown = Dropdown.create({
+    signal: props.signal,
+    initialSelectedId: () =>
+      getLocalItem("soundNotificationTypes")![props.item.id] || "default",
+    onChange(id) {
+      const current = getLocalItem("soundNotificationTypes");
+
+      setLocalItem("soundNotificationTypes", {
+        ...current,
+        [props.item.id]: id,
+      });
+    },
+    items() {
+      return Sound.map((s) => (
+        <Dropdown.Item id={s}>
+          {s !== "mute" && (
+            <Button icon="play_arrow" class={style.playButton} />
+          )}
+          <Dropdown.Label>
+            {capitalizeFirstLetter(s).replaceAll("-", " ")}
+          </Dropdown.Label>
+        </Dropdown.Item>
+      ));
+    },
+  });
+
+  return (
+    <SettingsBlock.Root>
+      <SettingsBlock.Icon name={props.item.icon} />
+      <SettingsBlock.Details title={props.item.name()} />
+      {dropdown.el}
+    </SettingsBlock.Root>
+  );
+};

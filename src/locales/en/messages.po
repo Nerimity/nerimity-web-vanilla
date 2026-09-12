@@ -323,23 +323,23 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/inboxDrawer.tsx:321
+#: src/components/inboxDrawer.tsx:330
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/inboxDrawer.tsx:324
+#: src/components/inboxDrawer.tsx:333
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/inboxDrawer.tsx:327
+#: src/components/inboxDrawer.tsx:336
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/inboxDrawer.tsx:394
+#: src/components/inboxDrawer.tsx:403
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:400
+#: src/components/inboxDrawer.tsx:409
 msgid "Friends"
 msgstr "Friends"
 
@@ -617,7 +617,7 @@ msgstr "Search"
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/serverClanItem.tsx:50
+#: src/components/serverClanItem.tsx:51
 msgid "Server Clan"
 msgstr "Server Clan"
 
@@ -630,7 +630,7 @@ msgid "Saving..."
 msgstr "Saving..."
 
 #. placeholder {0}: formatTimestamp(user.lastOnlineAt)
-#: src/components/userPresence.tsx:60
+#: src/components/userPresence.tsx:62
 msgid "Last online {0}"
 msgstr "Last online {0}"
 
@@ -919,25 +919,49 @@ msgstr "{serverCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other
 msgid "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 msgstr "{friendCount, plural, =0 {<0>No</0> Friends} one {<1>#</1> Friend} other {<2>#</2> Friends}}"
 
-#: src/pages/app-page/settings/notificationSettingsPage.tsx:13
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:20
 msgid "Desktop Notifications"
 msgstr "Desktop Notifications"
 
-#: src/pages/app-page/settings/notificationSettingsPage.tsx:34
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:21
+msgid "Sounds"
+msgstr "Sounds"
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:22
+msgid "Volume"
+msgstr "Volume"
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:23
+msgid "Customize Sounds"
+msgstr "Customize Sounds"
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:59
 msgid "Show desktop notifications even when the app is minimized."
 msgstr "Show desktop notifications even when the app is minimized."
 
-#: src/pages/app-page/settings/notificationSettingsPage.tsx:50
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:74
 msgid "This browser does not support desktop notification."
 msgstr "This browser does not support desktop notification."
 
-#: src/pages/app-page/settings/notificationSettingsPage.tsx:58
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:82
 msgid "Desktop notification permission denied."
 msgstr "Desktop notification permission denied."
 
-#: src/pages/app-page/settings/notificationSettingsPage.tsx:63
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:87
 msgid "Desktop Notifications Enabled"
 msgstr "Desktop Notifications Enabled"
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:128
+msgid "If the notification sounds are too annoying, you can disable them."
+msgstr "If the notification sounds are too annoying, you can disable them."
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:141
+msgid "Change the volume of the notification sounds."
+msgstr "Change the volume of the notification sounds."
+
+#: src/pages/app-page/settings/notificationSettingsPage.tsx:214
+msgid "Change the sound of notifications."
+msgstr "Change the sound of notifications."
 
 #: src/pages/app-page/settings/privacySettingsPage.tsx:14
 msgid "Last Online Time"
@@ -1308,6 +1332,26 @@ msgstr "in {duration}"
 msgid "{duration} ago"
 msgstr "{duration} ago"
 
-#: src/utils/notifications.ts:130
+#: src/utils/notifications.ts:136
 msgid "Attachment"
 msgstr "Attachment"
+
+#: src/utils/sounds.ts:32
+msgid "Messages"
+msgstr "Messages"
+
+#: src/utils/sounds.ts:37
+msgid "Mentions"
+msgstr "Mentions"
+
+#: src/utils/sounds.ts:42
+msgid "Reminders"
+msgstr "Reminders"
+
+#: src/utils/sounds.ts:47
+msgid "Call Join"
+msgstr "Call Join"
+
+#: src/utils/sounds.ts:52
+msgid "Call Leave"
+msgstr "Call Leave"

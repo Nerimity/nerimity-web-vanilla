@@ -8,3 +8,9 @@
   width: 25px;
   text-align: center;
 }
+.playButton {
+  padding: 0px;
+  :global(.icon) {
+    font-size: 17px;
+  }
+}

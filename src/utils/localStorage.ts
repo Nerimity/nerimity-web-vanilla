@@ -23,7 +23,13 @@ interface LocalStorageData {
 const defaultValues: Partial<LocalStorageData> = {
   soundNotification: true,
   soundNotificationVolume: 10,
-  soundNotificationTypes: {},
+  soundNotificationTypes: {
+    MESSAGE: "default",
+    MESSAGE_MENTION: "default",
+    REMINDER: "level-up",
+    CALL_JOIN: "default-call-join",
+    CALL_LEAVE: "default-call-leave",
+  },
 };
 
 export const getLocalItem = <T extends keyof LocalStorageData>(
