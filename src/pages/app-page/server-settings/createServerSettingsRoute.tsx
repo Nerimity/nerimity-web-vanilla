@@ -3,88 +3,50 @@ import morphdom from "morphdom";
 
 import { Avatar } from "../../../components/avatar";
 import { Banner, bannerCroppedHandler } from "../../../components/Banner";
-import { ServerClanItem } from "../../../components/serverClanItem";
-import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
+import { createServerSettingsDrawer } from "../../../components/server-settings/createServerSettingsDrawer";
 import { isMobileWidth } from "../../../config";
 import { accountStore } from "../../../store/accountStore";
-import { friendStore } from "../../../store/friendStore";
+import { serverMemberStore } from "../../../store/serverMemberStore";
 import { serverStore } from "../../../store/serverStore";
-import { FriendStatus, type RawUser } from "../../../Types";
 import { storeEmitter } from "../../../utils/EventEmitter";
-import { getFont } from "../../../utils/font";
 import { router } from "../../../utils/router";
 import { getAppHeader, type RouteContext } from "../AppPage";
 import {
-  Settings,
-  type HeaderOverrides,
+  ServerSettings,
   type Page,
-  type SettingsContext,
-} from "./Settings";
+  type ServerHeaderOverrides,
+  type ServerSettingsContext,
+} from "./ServerSettings";
 
-import style from "./createSettingsRoute.module.css";
-
-const NameAndTag = ({ user }: { user: RawUser }) => {
-  const font = getFont(user.profile?.font);
-
-  return (
-    <div class={style.nameAndTag}>
-      <span class={[style.username, font?.class, "font"]}>{user.username}</span>
-      <span class={style.tag}>:{user.tag}</span>
-      <span class={style.badges}>
-        {user?.profile?.clan && (
-          <span class={style.clan}>
-            <ServerClanItem clan={user?.profile?.clan} />
-          </span>
-        )}
-      </span>
-    </div>
-  );
-};
+import style from "./createServerSettingsRoute.module.css";
 
 const Stats = () => {
-  const serverCount = serverStore.servers.size;
-  const friendCount = [...friendStore.friends.values()].filter(
-    (f) => f.status === FriendStatus.FRIENDS,
-  ).length;
+  const serverId = router.match<{ serverId: string }>(
+    "/app/servers/:serverId/*",
+  )?.params.serverId;
+
+  if (!serverId) return null;
+
+  const memberSize = serverMemberStore.serverMembers.get(serverId)?.size || 0;
 
   return (
     <div class={style.stats}>
       <span class={style.stat}>
         <Plural
-          value={serverCount}
+          value={memberSize}
           _0={
             <Trans>
-              <span class={style.full}>No</span> Servers
+              <span class={style.full}>No</span> Members
             </Trans>
           }
           one={
             <Trans>
-              <span class={style.full}>#</span> Server
+              <span class={style.full}>#</span> Member
             </Trans>
           }
           other={
             <Trans>
-              <span class={style.full}>#</span> Servers
-            </Trans>
-          }
-        />
-      </span>
-      <span class={style.stat}>
-        <Plural
-          value={friendCount}
-          _0={
-            <Trans>
-              <span class={style.full}>No</span> Friends
-            </Trans>
-          }
-          one={
-            <Trans>
-              <span class={style.full}>#</span> Friend
-            </Trans>
-          }
-          other={
-            <Trans>
-              <span class={style.full}>#</span> Friends
+              <span class={style.full}>#</span> Members
             </Trans>
           }
         />
@@ -94,9 +56,15 @@ const Stats = () => {
 };
 
 let headerAc: AbortController | null = null;
-const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
-  const user = accountStore.currentUser;
-  if (!user) return null;
+const Header = ({ overrides }: { overrides: ServerHeaderOverrides }) => {
+  const serverId = router.match<{ serverId: string }>(
+    "/app/servers/:serverId/*",
+  )?.params.serverId;
+
+  if (!serverId) return null;
+
+  const server = serverStore.servers.get(serverId);
+  if (!server) return null;
 
   headerAc?.abort();
   headerAc = new AbortController();
@@ -113,45 +81,38 @@ const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
   return (
     <div class={style.header}>
       <div class={style.banner}>
-        <Banner user={user} image={overrides.banner} />
+        <Banner server={server} image={overrides.banner} />
       </div>
       <div class={style.overlayInfo}>
         <Avatar
-          user={user}
+          server={server}
           size={isMobileWidth() ? 96 : 128}
           image={overrides.avatar}
         />
       </div>
 
       <div class={[style.section, style.detailsSection]}>
-        <NameAndTag
-          user={{
-            ...user,
-            username: overrides.username ?? user.username,
-            tag: overrides.tag ?? user.tag,
-          }}
-        />
-
+        <div>{overrides.name ?? server.name}</div>
         <Stats />
       </div>
     </div>
   );
 };
 
-const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
+const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
   let headerContainerEl = (<div></div>) as HTMLDivElement;
 
-  const drawer = createSettingsDrawer();
+  const drawer = createServerSettingsDrawer();
 
   let innerContent = (<div></div>) as HTMLDivElement;
   let page: Page | undefined = undefined;
 
-  let headerOverride: HeaderOverrides = {};
+  let headerOverride: ServerHeaderOverrides = {};
 
-  let context: SettingsContext = {
+  let context: ServerSettingsContext = {
     content: innerContent,
     overrideHeader(override) {
       headerOverride = { ...headerOverride, ...override };
@@ -174,11 +135,20 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   storeEmitter.on("drawer:modeChange", renderHeader, signal);
 
   const renderPage = () => {
-    const matchedRoute = Settings.find((s) =>
-      router.match("/app/settings" + s.path),
+    const serverId = router.match<{ serverId: string }>(
+      "/app/servers/:serverId/*",
+    )?.params.serverId;
+
+    const matchedRoute = ServerSettings.find((s) =>
+      router.match("/app/servers/:serverId/settings" + s.path),
     );
     if (!matchedRoute) {
-      router.navigate("/app/settings" + Settings[0]!.path, { replace: true });
+      router.navigate(
+        `/app/servers/${serverId}/settings` + ServerSettings[0]!.path,
+        {
+          replace: true,
+        },
+      );
       return;
     }
     getAppHeader()?.updateHeader({
@@ -235,4 +205,4 @@ const createSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   return { destroy };
 };
 
-export default createSettingsRoute;
+export default createServerSettingsRoute;
