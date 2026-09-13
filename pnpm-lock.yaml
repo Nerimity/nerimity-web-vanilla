@@ -36,11 +36,11 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@formatjs/intl-durationformat':
-        specifier: ^0.10.18
-        version: 0.10.18
+        specifier: ^0.11.0
+        version: 0.11.0
       '@lingui/core':
-        specifier: ^6.6.0
-        version: 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+        specifier: ^6.7.0
+        version: 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
       '@melloware/coloris':
         specifier: ^0.25.0
         version: 0.25.0
@@ -72,8 +72,8 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
       temporal-polyfill:
-        specifier: ^1.0.4
-        version: 1.0.4
+        specifier: ^1.0.5
+        version: 1.0.5
       urlpattern-polyfill:
         specifier: ^10.1.0
         version: 10.1.0
@@ -82,20 +82,20 @@ importers:
         version: 2.2.0
     devDependencies:
       '@lingui/cli':
-        specifier: ^6.6.0
-        version: 6.6.0(rolldown@1.2.8)(supports-color@7.2.0)
+        specifier: ^6.7.0
+        version: 6.7.0(rolldown@1.2.8)(supports-color@7.2.0)
       '@lingui/conf':
-        specifier: ^6.6.0
-        version: 6.6.0
+        specifier: ^6.7.0
+        version: 6.7.0
       '@lingui/react':
-        specifier: ^6.6.0
-        version: 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)(react@19.2.7)
+        specifier: ^6.7.0
+        version: 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)(react@19.2.7)
       '@lingui/vite-plugin':
-        specifier: ^6.6.0
-        version: 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@lingui/babel-plugin-lingui-macro@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8))(@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0)))(rolldown@1.2.8)(supports-color@7.2.0)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0))
+        specifier: ^6.7.0
+        version: 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@lingui/babel-plugin-lingui-macro@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8))(@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0)))(rolldown@1.2.8)(supports-color@7.2.0)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0))
       '@rolldown/plugin-babel':
         specifier: ^0.2.4
-        version: 0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0))
+        version: 0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0))
       oxfmt:
         specifier: ^0.67.0
         version: 0.67.0
@@ -107,7 +107,7 @@ importers:
         version: 7.0.2
       vite:
         specifier: ^8.3.0
-        version: 8.3.0(@types/node@26.3.0)(jiti@2.7.0)
+        version: 8.3.0(@types/node@26.5.1)(jiti@2.7.0)
 
 packages:
 
@@ -219,11 +219,11 @@ packages:
   '@formatjs/fast-memoize@3.1.7':
     resolution: {integrity: sha512-zXfhLpvA6T7+efdt9JLbBwZ00tT7NsBMDVnDu8rpHeNNv8KfRZAMo2gkG0k9lK/Nzc//3kJ9pImsfuJxk3KhUA==}
 
-  '@formatjs/intl-durationformat@0.10.18':
-    resolution: {integrity: sha512-Wyn7TYW1c5EORLuh6IeAyEpaJf6GmvHPN7TXjJj3VT0bl9U2/zv/A518R+5lYtCmXLmmxX7DYz4iKSKzoKkR7g==}
+  '@formatjs/intl-durationformat@0.11.0':
+    resolution: {integrity: sha512-Pucips7a/j4+U5WNWUC/0crt3oWO8e+ps8in10NLOmWJJ4tyiJz4YmOQRYf/pT2tvWMYyuJWrfW08LY+ouDCKg==}
 
-  '@formatjs/intl-localematcher@0.8.13':
-    resolution: {integrity: sha512-kHEAFOkeJSPNi7c5PaKaRjxcBrJwzzt81ifUu+8uve1EDW/VJl83KsxmqgqNZLzcFEhSliZGvx3+pk/RH0IOmg==}
+  '@formatjs/intl-localematcher@0.8.14':
+    resolution: {integrity: sha512-8O7V38QmbB11+ryJ3KM/znrzXtiqgpXzqNoqDsndHZZ5/zDKTTL+cf5F0mzXkQEwhx8IlWnqYvEovf2S5EwLTw==}
 
   '@jest/schemas@29.6.3':
     resolution: {integrity: sha512-mo5j5X+jIZmJQveBKeS/clAueipV7KgiX1vMgCxam1RNYiqE1w62n0/tJJnHtjW8ZHcQco5gY85jA3mi0L+nSA==}
@@ -249,12 +249,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lingui/babel-plugin-extract-messages@6.6.0':
-    resolution: {integrity: sha512-QfCS4SjZYvVZFaiF44e/mLsdzCqQvRSGoVJWkb8nc51FkNpOZkwFLiwLtRnWgvm0ce7GeG51czMsG7RFPPCXqw==}
+  '@lingui/babel-plugin-extract-messages@6.7.0':
+    resolution: {integrity: sha512-9QNMFsXruVQJMhPRjDBO/6TR7jvKXZWmFnK0ugyjCnjmryiXBWDpYaAsWaZ4vUEMRSPomQlp50Az6Mt9Stk6Ng==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/babel-plugin-lingui-macro@6.6.0':
-    resolution: {integrity: sha512-FEBrnIx66lAeD9LGueRIen8IEj+aT7bDaMVmPNIITQNBCm2iC4mNcUtEV1/rAaVpfKKnh5uTdQowWmddB2D7iw==}
+  '@lingui/babel-plugin-lingui-macro@6.7.0':
+    resolution: {integrity: sha512-YY0mxBP6RZ6sHJ0QymQClEsgNYQ46RGXGBpZUsL16cpALwFnC32nj45yfpIN+eYar+g3wT49ptrD45gylYUirA==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       '@babel/core': ^7.20.12 || ^8.0.0
@@ -265,8 +265,8 @@ packages:
       '@babel/types':
         optional: true
 
-  '@lingui/cli@6.6.0':
-    resolution: {integrity: sha512-XtsWns8/m5Rtj+Gwr9j3SqPTk9bVztAbdJ6cbDG2qDFwSpGiXLxqxhqbam4cywjlxYMudsyNQ7E6DPPSgL4x8Q==}
+  '@lingui/cli@6.7.0':
+    resolution: {integrity: sha512-DDhayqKZxl5+h3hoCE8qmP7CbH5/hp8UX832uuaVxRJh9V/fwCmqYoi8nfNa/nvl3CPHkvvwgFhdj+zVyGjHAQ==}
     engines: {node: '>=22.19.0'}
     hasBin: true
     peerDependencies:
@@ -278,12 +278,12 @@ packages:
       rolldown:
         optional: true
 
-  '@lingui/conf@6.6.0':
-    resolution: {integrity: sha512-4NUxQh6VXZSBocAKATuJJ6+dOF/M3OTd5WtbND7eSi5tZtVKF0qFMcKFfx8aiUJFo+KP/wYnBBiDPvPLkJvqcA==}
+  '@lingui/conf@6.7.0':
+    resolution: {integrity: sha512-qZsE98lhJjT+GRTyFLlAnMKmEcTBE3R5foesY0aJP31r2gd8cxKgAPeiznrzhw7n4PDl7wgUgtQhdfDawDUqCQ==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/core@6.6.0':
-    resolution: {integrity: sha512-vqL7LkU2iDAHcaHYzFGbdYovHLdHamG0Zh7r5F9O7C1J1sEPZSMQfkddk2FFeSZHy5j7Na7hzIGGJTZutgiZRg==}
+  '@lingui/core@6.7.0':
+    resolution: {integrity: sha512-dw6n4S/11ZQJZQZe85AMKOOU+q/D360H4NkWTBO6A597D+2FFkgdLQV89UCidTPyxiI7t5P4qrgcy4m53tQ/+g==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       babel-plugin-macros: 2 || 3
@@ -291,16 +291,16 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  '@lingui/format-po@6.6.0':
-    resolution: {integrity: sha512-vOUYBYC+81Gl/tJWqEMM2ah+W06M3zWjb78qNwRtl3UhNhoDbduZpNayDQ7RoEA9NtxNQ75Fx7946+0GPnHy7Q==}
+  '@lingui/format-po@6.7.0':
+    resolution: {integrity: sha512-lCVeoANXP9fCdEWXTg2quok4j49wgt1O4hdZMdR7ImoUTxdQP0p/QlpT20QecqghPPATeSNuFfzvtFPS2nr93g==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/message-utils@6.6.0':
-    resolution: {integrity: sha512-XkEcuMjIUjq7KZfTe83jP6UWQvKskpae/Ve7E8M8HEJ3TujHIPLzKn/quEmot6pKRtGwYxQzktGRfs2sPcZaqg==}
+  '@lingui/message-utils@6.7.0':
+    resolution: {integrity: sha512-Rqxb/Hvq+3sWoPLdaJiNywsFNOcYiBSYBGJOrjyRCVbSUE4T9jviR05+vibmqyaABa1w+W0Pw/EhwV+gCSw4wQ==}
     engines: {node: '>=22.19.0'}
 
-  '@lingui/react@6.6.0':
-    resolution: {integrity: sha512-oRZvm8nx47wQB7Y4tQ4K78Ba0Ta0wJLRpT7125zW3J1wq++hMfc9XMqemCau2IDVtCMHGHdlLPiBeyFSIq/0Rw==}
+  '@lingui/react@6.7.0':
+    resolution: {integrity: sha512-CjlWVMOSJ5bqgp9ZSZ+0yrF+1iTQygGNDBzrr1A7s+JYqGjFkGET+vCYDkHaytNpf0p2Xf39/2MsZsZmcHmXLA==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       babel-plugin-macros: 2 || 3
@@ -309,8 +309,8 @@ packages:
       babel-plugin-macros:
         optional: true
 
-  '@lingui/vite-plugin@6.6.0':
-    resolution: {integrity: sha512-1kZMeGNk5hYQzrEPA3RcXQKb106VC26GqxpXpjVIhS4r2sT4c4gztk70T65VSwyZ7Uyc1pIpXxys3uY2DTfHKw==}
+  '@lingui/vite-plugin@6.7.0':
+    resolution: {integrity: sha512-6Gw0zJ7iMnJpIMozyhtiuzmPhc9EpbzjsJstgK5LA8w+NIDG9TKhw+SciY5uEOAu7oD0AMCWDFjSR95KQJWzIQ==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       '@babel/core': ^7.29.0 || ^8.0.0
@@ -752,8 +752,8 @@ packages:
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
 
-  '@types/node@26.3.0':
-    resolution: {integrity: sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==}
+  '@types/node@26.5.1':
+    resolution: {integrity: sha512-CzNm2FezW4VR/LjG6yUdiEgLE/rAQ9Slj5gCu/C2VrdcW7I0ahNZ8DRbHT7zOZ6r3ONgd/bsQIeSaoDGrd1C6g==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -884,8 +884,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@ungap/structured-clone@1.3.3':
-    resolution: {integrity: sha512-60YRaenCQcVjYEKOcG824+DRGGIQ3VKErcBoAEDJZz5bKIs2ZG+X/H9Nk+Q6EVkwJk5QNApxbrc5QtBSwtrXAg==}
+  '@ungap/structured-clone@1.4.0':
+    resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -967,9 +967,9 @@ packages:
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
 
-  commander@10.0.1:
-    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
-    engines: {node: '>=14'}
+  commander@13.1.0:
+    resolution: {integrity: sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==}
+    engines: {node: '>=18'}
 
   commander@14.0.3:
     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
@@ -1227,8 +1227,8 @@ packages:
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
 
-  nanoid@3.3.18:
-    resolution: {integrity: sha512-DTg4MJbGMWkfi6VZFdNt2/caMbQy4Ou+Op/hJQvGEWcnVfoA1QA+xzRKAzw9jD6+GVOOeYr/mIcuDSdug6F6+w==}
+  nanoid@3.3.19:
+    resolution: {integrity: sha512-Y2tUNy4ouw6tq5oDSKeQYGOyhkUBhNOcGV/02KC+6kd9eDGqdZd++mjMiIDilrBYvjEnCYvVtsuHCuP+okSfug==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
@@ -1306,9 +1306,9 @@ packages:
   property-information@7.2.0:
     resolution: {integrity: sha512-IAtzIB6sUiWaJYrX9smp3V46pBGbBeLFRGdh25kg1334VcBlD8HzhPeNIWQH9zhGmo2itIe25EHt9dQP7G5hmg==}
 
-  pseudolocale@2.3.0:
-    resolution: {integrity: sha512-2RfZuwSSZ8sopelTIIZ2JhmO4GLnHflJQBmtMPF2APWEtmfKOsvqCIWsi8KQJ6EQ0D0+zVllPnLLGijUauSlqw==}
-    engines: {node: '>=16.0.0'}
+  pseudolocale@3.1.0:
+    resolution: {integrity: sha512-jBidehQu5WO8zbFUod0ETJYoVPxZ0ixsdI9B8ilkE0eA+YTydxHA7ujNdU4YhTexD5yH5Griv9r5CuXx+nwFUA==}
+    engines: {node: '>=24.0.0'}
     hasBin: true
 
   react-is@18.3.1:
@@ -1393,14 +1393,14 @@ packages:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
 
-  temporal-polyfill@1.0.4:
-    resolution: {integrity: sha512-MLEU0qOD2uXlz24oINNtdLZQl8RgmMxSnRtKEGZGGetTJjlRwQJjk+VsJ4EREaUoiaTb8NJOcUiKtoAiWn9EBg==}
+  temporal-polyfill@1.0.5:
+    resolution: {integrity: sha512-+H/mmY74i6wXCMcjIhGuSnODcyZnc4eois2myhOyX0UqRAKNXQY5m9iB1en5jQ/n4SXtjLXo1ElBI5bmn8tZwQ==}
 
   temporal-spec@1.0.1:
     resolution: {integrity: sha512-wxVoanmDeavXie1vu2JaQ3WIc3JZnWAOYFBsJyATaVsXsycKYUflGsyBmrRSnoCpZJpwPyr38VpgSUlQ8CbFxg==}
 
-  temporal-utils@1.0.2:
-    resolution: {integrity: sha512-1B8Dl4KzrOvsNUlpoWGno2VLQlxroLjDgc5NBjVC9ax9ymdo+ezfyvhyjEMx+IVfhINr6CIG2gcnlP95iRrybQ==}
+  temporal-utils@1.0.3:
+    resolution: {integrity: sha512-9jbTSX3HvkOWvDpNpFzwX/d1mkCrgQgwLmVTOEiuocZGKHsrQJtttGZFmybJ2zYP5zCSZuU5ZyeS8+eOEPABiQ==}
 
   tinyglobby@0.2.17:
     resolution: {integrity: sha512-wXR/dYpcqKmfWpEdZjiKJOwCNFndD0DMnrW/cYjVGttEkBfVgcLFHoNrlj47mjOVic9yyNu65alsgF4NQyTa2g==}
@@ -1422,8 +1422,8 @@ packages:
     engines: {node: '>=16.20.0'}
     hasBin: true
 
-  undici-types@8.3.0:
-    resolution: {integrity: sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ==}
+  undici-types@8.9.0:
+    resolution: {integrity: sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==}
 
   unist-util-is@6.0.1:
     resolution: {integrity: sha512-LsiILbtBETkDz8I9p1dQ0uyRUWuaQzd/cuEeS1hoRSyW5E5XGmTzlwY1OrNzzakGowI9Dr/I8HVaw4hTtnxy8g==}
@@ -1449,8 +1449,8 @@ packages:
   urlpattern-polyfill@10.1.0:
     resolution: {integrity: sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==}
 
-  use-sync-external-store@1.6.0:
-    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
+  use-sync-external-store@1.7.0:
+    resolution: {integrity: sha512-6L+EeigHMQhdaIPNIFUKwfWJSwWFQ8gJbJ2DLOs5sDIegTwR9fRxvnM3uciHKjIZhFz+KAv2emhWMRvDmMcY8A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -1645,12 +1645,12 @@ snapshots:
 
   '@formatjs/fast-memoize@3.1.7': {}
 
-  '@formatjs/intl-durationformat@0.10.18':
+  '@formatjs/intl-durationformat@0.11.0':
     dependencies:
       '@formatjs/bigdecimal': 0.2.7
-      '@formatjs/intl-localematcher': 0.8.13
+      '@formatjs/intl-localematcher': 0.8.14
 
-  '@formatjs/intl-localematcher@0.8.13':
+  '@formatjs/intl-localematcher@0.8.14':
     dependencies:
       '@formatjs/fast-memoize': 3.1.7
 
@@ -1663,7 +1663,7 @@ snapshots:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 26.3.0
+      '@types/node': 26.5.1
       '@types/yargs': 17.0.35
       chalk: 4.1.2
 
@@ -1686,30 +1686,30 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lingui/babel-plugin-extract-messages@6.6.0':
+  '@lingui/babel-plugin-extract-messages@6.7.0':
     dependencies:
-      '@lingui/conf': 6.6.0
+      '@lingui/conf': 6.7.0
 
-  '@lingui/babel-plugin-lingui-macro@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)':
+  '@lingui/babel-plugin-lingui-macro@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)':
     dependencies:
-      '@lingui/conf': 6.6.0
-      '@lingui/message-utils': 6.6.0
+      '@lingui/conf': 6.7.0
+      '@lingui/message-utils': 6.7.0
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       '@babel/types': 7.29.8
 
-  '@lingui/cli@6.6.0(rolldown@1.2.8)(supports-color@7.2.0)':
+  '@lingui/cli@6.7.0(rolldown@1.2.8)(supports-color@7.2.0)':
     dependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       '@babel/generator': 7.29.8
       '@babel/parser': 7.29.8
       '@babel/types': 7.29.8
-      '@lingui/babel-plugin-extract-messages': 6.6.0
-      '@lingui/babel-plugin-lingui-macro': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
-      '@lingui/conf': 6.6.0
-      '@lingui/core': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
-      '@lingui/format-po': 6.6.0
-      '@lingui/message-utils': 6.6.0
+      '@lingui/babel-plugin-extract-messages': 6.7.0
+      '@lingui/babel-plugin-lingui-macro': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@lingui/conf': 6.7.0
+      '@lingui/core': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@lingui/format-po': 6.7.0
+      '@lingui/message-utils': 6.7.0
       chokidar: 5.0.0
       cli-table3: 0.6.5
       commander: 14.0.3
@@ -1718,7 +1718,7 @@ snapshots:
       ms: 2.1.3
       normalize-path: 3.0.0
       ora: 9.4.1
-      pseudolocale: 2.3.0
+      pseudolocale: 3.1.0
       source-map: 0.7.6
       tinypool: 2.1.2
     optionalDependencies:
@@ -1727,52 +1727,52 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  '@lingui/conf@6.6.0':
+  '@lingui/conf@6.7.0':
     dependencies:
       jest-validate: 29.7.0
       jiti: 2.7.0
       lilconfig: 3.1.3
       normalize-path: 3.0.0
 
-  '@lingui/core@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)':
+  '@lingui/core@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)':
     dependencies:
-      '@lingui/babel-plugin-lingui-macro': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
-      '@lingui/message-utils': 6.6.0
+      '@lingui/babel-plugin-lingui-macro': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@lingui/message-utils': 6.7.0
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/types'
 
-  '@lingui/format-po@6.6.0':
+  '@lingui/format-po@6.7.0':
     dependencies:
-      '@lingui/conf': 6.6.0
-      '@lingui/message-utils': 6.6.0
+      '@lingui/conf': 6.7.0
+      '@lingui/message-utils': 6.7.0
       pofile-ts: 4.0.3
 
-  '@lingui/message-utils@6.6.0':
+  '@lingui/message-utils@6.7.0':
     dependencies:
       '@messageformat/date-skeleton': 1.1.0
       '@messageformat/parser': 5.1.1
       js-sha256: 0.10.1
 
-  '@lingui/react@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)(react@19.2.7)':
+  '@lingui/react@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)(react@19.2.7)':
     dependencies:
-      '@lingui/babel-plugin-lingui-macro': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
-      '@lingui/core': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@lingui/babel-plugin-lingui-macro': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@lingui/core': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
       react: 19.2.7
-      use-sync-external-store: 1.6.0(react@19.2.7)
+      use-sync-external-store: 1.7.0(react@19.2.7)
     transitivePeerDependencies:
       - '@babel/core'
       - '@babel/types'
 
-  '@lingui/vite-plugin@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@lingui/babel-plugin-lingui-macro@6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8))(@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0)))(rolldown@1.2.8)(supports-color@7.2.0)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0))':
+  '@lingui/vite-plugin@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@lingui/babel-plugin-lingui-macro@6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8))(@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0)))(rolldown@1.2.8)(supports-color@7.2.0)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0))':
     dependencies:
-      '@lingui/cli': 6.6.0(rolldown@1.2.8)(supports-color@7.2.0)
-      '@lingui/conf': 6.6.0
-      vite: 8.3.0(@types/node@26.3.0)(jiti@2.7.0)
+      '@lingui/cli': 6.7.0(rolldown@1.2.8)(supports-color@7.2.0)
+      '@lingui/conf': 6.7.0
+      vite: 8.3.0(@types/node@26.5.1)(jiti@2.7.0)
     optionalDependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
-      '@lingui/babel-plugin-lingui-macro': 6.6.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
-      '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0))
+      '@lingui/babel-plugin-lingui-macro': 6.7.0(@babel/core@7.29.7(supports-color@7.2.0))(@babel/types@7.29.8)
+      '@rolldown/plugin-babel': 0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0))
       rolldown: 1.2.8
     transitivePeerDependencies:
       - babel-plugin-macros
@@ -1950,14 +1950,14 @@ snapshots:
   '@rolldown/binding-win32-x64-msvc@1.2.8':
     optional: true
 
-  '@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0))':
+  '@rolldown/plugin-babel@0.2.4(@babel/core@7.29.7(supports-color@7.2.0))(@babel/runtime@7.29.7)(rolldown@1.2.8)(vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@7.2.0)
       picomatch: 4.0.7
       rolldown: 1.2.8
     optionalDependencies:
       '@babel/runtime': 7.29.7
-      vite: 8.3.0(@types/node@26.3.0)(jiti@2.7.0)
+      vite: 8.3.0(@types/node@26.5.1)(jiti@2.7.0)
 
   '@rolldown/pluginutils@1.0.1': {}
 
@@ -2021,9 +2021,9 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/node@26.3.0':
+  '@types/node@26.5.1':
     dependencies:
-      undici-types: 8.3.0
+      undici-types: 8.9.0
 
   '@types/unist@3.0.3': {}
 
@@ -2093,7 +2093,7 @@ snapshots:
   '@typescript/typescript-win32-x64@7.0.2':
     optional: true
 
-  '@ungap/structured-clone@1.3.3': {}
+  '@ungap/structured-clone@1.4.0': {}
 
   ansi-regex@5.0.1: {}
 
@@ -2160,7 +2160,7 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@10.0.1: {}
+  commander@13.1.0: {}
 
   commander@14.0.3: {}
 
@@ -2329,7 +2329,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      '@ungap/structured-clone': 1.3.3
+      '@ungap/structured-clone': 1.4.0
       devlop: 1.1.0
       micromark-util-sanitize-uri: 2.0.1
       trim-lines: 3.0.1
@@ -2367,7 +2367,7 @@ snapshots:
 
   ms@2.1.3: {}
 
-  nanoid@3.3.18: {}
+  nanoid@3.3.19: {}
 
   node-releases@2.0.50: {}
 
@@ -2452,7 +2452,7 @@ snapshots:
 
   postcss@8.5.28:
     dependencies:
-      nanoid: 3.3.18
+      nanoid: 3.3.19
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
@@ -2464,9 +2464,9 @@ snapshots:
 
   property-information@7.2.0: {}
 
-  pseudolocale@2.3.0:
+  pseudolocale@3.1.0:
     dependencies:
-      commander: 10.0.1
+      commander: 13.1.0
 
   react-is@18.3.1: {}
 
@@ -2563,14 +2563,14 @@ snapshots:
     dependencies:
       has-flag: 4.0.0
 
-  temporal-polyfill@1.0.4:
+  temporal-polyfill@1.0.5:
     dependencies:
       temporal-spec: 1.0.1
-      temporal-utils: 1.0.2
+      temporal-utils: 1.0.3
 
   temporal-spec@1.0.1: {}
 
-  temporal-utils@1.0.2: {}
+  temporal-utils@1.0.3: {}
 
   tinyglobby@0.2.17:
     dependencies:
@@ -2608,7 +2608,7 @@ snapshots:
       '@typescript/typescript-win32-arm64': 7.0.2
       '@typescript/typescript-win32-x64': 7.0.2
 
-  undici-types@8.3.0: {}
+  undici-types@8.9.0: {}
 
   unist-util-is@6.0.1:
     dependencies:
@@ -2641,7 +2641,7 @@ snapshots:
 
   urlpattern-polyfill@10.1.0: {}
 
-  use-sync-external-store@1.6.0(react@19.2.7):
+  use-sync-external-store@1.7.0(react@19.2.7):
     dependencies:
       react: 19.2.7
 
@@ -2655,7 +2655,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.3.0(@types/node@26.3.0)(jiti@2.7.0):
+  vite@8.3.0(@types/node@26.5.1)(jiti@2.7.0):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -2663,7 +2663,7 @@ snapshots:
       rolldown: 1.2.8
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 26.3.0
+      '@types/node': 26.5.1
       fsevents: 2.3.3
       jiti: 2.7.0
 
