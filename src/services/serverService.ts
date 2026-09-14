@@ -1,6 +1,25 @@
 import type { RawBotCommand, RawExploreItem, RawServer } from "../Types";
 import { request } from "./request";
 
+export interface UpdateServerOptions {
+  name?: string;
+  avatarId?: string;
+  bannerId?: string;
+  defaultChannelId?: string;
+  systemChannelId?: string | null;
+}
+
+export async function updateServer(
+  serverId: string,
+  body: UpdateServerOptions,
+) {
+  return request<any>(`/servers/${serverId}`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}
+
 export const kickServerMember = async (opts: {
   serverId: string;
   userId: string;

@@ -35,6 +35,7 @@ export class Server {
   avatar?: string;
   banner?: string;
   defaultChannelId: string;
+  systemChannelId?: string;
   defaultRoleId: string;
   createdById: string;
   createdAt: number;
@@ -51,6 +52,7 @@ export class Server {
     this.hexColor = data.hexColor;
     this.avatar = data.avatar;
     this.defaultChannelId = data.defaultChannelId;
+    this.systemChannelId = data.systemChannelId;
     this.defaultRoleId = data.defaultRoleId;
     this.createdById = data.createdById;
     this.createdAt = data.createdAt;
@@ -128,21 +130,19 @@ function createServerStore() {
     socket.requestServerMembers(currentServerId!);
   }, 1000);
 
-  const currentChannelsSorted = new ManualMemo(() => {
-    if (!currentServerId) return null;
-
+  const sortedChannels = (serverId: string) => {
     const currentUserId = accountStore.currentUser?.id;
     const member = serverMemberStore.serverMembers
-      .get(currentServerId!)
+      .get(serverId!)
       ?.get(currentUserId!);
 
     const isAdmin = serverMemberStore.hasPermission({
-      serverId: serverStore.currentServerId!,
+      serverId: serverId!,
       userId: currentUserId!,
       permission: RolePermissionFlag.admin.bit,
     });
 
-    const server = servers.get(currentServerId!);
+    const server = servers.get(serverId);
     const defaultRoleId = server?.defaultRoleId;
     const publicChannelBit = ChannelPermissionFlag.publicChannel.bit;
     const memberRoleIds = member ? new Set(member.roleIds) : null;
@@ -164,7 +164,7 @@ function createServerStore() {
 
     const currentChannels: Channel[] = [];
     for (const channel of channelStore.channels.values()) {
-      if (channel.serverId !== currentServerId) continue;
+      if (channel.serverId !== serverId) continue;
       const isCategory = channel.type === ChannelType.CATEGORY;
       if (
         isAdmin ||
@@ -197,6 +197,12 @@ function createServerStore() {
     }
 
     return results;
+  };
+
+  const currentChannelsSorted = new ManualMemo(() => {
+    if (!currentServerId) return null;
+
+    return sortedChannels(currentServerId);
   });
 
   const currentServerSortedRoles = new ManualMemo(() => {
@@ -346,6 +352,7 @@ function createServerStore() {
     servers,
     orderedServers,
     setServers,
+    sortedChannels,
     get currentServerId() {
       return currentServerId;
     },

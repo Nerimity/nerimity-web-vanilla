@@ -92,6 +92,7 @@ export interface RawServer {
   order?: number;
   customEmojis?: RawCustomEmoji[];
   verified?: boolean;
+  systemChannelId?: string;
 }
 
 export const LastOnlineStatus = {

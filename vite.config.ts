@@ -19,6 +19,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "fact_check",
         "play_arrow",
         "call_end",
         "event_available",

@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
+import { Dropdown } from "../../../components/createDropdown";
 import { createFileInput } from "../../../components/FileInput";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
@@ -9,10 +10,9 @@ import { createSettingsActions } from "../../../components/settings-actions/Sett
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
-import { updateUser } from "../../../services/userService";
-import { accountStore } from "../../../store/accountStore";
+import { updateServer } from "../../../services/serverService";
 import { serverStore } from "../../../store/serverStore";
-import { userStore } from "../../../store/userStore";
+import { ChannelType } from "../../../Types";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { fileToDataUrl } from "../../../utils/file";
 import { router } from "../../../utils/router";
@@ -25,6 +25,8 @@ const getStrings = () => ({
   avatar: t`Avatar`,
   banner: t`Banner`,
   deleteServer: t`Delete Server`,
+  defaultChannel: t`Default Channel`,
+  systemChannel: t`System Channel`,
 });
 
 const generalServerSettingsPage = (context: ServerSettingsContext) => {
@@ -46,12 +48,62 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
 
       banner: null as null | { file: File; url: string },
       bannerCropPoints: null as null | CropPoints,
+
+      systemChannelId: server?.systemChannelId,
+      defaultChannelId: server?.defaultChannelId,
     };
   };
-
   const actions = createSettingsActions({ signal });
-
   const updateHandler = createUpdatedHandler(initialValues, signal);
+
+  const serverChannels = () => {
+    const serverId = router.match<{ serverId: string }>(
+      "/app/servers/:serverId/*",
+    )?.params.serverId;
+    return serverStore
+      .sortedChannels(serverId!)
+      .filter((c) => c.type !== ChannelType.CATEGORY);
+  };
+
+  const defaultChannelDropdown = Dropdown.create({
+    signal,
+    onChange(id) {
+      updateHandler.changeValue("defaultChannelId", id);
+    },
+    initialSelectedId: () => updateHandler.values.defaultChannelId!,
+    items: () => {
+      const channels = serverChannels();
+      return channels.map((c) => {
+        return (
+          <Dropdown.Item id={c.id}>
+            <Dropdown.Label>{c.name}</Dropdown.Label>
+          </Dropdown.Item>
+        );
+      });
+    },
+  });
+  const systemChannelDropdown = Dropdown.create({
+    signal,
+    onChange(id) {
+      updateHandler.changeValue("systemChannelId", id);
+    },
+    initialSelectedId: () => updateHandler.values.systemChannelId ?? "none",
+    items: () => {
+      const channels = serverChannels();
+      return [
+        <Dropdown.Item id="none">
+          <Dropdown.Label>{t`None`}</Dropdown.Label>
+        </Dropdown.Item>,
+        ...channels.map((c) => {
+          return (
+            <Dropdown.Item id={c.id}>
+              <Dropdown.Label>{c.name}</Dropdown.Label>
+            </Dropdown.Item>
+          );
+        }),
+      ];
+    },
+  });
 
   let el = (
     <div class={style.page}>
@@ -89,6 +141,27 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
             icon="attach_file"
             label={t`Browse`}
           />
+        </SettingsBlock.Root>
+      </SettingsBlock.Group>
+      <SettingsBlock.Group>
+        {/* Default Channel */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="tag" />
+          <SettingsBlock.Details
+            title={strings.defaultChannel}
+            description={t`New members will be directed to this channel.`}
+          />
+          {defaultChannelDropdown.el}
+        </SettingsBlock.Root>
+
+        {/* System Channel */}
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="fact_check" />
+          <SettingsBlock.Details
+            title={strings.systemChannel}
+            description={t`Where system messages should appear.`}
+          />
+          {systemChannelDropdown.el}
         </SettingsBlock.Root>
       </SettingsBlock.Group>
 
@@ -131,16 +204,30 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
     actions.setVisibility(hasChanges);
   });
 
-  actions.handleUndoClick(updateHandler.undo);
+  const handleUndo = () => {
+    updateHandler.undo();
+    systemChannelDropdown.update();
+    defaultChannelDropdown.update();
+  };
+
+  actions.handleUndoClick(handleUndo);
 
   const handleSave = async (
     done: (msg?: string) => void,
     password?: string,
   ) => {
-    const { avatar, avatarCropPoints, banner, bannerCropPoints, ...updates } =
-      updateHandler.changedValues;
+    const {
+      avatar,
+      avatarCropPoints,
+      banner,
+      bannerCropPoints,
+      systemChannelId,
+      ...updates
+    } = updateHandler.changedValues;
 
-    const userId = accountStore.currentUser?.id!;
+    const serverId = router.match<{ serverId: string }>(
+      "/app/servers/:serverId/*",
+    )?.params.serverId!;
 
     let avatarId: string | undefined = undefined;
     let bannerId: string | undefined = undefined;
@@ -148,7 +235,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
     if (avatar) {
       const [avatarRes, error] = await nerimityCDNUploadRequest({
         type: "avatars",
-        groupId: userId,
+        groupId: serverId,
         file: avatar.file,
         points: avatarCropPoints!,
       });
@@ -160,7 +247,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
     if (banner) {
       const [bannerRes, error] = await nerimityCDNUploadRequest({
         type: "profile_banners",
-        groupId: userId,
+        groupId: serverId,
         file: banner.file,
         points: bannerCropPoints!,
       });
@@ -172,19 +259,21 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
 
     const body = {
       ...updates,
+      systemChannelId: systemChannelId === "none" ? null : systemChannelId,
       bannerId,
       avatarId,
       password,
     };
 
-    const [res, error] = await updateUser(body);
+    const [_res, error] = await updateServer(serverId, body);
     if (error) {
       return done(error.message);
     }
 
-    userStore.users.get(userId)?.update(res.user);
+    // userStore.users.get(userId)?.update(res.user);
+    // serverStore.servers.get(serverId).update()
     done();
-    updateHandler.undo();
+    handleUndo();
   };
 
   actions.handleSaveClick(async (done) => {
