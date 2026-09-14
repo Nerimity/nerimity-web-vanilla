@@ -134,6 +134,12 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   storeEmitter.on("drawer:modeChange", renderHeader, signal);
 
+  router.createMatchListener("*", renderHeader, {
+    signal,
+    always: true,
+    defer: true,
+  });
+
   const renderPage = () => {
     const serverId = router.match<{ serverId: string }>(
       "/app/servers/:serverId/*",

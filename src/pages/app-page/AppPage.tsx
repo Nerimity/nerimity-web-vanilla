@@ -2,6 +2,7 @@ import { createAppHeader } from "../../components/appHeader";
 import { Drawer } from "../../components/drawer";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
+import { createServerContextMenuHandler } from "../../components/ServerContextMenu";
 import { createSidebar } from "../../components/sidebar";
 import { createUserContextMenuHandler } from "../../components/UserContextMenu";
 import { isMobileWidth } from "../../config";
@@ -33,6 +34,7 @@ function registerPaneRoute<T extends Page, P = unknown>(opts: {
   onRoute?: (res: MatchResult<P>) => void;
   onMatch?: () => void;
   onUnmatch?: () => void;
+  shouldMatch?: (res: MatchResult<P> | null | undefined) => boolean;
   alwaysRemount?: boolean;
 }) {
   let pane: T | null = null;
@@ -40,8 +42,6 @@ function registerPaneRoute<T extends Page, P = unknown>(opts: {
   router.createMatchListener<P>(
     opts.paths,
     async (res) => {
-      opts.onRoute?.(res);
-
       if (!res) {
         pane?.destroy();
         pane = null;
@@ -49,6 +49,14 @@ function registerPaneRoute<T extends Page, P = unknown>(opts: {
         return;
       }
 
+      if (opts.shouldMatch && !opts.shouldMatch(res)) {
+        pane?.destroy();
+        pane = null;
+        opts.onUnmatch?.();
+        return;
+      }
+
+      opts.onRoute?.(res);
       opts.onMatch?.();
       if (pane && !opts.alwaysRemount) return;
       pane?.destroy();
@@ -80,6 +88,7 @@ const createAppPage = () => {
   socket.connect();
 
   createUserContextMenuHandler({ signal });
+  createServerContextMenuHandler({ signal });
   const app = document.getElementById("app")!;
   const drawer = Drawer();
   appHeader = createAppHeader();
@@ -141,6 +150,7 @@ const createAppPage = () => {
       paths: "/app/servers/:serverId/:channelId",
       signal,
       tokenSource: appRouteSource,
+      shouldMatch: (res) => res?.params.channelId !== "settings",
       onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
       load: () => import("./createServerChannelRoute"),
       context,
@@ -164,6 +174,7 @@ const createAppPage = () => {
       paths: ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
       signal,
       tokenSource: contentSource,
+      shouldMatch: (res) => res?.params.channelId !== "settings",
       onRoute: (res) => channelStore.setCurrentChannelId(res?.params.channelId),
       onMatch: () => drawer.updateRightDrawerAvailable(true),
       onUnmatch: () => drawer.updateRightDrawerAvailable(false),
