@@ -66,6 +66,7 @@ export const createChatbar = () => {
 
   let inputContainerEl = (
     <Input
+      showFormatBar
       type="textarea"
       id="message-input"
       class={style.chatInput}

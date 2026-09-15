@@ -19,6 +19,14 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "code_xml",
+        "visibility_off",
+        "select_check_box",
+        "link",
+        "title",
+        "strikethrough_s",
+        "format_italic",
+        "format_bold",
         "fact_check",
         "play_arrow",
         "call_end",
