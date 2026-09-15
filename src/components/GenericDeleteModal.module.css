@@ -1,0 +1,19 @@
+.confirm {
+  padding-right: 4px;
+  padding-left: 4px;
+  border-radius: var(--radius-6);
+  color: black;
+  background-color: var(--alert-color);
+  user-select: text;
+}
+
+.text {
+  user-select: none;
+}
+
+.body {
+  gap: 12px;
+}
+.error {
+  color: var(--alert-color);
+}

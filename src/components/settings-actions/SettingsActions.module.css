@@ -6,10 +6,10 @@
   justify-content: end;
   margin-top: 12px;
   &.hide {
+    pointer-events: none;
     .innerContainer {
       opacity: 0;
       transform: translateY(20px);
-      pointer-events: none;
     }
   }
 

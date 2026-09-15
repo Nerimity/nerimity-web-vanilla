@@ -24,6 +24,7 @@ import {
   type RawInbox,
   type RawMessage,
   type RawNotice,
+  type RawServer,
   type RawServerMember,
   type RawServerRole,
   type RawUser,
@@ -60,6 +61,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:member_updated": onServerMemberUpdated,
   "server:role_deleted": onServerRoleDeleted,
   "server:channel_deleted": onServerChannelDeleted,
+  "server:updated": onServerUpdated,
   "message:reaction_added": onMessageReactionAdded,
   "message:reaction_removed": onMessageReactionRemoved,
   "server:emoji_add": onServerEmojiAdded,
@@ -329,6 +331,13 @@ export interface ReactionAddedPayload {
   gif: boolean;
   webp: boolean;
   count: number;
+}
+
+function onServerUpdated(payload: {
+  serverId: string;
+  updated: Partial<RawServer>;
+}) {
+  serverStore.servers.get(payload.serverId)?.update(payload.updated);
 }
 
 function onMessageReactionAdded(payload: ReactionAddedPayload) {

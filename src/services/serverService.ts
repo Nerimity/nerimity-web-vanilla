@@ -87,3 +87,9 @@ export const getServerDetailsByEmojiId = async (emojiId: string) => {
     method: "GET",
   });
 };
+export const deleteServer = async (serverId: string) => {
+  return request<RawExploreItem>(`/servers/${serverId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};

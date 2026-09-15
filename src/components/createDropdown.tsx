@@ -22,7 +22,13 @@ const createDropdown = (opts: {
       .findIndex((item: HTMLDivElement) => item.dataset.id === selectedId());
 
   const rerenderSelected = () => {
-    mainContainer.replaceChildren(opts.items()[selectedIdToIndex()] ?? []);
+    mainContainer.replaceChildren(
+      opts.items()[selectedIdToIndex()] ?? (
+        <Dropdown.Item id="">
+          <Dropdown.Label>{""}</Dropdown.Label>
+        </Dropdown.Item>
+      ),
+    );
   };
 
   rerenderSelected();

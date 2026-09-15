@@ -5,6 +5,7 @@ import {
   LastOnlineStatus,
   FriendStatus,
 } from "../Types";
+import { applyIfPresent } from "../utils/applyIfPresent";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore, type CurrentUser } from "./accountStore";
 import { friendStore } from "./friendStore";
@@ -49,13 +50,13 @@ export class User {
       } as CurrentUser);
     }
 
-    this.badges = updated.badges ?? this.badges;
-    this.username = updated.username ?? this.username;
-    this.tag = updated.tag ?? this.tag;
-    this.avatar = updated.avatar ?? this.avatar;
-    this.banner = updated.banner ?? this.banner;
-    this.lastOnlineAt = updated.lastOnlineAt ?? this.lastOnlineAt;
-    this.lastOnlineStatus = updated.lastOnlineStatus ?? this.lastOnlineStatus;
+    applyIfPresent(this, updated, "badges");
+    applyIfPresent(this, updated, "username");
+    applyIfPresent(this, updated, "tag");
+    applyIfPresent(this, updated, "avatar");
+    applyIfPresent(this, updated, "banner");
+    applyIfPresent(this, updated, "lastOnlineAt");
+    applyIfPresent(this, updated, "lastOnlineStatus");
 
     storeEmitter.emit("user:update", { user: this });
   }

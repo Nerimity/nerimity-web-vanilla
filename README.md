@@ -37,7 +37,7 @@ live: https://vanilla.nerimity.com
 
 - [ ] `server:joined`
 - [ ] `server:left`
-- [ ] `server:updated`
+- [x] `server:updated`
 - [ ] `server:role_created`
 - [x] `server:role_updated`
 - [ ] `server:role_order_updated`

@@ -96,6 +96,35 @@ msgstr "Emojis"
 msgid "Maximum file size allowed is {size} MB"
 msgstr "Maximum file size allowed is {size} MB"
 
+#: src/components/GenericDeleteModal.tsx:25
+msgid "Type <0>{confirmLabel}</0> to confirm"
+msgstr "Type <0>{confirmLabel}</0> to confirm"
+
+#: src/components/GenericDeleteModal.tsx:37
+#: src/components/message-pane/deleteMessageModal.tsx:45
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:73
+msgid "Don't Delete"
+msgstr "Don't Delete"
+
+#: src/components/GenericDeleteModal.tsx:43
+#: src/components/GenericDeleteModal.tsx:82
+#: src/components/message-pane/deleteMessageModal.tsx:52
+#: src/components/message-pane/deleteMessageModal.tsx:73
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/GenericDeleteModal.tsx:74
+msgid "Text doesn't match, try again."
+msgstr "Text doesn't match, try again."
+
+#: src/components/GenericDeleteModal.tsx:77
+#: src/components/message-pane/deleteMessageModal.tsx:66
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:108
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
+msgid "Deleting..."
+msgstr "Deleting..."
+
 #: src/components/ImageCropModal.tsx:68
 msgid "Crop Image"
 msgstr "Crop Image"
@@ -191,6 +220,29 @@ msgstr "Caution"
 msgid "Success"
 msgstr "Success"
 
+#: src/components/ServerContextMenu.tsx:62
+#: src/components/miniProfile.tsx:333
+#: src/components/server-settings/createServerSettingsDrawer.tsx:18
+#: src/components/settings/createSettingsDrawer.tsx:15
+msgid "Settings"
+msgstr "Settings"
+
+#: src/components/ServerContextMenu.tsx:68
+msgid "Leave"
+msgstr "Leave"
+
+#: src/components/ServerContextMenu.tsx:75
+#: src/components/UserContextMenu.tsx:151
+#: src/components/message-pane/messagePane.tsx:630
+msgid "Copy ID"
+msgstr "Copy ID"
+
+#: src/components/ServerContextMenu.tsx:79
+#: src/components/UserContextMenu.tsx:155
+#: src/components/message-pane/messagePane.tsx:634
+msgid "Copy Object"
+msgstr "Copy Object"
+
 #: src/components/UserContextMenu.tsx:123
 msgid "View Profile"
 msgstr "View Profile"
@@ -219,16 +271,6 @@ msgstr "Ban Member"
 #: src/components/UserContextMenu.tsx:145
 msgid "Kick Member"
 msgstr "Kick Member"
-
-#: src/components/UserContextMenu.tsx:151
-#: src/components/message-pane/messagePane.tsx:630
-msgid "Copy ID"
-msgstr "Copy ID"
-
-#: src/components/UserContextMenu.tsx:155
-#: src/components/message-pane/messagePane.tsx:634
-msgid "Copy Object"
-msgstr "Copy Object"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:320
@@ -446,23 +488,6 @@ msgstr "Are you sure you want to delete this message?"
 msgid "Delete Message"
 msgstr "Delete Message"
 
-#: src/components/message-pane/deleteMessageModal.tsx:45
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:73
-msgid "Don't Delete"
-msgstr "Don't Delete"
-
-#: src/components/message-pane/deleteMessageModal.tsx:52
-#: src/components/message-pane/deleteMessageModal.tsx:73
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
-msgid "Delete"
-msgstr "Delete"
-
-#: src/components/message-pane/deleteMessageModal.tsx:66
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:108
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
-msgid "Deleting..."
-msgstr "Deleting..."
-
 #: src/components/message-pane/inputSuggestions.tsx:237
 #: src/components/message-pane/inputSuggestions.tsx:271
 msgid "Silent message."
@@ -554,11 +579,6 @@ msgstr "<0>{following}</0> Following"
 #: src/components/miniProfile.tsx:293
 msgid "Full Profile"
 msgstr "Full Profile"
-
-#: src/components/miniProfile.tsx:333
-#: src/components/settings/createSettingsDrawer.tsx:15
-msgid "Settings"
-msgstr "Settings"
 
 #: src/components/miniProfile.tsx:353
 msgid "Roles"
@@ -725,6 +745,65 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
+#: src/pages/app-page/server-settings/ServerSettings.ts:42
+msgid "General"
+msgstr "General"
+
+#: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:35
+msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:25
+msgid "Name"
+msgstr "Name"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:26
+#: src/pages/app-page/settings/accountSettingsPage.tsx:30
+msgid "Avatar"
+msgstr "Avatar"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:27
+#: src/pages/app-page/settings/accountSettingsPage.tsx:31
+msgid "Banner"
+msgstr "Banner"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:28
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:325
+msgid "Delete Server"
+msgstr "Delete Server"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:29
+msgid "Default Channel"
+msgstr "Default Channel"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:30
+msgid "System Channel"
+msgstr "System Channel"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:98
+#: src/pages/app-page/settings/profileSettingsPage.tsx:196
+msgid "None"
+msgstr "None"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:131
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:145
+#: src/pages/app-page/settings/accountSettingsPage.tsx:126
+#: src/pages/app-page/settings/accountSettingsPage.tsx:140
+msgid "Browse"
+msgstr "Browse"
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:155
+msgid "New members will be directed to this channel."
+msgstr "New members will be directed to this channel."
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:165
+msgid "Where system messages should appear."
+msgstr "Where system messages should appear."
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:177
+msgid "Permanently delete this server and all associated data."
+msgstr "Permanently delete this server and all associated data."
+
 #: src/pages/app-page/settings/ChangePasswordModal.tsx:16
 #: src/pages/app-page/settings/accountSettingsPage.tsx:32
 msgid "Change Password"
@@ -849,23 +928,10 @@ msgstr "Don't Update"
 msgid "Tag"
 msgstr "Tag"
 
-#: src/pages/app-page/settings/accountSettingsPage.tsx:30
-msgid "Avatar"
-msgstr "Avatar"
-
-#: src/pages/app-page/settings/accountSettingsPage.tsx:31
-msgid "Banner"
-msgstr "Banner"
-
 #: src/pages/app-page/settings/accountSettingsPage.tsx:33
 #: src/pages/app-page/settings/accountSettingsPage.tsx:349
 msgid "Forgot Password"
 msgstr "Forgot Password"
-
-#: src/pages/app-page/settings/accountSettingsPage.tsx:126
-#: src/pages/app-page/settings/accountSettingsPage.tsx:140
-msgid "Browse"
-msgstr "Browse"
 
 #: src/pages/app-page/settings/accountSettingsPage.tsx:159
 msgid "Send a password reset link to your email."
@@ -1052,10 +1118,6 @@ msgstr "Username Font"
 #: src/pages/app-page/settings/profileSettingsPage.tsx:446
 msgid "Bio"
 msgstr "Bio"
-
-#: src/pages/app-page/settings/profileSettingsPage.tsx:196
-msgid "None"
-msgstr "None"
 
 #: src/pages/app-page/settings/profileSettingsPage.tsx:328
 msgid "Preview"

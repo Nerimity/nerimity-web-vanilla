@@ -8,6 +8,7 @@ import {
   type RawServerFolder,
   type ServerClan,
 } from "../Types";
+import { applyIfPresent } from "../utils/applyIfPresent";
 import { hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
 import { debounce } from "../utils/debounce";
@@ -68,6 +69,15 @@ export class Server {
       this.botCommands = res.commands;
       return { cache: false, commands: this.botCommands };
     });
+  }
+  update(updated: Partial<RawServer>) {
+    applyIfPresent(this, updated, "name");
+    applyIfPresent(this, updated, "avatar");
+    applyIfPresent(this, updated, "defaultChannelId");
+    applyIfPresent(this, updated, "systemChannelId");
+    applyIfPresent(this, updated, "banner");
+    applyIfPresent(this, updated, "verified");
+    applyIfPresent(this, updated, "clan");
   }
 }
 
@@ -130,7 +140,7 @@ function createServerStore() {
     socket.requestServerMembers(currentServerId!);
   }, 1000);
 
-  const sortedChannels = (serverId: string) => {
+  const sortedChannels = (serverId: string, filter = true) => {
     const currentUserId = accountStore.currentUser?.id;
     const member = serverMemberStore.serverMembers
       .get(serverId!)
@@ -148,12 +158,15 @@ function createServerStore() {
     const memberRoleIds = member ? new Set(member.roleIds) : null;
 
     const isPrivateChannel = (channel: Channel) => {
+      if (!filter) return false;
       if (!channel.permissions) return false;
       const perm = channel.permissions.find((p) => p.roleId === defaultRoleId);
       return perm ? !hasBit(perm.permissions, publicChannelBit) : false;
     };
 
     const hasRolePermission = (channel: Channel) => {
+      if (!filter) return false;
+
       if (!channel.permissions || !memberRoleIds) return false;
       for (const permission of channel.permissions) {
         if (!memberRoleIds.has(permission.roleId!)) continue;

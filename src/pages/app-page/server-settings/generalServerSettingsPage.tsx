@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { Button } from "../../../components/button";
 import { Dropdown } from "../../../components/createDropdown";
 import { createFileInput } from "../../../components/FileInput";
+import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
 import { Input } from "../../../components/input";
@@ -10,7 +11,7 @@ import { createSettingsActions } from "../../../components/settings-actions/Sett
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
-import { updateServer } from "../../../services/serverService";
+import { deleteServer, updateServer } from "../../../services/serverService";
 import { serverStore } from "../../../store/serverStore";
 import { ChannelType } from "../../../Types";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
@@ -34,11 +35,14 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
   const { signal } = ac;
   const strings = getStrings();
 
+  const getServerId = () =>
+    router.match<{ serverId: string }>("/app/servers/:serverId/*")?.params
+      .serverId;
+
+  const getServer = () => serverStore.servers.get(getServerId()!);
+
   const initialValues = () => {
-    const serverId = router.match<{ serverId: string }>(
-      "/app/servers/:serverId/*",
-    )?.params.serverId;
-    const server = serverStore.servers.get(serverId!);
+    const server = getServer();
 
     return {
       name: server?.name || "",
@@ -57,13 +61,12 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
   const updateHandler = createUpdatedHandler(initialValues, signal);
 
   const serverChannels = () => {
-    const serverId = router.match<{ serverId: string }>(
-      "/app/servers/:serverId/*",
-    )?.params.serverId;
     return serverStore
-      .sortedChannels(serverId!)
+      .sortedChannels(getServerId()!, false)
       .filter((c) => c.type !== ChannelType.CATEGORY);
   };
+
+  console.log(updateHandler.values.defaultChannelId!);
 
   const defaultChannelDropdown = Dropdown.create({
     signal,
@@ -225,10 +228,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
       ...updates
     } = updateHandler.changedValues;
 
-    const serverId = router.match<{ serverId: string }>(
-      "/app/servers/:serverId/*",
-    )?.params.serverId!;
-
+    const serverId = getServerId()!;
     let avatarId: string | undefined = undefined;
     let bannerId: string | undefined = undefined;
 
@@ -265,13 +265,12 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
       password,
     };
 
-    const [_res, error] = await updateServer(serverId, body);
+    const [res, error] = await updateServer(serverId, body);
     if (error) {
       return done(error.message);
     }
 
-    // userStore.users.get(userId)?.update(res.user);
-    // serverStore.servers.get(serverId).update()
+    serverStore.servers.get(serverId)?.update(res);
     done();
     handleUndo();
   };
@@ -321,7 +320,17 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
       }
 
       if (action === "delete-server") {
-        // createDeleteAccountModal();
+        createGenericDeleteModal({
+          confirmLabel: getServer()?.name!,
+          title: t`Delete Server`,
+          async onDelete(done) {
+            const [, error] = await deleteServer(getServerId()!);
+            done(error?.message);
+            if (!error) {
+              router.navigate("/app");
+            }
+          },
+        });
       }
     },
     { signal },
