@@ -14,7 +14,7 @@ import { userAgent } from "../../utils/userAgent";
 import { Button } from "../button";
 import { ExpressionPickerLazy } from "../ExpressionPickerLazy";
 import { createFileInput } from "../FileInput";
-import { createTextareaHeightHandler, Input } from "../input";
+import { createTextareaHeightHandler, handleFormatBar, Input } from "../input";
 import { createAttachmentIndicator } from "./attachmentIndicator";
 import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createInputSuggestions } from "./inputSuggestions";
@@ -88,6 +88,15 @@ export const createChatbar = () => {
   let inputEl = inputContainerEl.querySelector(
     "textarea",
   )! as HTMLTextAreaElement;
+
+  handleFormatBar({
+    signal,
+    inputContainer: inputContainerEl,
+    onTextUpdate(text) {
+      inputEl.value = text;
+      handleInput();
+    },
+  });
 
   const inputSuggestions = createInputSuggestions({ signal, inputEl });
 
