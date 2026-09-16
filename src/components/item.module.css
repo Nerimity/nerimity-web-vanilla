@@ -20,6 +20,7 @@
     content: "";
     transition: 0.2s;
   }
+
   &:not([data-disabled="true"]) {
     &:hover {
       background-color: var(--item-bg);
@@ -48,6 +49,30 @@
         height: 40%;
         opacity: 1;
         background-color: var(--alert-color);
+      }
+    }
+  }
+
+  &[data-handle-position="bottom"] {
+    &:before {
+      top: auto;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 4px;
+      transform: translateX(-50%);
+    }
+
+    &:not([data-disabled="true"]) {
+      &:hover:before {
+        width: 20%;
+        height: 4px;
+      }
+
+      &[data-selected="true"]:before,
+      &[data-alert="true"]:before {
+        width: 40%;
+        height: 4px;
       }
     }
   }

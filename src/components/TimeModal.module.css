@@ -1,0 +1,30 @@
+.tabs {
+  display: flex;
+  gap: 4px;
+  .tab {
+    padding: 8px;
+  }
+}
+.presets {
+  display: grid;
+  margin-bottom: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  :global(.button) {
+    justify-content: start;
+  }
+}
+.title {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.yearInput {
+  width: 50px;
+}

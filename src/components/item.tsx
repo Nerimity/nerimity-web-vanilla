@@ -11,6 +11,7 @@ interface BaseProps {
   class?: string | (string | undefined | boolean)[];
   disabled?: boolean;
   href?: string;
+  handlePosition?: "left" | "bottom"; // default: left
   [key: string]: any;
 }
 
@@ -22,6 +23,7 @@ export const Item = {
       alert,
       children,
       disabled,
+      handlePosition = "left",
       ...rest
     } = props;
     return (
@@ -32,6 +34,7 @@ export const Item = {
         data-selected={selected}
         data-disabled={disabled}
         data-alert={alert}
+        data-handle-position={handlePosition}
         {...rest}
       >
         {children}

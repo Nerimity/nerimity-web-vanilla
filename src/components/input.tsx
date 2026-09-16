@@ -2,6 +2,7 @@ import { Dynamic } from "../dynamic";
 import { createResizeObserver } from "../utils/observer";
 import { Button } from "./button";
 import { alert } from "./modal";
+import { createTimeModal } from "./TimeModal";
 
 import style from "./input.module.css";
 
@@ -214,7 +215,9 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
         return;
       }
       if (action === "timestamp") {
-        alert({ message: "TODO: handle timestamp modal." });
+        createTimeModal({
+          onConfirm() {},
+        });
         return;
       }
 
