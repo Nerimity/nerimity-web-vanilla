@@ -84,7 +84,7 @@
     padding: 8px;
     margin-right: 4px;
     margin-left: 4px;
-    border-radius: var(--radius-16);
+    border-radius: var(--radius-14);
     background-color: var(--gray-850);
     gap: 12px;
     .title {
