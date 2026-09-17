@@ -101,7 +101,7 @@
   .closeButton {
     padding: 4px;
     margin-right: 6px;
-    border-radius: 7px;
+    border-radius: var(--radius-max);
   }
 }
 
