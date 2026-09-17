@@ -4,7 +4,7 @@
   justify-content: center;
   padding: 8px;
   border: solid 1px var(--gray-700);
-  border-radius: var(--radius-6);
+  border-radius: var(--radius-10);
   background-color: transparent;
   background-color: var(--gray-900);
   cursor: pointer;

@@ -16,7 +16,7 @@
     overflow: hidden;
     align-items: center;
     border: solid 1px var(--gray-700);
-    border-radius: var(--radius-6);
+    border-radius: var(--radius-10);
 
     background-color: var(--input-background-color);
     transition: 0.2s border-bottom-color;
@@ -42,12 +42,13 @@
   padding: 4px;
   border: solid 1px var(--gray-700);
   border-bottom: none;
-  border-top-left-radius: var(--radius-6);
-  border-top-right-radius: var(--radius-6);
+  border-top-left-radius: var(--radius-10);
+  border-top-right-radius: var(--radius-10);
   background-color: var(--input-background-color);
 
   :global(.button) {
     padding: 4px;
+    border-radius: var(--radius-6);
   }
   :global(.icon) {
     font-size: 18px;

@@ -62,7 +62,7 @@
   flex-direction: column;
   max-height: 80vh;
   border: solid 1px var(--gray-700);
-  border-radius: var(--radius-14);
+  border-radius: var(--radius-18);
   background: var(--background);
 
   &.hasPos {

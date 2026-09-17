@@ -33,7 +33,7 @@
   .button {
     width: 36px;
     padding: 6px 0;
-    border-radius: var(--radius-4);
+    border-radius: var(--radius-6);
 
     &:global(.send),
     &:global(.edit) {

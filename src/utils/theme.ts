@@ -39,6 +39,7 @@ export const DefaultTheme = {
   "radius-12": "12px",
   "radius-14": "14px",
   "radius-16": "16px",
+  "radius-18": "18px",
 
   "status-offline": "#adadad",
   "status-online": "#78e380",

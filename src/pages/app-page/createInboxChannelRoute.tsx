@@ -46,6 +46,7 @@ const createInboxChannelRoute = ({ leftDrawer }: RouteContext) => {
   );
 
   const destroy = () => {
+    channelStore.setCurrentChannelId();
     miniProfileAbortController.abort();
     drawer.rightDrawer.replaceChildren();
     abortController.abort();

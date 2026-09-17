@@ -1,6 +1,7 @@
 import { Drawer } from "../../components/drawer";
 import { createRightDrawer } from "../../components/right-drawer/RightDrawer";
 import { createServerChannelList } from "../../components/serverChannelList";
+import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import type { RouteContext } from "./AppPage";
@@ -30,6 +31,8 @@ const createServerChannelRoute = ({ leftDrawer }: RouteContext) => {
   );
 
   const destroy = () => {
+    serverStore.setCurrentServerId();
+    channelStore.setCurrentChannelId();
     abortController.abort();
     serverChannelList.destroy();
     rightDrawer.destroy();
