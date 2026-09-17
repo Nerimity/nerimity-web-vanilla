@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   padding: 6px;
-  border-radius: var(--radius-10);
+  border-radius: var(--radius-12);
   cursor: pointer;
   user-select: none;
   gap: 6px;

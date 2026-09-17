@@ -10,16 +10,16 @@
 
 .contextMenu {
   display: flex;
-  flex-direction: column;
   align-self: flex-start;
+  flex-direction: column;
   width: max-content;
   min-width: max-content;
   max-width: calc(100vw - 16px);
   padding: 4px;
   opacity: 0;
   animation: show 0.2s ease-in-out;
-  animation-fill-mode: forwards;
   white-space: nowrap;
+  animation-fill-mode: forwards;
 }
 
 .separator + .separator {
@@ -48,7 +48,7 @@
   flex-shrink: 0;
   width: 100%;
   min-width: max-content;
-  border-radius: var(--radius-10);
+  border-radius: var(--radius-12);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -85,9 +85,9 @@
     }
   }
   .label {
+    flex-shrink: 0;
     margin-right: 6px;
     margin-left: 4px;
-    flex-shrink: 0;
     white-space: nowrap;
   }
 
