@@ -7,7 +7,7 @@
 }
 .presets {
   display: grid;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   :global(.button) {
@@ -23,8 +23,35 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+
+  > * {
+    flex: 1 1 0;
+  }
 }
 
 .yearInput {
+  flex: 0 0 50px;
   width: 50px;
+}
+
+.dropdownDate {
+  flex: 1;
+}
+.timeContainer {
+  display: flex;
+  margin-top: 12px;
+
+  .dropdownHours :global(.item) {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .dropdownMins :global(.item) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  input {
+    text-align: center;
+    font-size: 32px;
+  }
 }

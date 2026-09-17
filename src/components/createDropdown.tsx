@@ -8,12 +8,13 @@ const createDropdown = (opts: {
   initialSelectedId: () => string;
   items: () => any[];
   onChange: (id: string) => void;
+  class?: string;
 }) => {
   let popupEl: HTMLDivElement | null = null;
 
   let mainContainer = (<div class={style.main}></div>) as HTMLDivElement;
 
-  let el = (<div>{mainContainer}</div>) as HTMLDivElement;
+  let el = (<div class={opts.class}>{mainContainer}</div>) as HTMLDivElement;
 
   const selectedId = opts.initialSelectedId;
   const selectedIdToIndex = () =>
@@ -138,9 +139,13 @@ const createDropdown = (opts: {
 
 const DropdownItem = (props: { children: any; id: string }) => {
   return (
-    <div class={style.item} data-id={props.id}>
+    <div class={[style.item, "item"]} data-id={props.id}>
       {props.children}
-      <Icon class={style.expandIcon} name="keyboard_arrow_down" />
+      <Icon
+        class={style.expandIcon}
+        name="keyboard_arrow_down"
+        style={{ marginLeft: "auto", flexShrink: 0 }}
+      />
     </div>
   );
 };
@@ -148,5 +153,9 @@ const DropdownItem = (props: { children: any; id: string }) => {
 export const Dropdown = {
   create: createDropdown,
   Item: DropdownItem,
-  Label: (props: { children: any }) => <div>{props.children}</div>,
+  Label: (props: { children: any; class?: string; style?: any }) => (
+    <div class={props.class} style={props.style}>
+      {props.children}
+    </div>
+  ),
 };

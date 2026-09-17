@@ -3,13 +3,17 @@ import { t } from "@lingui/core/macro";
 import { Button } from "./button";
 import { Dropdown } from "./createDropdown";
 import { Input } from "./input";
+import { TimestampType } from "./input";
 import { Item } from "./item";
 import { createModal, Modal } from "./modal";
 
 import style from "./TimeModal.module.css";
 
 interface GenericDeleteModalOpts {
-  onConfirm: () => void;
+  onConfirm: (event: {
+    type: typeof TimestampType.RELATIVE;
+    val: number;
+  }) => void;
 }
 
 const Tabs = () => (
@@ -31,8 +35,9 @@ const Tabs = () => (
 );
 
 type Tab = "relative" | "offset";
+let cacheTime = 0;
 
-export const createTimeModal = (_opts: GenericDeleteModalOpts) => {
+export const createTimeModal = (opts: GenericDeleteModalOpts) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let currentTab: Tab = "relative";
@@ -83,10 +88,19 @@ export const createTimeModal = (_opts: GenericDeleteModalOpts) => {
       const action = actionBtn?.dataset.action;
 
       if (action === "confirm") {
+        opts.onConfirm({
+          type: TimestampType.RELATIVE,
+          val: Math.floor(cacheTime / 1000),
+        });
+        abortController.abort();
       }
     },
     { signal },
   );
+
+  signal.addEventListener("abort", () => {
+    contentAbortController.abort();
+  });
 
   createModal(() => {
     return el;
@@ -109,41 +123,63 @@ const MonthNames = [
 ];
 
 const Presets = () => [
-  { label: t`15 minutes` },
-  { label: t`30 minutes` },
-  { label: t`1 hour` },
-  { label: t`6 hours` },
-  { label: t`12 hours` },
-  { label: t`1 day` },
+  { label: t`15 minutes`, value: 15 * 60 },
+  { label: t`30 minutes`, value: 30 * 60 },
+  { label: t`1 hour`, value: 60 * 60 },
+  { label: t`6 hours`, value: 6 * 60 * 60 },
+  { label: t`12 hours`, value: 12 * 60 * 60 },
+  { label: t`1 day`, value: 24 * 60 * 60 },
 ];
+const hours = Array.from({ length: 24 }, (_, index) => index);
+const minutes = Array.from({ length: 60 }, (_, index) => index);
 
 const RelativeContent = (props: { signal: AbortSignal }) => {
-  const date = new Date();
+  let date = new Date();
 
-  let month = date.getMonth();
-  let day = date.getDate();
-  let year = date.getFullYear();
+  const updateSelectedPreset = () => {
+    const buttons = el.querySelectorAll<HTMLDivElement>("[data-preset-index");
+    buttons.forEach((v, i) => {
+      const preset = Presets()[i]!;
+      const shouldHighlight =
+        Math.abs(date.getTime() - (Date.now() + preset.value * 1000)) < 60_000;
+      v.dataset.primary = String(shouldHighlight);
+    });
+  };
 
-  const updateVals = () => {
-    month = date.getMonth();
-    day = date.getDate();
-    year = date.getFullYear();
+  const vals = () => {
+    requestAnimationFrame(() => updateSelectedPreset());
+    cacheTime = date.getTime();
+    return {
+      month: date.getMonth(),
+      day: date.getDate(),
+      year: date.getFullYear(),
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+    };
   };
 
   const dateDropdown = Dropdown.create({
     signal: props.signal,
+    class: style.dropdownDate,
     onChange(id) {
       date.setDate(parseInt(id) + 1);
-      updateVals();
     },
     initialSelectedId() {
-      return (day - 1).toString();
+      return (vals().day - 1).toString();
     },
     items() {
-      const days = dayNamesInMonth(year, month);
+      const days = dayNamesInMonth(vals().year, vals().month);
       return days.map((d, i) => (
         <Dropdown.Item id={i.toString()}>
-          <Dropdown.Label>
+          <Dropdown.Label
+            style={{
+              flex: 1,
+              minWidth: 0,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
             {addOrdinalSuffix(d.day)} {d.dayName}
           </Dropdown.Label>
         </Dropdown.Item>
@@ -152,44 +188,129 @@ const RelativeContent = (props: { signal: AbortSignal }) => {
   });
   const monthDropdown = Dropdown.create({
     signal: props.signal,
+    class: style.dropdownMonth,
     onChange(id) {
-      const dayCount = dayNamesInMonth(year, parseInt(id)).length;
-      if (day >= dayCount) {
+      const dayCount = dayNamesInMonth(vals().year, parseInt(id)).length;
+      if (vals().day >= dayCount) {
         date.setDate(dayCount);
       }
       date.setMonth(parseInt(id));
 
-      updateVals();
       dateDropdown.update();
     },
     initialSelectedId() {
-      return month.toString();
+      return vals().month.toString();
     },
     items() {
       return MonthNames.map((m, i) => (
         <Dropdown.Item id={i.toString()}>
-          <Dropdown.Label>{m}</Dropdown.Label>
+          <Dropdown.Label style={{ flex: 1, minWidth: 0 }}>{m}</Dropdown.Label>
+        </Dropdown.Item>
+      ));
+    },
+  });
+  const hoursDropdown = Dropdown.create({
+    signal: props.signal,
+    class: style.dropdownHours,
+    onChange(id) {
+      date.setHours(parseInt(id));
+    },
+    initialSelectedId() {
+      return vals().hours.toString();
+    },
+    items() {
+      return hours.map((h) => (
+        <Dropdown.Item id={h.toString()}>
+          <Dropdown.Label style={{ flex: 1, minWidth: 0 }}>
+            {h.toString().padStart(2, "0")}
+          </Dropdown.Label>
+        </Dropdown.Item>
+      ));
+    },
+  });
+  const minsDropdown = Dropdown.create({
+    signal: props.signal,
+    class: style.dropdownMins,
+    onChange(id) {
+      date.setMinutes(parseInt(id));
+    },
+    initialSelectedId() {
+      return vals().minutes.toString();
+    },
+    items() {
+      return minutes.map((m) => (
+        <Dropdown.Item id={m.toString()}>
+          <Dropdown.Label style={{ flex: 1, minWidth: 0 }}>
+            {m.toString().padStart(2, "0")}
+          </Dropdown.Label>
         </Dropdown.Item>
       ));
     },
   });
 
-  return (
+  const el = (
     <div>
       <div class={style.title}>{t`Presets`}</div>
       <div class={style.presets}>
-        {Presets().map((p) => (
-          <Button label={p.label} />
+        {Presets().map((p, i) => (
+          <Button data-preset-index={i.toString()} label={p.label} />
         ))}
       </div>
 
       <div class={style.inputs}>
         {dateDropdown.el}
         {monthDropdown.el}
-        <Input class={style.yearInput} maxLength={4} value={year.toString()} />
+        <Input
+          class={style.yearInput}
+          maxLength={4}
+          value={vals().year.toString()}
+        />
+      </div>
+
+      <div class={style.timeContainer}>
+        {hoursDropdown.el}
+        {minsDropdown.el}
       </div>
     </div>
+  ) as HTMLDivElement;
+
+  const yearInput = el.querySelector(
+    `.${style.yearInput} input`,
+  ) as HTMLInputElement;
+
+  yearInput.addEventListener(
+    "input",
+    () => {
+      date.setFullYear(parseInt(yearInput.value));
+      dateDropdown.update();
+      monthDropdown.update();
+    },
+    { signal: props.signal },
   );
+
+  const handlePresetClick = (index: number) => {
+    const preset = Presets()[index]!;
+    date = new Date(Date.now() + preset.value * 1000);
+    dateDropdown.update();
+    monthDropdown.update();
+    minsDropdown.update();
+    hoursDropdown.update();
+    yearInput.value = date.getFullYear().toString();
+  };
+
+  el.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const presetBtn = target.closest("[data-preset-index]") as HTMLDivElement;
+      if (!presetBtn) return;
+      const presetIndex = parseInt(presetBtn.dataset.presetIndex!);
+      handlePresetClick(presetIndex);
+    },
+    { signal: props.signal },
+  );
+
+  return el;
 };
 
 const dayNamesInMonth = (year: number, month: number) => {
@@ -209,7 +330,7 @@ function getDaysInMonth(year: number, month: number) {
 
 function getDayNameForDate(
   year: number,
-  month: number, // 0-indexed month
+  month: number,
   day: number,
   locale: string = "en-US",
 ): string {

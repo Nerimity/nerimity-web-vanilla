@@ -38,12 +38,12 @@ export const Button = (props: ButtonProps) => {
         style.button,
         className,
         hoverBorder && style.hoverBorder,
-        primary && style.primary,
         alert && style.alert,
         warn && style.warn,
         success && style.success,
         "button",
       ]}
+      data-primary={primary}
       {...rest}
     >
       {icon && <Icon class={[style.icon, "icon"]} name={icon} />}

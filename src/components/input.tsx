@@ -68,7 +68,7 @@ export const createTextareaHeightHandler = (opts: {
   return { adjust };
 };
 
-const TimestampType = {
+export const TimestampType = {
   RELATIVE: "tr",
   OFFSET: "to",
 } as const;
@@ -216,7 +216,15 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
       }
       if (action === "timestamp") {
         createTimeModal({
-          onConfirm() {},
+          onConfirm(event) {
+            applyFormat({
+              inputEl,
+              format: action,
+              onTextUpdate: opts.onTextUpdate,
+              type: event.type,
+              schedule: event.val,
+            });
+          },
         });
         return;
       }
