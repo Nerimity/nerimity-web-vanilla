@@ -472,6 +472,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   });
 
   const destroy = () => {
+    channelStore.setCurrentChannelId();
     abortController.abort();
     imageEmbedResizer.destroy();
     imageEmbedFocusAnimator.destroy();
