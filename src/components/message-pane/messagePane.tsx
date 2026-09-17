@@ -167,6 +167,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   let lastSeenMessage: Message | null = null;
 
   const rerender = async (opts?: RerenderOpts) => {
+    if (signal.aborted) return;
     skeletonsBottom.classList.toggle(style.hide!, !shouldShowBottomSkel());
 
     const channelId = channelStore.currentChannelId;
