@@ -55,3 +55,12 @@
     font-size: 32px;
   }
 }
+
+.searchInput {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+.timezoneList {
+  overflow: auto;
+  height: 300px;
+}

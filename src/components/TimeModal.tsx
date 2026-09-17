@@ -1,5 +1,8 @@
 import { t } from "@lingui/core/macro";
+import { matchSorter } from "match-sorter";
 
+import { debounce } from "../utils/debounce";
+import { myTimezone, Timezones } from "../utils/Timezones";
 import { Button } from "./button";
 import { Dropdown } from "./createDropdown";
 import { Input } from "./input";
@@ -44,7 +47,7 @@ export const createTimeModal = (opts: GenericDeleteModalOpts) => {
 
   const contentEl = (<div></div>) as HTMLDivElement;
   const el = (
-    <Modal.Root>
+    <Modal.Root disableGestures fullHeight>
       <Modal.Header label={t`Time`} icon="schedule" />
       <Modal.Body width="320px" class={style.body}>
         <Tabs />
@@ -65,7 +68,11 @@ export const createTimeModal = (opts: GenericDeleteModalOpts) => {
     });
     contentAbortController = new AbortController();
     contentEl.replaceChildren(
-      <RelativeContent signal={contentAbortController.signal} />,
+      currentTab === "relative" ? (
+        <RelativeContent signal={contentAbortController.signal} />
+      ) : (
+        <OffsetContent signal={contentAbortController.signal} />
+      ),
     );
   };
   updateTab();
@@ -372,3 +379,56 @@ function addOrdinalSuffix(n: number): string {
       return n + "th";
   }
 }
+
+const OffsetContent = (props: { signal: AbortSignal }) => {
+  const listEl = (<div class={style.timezoneList}></div>) as HTMLDivElement;
+  let selected = myTimezone;
+
+  const el = (
+    <div>
+      <Input class={style.searchInput} placeholder="Search" />
+      {listEl}
+    </div>
+  ) as HTMLDivElement;
+
+  const searchInput = el.querySelector(
+    `.${style.searchInput} input`,
+  ) as HTMLInputElement;
+
+  const renderList = () => {
+    let tz = Timezones;
+
+    if (searchInput.value.trim()) {
+      tz = matchSorter(tz, searchInput.value);
+    }
+
+    listEl.replaceChildren(
+      <>
+        {tz.map((t) => (
+          <Item.Base selected={selected === t}>
+            <Item.Label>{t}</Item.Label>
+          </Item.Base>
+        ))}
+      </>,
+    );
+  };
+  searchInput.addEventListener(
+    "input",
+    debounce(() => renderList(), 300),
+    {
+      signal: props.signal,
+    },
+  );
+
+  renderList();
+
+  el.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+    },
+    { signal: props.signal },
+  );
+
+  return el;
+};

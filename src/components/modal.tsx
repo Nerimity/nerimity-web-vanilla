@@ -508,6 +508,7 @@ export const createModal = (
   let wheelTimeout: number | null = null;
 
   const handleScroll = (event: WheelEvent) => {
+    if (disableGestures) return;
     if (!isMobileWidth() || !isTopModal(stackEntry)) return;
     cancelInertia();
 
@@ -593,6 +594,13 @@ export const createModal = (
     }
     if (!currentMobile) return;
     const windowHeight = window.innerHeight;
+
+    if (alwaysOpenFully) {
+      modalY = getMinY();
+      setModalY(modalY);
+      lastWindowHeight = windowHeight;
+      return;
+    }
 
     const distanceFromBottom = lastWindowHeight - modalY;
 
