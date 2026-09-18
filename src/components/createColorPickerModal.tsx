@@ -26,6 +26,7 @@ export interface ColorPickerModalOpts {
   anchor?: ColorPickerModalAnchor;
   onChange?: (color: string) => void;
   onClose?: (color: string) => void;
+  alpha?: boolean;
 }
 
 Coloris.init();
@@ -130,6 +131,7 @@ export const _createColorPickerModal = (opts: ColorPickerModalOpts) => {
     parent: colorisEl,
     themeMode: "dark",
     inline: true,
+    alpha: opts.alpha,
     onChange: (color) => {
       currentColor = color;
       debounceOnChange();
