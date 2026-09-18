@@ -62,5 +62,19 @@
 }
 .timezoneList {
   overflow: auto;
-  height: 300px;
+  height: 250px;
+}
+
+.offsetDetails {
+  padding: 6px;
+  margin-top: 8px;
+  border-radius: var(--radius-6);
+  background-color: var(--gray-850);
+
+  .timezone {
+    font-weight: bold;
+  }
+  .time {
+    color: var(--gray-400);
+  }
 }

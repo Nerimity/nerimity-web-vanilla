@@ -1,6 +1,8 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
+import morphdom from "morphdom";
 
+import { formatTimestampOffset } from "../utils/date";
 import { debounce } from "../utils/debounce";
 import { myTimezone, Timezones } from "../utils/Timezones";
 import { Button } from "./button";
@@ -12,11 +14,18 @@ import { createModal, Modal } from "./modal";
 
 import style from "./TimeModal.module.css";
 
-interface GenericDeleteModalOpts {
-  onConfirm: (event: {
-    type: typeof TimestampType.RELATIVE;
-    val: number;
-  }) => void;
+interface TimeModalOts {
+  onConfirm: (
+    event:
+      | {
+          type: typeof TimestampType.RELATIVE;
+          val: number;
+        }
+      | {
+          type: typeof TimestampType.OFFSET;
+          val: string;
+        },
+  ) => void;
 }
 
 const Tabs = () => (
@@ -39,8 +48,9 @@ const Tabs = () => (
 
 type Tab = "relative" | "offset";
 let cacheTime = 0;
+let selectedTz = myTimezone;
 
-export const createTimeModal = (opts: GenericDeleteModalOpts) => {
+export const createTimeModal = (opts: TimeModalOts) => {
   const abortController = new AbortController();
   const { signal } = abortController;
   let currentTab: Tab = "relative";
@@ -95,10 +105,18 @@ export const createTimeModal = (opts: GenericDeleteModalOpts) => {
       const action = actionBtn?.dataset.action;
 
       if (action === "confirm") {
-        opts.onConfirm({
-          type: TimestampType.RELATIVE,
-          val: Math.floor(cacheTime / 1000),
-        });
+        if (currentTab === "relative") {
+          opts.onConfirm({
+            type: TimestampType.RELATIVE,
+            val: Math.floor(cacheTime / 1000),
+          });
+        }
+        if (currentTab === "offset") {
+          opts.onConfirm({
+            type: TimestampType.OFFSET,
+            val: selectedTz!,
+          });
+        }
         abortController.abort();
       }
     },
@@ -382,10 +400,23 @@ function addOrdinalSuffix(n: number): string {
 
 const OffsetContent = (props: { signal: AbortSignal }) => {
   const listEl = (<div class={style.timezoneList}></div>) as HTMLDivElement;
-  let selected = myTimezone;
+  selectedTz = myTimezone;
 
+  const detailsEl = (<div class={style.offsetDetails}></div>) as HTMLDivElement;
+
+  const updateDetailsEl = () => {
+    detailsEl.replaceChildren(
+      <>
+        <div class={style.timezone}>{selectedTz}</div>
+        <div class={style.time}>{formatTimestampOffset(selectedTz!)}</div>
+      </>,
+    );
+  };
+
+  updateDetailsEl();
   const el = (
     <div>
+      {detailsEl}
       <Input class={style.searchInput} placeholder="Search" />
       {listEl}
     </div>
@@ -396,21 +427,24 @@ const OffsetContent = (props: { signal: AbortSignal }) => {
   ) as HTMLInputElement;
 
   const renderList = () => {
-    let tz = Timezones;
+    let tzs = Timezones;
 
     if (searchInput.value.trim()) {
-      tz = matchSorter(tz, searchInput.value);
+      tzs = matchSorter(tzs, searchInput.value);
     }
 
-    listEl.replaceChildren(
-      <>
-        {tz.map((t) => (
-          <Item.Base selected={selected === t}>
+    morphdom(
+      listEl,
+      <div>
+        {tzs.map((t) => (
+          <Item.Base data-tz={t} selected={selectedTz === t}>
             <Item.Label>{t}</Item.Label>
           </Item.Base>
         ))}
-      </>,
+      </div>,
+      { childrenOnly: true },
     );
+    updateDetailsEl();
   };
   searchInput.addEventListener(
     "input",
@@ -422,10 +456,28 @@ const OffsetContent = (props: { signal: AbortSignal }) => {
 
   renderList();
 
+  const interval = setInterval(() => {
+    updateDetailsEl();
+  }, 1000);
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      clearInterval(interval);
+    },
+    { once: true },
+  );
+
   el.addEventListener(
     "click",
     (event) => {
       const target = event.target as HTMLDivElement;
+
+      const tzEl = target.closest("[data-tz]") as HTMLDivElement;
+      if (!tzEl) return;
+      const tz = tzEl.dataset.tz!;
+      selectedTz = tz;
+      renderList();
     },
     { signal: props.signal },
   );
