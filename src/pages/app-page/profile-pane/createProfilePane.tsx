@@ -87,10 +87,15 @@ const Content = (opts: {
   return (
     <div class={style.content}>
       <div class={style.banner}>
-        <Banner user={user} />
+        <Banner imgClass="mainBanner" user={user} />
       </div>
       <div class={style.overlayInfo}>
-        <Avatar user={user} size={opts.mobile ? 96 : 128} />
+        <Avatar
+          class={style.avatar}
+          imgClass="mainAvatar"
+          user={user}
+          size={opts.mobile ? 96 : 128}
+        />
       </div>
       {!opts.mobile && (
         <Actions details={userDetails} user={opts.user} signal={signal} />
@@ -746,6 +751,17 @@ const createProfilePane = ({ content }: RouteContext) => {
       });
     },
     { once: true },
+  );
+
+  import("../../../components/ImagePreviewModal").then(
+    ({ handleImagePreviewModal }) => {
+      handleImagePreviewModal({
+        root: content,
+        signal,
+        selector: ".mainAvatar, .mainBanner",
+        hideActions: true,
+      });
+    },
   );
 
   const destroy = () => {

@@ -1,7 +1,8 @@
-import { portalElement } from "../utils/portal";
+import { cdnUrl } from "../config";
 
 import "zoomist/css";
 
+import { portalElement } from "../utils/portal";
 import { transitionViewIfSupported } from "../utils/viewTransition";
 import { Button } from "./button";
 import { createLinkWarnModal } from "./LinkWarnModal";
@@ -12,6 +13,7 @@ export const handleImagePreviewModal = (opts: {
   root: HTMLDivElement;
   signal: AbortSignal;
   selector: string;
+  hideActions?: boolean;
 }) => {
   if (opts.signal.aborted) return; // when lazy loading
   opts.root.addEventListener(
@@ -21,7 +23,11 @@ export const handleImagePreviewModal = (opts: {
       const image = target.closest(opts.selector) as HTMLImageElement;
       if (!image) return;
       const url = image.src;
-      createImagePreviewModal({ src: url, imageEl: image });
+      createImagePreviewModal({
+        src: url,
+        imageEl: image,
+        hideActions: opts.hideActions,
+      });
     },
     { signal: opts.signal },
   );
@@ -30,6 +36,7 @@ export const handleImagePreviewModal = (opts: {
 const createImagePreviewModal = (opts: {
   src: string;
   imageEl?: HTMLImageElement;
+  hideActions?: boolean;
 }) => {
   const toggleViewTransitionName = (state: boolean) => {
     if (!opts.imageEl) return;
@@ -43,12 +50,17 @@ const createImagePreviewModal = (opts: {
   const abortController = new AbortController();
   const { signal } = abortController;
 
+  const url = new URL(opts.src);
+  if (url.href.startsWith(cdnUrl)) {
+    url.search = "";
+  }
+
   const el = (
     <div class={style.bg}>
       <div class="zoomist-container">
         <div class="zoomist-wrapper">
           <div class="zoomist-image">
-            <img class={style.image} draggable="false" src={opts.src} />
+            <img class={style.image} draggable="false" src={url.href} />
           </div>
         </div>
       </div>
@@ -57,13 +69,23 @@ const createImagePreviewModal = (opts: {
         <div class={style.header}>
           <Button data-action="close" alert icon="close" hoverBorder />
         </div>
-        <div class={style.controls}>
-          <Button data-action="open" icon="open_in_new" hoverBorder />
-          <Button data-action="copy" icon="content_copy" hoverBorder />
-        </div>
+        {!opts.hideActions && (
+          <div class={style.controls}>
+            <Button data-action="open" icon="open_in_new" hoverBorder />
+            <Button data-action="copy" icon="content_copy" hoverBorder />
+          </div>
+        )}
       </div>
     </div>
   ) as HTMLDivElement;
+
+  el.addEventListener(
+    "contextmenu",
+    (e) => {
+      e.preventDefault();
+    },
+    { signal },
+  );
 
   abortController.signal.addEventListener(
     "abort",

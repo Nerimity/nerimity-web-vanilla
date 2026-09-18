@@ -10,6 +10,7 @@ export const Banner = (props: {
   children?: any;
   initialAnimate?: boolean;
   size?: number;
+  imgClass?: string;
 
   image?: {
     url: string;
@@ -51,7 +52,7 @@ export const Banner = (props: {
           {url && (
             <img
               {...(animated && { "data-img-anim": "" })}
-              class={style.bannerImage}
+              class={[style.bannerImage, props.imgClass]}
               src={url}
             />
           )}
@@ -62,6 +63,13 @@ export const Banner = (props: {
     </div>
   );
 };
+
+document.addEventListener("contextmenu", (e) => {
+  const target = e.target as HTMLDivElement;
+  if (target.closest(`.${style.banner}`)) {
+    e.preventDefault();
+  }
+});
 
 export function bannerCroppedHandler(
   container: HTMLDivElement,

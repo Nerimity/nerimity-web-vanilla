@@ -33,7 +33,12 @@
     margin-top: -64px;
     margin-bottom: 10px;
     margin-left: 18px;
+    pointer-events: none;
   }
+}
+
+.avatar {
+  pointer-events: all;
 }
 .actions {
   display: flex;
@@ -41,6 +46,7 @@
   padding: 14px;
   padding-right: 0;
   margin-top: -74px;
+  pointer-events: all;
   &.mobileActions {
     justify-content: initial;
     padding: 0;

@@ -235,3 +235,10 @@ new HoverHandler(document.body, [
     },
   },
 ]);
+
+document.addEventListener("contextmenu", (e) => {
+  const target = e.target as HTMLDivElement;
+  if (target.closest(`.${style.avatar}`)) {
+    e.preventDefault();
+  }
+});

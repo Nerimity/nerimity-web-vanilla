@@ -41,6 +41,7 @@ import { createEditServerRolesModal } from "./EditServerRolesModal";
 import { GradientText } from "./gradientText";
 import { Icon } from "./icon";
 import { Input } from "./input";
+import { Link } from "./link";
 import { createLogoutModal } from "./LogoutModal";
 import { Markup } from "./markup/markup";
 import { createModal, Modal } from "./modal";
@@ -234,14 +235,20 @@ export const MiniProfile = (props: {
           user={user!}
         ></Banner>
         <div class={style.overlayInfo}>
-          <Avatar user={user} size={96} />
+          <Link data-no-mini href={`/app/profile/${user?.id}`}>
+            <Avatar user={user} size={96} />
+          </Link>
         </div>
         <div class={[style.section, style.info]}>
           <span class={style.name}>
             <span>
-              <span class={[style.username, font?.class, "font"]}>
+              <Link
+                data-no-mini
+                href={`/app/profile/${user?.id}`}
+                class={[style.username, font?.class, "font"]}
+              >
                 {user?.username}
-              </span>
+              </Link>
               <span class={style.tag}>:{user?.tag}</span>
             </span>
             {clan && <ServerClanItem clan={clan} />}
