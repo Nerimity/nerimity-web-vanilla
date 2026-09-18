@@ -235,7 +235,11 @@ export const MiniProfile = (props: {
           user={user!}
         ></Banner>
         <div class={style.overlayInfo}>
-          <Link data-no-mini href={`/app/profile/${user?.id}`}>
+          <Link
+            data-no-mini
+            data-action="profile"
+            href={`/app/profile/${user?.id}`}
+          >
             <Avatar user={user} size={96} />
           </Link>
         </div>
@@ -243,6 +247,7 @@ export const MiniProfile = (props: {
           <span class={style.name}>
             <span>
               <Link
+                data-action="profile"
                 data-no-mini
                 href={`/app/profile/${user?.id}`}
                 class={[style.username, font?.class, "font"]}
@@ -499,7 +504,7 @@ export const MiniProfile = (props: {
           }
         }
 
-        const button = e.target.closest(".button") as HTMLElement;
+        const button = e.target.closest("[data-action]") as HTMLElement;
         if (!button) return;
         if (button.dataset.action === "message") {
           inboxStore.openChannel(props.userId);
