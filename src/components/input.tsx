@@ -1,7 +1,7 @@
 import { Dynamic } from "../dynamic";
 import { createResizeObserver } from "../utils/observer";
 import { Button } from "./button";
-import { alert } from "./modal";
+import { createColorPickerModalLazy } from "./createColorPickerLazy";
 import { createTimeModal } from "./TimeModal";
 
 import style from "./input.module.css";
@@ -207,11 +207,24 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
     (event) => {
       const target = event.target as HTMLDivElement;
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      if (!actionEl) return;
 
       const action = actionEl.dataset.action as keyof typeof Formats;
 
       if (action === "color") {
-        alert({ message: "TODO: handle color picker modal." });
+        createColorPickerModalLazy({
+          color: "#ff0000",
+          anchor: "top-center",
+          onClose(color) {
+            applyFormat({
+              inputEl,
+              format: action,
+              onTextUpdate: opts.onTextUpdate,
+              color,
+            });
+          },
+          triggerEl: actionEl,
+        });
         return;
       }
       if (action === "timestamp") {

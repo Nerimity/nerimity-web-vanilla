@@ -8,15 +8,29 @@ import { debounce } from "../utils/debounce";
 import { createModal, Modal } from "./modal";
 
 import style from "./createColorPickerModal.module.css";
+
+export type ColorPickerModalAnchor =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "center-left"
+  | "center"
+  | "center-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
+
 export interface ColorPickerModalOpts {
   color: string;
   triggerEl: HTMLElement;
-  onChange: (color: string) => void;
+  anchor?: ColorPickerModalAnchor;
+  onChange?: (color: string) => void;
+  onClose?: (color: string) => void;
 }
 
 Coloris.init();
 
-export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
+export const _createColorPickerModal = (opts: ColorPickerModalOpts) => {
   const ac = new AbortController();
 
   let input = (
@@ -35,16 +49,73 @@ export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
 
   const rect = opts.triggerEl.getBoundingClientRect();
 
+  const getPosFromAnchor = () => {
+    const defaultPos = {
+      x: rect.left + "px",
+      y: rect.bottom + "px",
+    };
+
+    if (!opts.anchor) return defaultPos;
+
+    const anchorMap: Record<
+      ColorPickerModalAnchor,
+      { x: string; y: string; anchor: ColorPickerModalAnchor }
+    > = {
+      "top-left": {
+        x: rect.left + "px",
+        y: rect.top + "px",
+        anchor: "bottom-left",
+      },
+      "top-center": {
+        x: rect.left + rect.width / 2 + "px",
+        y: rect.top + "px",
+        anchor: "bottom-center",
+      },
+      "top-right": {
+        x: rect.right + "px",
+        y: rect.top + "px",
+        anchor: "bottom-right",
+      },
+      "center-left": {
+        x: rect.left + "px",
+        y: rect.top + rect.height / 2 + "px",
+        anchor: "center-right",
+      },
+      center: {
+        x: rect.left + rect.width / 2 + "px",
+        y: rect.top + rect.height / 2 + "px",
+        anchor: "center",
+      },
+      "center-right": {
+        x: rect.right + "px",
+        y: rect.top + rect.height / 2 + "px",
+        anchor: "center-left",
+      },
+      "bottom-left": {
+        x: rect.left + "px",
+        y: rect.bottom + "px",
+        anchor: "top-left",
+      },
+      "bottom-center": {
+        x: rect.left + rect.width / 2 + "px",
+        y: rect.bottom + "px",
+        anchor: "top-center",
+      },
+      "bottom-right": {
+        x: rect.right + "px",
+        y: rect.bottom + "px",
+        anchor: "top-right",
+      },
+    };
+
+    return anchorMap[opts.anchor];
+  };
+
+  const pos = getPosFromAnchor();
+
   createModal(
     () => (
-      <Modal.Root
-        fullHeight
-        backdropClass={style.modalBackdrop}
-        pos={{
-          x: rect.x + "px",
-          y: rect.y + rect.height + "px",
-        }}
-      >
+      <Modal.Root fullHeight backdropClass={style.modalBackdrop} pos={pos}>
         <Modal.Body class={style.modalBody}>{container}</Modal.Body>
       </Modal.Root>
     ),
@@ -52,7 +123,7 @@ export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
   );
   let currentColor = opts.color;
   const debounceOnChange = debounce(() => {
-    opts.onChange(currentColor);
+    opts.onChange?.(currentColor);
   }, 100);
   Coloris({
     el: input,
@@ -73,7 +144,8 @@ export const createColorPickerModal = (opts: ColorPickerModalOpts) => {
     "abort",
     () => {
       Coloris.close();
-      opts.onChange(currentColor);
+      opts.onChange?.(currentColor);
+      opts.onClose?.(currentColor);
       clearInterval(updatePosInterval);
       input.remove();
       colorisEl.remove();
