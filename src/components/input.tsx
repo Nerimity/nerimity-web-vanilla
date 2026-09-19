@@ -1,7 +1,9 @@
 import { Dynamic } from "../dynamic";
+import type { CustomEmoji, EmojiData } from "../utils/emojis";
 import { createResizeObserver } from "../utils/observer";
 import { Button } from "./button";
 import { createColorPickerModalLazy } from "./createColorPickerLazy";
+import { ExpressionPickerLazy } from "./ExpressionPickerLazy";
 import { createTimeModal } from "./TimeModal";
 
 import style from "./input.module.css";
@@ -202,6 +204,16 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
     "input, textarea",
   ) as HTMLInputElement;
 
+  const onEmojiPick = (emoji?: EmojiData, custom?: CustomEmoji) => {
+    const shortcode = emoji?.short_names[0] || custom?.name;
+    if (!shortcode) return;
+    inputEl.focus();
+    const selStart = inputEl.selectionStart!;
+    const selEnd = inputEl.selectionEnd!;
+    inputEl.setRangeText(`:${shortcode}: `, selStart, selEnd, "end");
+    opts.onTextUpdate(inputEl.value);
+  };
+
   opts.inputContainer.addEventListener(
     "click",
     (event) => {
@@ -209,7 +221,16 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
       if (!actionEl) return;
 
-      const action = actionEl.dataset.action as keyof typeof Formats;
+      const action = actionEl.dataset.action as keyof typeof Formats | "emoji";
+
+      if (action === "emoji") {
+        ExpressionPickerLazy({
+          targetEl: actionEl,
+
+          onEmojiPick,
+        });
+        return;
+      }
 
       if (action === "color") {
         createColorPickerModalLazy({

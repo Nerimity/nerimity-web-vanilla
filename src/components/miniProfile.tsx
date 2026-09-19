@@ -40,10 +40,11 @@ import { Drawer } from "./drawer";
 import { createEditServerRolesModal } from "./EditServerRolesModal";
 import { GradientText } from "./gradientText";
 import { Icon } from "./icon";
-import { Input } from "./input";
+import { handleFormatBar, Input } from "./input";
 import { Link } from "./link";
 import { createLogoutModal } from "./LogoutModal";
 import { Markup } from "./markup/markup";
+import { formatMessage } from "./message-pane/utils";
 import { createModal, Modal } from "./modal";
 import { ServerClanItem } from "./serverClanItem";
 import { updateActivity, UserActivity } from "./UserActivity";
@@ -834,8 +835,10 @@ const createCustomStatusModal = () => {
       <Modal.Body width="300px">
         {previewEl}
         <Input
+          showFormatBar
           class={style.customStatusInput}
           placeholder={t`What are you up to?`}
+          showFormatBarEmoji
         />
       </Modal.Body>
       <Modal.Footer>
@@ -845,13 +848,20 @@ const createCustomStatusModal = () => {
     </Modal.Root>
   ) as HTMLDivElement;
 
-  const presence = userPresenceStore.presences.get(
-    accountStore.currentUser?.id!,
-  );
-
   const inputEl = el.querySelector(
     `.${style.customStatusInput} input`,
   ) as HTMLInputElement;
+  handleFormatBar({
+    inputContainer: el,
+    signal,
+    onTextUpdate(text) {
+      inputEl.value = text;
+    },
+  });
+
+  const presence = userPresenceStore.presences.get(
+    accountStore.currentUser?.id!,
+  );
   inputEl.value = presence?.custom || "";
 
   const updatePreview = () => {
@@ -879,7 +889,10 @@ const createCustomStatusModal = () => {
           abortController.abort();
           break;
         case "save":
-          updatePresence({ custom: inputEl.value });
+          const formatted = formatMessage({
+            content: inputEl.value,
+          });
+          updatePresence({ custom: formatted });
           abortController.abort();
           break;
         default:

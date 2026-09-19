@@ -140,7 +140,7 @@ export const createChatbar = () => {
     ExpressionPickerLazy({
       targetEl: emojiPickerButton,
       anchorEl: inputContainerEl,
-      offset: { top: 4 },
+      offset: { top: -34 },
       onEmojiPick,
     });
   };

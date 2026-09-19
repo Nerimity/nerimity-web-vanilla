@@ -13,6 +13,7 @@
 
 .expressionPicker {
   position: fixed;
+  z-index: 11111111111111;
 
   top: var(--top);
   left: var(--left);

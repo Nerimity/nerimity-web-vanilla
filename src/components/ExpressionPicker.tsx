@@ -96,22 +96,35 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
       props.anchorEl || props.targetEl
     ).getBoundingClientRect();
     const elRect = el.getBoundingClientRect();
+    const padding = 8;
+
     if (isMobileWidth()) {
       app.style.height = window.innerHeight - elRect.height + "px";
     }
 
-    el.style.setProperty(
-      "--top",
-      targetRect.top - elRect.height - (props.offset?.top || 0) + "px",
+    const desiredTop =
+      targetRect.top - elRect.height - (props.offset?.top || 0);
+    const minTop = padding;
+    const maxTop = Math.max(
+      padding,
+      window.innerHeight - elRect.height - padding,
     );
-    el.style.setProperty(
-      "--left",
+    const clampedTop = Math.min(Math.max(desiredTop, minTop), maxTop);
+
+    const desiredLeft =
       targetRect.left -
-        elRect.width +
-        targetRect.width +
-        (props.offset?.left || 0) +
-        "px",
+      elRect.width +
+      targetRect.width +
+      (props.offset?.left || 0);
+    const minLeft = padding;
+    const maxLeft = Math.max(
+      padding,
+      window.innerWidth - elRect.width - padding,
     );
+    const clampedLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
+
+    el.style.setProperty("--top", `${clampedTop}px`);
+    el.style.setProperty("--left", `${clampedLeft}px`);
   };
   portalElement().appendChild(el);
   updatePos();
@@ -135,17 +148,19 @@ export const createExpressionPicker = (props: ExpressionPickerProps) => {
   document.addEventListener(
     "click",
     (e) => {
+      const target = e.target as HTMLDivElement;
+      if (!target.closest(`.${style.expressionPicker}`)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       const movedX = Math.abs(e.clientX - downX);
       const movedY = Math.abs(e.clientY - downY);
       if (movedX > 10 || movedY > 10) return;
-      if (
-        !el.contains(e.target as Node) &&
-        !props.targetEl.contains(e.target as Node)
-      ) {
+      if (!el.contains(e.target as Node)) {
         abortController.abort();
       }
     },
-    { signal: abortController.signal },
+    { signal: abortController.signal, capture: true },
   );
 
   abortController.signal.addEventListener(

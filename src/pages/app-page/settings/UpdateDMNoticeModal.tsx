@@ -1,7 +1,8 @@
 import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
-import { Input } from "../../../components/input";
+import { handleFormatBar, Input } from "../../../components/input";
+import { formatMessage } from "../../../components/message-pane/utils";
 import { createModal, Modal } from "../../../components/modal";
 import {
   deleteUserChannelNotice,
@@ -39,6 +40,8 @@ export const createUpdateDMNoticeModal = () => {
       <Modal.Body width="400px">
         <div class={style.body}>
           <Input
+            showFormatBarEmoji
+            showFormatBar
             id="noticeInput"
             type="textarea"
             placeholder="Don't talk to me if you're an insect."
@@ -71,6 +74,14 @@ export const createUpdateDMNoticeModal = () => {
 
   const inputEl = () => modal.querySelector("#noticeInput") as HTMLInputElement;
 
+  handleFormatBar({
+    signal,
+    inputContainer: modal,
+    onTextUpdate(text) {
+      inputEl().value = text;
+    },
+  });
+
   const setError = (val?: string) => {
     const el = modal.querySelector(`.${style.error}`) as HTMLDivElement;
     el.style.display = val ? "flex" : "none";
@@ -99,7 +110,7 @@ export const createUpdateDMNoticeModal = () => {
         updateButton();
 
         const [, error] = await (newContent
-          ? updateUserChannelNotice(newContent)
+          ? updateUserChannelNotice(formatMessage({ content: newContent }))
           : deleteUserChannelNotice());
 
         changing = false;

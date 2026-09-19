@@ -4,7 +4,7 @@ import { Avatar } from "../../../components/avatar";
 import { Button } from "../../../components/button";
 import { createColorPicker } from "../../../components/ColorPicker";
 import { Dropdown } from "../../../components/createDropdown";
-import { Input } from "../../../components/input";
+import { handleFormatBar, Input } from "../../../components/input";
 import { formatMessage } from "../../../components/message-pane/utils";
 import {
   createMiniProfileModal,
@@ -447,6 +447,8 @@ export const createUpdateBioModal = (props: {
       <Modal.Body width="500px">
         <div class={style.updateBioBody}>
           <Input
+            showFormatBar
+            showFormatBarEmoji
             id="bioInput"
             type="textarea"
             placeholder="I like cats."
@@ -467,6 +469,14 @@ export const createUpdateBioModal = (props: {
   ) as HTMLDivElement;
 
   const inputEl = () => modal.querySelector("#bioInput") as HTMLInputElement;
+
+  handleFormatBar({
+    signal,
+    inputContainer: modal,
+    onTextUpdate(text) {
+      inputEl().value = text;
+    },
+  });
 
   modal.addEventListener(
     "click",
