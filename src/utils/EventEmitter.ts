@@ -14,6 +14,7 @@ type StoreEvents = {
   "server:update": WithId<RawServer>;
   "server:members_fetched": { serverId: string };
   "server:members_added": { member: ServerMember };
+  "server:member_removed": { serverId: string; userId: string };
   "ws:authStateUpdate": boolean;
   "ws:connectStateUpdate": boolean;
   "navigate:channelId": string | null;

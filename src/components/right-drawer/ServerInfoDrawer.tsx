@@ -318,6 +318,14 @@ export const createServerInfoDrawer = (props: {
     signal,
   );
   storeEmitter.on(
+    "server:member_removed",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+  storeEmitter.on(
     "server:members_added",
     (event) => {
       if (event.member.serverId !== serverStore.currentServerId) return;

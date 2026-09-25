@@ -60,6 +60,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:role_updated": onServerRoleUpdated,
   "server:member_updated": onServerMemberUpdated,
   "server:member_joined": onServerMemberJoined,
+  "server:member_left": onServerMemberLeft,
   "server:role_deleted": onServerRoleDeleted,
   "server:channel_deleted": onServerChannelDeleted,
   "server:updated": onServerUpdated,
@@ -316,6 +317,9 @@ function onServerMemberJoined(payload: {
   member: RawServerMember;
 }) {
   serverMemberStore.setMember(payload.member);
+}
+function onServerMemberLeft(payload: { userId: string; serverId: string }) {
+  serverMemberStore.remove(payload.serverId, payload.userId);
 }
 
 function onServerRoleDeleted(payload: { serverId: string; roleId: string }) {

@@ -107,6 +107,13 @@ function createServerMemberStore() {
     storeEmitter.emit("server:member_update", { serverId, userId, isMe });
   };
 
+  const remove = (serverId: string, userId: string) => {
+    const members = serverMembers.get(serverId);
+    const removed = members?.delete(userId);
+    if (!removed) return;
+    storeEmitter.emit("server:member_removed", { serverId, userId });
+  };
+
   const createPermChecker = (serverId: string, userId: string) => {
     const members = serverMembers.get(serverId);
     const member = members?.get(userId);
@@ -207,5 +214,6 @@ function createServerMemberStore() {
     getMember,
     updateMember,
     setMember,
+    remove,
   };
 }
