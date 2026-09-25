@@ -46,7 +46,7 @@ live: https://vanilla.nerimity.com
 
 - [x] `server:role_deleted`
 
-- [ ] `server:member_joined`
+- [x] `server:member_joined`
 - [ ] `server:member_left`
 - [x] `server:member_updated`
 - [x] `server:channel_created`

@@ -73,6 +73,15 @@ function createServerMemberStore() {
       serverMembers.set(member.serverId, members);
     }
   };
+  const setMember = (member: RawServerMember) => {
+    const members =
+      serverMembers.get(member.serverId) || new Map<string, ServerMember>();
+    userStore.addUser(member.user);
+    const newMember = new ServerMember(member);
+    members.set(member.userId, newMember);
+    serverMembers.set(member.serverId, members);
+    storeEmitter.emit("server:members_added", { member: newMember });
+  };
 
   const updateMember = (
     serverId: string,
@@ -197,5 +206,6 @@ function createServerMemberStore() {
     hasPermission,
     getMember,
     updateMember,
+    setMember,
   };
 }

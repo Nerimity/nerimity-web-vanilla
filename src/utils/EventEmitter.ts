@@ -3,6 +3,7 @@ import type { Friend } from "../store/friendStore";
 import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
+import type { ServerMember } from "../store/serverMemberStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { User } from "../store/userStore";
 import type { RawBotCommand, RawMessage, RawServer } from "../Types";
@@ -12,6 +13,7 @@ type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 type StoreEvents = {
   "server:update": WithId<RawServer>;
   "server:members_fetched": { serverId: string };
+  "server:members_added": { member: ServerMember };
   "ws:authStateUpdate": boolean;
   "ws:connectStateUpdate": boolean;
   "navigate:channelId": string | null;
