@@ -34,10 +34,10 @@ export class ServerRole {
 function createServerRoleStore() {
   const roles = new Map<string, Map<string, ServerRole>>();
 
-  const setRoles = (newMembers: RawServerRole[]) => {
-    roles.clear();
-    for (let i = 0; i < newMembers.length; i++) {
-      const role = newMembers[i]!;
+  const setRoles = (newRoles: RawServerRole[], clear = true) => {
+    if (clear) roles.clear();
+    for (let i = 0; i < newRoles.length; i++) {
+      const role = newRoles[i]!;
       const serverRoles =
         roles.get(role.serverId) || new Map<string, ServerRole>();
       serverRoles.set(role.id, new ServerRole(role));

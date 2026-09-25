@@ -242,8 +242,8 @@ function createChannelStore() {
     storeEmitter.emit("message_property:select_bot_command", botCommand);
   };
 
-  const setChannels = (newChannels: RawChannel[]) => {
-    channels.clear();
+  const setChannels = (newChannels: RawChannel[], clear = true) => {
+    if (clear) channels.clear();
     for (let i = 0; i < newChannels.length; i++) {
       const channel = newChannels[i]!;
       channels.set(channel.id, new Channel(channel));

@@ -4,6 +4,7 @@ import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
 import type { ServerMember } from "../store/serverMemberStore";
+import type { Server } from "../store/serverStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { User } from "../store/userStore";
 import type { RawBotCommand, RawMessage, RawServer } from "../Types";
@@ -15,6 +16,7 @@ type StoreEvents = {
   "server:members_fetched": { serverId: string };
   "server:members_added": { member: ServerMember };
   "server:member_removed": { serverId: string; userId: string };
+  "server:add": { server: Server };
   "ws:authStateUpdate": boolean;
   "ws:connectStateUpdate": boolean;
   "navigate:channelId": string | null;

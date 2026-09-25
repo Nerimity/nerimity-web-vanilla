@@ -30,6 +30,7 @@ import {
   type RawUser,
   type RawUserActivity,
   type RawUserNotificationSettings,
+  type RawUserPresence,
 } from "../Types";
 import {
   createCustomEmojiLoader,
@@ -55,6 +56,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "inbox:opened": onInboxOpened,
   "inbox:closed": onInboxClosed,
   "user:notification_settings_update": onNotificationSettingsUpdate,
+  "server:joined": onServerJoined,
   "server:channel_created": onServerChannelCreated,
   "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
   "server:role_updated": onServerRoleUpdated,
@@ -266,6 +268,21 @@ async function onInboxClosed(payload: { channelId: string }) {
 
 function onTyping(payload: { channelId: string; userId: string }) {
   storeEmitter.emit("channel:typing", payload);
+}
+
+function onServerJoined(payload: {
+  server: RawServer;
+  members: RawServerMember[];
+  channels: RawChannel[];
+  roles: RawServerRole[];
+  memberPresences: RawUserPresence[];
+  voiceChannelUsers: any[];
+}) {
+  serverStore.setServer(payload.server);
+  channelStore.setChannels(payload.channels, false);
+  serverRoleStore.setRoles(payload.roles, false);
+  serverMemberStore.setServerMembers(payload.members, payload.server.id);
+  userPresenceStore.setPresences(payload.memberPresences, false);
 }
 
 function onNotificationSettingsUpdate(payload: {

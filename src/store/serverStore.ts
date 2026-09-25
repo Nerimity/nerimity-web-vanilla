@@ -101,6 +101,24 @@ function createServerStore() {
     }
   };
 
+  const setServer = (server: RawServer, lazy = false) => {
+    const newServer = new Server(server);
+    servers.set(server.id, newServer);
+    if (lazy) {
+      newServer.lazy = true;
+    }
+
+    const currentUser = accountStore.currentUser;
+    if (currentUser?.orderedServerIds) {
+      currentUser.orderedServerIds = [
+        server.id,
+        ...currentUser.orderedServerIds.filter((id) => id !== server.id),
+      ];
+    }
+
+    storeEmitter.emit("server:add", { server: newServer });
+  };
+
   const setLastSeenChannelIds = (data: Record<string, number>) => {
     lastSeenChannelIds.clear();
     for (const [id, lastSeenAt] of Object.entries(data)) {
@@ -365,6 +383,7 @@ function createServerStore() {
     servers,
     orderedServers,
     setServers,
+    setServer,
     sortedChannels,
     get currentServerId() {
       return currentServerId;

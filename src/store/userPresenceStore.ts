@@ -54,8 +54,8 @@ export class UserPresence {
 function createPresenceStore() {
   const presences = new Map<string, UserPresence>();
 
-  const setPresences = (newPresences: RawUserPresence[]) => {
-    presences.clear();
+  const setPresences = (newPresences: RawUserPresence[], clear = true) => {
+    if (clear) presences.clear();
     for (let i = 0; i < newPresences.length; i++) {
       const presence = newPresences[i]!;
       presences.set(presence.userId, new UserPresence(presence));
