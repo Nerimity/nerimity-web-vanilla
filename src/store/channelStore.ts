@@ -354,6 +354,15 @@ function createChannelStore() {
     }
   };
 
+  const removeAllServerChannels = (serverId: string) => {
+    channels.forEach((c) => {
+      if (c.serverId === serverId) {
+        channels.delete(c.id);
+        properties.delete(c.id);
+      }
+    });
+  };
+
   return {
     channels,
     setChannels,
@@ -378,6 +387,7 @@ function createChannelStore() {
     updateAttachment,
     removeChannel,
     updateSelectedBotCommand,
+    removeAllServerChannels,
   };
 }
 

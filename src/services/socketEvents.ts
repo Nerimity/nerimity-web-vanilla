@@ -35,6 +35,7 @@ import {
 import {
   createCustomEmojiLoader,
   loadCustomEmojisFromServers,
+  removeEmojisByServerId,
 } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { handleMessageNotifications } from "../utils/notifications";
@@ -66,6 +67,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:role_deleted": onServerRoleDeleted,
   "server:channel_deleted": onServerChannelDeleted,
   "server:updated": onServerUpdated,
+  "server:left": onServerLeft,
   "message:reaction_added": onMessageReactionAdded,
   "message:reaction_removed": onMessageReactionRemoved,
   "server:emoji_add": onServerEmojiAdded,
@@ -270,7 +272,7 @@ function onTyping(payload: { channelId: string; userId: string }) {
   storeEmitter.emit("channel:typing", payload);
 }
 
-function onServerJoined(payload: {
+async function onServerJoined(payload: {
   server: RawServer;
   members: RawServerMember[];
   channels: RawChannel[];
@@ -283,6 +285,26 @@ function onServerJoined(payload: {
   serverRoleStore.setRoles(payload.roles, false);
   serverMemberStore.setServerMembers(payload.members, payload.server.id);
   userPresenceStore.setPresences(payload.memberPresences, false);
+
+  channelStore.notificationsMemo.rerun();
+  serverStore.notificationsMemo.rerun();
+  storeEmitter.emit("noti_settings:update");
+
+  const emojiLoader = await createCustomEmojiLoader();
+  emojiLoader?.putFromServer(payload.server);
+  await emojiLoader?.done();
+}
+function onServerLeft(payload: { serverId: string }) {
+  serverStore.remove(payload.serverId);
+  channelStore.removeAllServerChannels(payload.serverId);
+  serverRoleStore.removeAll(payload.serverId);
+  serverMemberStore.removeAll(payload.serverId);
+
+  channelStore.notificationsMemo.rerun();
+  serverStore.notificationsMemo.rerun();
+  storeEmitter.emit("noti_settings:update");
+
+  removeEmojisByServerId(payload.serverId);
 }
 
 function onNotificationSettingsUpdate(payload: {

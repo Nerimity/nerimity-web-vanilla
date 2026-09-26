@@ -45,6 +45,10 @@ function createServerRoleStore() {
     }
   };
 
+  const removeAll = (serverId: string) => {
+    roles.delete(serverId);
+  };
+
   const updateRole = (
     serverId: string,
     roleId: string,
@@ -108,5 +112,5 @@ function createServerRoleStore() {
     });
   };
 
-  return { roles, setRoles, updateRole, deleteRole };
+  return { roles, setRoles, updateRole, deleteRole, removeAll };
 }

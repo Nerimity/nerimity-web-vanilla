@@ -17,6 +17,7 @@ type StoreEvents = {
   "server:members_added": { member: ServerMember };
   "server:member_removed": { serverId: string; userId: string };
   "server:add": { server: Server };
+  "server:remove": { serverId: string };
   "ws:authStateUpdate": boolean;
   "ws:connectStateUpdate": boolean;
   "navigate:channelId": string | null;

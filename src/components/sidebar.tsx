@@ -231,6 +231,13 @@ export const createSidebar = () => {
     },
     signal,
   );
+  storeEmitter.on(
+    "server:remove",
+    (event) => {
+      renderList({ id: event.serverId });
+    },
+    signal,
+  );
 
   storeEmitter.on(
     "server:member_update",

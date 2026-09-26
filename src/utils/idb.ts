@@ -16,6 +16,7 @@ interface Database extends DBSchema {
     value: CustomEmoji;
     indexes: {
       name: string;
+      serverId: string;
     };
   };
 }
@@ -24,7 +25,7 @@ let _idb: Awaited<ReturnType<typeof openDB<Database>>> | undefined;
 
 export async function getIdb() {
   if (_idb) return _idb;
-  _idb = await openDB<Database>("nerimity", 5, {
+  _idb = await openDB<Database>("nerimity", 6, {
     upgrade(db) {
       if (db.objectStoreNames.contains("emojis")) {
         db.deleteObjectStore("emojis");
@@ -43,6 +44,7 @@ export async function getIdb() {
         keyPath: "id",
       });
       customEmojiStore.createIndex("name", "name");
+      customEmojiStore.createIndex("serverId", "serverId");
     },
   });
   return _idb;

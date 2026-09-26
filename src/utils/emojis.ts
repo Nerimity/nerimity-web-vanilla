@@ -95,6 +95,21 @@ async function buildEmojiMaps() {
   }
 }
 
+export const removeEmojisByServerId = async (serverId: string) => {
+  const db = await getIdb();
+  if (!db) return;
+
+  const tx = db.transaction("custom_emojis", "readwrite");
+  const keys = await tx.store.index("serverId").getAllKeys(serverId);
+
+  for (let i = 0; i < keys.length; i++) {
+    await tx.store.delete(keys[i]!);
+  }
+
+  await tx.done;
+  loadCustomShortcodeToIds();
+};
+
 export type CustomEmoji = RawCustomEmoji & {
   serverId: string;
 };

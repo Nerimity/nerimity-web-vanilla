@@ -107,6 +107,10 @@ function createServerMemberStore() {
     storeEmitter.emit("server:member_update", { serverId, userId, isMe });
   };
 
+  const removeAll = (serverId: string) => {
+    serverMembers.delete(serverId);
+  };
+
   const remove = (serverId: string, userId: string) => {
     const members = serverMembers.get(serverId);
     const removed = members?.delete(userId);
@@ -214,6 +218,7 @@ function createServerMemberStore() {
     getMember,
     updateMember,
     setMember,
+    removeAll,
     remove,
   };
 }

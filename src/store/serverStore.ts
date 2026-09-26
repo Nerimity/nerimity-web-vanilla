@@ -119,6 +119,17 @@ function createServerStore() {
     storeEmitter.emit("server:add", { server: newServer });
   };
 
+  const remove = (serverId: string) => {
+    const currentUser = accountStore.currentUser;
+    if (currentUser?.orderedServerIds) {
+      currentUser.orderedServerIds = currentUser.orderedServerIds.filter(
+        (id) => id !== serverId,
+      );
+    }
+    servers.delete(serverId);
+    storeEmitter.emit("server:remove", { serverId });
+  };
+
   const setLastSeenChannelIds = (data: Record<string, number>) => {
     lastSeenChannelIds.clear();
     for (const [id, lastSeenAt] of Object.entries(data)) {
@@ -398,5 +409,6 @@ function createServerStore() {
     currentServerSortedRoles,
     updateLastSeenServerChannel,
     memberTopColorAndIcon,
+    remove,
   };
 }
