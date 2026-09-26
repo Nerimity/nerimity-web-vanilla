@@ -93,3 +93,21 @@ export const deleteServer = async (serverId: string) => {
     method: "DELETE",
   });
 };
+export const leaveServer = async (serverId: string) => {
+  return request(`/servers/${serverId}/leave`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+export const joinServerByInviteCode = async (inviteCode: string) => {
+  return request(`/servers/invites/${inviteCode}`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+export const joinPublicServer = async (serverId: string) => {
+  return request(`/explore/servers/${serverId}/join`, {
+    useToken: true,
+    method: "POST",
+  });
+};

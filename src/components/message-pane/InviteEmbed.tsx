@@ -4,14 +4,20 @@ import { Plural, Trans } from "@trans";
 import {
   getServerDetailsByCode,
   getServerDetailsByEmojiId,
+  joinPublicServer,
+  joinServerByInviteCode,
   type ServerWithMemberCount,
 } from "../../services/serverService";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { customEmojiById } from "../../utils/emojis";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { getRecentServerChannelId } from "../../utils/recentServerChannels";
+import { router } from "../../utils/router";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
 import { Icon } from "../icon";
+import { alert } from "../modal";
 import { InviteSkeleton } from "../skeleton";
 
 import style from "./InviteEmbed.module.css";
@@ -125,6 +131,8 @@ export const InviteEmbed = (props: {
           </div>
           <Button
             class={style.button}
+            data-code={props.code}
+            data-id={inviteItem.id}
             icon="login"
             hoverBorder
             success={isInServer}
@@ -155,6 +163,49 @@ export const InviteEmbed = (props: {
 
   return el;
 };
+
+let joinClickedServerId = "";
+document.addEventListener("click", async (e) => {
+  const target = e.target as HTMLDivElement;
+  const btn = target.closest(`.${style.button}`) as HTMLDivElement;
+  if (!btn) return;
+  const serverId = btn.dataset.id!;
+  const code = btn.dataset.code;
+
+  const server = serverStore.servers.get(serverId);
+
+  if (server) {
+    router.navigate(
+      `/app/servers/${serverId}/${getRecentServerChannelId(serverId)}`,
+    );
+    return;
+  }
+  const [, error] = await (async () => {
+    joinClickedServerId = serverId;
+    if (code) {
+      return joinServerByInviteCode(code);
+    } else {
+      return joinPublicServer(serverId);
+    }
+  })();
+  if (error?.message) {
+    joinClickedServerId = "";
+    alert({ message: error.message });
+  }
+});
+
+storeEmitter.on(
+  "server:add",
+  (payload) => {
+    if (payload.server.id !== joinClickedServerId) return;
+    joinClickedServerId = "";
+
+    router.navigate(
+      `/app/servers/${payload.server.id}/${getRecentServerChannelId(payload.server.id)}`,
+    );
+  },
+  new AbortController().signal,
+);
 
 function InvalidInvite(props: { emojiId?: string; clan?: boolean }) {
   return (

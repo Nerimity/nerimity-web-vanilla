@@ -61,6 +61,7 @@ msgstr "Don't Confirm"
 
 #: src/components/ConfirmPasswordModal.tsx:62
 #: src/components/ConfirmPasswordModal.tsx:151
+#: src/components/TimeModal.tsx:67
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -110,7 +111,7 @@ msgstr "Don't Delete"
 #: src/components/GenericDeleteModal.tsx:82
 #: src/components/message-pane/deleteMessageModal.tsx:52
 #: src/components/message-pane/deleteMessageModal.tsx:73
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
 msgid "Delete"
 msgstr "Delete"
 
@@ -121,7 +122,7 @@ msgstr "Text doesn't match, try again."
 #: src/components/GenericDeleteModal.tsx:77
 #: src/components/message-pane/deleteMessageModal.tsx:66
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:108
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:21
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
 msgid "Deleting..."
 msgstr "Deleting..."
 
@@ -185,7 +186,7 @@ msgstr "Clear local settings"
 #: src/components/LogoutModal.tsx:39
 #: src/components/LogoutModal.tsx:52
 #: src/components/createAuthErrorModal.tsx:52
-#: src/components/miniProfile.tsx:340
+#: src/components/miniProfile.tsx:353
 msgid "Logout"
 msgstr "Logout"
 
@@ -220,43 +221,104 @@ msgstr "Caution"
 msgid "Success"
 msgstr "Success"
 
-#: src/components/ServerContextMenu.tsx:62
-#: src/components/miniProfile.tsx:333
+#: src/components/ServerContextMenu.tsx:68
+#: src/components/miniProfile.tsx:346
 #: src/components/server-settings/createServerSettingsDrawer.tsx:18
 #: src/components/settings/createSettingsDrawer.tsx:15
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/ServerContextMenu.tsx:68
+#: src/components/ServerContextMenu.tsx:74
 msgid "Leave"
 msgstr "Leave"
 
-#: src/components/ServerContextMenu.tsx:75
+#: src/components/ServerContextMenu.tsx:81
 #: src/components/UserContextMenu.tsx:151
-#: src/components/message-pane/messagePane.tsx:630
+#: src/components/message-pane/messagePane.tsx:632
 msgid "Copy ID"
 msgstr "Copy ID"
 
-#: src/components/ServerContextMenu.tsx:79
+#: src/components/ServerContextMenu.tsx:85
 #: src/components/UserContextMenu.tsx:155
-#: src/components/message-pane/messagePane.tsx:634
+#: src/components/message-pane/messagePane.tsx:636
 msgid "Copy Object"
 msgstr "Copy Object"
+
+#: src/components/ServerContextMenu.tsx:100
+msgid "Leave {serverName}"
+msgstr "Leave {serverName}"
+
+#: src/components/ServerContextMenu.tsx:102
+msgid "Are you sure you want to leave {serverName}?"
+msgstr "Are you sure you want to leave {serverName}?"
+
+#: src/components/ServerContextMenu.tsx:109
+msgid "Don't Leave"
+msgstr "Don't Leave"
+
+#: src/components/ServerContextMenu.tsx:116
+#: src/components/ServerContextMenu.tsx:128
+msgid "Leave Server"
+msgstr "Leave Server"
+
+#: src/components/ServerContextMenu.tsx:128
+msgid "Leaving..."
+msgstr "Leaving..."
+
+#: src/components/TimeModal.tsx:40
+msgid "Relative"
+msgstr "Relative"
+
+#: src/components/TimeModal.tsx:44
+msgid "Offset"
+msgstr "Offset"
+
+#: src/components/TimeModal.tsx:61
+msgid "Time"
+msgstr "Time"
+
+#: src/components/TimeModal.tsx:151
+msgid "15 minutes"
+msgstr "15 minutes"
+
+#: src/components/TimeModal.tsx:152
+msgid "30 minutes"
+msgstr "30 minutes"
+
+#: src/components/TimeModal.tsx:153
+msgid "1 hour"
+msgstr "1 hour"
+
+#: src/components/TimeModal.tsx:154
+msgid "6 hours"
+msgstr "6 hours"
+
+#: src/components/TimeModal.tsx:155
+msgid "12 hours"
+msgstr "12 hours"
+
+#: src/components/TimeModal.tsx:156
+msgid "1 day"
+msgstr "1 day"
+
+#: src/components/TimeModal.tsx:278
+msgid "Presets"
+msgstr "Presets"
 
 #: src/components/UserContextMenu.tsx:123
 msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:303
-#: src/components/miniProfile.tsx:327
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:248
+#: src/components/miniProfile.tsx:316
+#: src/components/miniProfile.tsx:340
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:303
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:248
+#: src/components/miniProfile.tsx:316
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Message"
 msgstr "Message"
 
@@ -273,7 +335,7 @@ msgid "Kick Member"
 msgstr "Kick Member"
 
 #: src/components/appHeader.tsx:34
-#: src/components/miniProfile.tsx:320
+#: src/components/miniProfile.tsx:333
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
@@ -408,27 +470,27 @@ msgstr "Embed not supported by your browser."
 #. placeholder {0}: inviteItem.memberCount
 #. placeholder {1}: inviteItem.memberCount.toLocaleString()
 #. placeholder {2}: inviteItem.memberCount.toLocaleString()
-#: src/components/message-pane/InviteEmbed.tsx:98
+#: src/components/message-pane/InviteEmbed.tsx:104
 msgid "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 msgstr "{0, plural, =0 {<0>No</0> Members} one {<1>{1}</1> Member} other {<2>{2}</2> Members}}"
 
-#: src/components/message-pane/InviteEmbed.tsx:131
+#: src/components/message-pane/InviteEmbed.tsx:139
 msgid "Visit"
 msgstr "Visit"
 
-#: src/components/message-pane/InviteEmbed.tsx:131
+#: src/components/message-pane/InviteEmbed.tsx:139
 msgid "Join"
 msgstr "Join"
 
-#: src/components/message-pane/InviteEmbed.tsx:166
+#: src/components/message-pane/InviteEmbed.tsx:217
 msgid "Emoji from a private server."
 msgstr "Emoji from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:168
+#: src/components/message-pane/InviteEmbed.tsx:219
 msgid "Clan from a private server."
 msgstr "Clan from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:169
+#: src/components/message-pane/InviteEmbed.tsx:220
 msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
@@ -470,12 +532,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name
-#: src/components/message-pane/chatbar.tsx:272
+#: src/components/message-pane/chatbar.tsx:282
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:277
+#: src/components/message-pane/chatbar.tsx:287
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -484,7 +546,7 @@ msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
 #: src/components/message-pane/deleteMessageModal.tsx:39
-#: src/components/message-pane/messagePane.tsx:620
+#: src/components/message-pane/messagePane.tsx:622
 msgid "Delete Message"
 msgstr "Delete Message"
 
@@ -539,15 +601,15 @@ msgstr "Silent"
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messagePane.tsx:610
+#: src/components/message-pane/messagePane.tsx:612
 msgid "Edit Message"
 msgstr "Edit Message"
 
-#: src/components/message-pane/messagePane.tsx:615
+#: src/components/message-pane/messagePane.tsx:617
 msgid "Reply Message"
 msgstr "Reply Message"
 
-#: src/components/message-pane/messagePane.tsx:626
+#: src/components/message-pane/messagePane.tsx:628
 msgid "Copy Content"
 msgstr "Copy Content"
 
@@ -560,67 +622,67 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:249
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:153
+#: src/components/miniProfile.tsx:262
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:158
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
-#: src/components/miniProfile.tsx:258
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:375
+#: src/components/miniProfile.tsx:271
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:380
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:281
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:398
+#: src/components/miniProfile.tsx:294
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:403
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:293
+#: src/components/miniProfile.tsx:306
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:353
+#: src/components/miniProfile.tsx:366
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:367
+#: src/components/miniProfile.tsx:380
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:384
+#: src/components/miniProfile.tsx:397
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:641
+#: src/components/miniProfile.tsx:654
 #: src/components/right-drawer/DrawerChannelNotice.tsx:16
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/miniProfile.tsx:691
+#: src/components/miniProfile.tsx:704
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:778
-#: src/components/miniProfile.tsx:821
+#: src/components/miniProfile.tsx:791
+#: src/components/miniProfile.tsx:834
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:826
+#: src/components/miniProfile.tsx:840
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:830
+#: src/components/miniProfile.tsx:845
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:831
+#: src/components/miniProfile.tsx:846
 #: src/components/settings-actions/SettingsActions.tsx:25
 #: src/components/settings-actions/SettingsActions.tsx:42
 msgid "Save"
 msgstr "Save"
 
-#: src/components/modal.tsx:747
+#: src/components/modal.tsx:755
 msgid "Understood"
 msgstr "Understood"
 
@@ -671,55 +733,55 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:177
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:182
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:182
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:187
 msgid "Accept Request"
 msgstr "Accept Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:188
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:193
 msgid "Remove Request"
 msgstr "Remove Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:195
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:200
 msgid "Remove Friend"
 msgstr "Remove Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:198
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:203
 msgid "Add Friend"
 msgstr "Add Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:221
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:226
 msgid "Edit Profile"
 msgstr "Edit Profile"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:229
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:234
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:239
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:244
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:464
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:469
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:492
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:487
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:492
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:562
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:567
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:606
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:611
 #: src/pages/app-page/settings/Settings.ts:69
 msgid "Badges"
 msgstr "Badges"
@@ -906,21 +968,21 @@ msgstr "Notifications"
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:23
 msgid "Updating..."
 msgstr "Updating..."
 
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:23
 msgid "Update"
 msgstr "Update"
 
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:38
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:39
 #: src/pages/app-page/settings/accountSettingsPage.tsx:34
 msgid "DM Notice"
 msgstr "DM Notice"
 
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:53
-#: src/pages/app-page/settings/profileSettingsPage.tsx:460
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:56
+#: src/pages/app-page/settings/profileSettingsPage.tsx:462
 msgid "Don't Update"
 msgstr "Don't Update"
 
@@ -1123,7 +1185,7 @@ msgstr "Bio"
 msgid "Preview"
 msgstr "Preview"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:464
+#: src/pages/app-page/settings/profileSettingsPage.tsx:466
 msgid "Done"
 msgstr "Done"
 
