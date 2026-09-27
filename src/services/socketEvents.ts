@@ -39,6 +39,7 @@ import {
 } from "../utils/emojis";
 import { storeEmitter } from "../utils/EventEmitter";
 import { handleMessageNotifications } from "../utils/notifications";
+import { router } from "../utils/router";
 import { socket } from "./socket";
 
 const handlers: Record<string, (payload: any) => void> = {
@@ -295,6 +296,9 @@ async function onServerJoined(payload: {
   await emojiLoader?.done();
 }
 function onServerLeft(payload: { serverId: string }) {
+  const isServerRoute = router.match(`/app/servers/${payload.serverId}/*`);
+  if (isServerRoute) router.navigate("/app");
+
   serverStore.remove(payload.serverId);
   channelStore.removeAllServerChannels(payload.serverId);
   serverRoleStore.removeAll(payload.serverId);

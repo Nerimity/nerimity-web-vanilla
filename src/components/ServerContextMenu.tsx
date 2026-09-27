@@ -149,7 +149,6 @@ const LeaveServerModal = (serverId: string) => {
         updateButton();
         if (!error) {
           ac.abort();
-          if (serverStore.currentServerId === serverId) router.navigate("/app");
         }
         if (error) {
           alert({ message: error.message });
