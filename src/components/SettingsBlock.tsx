@@ -75,10 +75,10 @@ export const SettingsBlock = {
       </Dynamic>
     );
   },
-  Icon: (props: { name: string; alert?: boolean }) => {
+  Icon: (props: { name: string; class?: string; alert?: boolean }) => {
     return (
       <MaterialIcon
-        class={[style.icon, props.alert && style.alert]}
+        class={[style.icon, props.alert && style.alert, props.class]}
         name={props.name}
       />
     );

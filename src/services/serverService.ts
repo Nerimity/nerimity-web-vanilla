@@ -122,10 +122,13 @@ export interface UserAuditLog {
   actionById: string;
   createdAt: number;
   serverId?: string;
+  id: string;
   data?: {
     serverName?: string;
     bannedUserId?: string;
     kickedUserId?: string;
+    unbannedUserId?: string;
+    name?: string;
   };
 }
 interface UserAuditLogResponse {

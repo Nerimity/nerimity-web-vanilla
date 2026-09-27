@@ -1,5 +1,7 @@
+import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
+import { Button } from "../../../components/button";
 import { isNewDay } from "../../../components/message-pane/utils";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
@@ -17,22 +19,82 @@ const getStrings = () => ({});
 
 const auditLogsServerSettingsPage = (context: ServerSettingsContext) => {
   const ac = new AbortController();
+  const { signal } = ac;
 
   const getServerId = () => serverStore.currentServerId;
 
-  let el = (<div class={style.page}></div>) as HTMLDivElement;
-  getServerAuditLogs({
-    serverId: getServerId()!,
-  }).then(([res]) => {
-    if (!res) return;
-    el.replaceChildren(
-      <>
-        {res.auditLogs.map((a, i) => (
-          <AuditItem audit={a} prev={res.auditLogs[i - 1]} users={res.users} />
-        ))}
-      </>,
-    );
-  });
+  const listEl = (<div class={style.list}></div>) as HTMLDivElement;
+
+  let lastId = "";
+
+  const btnEl = (
+    <Button
+      label={t`Load More`}
+      primary
+      class={style.loadMoreBtn}
+
+      icon="expand_more"
+    />
+  ) as HTMLDivElement;
+
+  let el = (
+    <div class={style.page}>
+      {listEl}
+      {btnEl}
+    </div>
+  ) as HTMLDivElement;
+
+  let loading = false;
+
+  btnEl.addEventListener(
+    "click",
+    () => {
+      load(true);
+    },
+    { signal },
+  );
+
+  const load = (more?: boolean) => {
+    if (more && !lastId) return;
+    if (loading) return;
+    loading = true;
+    btnEl.style.display = "none";
+
+    getServerAuditLogs({
+      serverId: getServerId()!,
+      afterId: lastId,
+    }).then(([res]) => {
+      loading = false;
+      if (!res) return;
+
+      if (!res.auditLogs.length) {
+        btnEl.style.display = "none";
+      } else {
+        btnEl.style.display = "flex";
+      }
+
+      const content = (
+        <>
+          {res.auditLogs.map((a, i) => (
+            <AuditItem
+              audit={a}
+              prev={res.auditLogs[i - 1]}
+              users={res.users}
+            />
+          ))}
+        </>
+      );
+
+      if (more) {
+        listEl.appendChild(content);
+      } else {
+        listEl.replaceChildren(content);
+      }
+
+      lastId = res.auditLogs[res.auditLogs.length - 1]?.id || "";
+    });
+  };
+  load();
 
   context.content.replaceChildren(el);
 
@@ -50,9 +112,67 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
   const username = user?.username || "";
 
   switch (audit.actionType) {
+    case "SERVER_CHANNEL_DELETE": {
+      const channelName = audit.data?.name!;
+      return {
+        icon: "delete",
+        color: "var(--alert-color)",
+        title: () => (
+          <Trans>
+            <strong>{username}</strong> deleted channel{" "}
+            <strong>{channelName}</strong>
+          </Trans>
+        ),
+      };
+    }
+    case "SERVER_CHANNEL_CREATE": {
+      return {
+        icon: "tag",
+        color: "var(--success-color)",
+        title: () => (
+          <Trans>
+            <strong>{username}</strong> created a channel
+          </Trans>
+        ),
+        description: () => (
+          <div>
+            {audit.data
+              ? Object.entries(audit.data).map(([k, v]) => (
+                  <div>
+                    {k}: <strong>{v || "Removed"}</strong>
+                  </div>
+                ))
+              : null}
+          </div>
+        ),
+      };
+    }
+    case "SERVER_UPDATE": {
+      return {
+        icon: "tag",
+        color: "var(--primary-color)",
+        title: () => (
+          <Trans>
+            <strong>{username}</strong> updated the server
+          </Trans>
+        ),
+        description: () => (
+          <div>
+            {audit.data
+              ? Object.entries(audit.data).map(([k, v]) => (
+                  <div>
+                    {k}: <strong>{v || "Removed"}</strong>
+                  </div>
+                ))
+              : null}
+          </div>
+        ),
+      };
+    }
     case "SERVER_CHANNEL_UPDATE": {
       return {
         icon: "tag",
+        color: "var(--primary-color)",
         title: () => (
           <Trans>
             <strong>{username}</strong> updated a channel
@@ -71,11 +191,28 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
         ),
       };
     }
+    case "SERVER_USER_UNBAN": {
+      const unbannedUser = users.find(
+        (u) => u.id === audit.data?.unbannedUserId,
+      );
+      const unbannedUsername = unbannedUser?.username || "";
+      return {
+        icon: "lock_open",
+        color: "var(--success-color)",
+        title: () => (
+          <Trans>
+            <strong>{username}</strong> unbanned{" "}
+            <strong>{unbannedUsername}</strong>
+          </Trans>
+        ),
+      };
+    }
     case "SERVER_USER_BAN": {
       const bannedUser = users.find((u) => u.id === audit.data?.bannedUserId);
       const bannedUsername = bannedUser?.username || "";
       return {
         icon: "block",
+        color: "var(--alert-color)",
         title: () => (
           <Trans>
             <strong>{username}</strong> banned <strong>{bannedUsername}</strong>
@@ -88,6 +225,7 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
       const kickedUsername = kickedUser?.username || "";
       return {
         icon: "logout",
+        color: "var(--alert-color)",
         title: () => (
           <Trans>
             <strong>{username}</strong> kicked <strong>{kickedUsername}</strong>
@@ -99,6 +237,7 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
       const updatedUsername = "User"; // TODO: get updated users username
       return {
         icon: "edit",
+        color: "var(--primary-color)",
         title: () => (
           <Trans>
             <strong>{username}</strong> updated{" "}
@@ -122,6 +261,7 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
     default: {
       return {
         icon: "",
+        color: "var(--primary-color)",
         title: () => audit.actionType,
         description: () => (
           <div>
@@ -156,7 +296,12 @@ const AuditItem = (props: {
       )}
 
       <SettingsBlock.Root>
-        <SettingsBlock.Icon name={transformed.icon} />
+        <div
+          class={style.iconContainer}
+          style={{ background: transformed.color }}
+        >
+          <SettingsBlock.Icon class={style.icon} name={transformed.icon} />
+        </div>
 
         <div>
           <div>{transformed.title()}</div>

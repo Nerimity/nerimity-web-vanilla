@@ -15,3 +15,25 @@
   margin-left: 4px;
   font-weight: bold;
 }
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-max);
+  .icon {
+    font-size: 18px;
+  }
+}
+.loadMoreBtn {
+  align-self: center;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
