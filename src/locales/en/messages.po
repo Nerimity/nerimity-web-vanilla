@@ -200,11 +200,12 @@ msgid "Warning"
 msgstr "Warning"
 
 #: src/components/Notice.tsx:14
-#: src/utils/date.ts:135
-#: src/utils/date.ts:255
-#: src/utils/date.ts:292
-#: src/utils/date.ts:322
-#: src/utils/date.ts:368
+#: src/utils/date.ts:119
+#: src/utils/date.ts:147
+#: src/utils/date.ts:267
+#: src/utils/date.ts:304
+#: src/utils/date.ts:334
+#: src/utils/date.ts:380
 msgid "Error"
 msgstr "Error"
 
@@ -223,7 +224,7 @@ msgstr "Success"
 
 #: src/components/ServerContextMenu.tsx:68
 #: src/components/miniProfile.tsx:346
-#: src/components/server-settings/createServerSettingsDrawer.tsx:18
+#: src/components/server-settings/createServerSettingsDrawer.tsx:19
 #: src/components/settings/createSettingsDrawer.tsx:15
 msgid "Settings"
 msgstr "Settings"
@@ -807,11 +808,31 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:42
+#: src/pages/app-page/server-settings/ServerSettings.ts:43
 msgid "General"
 msgstr "General"
 
-#: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:35
+#: src/pages/app-page/server-settings/ServerSettings.ts:50
+msgid "Audit Logs"
+msgstr "Audit Logs"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:57
+msgid "<0>{username}</0> updated a channel"
+msgstr "<0>{username}</0> updated a channel"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:80
+msgid "<0>{username}</0> banned <1>{bannedUsername}</1>"
+msgstr "<0>{username}</0> banned <1>{bannedUsername}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:92
+msgid "<0>{username}</0> kicked <1>{kickedUsername}</1>"
+msgstr "<0>{username}</0> kicked <1>{kickedUsername}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:103
+msgid "<0>{username}</0> updated <1>{updatedUsername}</1>"
+msgstr "<0>{username}</0> updated <1>{updatedUsername}</1>"
+
+#: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
 msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
@@ -830,7 +851,7 @@ msgid "Banner"
 msgstr "Banner"
 
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:28
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:325
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:321
 msgid "Delete Server"
 msgstr "Delete Server"
 
@@ -842,27 +863,27 @@ msgstr "Default Channel"
 msgid "System Channel"
 msgstr "System Channel"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:98
-#: src/pages/app-page/settings/profileSettingsPage.tsx:196
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:94
+#: src/pages/app-page/settings/profileSettingsPage.tsx:195
 msgid "None"
 msgstr "None"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:131
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:145
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:127
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:141
 #: src/pages/app-page/settings/accountSettingsPage.tsx:126
 #: src/pages/app-page/settings/accountSettingsPage.tsx:140
 msgid "Browse"
 msgstr "Browse"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:155
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:151
 msgid "New members will be directed to this channel."
 msgstr "New members will be directed to this channel."
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:165
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:161
 msgid "Where system messages should appear."
 msgstr "Where system messages should appear."
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:177
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:173
 msgid "Permanently delete this server and all associated data."
 msgstr "Permanently delete this server and all associated data."
 
@@ -982,7 +1003,7 @@ msgid "DM Notice"
 msgstr "DM Notice"
 
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:56
-#: src/pages/app-page/settings/profileSettingsPage.tsx:462
+#: src/pages/app-page/settings/profileSettingsPage.tsx:461
 msgid "Don't Update"
 msgstr "Don't Update"
 
@@ -1177,15 +1198,15 @@ msgid "Username Font"
 msgstr "Username Font"
 
 #: src/pages/app-page/settings/profileSettingsPage.tsx:41
-#: src/pages/app-page/settings/profileSettingsPage.tsx:446
+#: src/pages/app-page/settings/profileSettingsPage.tsx:445
 msgid "Bio"
 msgstr "Bio"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:328
+#: src/pages/app-page/settings/profileSettingsPage.tsx:327
 msgid "Preview"
 msgstr "Preview"
 
-#: src/pages/app-page/settings/profileSettingsPage.tsx:466
+#: src/pages/app-page/settings/profileSettingsPage.tsx:465
 msgid "Done"
 msgstr "Done"
 
@@ -1416,43 +1437,43 @@ msgstr "Palestine"
 msgid "This user is a bot"
 msgstr "This user is a bot"
 
-#: src/utils/date.ts:113
+#: src/utils/date.ts:125
 msgid "Expired"
 msgstr "Expired"
 
-#: src/utils/date.ts:116
+#: src/utils/date.ts:128
 msgid "Expires in {minutes}m"
 msgstr "Expires in {minutes}m"
 
-#: src/utils/date.ts:119
+#: src/utils/date.ts:131
 msgid "Expires in {hours}h"
 msgstr "Expires in {hours}h"
 
-#: src/utils/date.ts:284
+#: src/utils/date.ts:296
 msgid "Yesterday at {time}"
 msgstr "Yesterday at {time}"
 
-#: src/utils/date.ts:288
+#: src/utils/date.ts:300
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/utils/date.ts:306
+#: src/utils/date.ts:318
 msgid "Invalid Timezone."
 msgstr "Invalid Timezone."
 
-#: src/utils/date.ts:353
+#: src/utils/date.ts:365
 msgid "now"
 msgstr "now"
 
-#: src/utils/date.ts:360
+#: src/utils/date.ts:372
 msgid "for {duration}"
 msgstr "for {duration}"
 
-#: src/utils/date.ts:362
+#: src/utils/date.ts:374
 msgid "in {duration}"
 msgstr "in {duration}"
 
-#: src/utils/date.ts:364
+#: src/utils/date.ts:376
 msgid "{duration} ago"
 msgstr "{duration} ago"
 
