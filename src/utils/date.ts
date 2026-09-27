@@ -99,13 +99,25 @@ export function friendlyTimestamp(timestamp: number): string {
 }
 
 // Tuesday, 26 May 2026
-export function fullDate(timestamp: number): string {
+export function fullDate(timestamp: number, short = false): string {
   return new Date(timestamp).toLocaleDateString("en-GB", {
-    weekday: "long",
+    weekday: short ? "short" : "long",
     day: "numeric",
-    month: "long",
+    month: short ? "short" : "long",
     year: "numeric",
   });
+}
+
+export function getTime(timestamp = Date.now(), seconds = false): string {
+  try {
+    const formatter = seconds
+      ? formatters.datetime.seconds
+      : formatters.datetime.time;
+    return formatter.format(new Date(timestamp));
+  } catch (e) {
+    console.warn(e);
+    return t`Error`;
+  }
 }
 
 export const formatExpiry = (expiresAt: number): string => {

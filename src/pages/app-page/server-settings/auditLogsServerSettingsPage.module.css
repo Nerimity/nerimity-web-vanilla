@@ -4,15 +4,14 @@
   gap: 6px;
 }
 
-.tagInput {
-  width: 5em;
+.time {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 12px;
 }
-
-.separator {
-  align-self: center;
-  width: 96%;
-  height: 1px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  background-color: var(--gray-700);
+.newDay {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  margin-left: 4px;
+  font-weight: bold;
 }

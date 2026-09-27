@@ -125,6 +125,7 @@ export interface UserAuditLog {
   data?: {
     serverName?: string;
     bannedUserId?: string;
+    kickedUserId?: string;
   };
 }
 interface UserAuditLogResponse {
