@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
+import { Dynamic } from "../dynamic";
 import { getOrCacheChannelNotice } from "../services/channelService";
 import {
   getUserDetails,
@@ -227,6 +228,8 @@ export const MiniProfile = (props: {
       return details?.profile?.clan;
     })();
 
+    const isWebhook = user?.id.includes("-");
+
     return (
       <>
         <Banner
@@ -236,25 +239,27 @@ export const MiniProfile = (props: {
           user={user!}
         ></Banner>
         <div class={style.overlayInfo}>
-          <Link
+          <Dynamic
+            component={isWebhook ? "span" : Link}
             data-no-mini
             data-action="profile"
             href={`/app/profile/${user?.id}`}
           >
             <Avatar user={user} size={96} />
-          </Link>
+          </Dynamic>
         </div>
         <div class={[style.section, style.info]}>
           <span class={style.name}>
             <span>
-              <Link
+              <Dynamic
+                component={isWebhook ? "span" : Link}
                 data-action="profile"
                 data-no-mini
                 href={`/app/profile/${user?.id}`}
                 class={[style.username, font?.class, "font"]}
               >
                 {user?.username}
-              </Link>
+              </Dynamic>
               <span class={style.tag}>:{user?.tag}</span>
             </span>
             {clan && <ServerClanItem clan={clan} />}
@@ -298,7 +303,7 @@ export const MiniProfile = (props: {
               )}
             </div>
           )}
-          {!props.options && (
+          {!props.options && !isWebhook && (
             <div class={style.buttons}>
               <Button
                 class={style.button}
@@ -358,7 +363,7 @@ export const MiniProfile = (props: {
           </>
         )}
 
-        {!props.options && (
+        {!props.options && !isWebhook && (
           <div class={[style.section, "scrollbarHover"]}>
             {noticeEl}
             {server && (
