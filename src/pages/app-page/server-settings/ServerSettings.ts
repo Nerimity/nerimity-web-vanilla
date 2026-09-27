@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import type { CropPoints } from "../../../components/ImageCropModal";
+import * as auditLogsServerSettingsPage from "./auditLogsServerSettingsPage";
 import * as generalServerSettingsPage from "./generalServerSettingsPage";
 
 export interface Page {
@@ -42,5 +43,12 @@ export const ServerSettings: ServerSetting[] = [
     name: () => t`General`,
     path: "/general",
     load: generalServerSettingsPage,
+  },
+  {
+    id: "audit-logs",
+    icon: "search_activity",
+    name: () => t`Audit Logs`,
+    path: "/audit-logs",
+    load: auditLogsServerSettingsPage,
   },
 ];

@@ -1,4 +1,9 @@
-import type { RawBotCommand, RawExploreItem, RawServer } from "../Types";
+import type {
+  RawBotCommand,
+  RawExploreItem,
+  RawServer,
+  RawUser,
+} from "../Types";
 import { request } from "./request";
 
 export interface UpdateServerOptions {
@@ -109,5 +114,35 @@ export const joinPublicServer = async (serverId: string) => {
   return request(`/explore/servers/${serverId}/join`, {
     useToken: true,
     method: "POST",
+  });
+};
+
+export interface UserAuditLog {
+  actionType: string;
+  actionById: string;
+  createdAt: number;
+  serverId?: string;
+  data?: {
+    serverName?: string;
+    bannedUserId?: string;
+  };
+}
+interface UserAuditLogResponse {
+  users: RawUser[];
+  servers: RawServer[];
+  auditLogs: UserAuditLog[];
+}
+export const getServerAuditLogs = async (opts: {
+  serverId: string;
+  afterId?: string;
+  limit?: number;
+}) => {
+  return request<UserAuditLogResponse>(`/servers/${opts.serverId}/audit-logs`, {
+    useToken: true,
+    method: "GET",
+    params: {
+      ...(opts.afterId ? { after: opts.afterId } : {}),
+      limit: opts.limit,
+    },
   });
 };

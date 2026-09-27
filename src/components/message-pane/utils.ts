@@ -28,7 +28,10 @@ export const shouldGroup = (message: Message, prev?: Message): boolean => {
 const MS_PER_DAY = 86400000;
 const TZ_OFFSET = new Date().getTimezoneOffset() * 60000;
 
-export const isNewDay = (message: Message, prev?: Message) => {
+export const isNewDay = (
+  message: { createdAt: number },
+  prev?: { createdAt: number },
+) => {
   if (!prev) return true;
   const prevLocal = prev.createdAt - TZ_OFFSET;
   const prevMidnight = prevLocal - (prevLocal % MS_PER_DAY);
