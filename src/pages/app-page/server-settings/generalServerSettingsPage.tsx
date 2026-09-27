@@ -35,9 +35,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
   const { signal } = ac;
   const strings = getStrings();
 
-  const getServerId = () =>
-    router.match<{ serverId: string }>("/app/servers/:serverId/*")?.params
-      .serverId;
+  const getServerId = () => serverStore.currentServerId;
 
   const getServer = () => serverStore.servers.get(getServerId()!);
 
@@ -65,8 +63,6 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
       .sortedChannels(getServerId()!, false)
       .filter((c) => c.type !== ChannelType.CATEGORY);
   };
-
-  console.log(updateHandler.values.defaultChannelId!);
 
   const defaultChannelDropdown = Dropdown.create({
     signal,

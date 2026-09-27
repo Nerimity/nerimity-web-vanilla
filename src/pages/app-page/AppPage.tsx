@@ -115,6 +115,12 @@ const createAppPage = () => {
   const appRouteSource = createTokenSource();
   const contentSource = createTokenSource();
 
+  const clearCurrentServerIfLeavingServerContext = () => {
+    const pathname = location.pathname;
+    if (pathname.startsWith("/app/servers/")) return;
+    serverStore.setCurrentServerId();
+  };
+
   const context: RouteContext = {
     leftDrawer,
     content,
@@ -146,12 +152,22 @@ const createAppPage = () => {
       context,
     }),
 
+    registerPaneRoute<Page, { serverId: string }>({
+      paths: "/app/servers/:serverId/settings{/*}?",
+      signal,
+      tokenSource: appRouteSource,
+      load: () => import("./server-settings/createServerSettingsRoute"),
+      onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
+      onUnmatch: clearCurrentServerIfLeavingServerContext,
+      context,
+    }),
     registerPaneRoute<Page, { serverId: string; channelId: string }>({
       paths: "/app/servers/:serverId/:channelId",
       signal,
       tokenSource: appRouteSource,
       shouldMatch: (res) => res?.params.channelId !== "settings",
       onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
+      onUnmatch: clearCurrentServerIfLeavingServerContext,
       load: () => import("./createServerChannelRoute"),
       context,
     }),
@@ -160,13 +176,6 @@ const createAppPage = () => {
       signal,
       tokenSource: appRouteSource,
       load: () => import("./settings/createSettingsRoute"),
-      context,
-    }),
-    registerPaneRoute<Page>({
-      paths: "/app/servers/:serverId/settings{/*}?",
-      signal,
-      tokenSource: appRouteSource,
-      load: () => import("./server-settings/createServerSettingsRoute"),
       context,
     }),
 

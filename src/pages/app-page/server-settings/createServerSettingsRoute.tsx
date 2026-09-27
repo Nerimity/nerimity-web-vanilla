@@ -21,9 +21,7 @@ import {
 import style from "./createServerSettingsRoute.module.css";
 
 const Stats = () => {
-  const serverId = router.match<{ serverId: string }>(
-    "/app/servers/:serverId/*",
-  )?.params.serverId;
+  const serverId = serverStore.currentServerId;
 
   if (!serverId) return null;
 
@@ -57,9 +55,7 @@ const Stats = () => {
 
 let headerAc: AbortController | null = null;
 const Header = ({ overrides }: { overrides: ServerHeaderOverrides }) => {
-  const serverId = router.match<{ serverId: string }>(
-    "/app/servers/:serverId/*",
-  )?.params.serverId;
+  const serverId = serverStore.currentServerId;
 
   if (!serverId) return null;
 
@@ -72,10 +68,11 @@ const Header = ({ overrides }: { overrides: ServerHeaderOverrides }) => {
 
   requestAnimationFrame(() => {
     if (signal.aborted) return;
-    bannerCroppedHandler(
-      document.querySelector(`.${style.banner!}`) as HTMLDivElement,
-      signal,
-    );
+
+    const bannerEl = document.querySelector(`.${style.banner!}`);
+    if (!bannerEl) return;
+
+    bannerCroppedHandler(bannerEl as HTMLDivElement, signal);
   });
 
   return (
@@ -133,6 +130,13 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   };
 
   storeEmitter.on("drawer:modeChange", renderHeader, signal);
+  storeEmitter.on(
+    "server:members_fetched",
+    (payload) => {
+      if (payload.serverId === serverStore.currentServerId) renderHeader();
+    },
+    signal,
+  );
 
   router.createMatchListener("*", renderHeader, {
     signal,
@@ -141,9 +145,8 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   });
 
   const renderPage = () => {
-    const serverId = router.match<{ serverId: string }>(
-      "/app/servers/:serverId/*",
-    )?.params.serverId;
+    const serverId = serverStore.currentServerId;
+    if (!serverId) return;
 
     const matchedRoute = ServerSettings.find((s) =>
       router.match("/app/servers/:serverId/settings" + s.path),

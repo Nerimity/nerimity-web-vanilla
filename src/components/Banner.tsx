@@ -72,9 +72,11 @@ document.addEventListener("contextmenu", (e) => {
 });
 
 export function bannerCroppedHandler(
-  container: HTMLDivElement,
+  container: HTMLDivElement | null | undefined,
   signal: AbortSignal,
 ) {
+  if (!(container instanceof HTMLElement)) return;
+
   createResizeObserver(
     container,
     (event) => {

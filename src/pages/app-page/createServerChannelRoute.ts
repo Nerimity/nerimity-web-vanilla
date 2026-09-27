@@ -31,7 +31,6 @@ const createServerChannelRoute = ({ leftDrawer }: RouteContext) => {
   );
 
   const destroy = () => {
-    serverStore.setCurrentServerId();
     channelStore.setCurrentChannelId();
     abortController.abort();
     serverChannelList.destroy();

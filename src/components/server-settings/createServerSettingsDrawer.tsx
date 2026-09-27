@@ -5,6 +5,7 @@ import {
   ServerSettings,
   type ServerSetting,
 } from "../../pages/app-page/server-settings/ServerSettings";
+import { serverStore } from "../../store/serverStore";
 import { router } from "../../utils/router";
 import { Drawer } from "../drawer";
 import { Icon } from "../icon";
@@ -20,9 +21,7 @@ const HeaderPill = () => {
 
 const createItemHelper = () => {
   const create = (props: { setting: ServerSetting }) => {
-    const serverId = router.match<{ serverId: string }>(
-      "/app/servers/:serverId/*",
-    )?.params.serverId;
+    const serverId = serverStore.currentServerId;
 
     const fullPath = `/app/servers/${serverId}/settings` + props.setting.path;
     return (

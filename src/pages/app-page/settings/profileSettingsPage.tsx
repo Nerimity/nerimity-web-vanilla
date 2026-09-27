@@ -173,7 +173,6 @@ const profileSettingsPage = (context: SettingsContext) => {
       if (button.dataset.delete) {
         const deleteKey = button.dataset.delete as keyof typeof DefaultValues;
         const deleteVal = DefaultValues[deleteKey];
-        console.log(deleteKey, deleteVal);
         updateHandler.changeValue(deleteKey, deleteVal);
       }
     },

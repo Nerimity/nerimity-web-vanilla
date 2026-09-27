@@ -6,9 +6,9 @@ import {
   getServerAuditLogs,
   type UserAuditLog,
 } from "../../../services/serverService";
+import { serverStore } from "../../../store/serverStore";
 import type { RawUser } from "../../../Types";
 import { fullDate } from "../../../utils/date";
-import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./auditLogsServerSettingsPage.module.css";
@@ -18,9 +18,7 @@ const getStrings = () => ({});
 const auditLogsServerSettingsPage = (context: ServerSettingsContext) => {
   const ac = new AbortController();
 
-  const getServerId = () =>
-    router.match<{ serverId: string }>("/app/servers/:serverId/*")?.params
-      .serverId;
+  const getServerId = () => serverStore.currentServerId;
 
   let el = (<div class={style.page}></div>) as HTMLDivElement;
   getServerAuditLogs({

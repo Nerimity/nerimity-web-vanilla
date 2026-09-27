@@ -436,10 +436,10 @@ export const createServerInfoDrawer = (props: {
     vt?.destroy();
     hoverAnimator?.destroy();
 
-    infoContainerEl.remove();
+    infoContainerEl?.remove?.();
     (infoContainerEl as any) = null;
 
-    membersListEl.remove();
+    membersListEl?.remove?.();
     (membersListEl as any) = null;
   };
 

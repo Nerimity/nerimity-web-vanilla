@@ -99,10 +99,12 @@ export const createRightDrawer = () => {
 
   const destroy = () => {
     ac.abort();
-    tabsEl?.remove();
     currentTabContent?.destroy();
-    innerContainerEl?.remove();
-    containerEl?.remove();
+    currentTabContent = undefined;
+
+    tabsEl?.remove?.();
+    innerContainerEl?.remove?.();
+    containerEl?.remove?.();
 
     (tabsEl as any) = null;
     (innerContainerEl as any) = null;

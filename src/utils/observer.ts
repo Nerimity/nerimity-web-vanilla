@@ -35,10 +35,14 @@ export const createIntersectionObserver = (
 };
 
 export const createResizeObserver = (
-  target: HTMLElement,
+  target: HTMLElement | null | undefined,
   onResize: (event: { height: number; width: number }) => void,
   opts: { signal: AbortSignal; defer?: boolean },
 ) => {
+  if (!(target instanceof Element)) {
+    return;
+  }
+
   const observer = new ResizeObserver((entries) => {
     const box = entries[0]?.contentBoxSize[0];
     const rect = entries[0]?.contentRect;

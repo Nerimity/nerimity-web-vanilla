@@ -104,10 +104,11 @@ const Header = ({ overrides }: { overrides: HeaderOverrides }) => {
 
   requestAnimationFrame(() => {
     if (signal.aborted) return;
-    bannerCroppedHandler(
-      document.querySelector(`.${style.banner!}`) as HTMLDivElement,
-      signal,
-    );
+
+    const bannerEl = document.querySelector(`.${style.banner!}`);
+    if (!bannerEl) return;
+
+    bannerCroppedHandler(bannerEl as HTMLDivElement, signal);
   });
 
   return (

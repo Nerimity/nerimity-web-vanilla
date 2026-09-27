@@ -296,8 +296,7 @@ async function onServerJoined(payload: {
   await emojiLoader?.done();
 }
 function onServerLeft(payload: { serverId: string }) {
-  const isServerRoute = router.match(`/app/servers/${payload.serverId}/*`);
-  if (isServerRoute) router.navigate("/app");
+  if (payload.serverId === serverStore.currentServerId) router.navigate("/app");
 
   serverStore.remove(payload.serverId);
   channelStore.removeAllServerChannels(payload.serverId);
