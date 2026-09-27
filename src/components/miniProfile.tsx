@@ -260,7 +260,7 @@ export const MiniProfile = (props: {
               >
                 {user?.username}
               </Dynamic>
-              <span class={style.tag}>:{user?.tag}</span>
+              {!isWebhook && <span class={style.tag}>:{user?.tag}</span>}
             </span>
             {clan && <ServerClanItem clan={clan} />}
             {details?.followsYou && (
@@ -268,7 +268,7 @@ export const MiniProfile = (props: {
             )}
             <Badges details={details} />
           </span>
-          {userPresenceContainer}
+          {!isWebhook && userPresenceContainer}
           {showStats && (
             <div class={style.stats}>
               {!hideFollowers && (
