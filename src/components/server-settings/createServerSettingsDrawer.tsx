@@ -131,6 +131,7 @@ export const createServerSettingsDrawer = () => {
       );
       if (!matchedRoute) return;
       itemHelper.updateSelected(listEl, matchedRoute.id);
+      renderList();
     },
     { signal, always: true },
   );
