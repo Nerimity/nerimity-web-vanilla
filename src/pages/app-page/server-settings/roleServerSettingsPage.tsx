@@ -119,11 +119,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
 
   updateHandler.handleInput(el.querySelector(".nameInput")!, "name");
 
-  updateHandler.onUpdate((changes, hasChanges) => {
-    context.overrideHeader({
-      name: changes.name,
-    });
-
+  updateHandler.onUpdate((_changes, hasChanges) => {
     actions.setVisibility(hasChanges);
   });
 
