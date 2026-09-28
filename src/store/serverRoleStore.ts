@@ -18,6 +18,7 @@ export class ServerRole {
   hexColor?: string;
   icon?: string;
   botRole?: boolean;
+  applyOnJoin?: boolean;
   constructor(data: RawServerRole) {
     this.id = data.id;
     this.serverId = data.serverId;
@@ -28,6 +29,7 @@ export class ServerRole {
     this.hexColor = data.hexColor;
     this.icon = data.icon;
     this.botRole = data.botRole;
+    this.applyOnJoin = data.applyOnJoin;
   }
 }
 

@@ -45,6 +45,7 @@ const offlineRole: ServerRole = new ServerRole({
   hideRole: true,
   order: 0,
   serverId: "",
+  createdById: "",
 });
 
 const currentServerDefaultRole = () => {

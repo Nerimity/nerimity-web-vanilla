@@ -211,10 +211,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
 
   actions.handleUndoClick(handleUndo);
 
-  const handleSave = async (
-    done: (msg?: string) => void,
-    password?: string,
-  ) => {
+  const handleSave = async (done: (msg?: string) => void) => {
     const {
       avatar,
       avatarCropPoints,
@@ -258,7 +255,6 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
       systemChannelId: systemChannelId === "none" ? null : systemChannelId,
       bannerId,
       avatarId,
-      password,
     };
 
     const [res, error] = await updateServer(serverId, body);

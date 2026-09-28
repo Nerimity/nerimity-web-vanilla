@@ -18,6 +18,7 @@ export class ManualMemo<T> {
     this.cache = null;
     const value = this.value(prev);
     this.listeners.forEach((l) => l(value));
+    return value;
   }
 
   onUpdate(listener: (value: T) => void, signal: AbortSignal) {

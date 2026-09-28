@@ -3,6 +3,8 @@ import { t } from "@lingui/core/macro";
 import type { CropPoints } from "../../../components/ImageCropModal";
 import * as auditLogsServerSettingsPage from "./auditLogsServerSettingsPage";
 import * as generalServerSettingsPage from "./generalServerSettingsPage";
+import * as roleServerSettingsPage from "./roleServerSettingsPage";
+import * as rolesServerSettingsPage from "./rolesServerSettingsPage";
 
 export interface Page {
   destroy: () => void;
@@ -30,6 +32,8 @@ export interface ServerSetting {
   icon: string;
   name: () => string;
   path: string;
+  hideFromDrawer?: boolean;
+  pattern?: string;
   load: {
     create: (context: ServerSettingsContext) => Page;
     getStrings: () => Record<string, string>;
@@ -50,5 +54,21 @@ export const ServerSettings: ServerSetting[] = [
     name: () => t`Audit Logs`,
     path: "/audit-logs",
     load: auditLogsServerSettingsPage,
+  },
+  {
+    id: "roles",
+    icon: "leaderboard",
+    name: () => t`Roles`,
+    path: "/roles",
+    pattern: "/roles{/*}?",
+    load: rolesServerSettingsPage,
+  },
+  {
+    id: "role",
+    icon: "leaderboard",
+    name: () => t`Role`,
+    path: "/roles/:roleId",
+    hideFromDrawer: true,
+    load: roleServerSettingsPage,
   },
 ];

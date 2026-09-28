@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
+import morphdom from "morphdom";
 
 import {
   ServerSettings,
@@ -23,13 +24,17 @@ const createItemHelper = () => {
   const create = (props: { setting: ServerSetting }) => {
     const serverId = serverStore.currentServerId;
 
-    const fullPath = `/app/servers/${serverId}/settings` + props.setting.path;
+    let basePath = `/app/servers/${serverId}/settings`;
+
+    const fullPath = basePath + props.setting.path;
+    const fullPatternPath =
+      basePath + (props.setting.pattern || props.setting.path);
     return (
       <Item.Base
         class={style.item}
         data-id={props.setting.id}
         href={fullPath}
-        selected={!!router.match(fullPath)}
+        selected={!!router.match(fullPatternPath)}
       >
         <Item.Icon name={props.setting.icon} />
         <Item.Label>{props.setting.name()}</Item.Label>
@@ -103,15 +108,24 @@ export const createServerSettingsDrawer = () => {
   const renderList = () => {
     const val = searchInputEl.value;
 
-    const results = matchSorter(ServerSettings, val, {
+    const SettingsWithoutHidden = ServerSettings.filter(
+      (s) => !s.hideFromDrawer,
+    );
+
+    const results = matchSorter(SettingsWithoutHidden, val, {
       keys: [
         (item) => item.name(),
         (item) => Object.values(item.load.getStrings()),
       ],
-    }).sort((a, b) => ServerSettings.indexOf(a) - ServerSettings.indexOf(b));
+    }).sort(
+      (a, b) =>
+        SettingsWithoutHidden.indexOf(a) - SettingsWithoutHidden.indexOf(b),
+    );
 
-    listEl.replaceChildren(
-      <> {results.map((s) => itemHelper.create({ setting: s }))}</>,
+    morphdom(
+      listEl,
+      <div>{results.map((s) => itemHelper.create({ setting: s }))}</div>,
+      { childrenOnly: true },
     );
   };
   renderList();
@@ -126,7 +140,7 @@ export const createServerSettingsDrawer = () => {
     "/app/servers/:serverId/settings/*",
     () => {
       const matchedRoute = ServerSettings.find((s) =>
-        router.match("/app/servers/:serverId/settings" + s.path),
+        router.match("/app/servers/:serverId/settings" + (s.pattern || s.path)),
       );
       if (!matchedRoute) return;
       itemHelper.updateSelected(listEl, matchedRoute.id);

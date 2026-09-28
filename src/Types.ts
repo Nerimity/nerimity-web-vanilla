@@ -28,14 +28,17 @@ export interface RawServerMember {
 
 export interface RawServerRole {
   id: string;
-  serverId: string;
-  permissions: number;
-  order: number;
   name: string;
-  hideRole: boolean;
-  hexColor?: string;
   icon?: string;
+  order: number;
+  hexColor?: string;
+  font?: number;
+  createdById: string;
+  permissions: number;
+  serverId: string;
+  hideRole: boolean;
   botRole?: boolean;
+  applyOnJoin?: boolean;
 }
 
 export const ChannelType = {
