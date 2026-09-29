@@ -28,7 +28,8 @@ const MessageItem = (props: { message: Message }) => {
 
   const topRoleColor = serverStore.memberTopColor(member);
 
-  const color = resolveGradient(topRoleColor) ?? "";
+  const color =
+    resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
 
   return (
     <div class={style.messageItem} data-message-id={props.message.id}>

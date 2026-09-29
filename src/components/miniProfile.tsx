@@ -537,7 +537,7 @@ export const MiniProfile = (props: {
 };
 
 const RoleItem = (props: { role: ServerRole }) => {
-  const color = resolveGradient(props.role.hexColor);
+  const color = resolveGradient(props.role.gradient || props.role.hexColor);
 
   return (
     <div class={style.role}>

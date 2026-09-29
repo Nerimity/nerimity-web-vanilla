@@ -62,7 +62,7 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
 };
 
 const RoleItem = (props: { role: ServerRole; members: ServerMember[] }) => {
-  const color = resolveGradient(props.role.hexColor);
+  const color = resolveGradient(props.role.gradient || props.role.hexColor);
 
   const server = serverStore.currentServer();
   const isDefaultRole = server?.defaultRoleId === props.role.id;

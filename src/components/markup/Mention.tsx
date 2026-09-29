@@ -10,7 +10,7 @@ import style from "./Mention.module.css";
 interface MentionProps {
   user?: { id: string; username: string; hexColor: string; avatar?: string };
   channel?: { id: string; name?: string; serverId?: string };
-  role?: { id: string; name?: string; hexColor?: string };
+  role?: { id: string; name?: string; hexColor?: string; gradient?: string };
   label?: string;
   icon?: string;
   monospace?: boolean;
@@ -36,7 +36,7 @@ export const Mention = ({
     url = `/app/servers/${channel.serverId!}/${channel.id}`;
   }
 
-  const color = resolveGradient(role?.hexColor);
+  const color = resolveGradient(role?.gradient || role?.hexColor);
 
   return h(
     url ? Link : "span",

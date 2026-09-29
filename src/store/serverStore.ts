@@ -260,12 +260,13 @@ function createServerStore() {
     const role = currentServerSortedRoles
       .value()
       .find((r) => member.roleIds.includes(r.id) && r.hexColor);
-    return role?.hexColor;
+    return { color: role?.hexColor, gradient: role?.gradient };
   };
 
   const memberTopColorAndIcon = (member?: ServerMember) => {
     if (!member) return;
     let color: string | undefined = undefined;
+    let gradient: string | undefined = undefined;
     let icon: string | undefined = undefined;
 
     const currentRoles = currentServerSortedRoles.value();
@@ -273,13 +274,16 @@ function createServerStore() {
       const role = currentRoles[i]!;
       if (!member.roleIds.includes(role.id)) continue;
 
-      if (!color && role.hexColor) color = role.hexColor;
+      if (!color && role.hexColor) {
+        color = role.hexColor;
+        gradient = role.gradient;
+      }
       if (!icon && role.icon) icon = role.icon;
 
       if (color && icon) break;
     }
 
-    return { color, icon };
+    return { color, icon, gradient };
   };
 
   const notificationsMemo = new ManualMemo(() => {

@@ -1,13 +1,13 @@
-export const convertShorthandToLinearGradient = (shorthand?: string) => {
-  if (!shorthand) return null;
+export const convertShorthandToLinearGradient = (shorthand: string) => {
   const parts = shorthand.trim().split(/\s+/);
 
   if (parts.length < 3 || parts.length > 5) {
-    return null;
+    return [null, "Error: Invalid format (must represent 2-4 colors)"] as const;
   }
 
   const startMatch = parts[0]?.match(/^lg(\d+)(#[a-f0-9]{3,6})$/i);
-  if (!startMatch) return null;
+  if (!startMatch)
+    return [null, "Invalid start format (e.g., lg0#ffffff)"] as const;
 
   const degree = startMatch[1];
   const colors = [startMatch[2]];
@@ -15,25 +15,32 @@ export const convertShorthandToLinearGradient = (shorthand?: string) => {
 
   for (let i = 1; i < parts.length - 1; i++) {
     const middleMatch = parts[i]?.match(/^(\d+)(#[a-f0-9]{3,6})$/i);
-    if (!middleMatch) return null;
+    if (!middleMatch)
+      return [null, `Invalid middle format at part ${i + 1}`] as const;
 
     stops.push(middleMatch[1]!);
     colors.push(middleMatch[2]);
   }
 
   const endMatch = parts[parts.length - 1]?.match(/^(\d+)$/);
-  if (!endMatch) return null;
+  if (!endMatch)
+    return [null, "Invalid end format (must be a number)"] as const;
 
   stops.push(endMatch[1]!);
 
   const cssStops = colors.map((hex, i) => `${hex} ${stops[i]}%`).join(", ");
 
-  // return { gradient: `linear-gradient(${degree}deg, ${cssStops})`, colors };
-  return `linear-gradient(${degree}deg, ${cssStops})`;
+  return [
+    { gradient: `linear-gradient(${degree}deg, ${cssStops})`, colors },
+    null,
+  ] as const;
 };
 
 export const resolveGradient = (shorthand?: string) => {
-  return convertShorthandToLinearGradient(shorthand) || shorthand;
+  if (!shorthand) return undefined;
+  return (
+    convertShorthandToLinearGradient(shorthand)?.[0]?.gradient || shorthand
+  );
 };
 export interface ColorStop {
   color: string;

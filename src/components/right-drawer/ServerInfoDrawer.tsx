@@ -455,7 +455,8 @@ const memberItem = (cat: Categorized) => {
     const user = userStore.users.get(cat.member.userId);
     const topRoleColor = serverStore.memberTopColor(cat.member);
 
-    const color = resolveGradient(topRoleColor) ?? "";
+    const color =
+      resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
 
     const font = getFont(user?.profile?.font);
 

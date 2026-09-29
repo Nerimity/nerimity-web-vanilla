@@ -67,7 +67,7 @@ export const MessageItem = (props: {
     ?.get(creator.id);
 
   const topRole = serverStore.memberTopColorAndIcon(member);
-  const color = resolveGradient(topRole?.color) ?? "";
+  const color = resolveGradient(topRole?.gradient || topRole?.color) ?? "";
 
   const name = member?.nickname || creator.username;
 
@@ -316,7 +316,8 @@ const ReplyMessage = (props: { message: RawReplyMessage }) => {
     ?.get(creator?.id);
   const topRoleColor = serverStore.memberTopColor(member);
 
-  const color = resolveGradient(topRoleColor) ?? "";
+  const color =
+    resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
 
   const font = getFont(member?.user?.profile?.font);
 

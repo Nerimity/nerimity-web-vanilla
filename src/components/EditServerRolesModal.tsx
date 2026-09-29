@@ -110,7 +110,7 @@ const RoleItem = (props: {
   role: ServerRole;
   members: ServerMember[];
 }) => {
-  const color = resolveGradient(props.role.hexColor);
+  const color = resolveGradient(props.role.gradient || props.role.hexColor);
 
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const isDefaultRole = server?.defaultRoleId === props.role.id;

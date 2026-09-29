@@ -1,5 +1,6 @@
 import type { RawServerRole } from "../Types";
 import { applyIfPresent } from "../utils/applyIfPresent";
+import { convertShorthandToLinearGradient } from "../utils/color";
 import { storeEmitter } from "../utils/EventEmitter";
 import { patchProperty } from "../utils/object";
 import { accountStore } from "./accountStore";
@@ -20,6 +21,7 @@ export class ServerRole {
   icon?: string;
   botRole?: boolean;
   applyOnJoin?: boolean;
+  gradient?: string;
   constructor(data: RawServerRole) {
     this.id = data.id;
     this.serverId = data.serverId;
@@ -31,6 +33,14 @@ export class ServerRole {
     this.icon = data.icon;
     this.botRole = data.botRole;
     this.applyOnJoin = data.applyOnJoin;
+
+    if (this.hexColor?.startsWith("lg")) {
+      const [converted] = convertShorthandToLinearGradient(this.hexColor);
+      if (converted) {
+        this.hexColor = converted.colors[0]!;
+        this.gradient = converted.gradient;
+      }
+    }
   }
 
   update(updated: Partial<RawServerRole>) {
@@ -40,6 +50,14 @@ export class ServerRole {
     applyIfPresent(this, updated, "hideRole");
     applyIfPresent(this, updated, "icon");
     applyIfPresent(this, updated, "applyOnJoin");
+    applyIfPresent(this, updated, "hexColor");
+    if (updated.hexColor?.startsWith("lg")) {
+      const [converted] = convertShorthandToLinearGradient(updated.hexColor);
+      if (converted) {
+        this.hexColor = converted.colors[0]!;
+        this.gradient = converted.gradient;
+      }
+    }
   }
 }
 
@@ -88,6 +106,14 @@ function createServerRoleStore() {
     patchProperty(role, data, "hideRole");
     patchProperty(role, data, "hexColor");
     patchProperty(role, data, "icon");
+
+    if (data.hexColor?.startsWith("lg")) {
+      const [converted] = convertShorthandToLinearGradient(data.hexColor);
+      if (converted) {
+        role.hexColor = converted.colors[0]!;
+        role.gradient = converted.gradient;
+      }
+    }
 
     if (hasRole) {
       channelStore.notificationsMemo.rerun();

@@ -83,7 +83,7 @@ export const SystemMessage = (props: { message: Message }) => {
     ?.get(creator.id);
 
   const topRole = serverStore.memberTopColorAndIcon(member);
-  const color = resolveGradient(topRole?.color) ?? "";
+  const color = resolveGradient(topRole?.gradient || topRole?.color) ?? "";
 
   const name = member?.nickname || creator.username;
 

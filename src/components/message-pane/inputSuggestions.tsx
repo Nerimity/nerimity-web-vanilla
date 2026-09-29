@@ -145,7 +145,7 @@ export const createInputSuggestions = (opts: {
         id: role.id,
         name: role.name,
         icon: role.icon,
-        color: role.hexColor,
+        color: role.gradient || role.hexColor,
       }));
     }
 
@@ -531,8 +531,9 @@ type SuggestionItemProps = {
 function getItemConfig(item: SuggestionItem) {
   switch (item.type) {
     case "user": {
+      const topColor = serverStore.memberTopColor(item.member);
       const color = item.member
-        ? resolveGradient(serverStore.memberTopColor(item.member))
+        ? resolveGradient(topColor?.gradient || topColor?.color)
         : undefined;
       return {
         icon: <Avatar user={item.user} size={18} />,

@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { Checkbox } from "../../../components/checkbox";
+import { createColorPicker } from "../../../components/ColorPicker";
 import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
@@ -13,6 +14,7 @@ import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { router } from "../../../utils/router";
+import { DefaultTheme } from "../../../utils/theme";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./roleServerSettingsPage.module.css";
@@ -51,10 +53,21 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
       name: role?.name || "",
       hideRole: role?.hideRole || false,
       applyOnJoin: role?.applyOnJoin || false,
+      hexColor: role?.gradient || role?.hexColor,
     };
   };
   const actions = createSettingsActions({ signal });
   const updateHandler = createUpdatedHandler(initialValues, signal);
+
+  const roleColorPicker = createColorPicker({
+    signal,
+    initialColor() {
+      return updateHandler.values.hexColor || DefaultTheme["text-color"];
+    },
+    onChange(color) {
+      updateHandler.changeValue("hexColor", color);
+    },
+  });
 
   let el = (
     <div class={style.page}>
@@ -74,6 +87,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="palette" />
           <SettingsBlock.Details title={strings.roleColor} />
+          {roleColorPicker.el}
         </SettingsBlock.Root>
 
         {/* role icon */}
@@ -130,6 +144,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     updateHandler.undo();
     applyOnJoinCheckbox.update();
     hideRoleCheckbox.update();
+    roleColorPicker.update();
   };
 
   const applyOnJoinCheckbox = Checkbox.createHandler({

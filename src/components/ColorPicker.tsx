@@ -16,7 +16,7 @@ const ColorPicker = (props: ColorPickerProps) => {
         <Icon class={style.icon} name="brush" />
         <div
           class={style.colorLine}
-          style={{ background: props.initialColor() }}
+          style={{ background: props.initialColor()! }}
         ></div>
       </div>
     </div>
