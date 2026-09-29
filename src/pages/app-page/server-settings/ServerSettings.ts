@@ -61,7 +61,15 @@ export const ServerSettings: ServerSetting[] = [
     name: () => t`Roles`,
     path: "/roles",
     pattern: "/roles{/*}?",
-    load: rolesServerSettingsPage,
+    load: {
+      ...rolesServerSettingsPage,
+      getStrings() {
+        return {
+          ...rolesServerSettingsPage.getStrings(),
+          ...roleServerSettingsPage.getStrings(),
+        };
+      },
+    },
   },
   {
     id: "role",
