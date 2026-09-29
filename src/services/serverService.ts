@@ -150,3 +150,17 @@ export const getServerAuditLogs = async (opts: {
     },
   });
 };
+
+interface UpdateServerRoleOptions {}
+
+export async function updateServerRole(
+  serverId: string,
+  roleId: string,
+  body: UpdateServerRoleOptions,
+) {
+  return request<any>(`/servers/${serverId}/roles/${roleId}`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}

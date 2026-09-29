@@ -5,7 +5,10 @@ import { createGenericDeleteModal } from "../../../components/GenericDeleteModal
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { deleteServer, updateServer } from "../../../services/serverService";
+import {
+  deleteServer,
+  updateServerRole,
+} from "../../../services/serverService";
 import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
@@ -80,25 +83,25 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
         </SettingsBlock.Root>
 
         {/* hide role */}
-        <SettingsBlock.Root clickable hideArrow>
+        <SettingsBlock.Root clickable hideArrow data-checkbox="hideRole">
           <SettingsBlock.Icon name="visibility_off" />
           <SettingsBlock.Details
             title={strings.hideRole}
             description={t`Display members with this role along with all the default members`}
           />
-          <Checkbox.Root checked={initialValues().hideRole}>
+          <Checkbox.Root>
             <Checkbox.Box></Checkbox.Box>
           </Checkbox.Root>
         </SettingsBlock.Root>
 
         {/* apply on join */}
-        <SettingsBlock.Root clickable hideArrow>
+        <SettingsBlock.Root clickable hideArrow data-checkbox="applyOnJoin">
           <SettingsBlock.Icon name="person_add" />
           <SettingsBlock.Details
             title={strings.applyOnJoin}
             description={t`Apply this role to members when they join the server.`}
           />
-          <Checkbox.Root checked={initialValues().applyOnJoin}>
+          <Checkbox.Root>
             <Checkbox.Box></Checkbox.Box>
           </Checkbox.Root>
         </SettingsBlock.Root>
@@ -125,7 +128,34 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
 
   const handleUndo = () => {
     updateHandler.undo();
+    applyOnJoinCheckbox.update();
+    hideRoleCheckbox.update();
   };
+
+  const applyOnJoinCheckbox = Checkbox.createHandler({
+    el: el.querySelector('[data-checkbox="applyOnJoin"]') as HTMLDivElement,
+    triggerEl: el.querySelector(
+      '[data-checkbox="applyOnJoin"]',
+    ) as HTMLDivElement,
+    initialState() {
+      return initialValues().applyOnJoin;
+    },
+    onChange(checked) {
+      updateHandler.changeValue("applyOnJoin", checked);
+    },
+    signal,
+  });
+  const hideRoleCheckbox = Checkbox.createHandler({
+    el: el.querySelector('[data-checkbox="hideRole"]') as HTMLDivElement,
+    triggerEl: el.querySelector('[data-checkbox="hideRole"]') as HTMLDivElement,
+    initialState() {
+      return initialValues().hideRole;
+    },
+    onChange(checked) {
+      updateHandler.changeValue("hideRole", checked);
+    },
+    signal,
+  });
 
   actions.handleUndoClick(handleUndo);
 
@@ -133,17 +163,18 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     const { ...updates } = updateHandler.changedValues;
 
     const serverId = getServerId()!;
+    const roleId = getRoleId()!;
 
     const body = {
       ...updates,
     };
 
-    const [res, error] = await updateServer("", body);
+    const [res, error] = await updateServerRole(serverId, roleId, body);
     if (error) {
       return done(error.message);
     }
 
-    serverStore.servers.get(serverId)?.update(res);
+    serverRoleStore.roles.get(serverId)?.get(roleId)?.update(res);
     done();
     handleUndo();
   };

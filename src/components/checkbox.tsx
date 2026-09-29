@@ -38,30 +38,72 @@ const createHandler = (opts: {
   onChange: (checked: boolean, el: HTMLElement) => void;
   signal: AbortSignal;
   disableUpdateState?: boolean;
+  initialState?: () => boolean;
+  triggerEl?: HTMLDivElement;
 }) => {
-  opts.el.addEventListener(
-    "click",
-    (el) => {
-      const target = el.target as HTMLElement;
-      const checkEl = target?.closest(
-        `.${style.checkboxContainer}`,
-      ) as HTMLDivElement;
-      if (checkEl) {
-        if (checkEl.dataset.disabled) {
-          return;
+  if (opts.triggerEl) {
+    opts.triggerEl.addEventListener(
+      "click",
+      () => {
+        const checkEl = opts.triggerEl?.querySelector(
+          `.${style.checkboxContainer}`,
+        ) as HTMLDivElement;
+        if (checkEl) {
+          if (checkEl.dataset.disabled) {
+            return;
+          }
+
+          const checked = checkEl.dataset.checked === "true" ? false : true;
+
+          if (!opts.disableUpdateState) {
+            checkEl.dataset.checked = `${checked}`;
+          }
+
+          opts.onChange(checked, checkEl);
         }
+      },
+      { signal: opts.signal },
+    );
+  } else {
+    opts.el.addEventListener(
+      "click",
+      (el) => {
+        const target = el.target as HTMLElement;
+        const checkEl = target?.closest(
+          `.${style.checkboxContainer}`,
+        ) as HTMLDivElement;
+        if (checkEl) {
+          if (checkEl.dataset.disabled) {
+            return;
+          }
 
-        const checked = checkEl.dataset.checked === "true" ? false : true;
+          const checked = checkEl.dataset.checked === "true" ? false : true;
 
-        if (!opts.disableUpdateState) {
-          checkEl.dataset.checked = `${checked}`;
+          if (!opts.disableUpdateState) {
+            checkEl.dataset.checked = `${checked}`;
+          }
+
+          opts.onChange(checked, checkEl);
         }
+      },
+      { signal: opts.signal },
+    );
+  }
 
-        opts.onChange(checked, checkEl);
-      }
-    },
-    { signal: opts.signal },
-  );
+  const update = () => {
+    if (!opts.initialState) return;
+    const initial = opts.initialState();
+    const checkboxEl = opts.el.querySelector(
+      `.${style.checkboxContainer}`,
+    ) as HTMLDivElement;
+    if (!checkboxEl) return;
+    checkboxEl.dataset.checked = initial ? "true" : "false";
+  };
+  update();
+
+  return {
+    update,
+  };
 };
 
 export const Checkbox = {

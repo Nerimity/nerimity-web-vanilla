@@ -1,4 +1,5 @@
 import type { RawServerRole } from "../Types";
+import { applyIfPresent } from "../utils/applyIfPresent";
 import { storeEmitter } from "../utils/EventEmitter";
 import { patchProperty } from "../utils/object";
 import { accountStore } from "./accountStore";
@@ -30,6 +31,15 @@ export class ServerRole {
     this.icon = data.icon;
     this.botRole = data.botRole;
     this.applyOnJoin = data.applyOnJoin;
+  }
+
+  update(updated: Partial<RawServerRole>) {
+    applyIfPresent(this, updated, "name");
+    applyIfPresent(this, updated, "permissions");
+    applyIfPresent(this, updated, "order");
+    applyIfPresent(this, updated, "hideRole");
+    applyIfPresent(this, updated, "icon");
+    applyIfPresent(this, updated, "applyOnJoin");
   }
 }
 
