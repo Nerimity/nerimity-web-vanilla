@@ -44,3 +44,63 @@ body .modalBody {
 :global .clr-dark input.clr-color {
   background-color: transparent;
 }
+
+.tabs {
+  display: flex;
+  margin: 6px;
+  gap: 4px;
+  :global(.item) {
+    padding: 8px 12px;
+  }
+}
+
+.gradientSlider {
+  position: relative;
+  flex: 1;
+  height: 30px;
+  margin: 8px;
+  margin-top: 14px;
+
+  border: solid 1px var(--text-color);
+  border-radius: var(--radius-6);
+  user-select: none;
+  touch-action: none;
+}
+
+.colorStop {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  display: flex;
+  justify-content: center;
+  width: 12px;
+  border: solid 1px white;
+  border-radius: var(--radius-6);
+  cursor: pointer;
+  &.active,
+  &:hover {
+    border-width: 2px;
+  }
+
+  &.active {
+    .removeButton {
+      display: flex;
+    }
+  }
+
+  .removeButton {
+    position: absolute;
+    top: -18px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: solid 1px white;
+    border-radius: 50%;
+    background: rgb(0, 0, 0);
+    .removeIcon {
+      font-size: 12px;
+    }
+  }
+}

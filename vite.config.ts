@@ -19,6 +19,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "format_color_fill",
+        "gradient",
         "leaderboard",
         "expand_more",
         "lock_open",

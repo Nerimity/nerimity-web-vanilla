@@ -7,6 +7,7 @@ interface ColorPickerProps {
   initialColor: () => string | undefined;
   signal: AbortSignal;
   onChange: (color: string) => void;
+  gradientTab?: boolean;
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
@@ -39,6 +40,7 @@ export const createColorPicker = (props: ColorPickerProps) => {
     () => {
       createColorPickerModalLazy({
         color: props.initialColor() || "black",
+        gradientTab: props.gradientTab,
         triggerEl: colorPickerEl,
         onChange: (color) => {
           props.onChange(color);

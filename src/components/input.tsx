@@ -236,12 +236,13 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
         createColorPickerModalLazy({
           color: "#ff0000",
           anchor: "top-center",
-          onClose(color) {
+          gradientTab: true,
+          onClose(color, colors) {
             applyFormat({
               inputEl,
-              format: action,
+              format: colors ? "gradient" : "color",
               onTextUpdate: opts.onTextUpdate,
-              color,
+              color: colors ? colors.join("-") : color,
             });
           },
           triggerEl: actionEl,
