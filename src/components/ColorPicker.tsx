@@ -8,6 +8,7 @@ interface ColorPickerProps {
   signal: AbortSignal;
   onChange: (color: string) => void;
   gradientTab?: boolean;
+  gradientStopLimit?: number;
 }
 
 const ColorPicker = (props: ColorPickerProps) => {
@@ -42,6 +43,7 @@ export const createColorPicker = (props: ColorPickerProps) => {
         color: props.initialColor() || "black",
         gradientTab: props.gradientTab,
         triggerEl: colorPickerEl,
+        gradientStopLimit: props.gradientStopLimit,
         onChange: (color) => {
           props.onChange(color);
           update();

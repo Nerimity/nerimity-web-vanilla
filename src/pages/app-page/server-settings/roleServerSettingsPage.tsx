@@ -62,6 +62,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
   const roleColorPicker = createColorPicker({
     signal,
     gradientTab: true,
+    gradientStopLimit: 4,
     initialColor() {
       return updateHandler.values.hexColor || DefaultTheme["text-color"];
     },

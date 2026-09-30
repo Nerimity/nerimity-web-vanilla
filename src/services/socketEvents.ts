@@ -340,7 +340,8 @@ function onServerRoleUpdated(payload: {
   roleId: string;
   updated: Partial<RawServerRole>;
 }) {
-  serverRoleStore.updateRole(payload.serverId, payload.roleId, payload.updated);
+  const role = serverRoleStore.roles.get(payload.serverId)?.get(payload.roleId);
+  role?.update(payload.updated);
 }
 
 function onServerMemberUpdated(payload: {

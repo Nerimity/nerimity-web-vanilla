@@ -2,7 +2,6 @@ import type { RawServerRole } from "../Types";
 import { applyIfPresent } from "../utils/applyIfPresent";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { storeEmitter } from "../utils/EventEmitter";
-import { patchProperty } from "../utils/object";
 import { accountStore } from "./accountStore";
 import { channelStore } from "./channelStore";
 import { serverMemberStore } from "./serverMemberStore";
@@ -58,6 +57,28 @@ export class ServerRole {
         this.gradient = converted.gradient;
       }
     }
+
+    const server = serverStore.servers.get(this.serverId);
+
+    const member = serverMemberStore.getMember(
+      this.serverId,
+      accountStore.currentUser?.id!,
+    );
+
+    const defaultRole = server?.defaultRoleId === this.id;
+
+    const hasRole = defaultRole || member?.roleIds.includes(this.id);
+
+    if (hasRole) {
+      channelStore.notificationsMemo.rerun();
+      serverStore.notificationsMemo.rerun();
+      serverStore.currentChannelsSorted.rerun();
+    }
+    storeEmitter.emit("server:update_role", {
+      hasRole: !!hasRole,
+      roleId: this.id,
+      serverId: this.serverId,
+    });
   }
 }
 
@@ -77,54 +98,6 @@ function createServerRoleStore() {
 
   const removeAll = (serverId: string) => {
     roles.delete(serverId);
-  };
-
-  const updateRole = (
-    serverId: string,
-    roleId: string,
-    data: Partial<ServerRole>,
-  ) => {
-    const server = serverStore.servers.get(serverId);
-    const serverRoles = roles.get(serverId);
-    if (!serverRoles) return;
-
-    const role = serverRoles.get(roleId);
-    if (!role) return;
-
-    const member = serverMemberStore.getMember(
-      serverId,
-      accountStore.currentUser?.id!,
-    );
-
-    const defaultRole = server?.defaultRoleId === roleId;
-
-    const hasRole = defaultRole || member?.roleIds.includes(roleId);
-
-    patchProperty(role, data, "permissions");
-    patchProperty(role, data, "order");
-    patchProperty(role, data, "name");
-    patchProperty(role, data, "hideRole");
-    patchProperty(role, data, "hexColor");
-    patchProperty(role, data, "icon");
-
-    if (data.hexColor?.startsWith("lg")) {
-      const [converted] = convertShorthandToLinearGradient(data.hexColor);
-      if (converted) {
-        role.hexColor = converted.colors[0]!;
-        role.gradient = converted.gradient;
-      }
-    }
-
-    if (hasRole) {
-      channelStore.notificationsMemo.rerun();
-      serverStore.notificationsMemo.rerun();
-      serverStore.currentChannelsSorted.rerun();
-    }
-    storeEmitter.emit("server:update_role", {
-      hasRole: !!hasRole,
-      roleId,
-      serverId,
-    });
   };
 
   const deleteRole = (serverId: string, roleId: string) => {
@@ -150,5 +123,5 @@ function createServerRoleStore() {
     });
   };
 
-  return { roles, setRoles, updateRole, deleteRole, removeAll };
+  return { roles, setRoles, deleteRole, removeAll };
 }
