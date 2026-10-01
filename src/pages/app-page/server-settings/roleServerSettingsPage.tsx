@@ -2,12 +2,13 @@ import { t } from "@lingui/core/macro";
 
 import { Checkbox } from "../../../components/checkbox";
 import { createColorPicker } from "../../../components/ColorPicker";
+import { createEmojiSelector } from "../../../components/createEmojiSelector";
 import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import { Input } from "../../../components/input";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
-  deleteServer,
+  deleteServerRole,
   updateServerRole,
 } from "../../../services/serverService";
 import { serverRoleStore } from "../../../store/serverRoleStore";
@@ -54,6 +55,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
       hideRole: role?.hideRole || false,
       applyOnJoin: role?.applyOnJoin || false,
       hexColor: role?.gradient || role?.hexColor,
+      icon: role?.icon,
     };
   };
   const actions = createSettingsActions({ signal });
@@ -68,6 +70,16 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     },
     onChange(color) {
       updateHandler.changeValue("hexColor", color);
+    },
+  });
+
+  const roleIconPicker = createEmojiSelector({
+    signal,
+    initialEmoji() {
+      return updateHandler.values.icon;
+    },
+    onChange(icon) {
+      updateHandler.changeValue("icon", icon);
     },
   });
 
@@ -96,6 +108,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="face" />
           <SettingsBlock.Details title={strings.roleIcon} />
+          {roleIconPicker.el}
         </SettingsBlock.Root>
 
         {/* hide role */}
@@ -147,6 +160,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     applyOnJoinCheckbox.update();
     hideRoleCheckbox.update();
     roleColorPicker.update();
+    roleIconPicker.update();
   };
 
   const applyOnJoinCheckbox = Checkbox.createHandler({
@@ -213,10 +227,13 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
           confirmLabel: getRole()?.name!,
           title: t`Delete Role`,
           async onDelete(done) {
-            const [, error] = await deleteServer("");
+            const [, error] = await deleteServerRole(
+              getServerId()!,
+              getRoleId()!,
+            );
             done(error?.message);
             if (!error) {
-              router.navigate("/app");
+              router.navigate("../roles");
             }
           },
         });

@@ -2,6 +2,7 @@ import type {
   RawBotCommand,
   RawExploreItem,
   RawServer,
+  RawServerRole,
   RawUser,
 } from "../Types";
 import { request } from "./request";
@@ -162,5 +163,18 @@ export async function updateServerRole(
     method: "POST",
     useToken: true,
     body,
+  });
+}
+
+export async function deleteServerRole(serverId: string, roleId: string) {
+  return request<any>(`/servers/${serverId}/roles/${roleId}`, {
+    method: "DELETE",
+    useToken: true,
+  });
+}
+export async function createServerRole(serverId: string) {
+  return request<RawServerRole>(`/servers/${serverId}/roles`, {
+    method: "POST",
+    useToken: true,
   });
 }

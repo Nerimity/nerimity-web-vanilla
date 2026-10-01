@@ -96,6 +96,12 @@ function createServerRoleStore() {
     }
   };
 
+  const addRole = (rawRole: RawServerRole) => {
+    const role = new ServerRole(rawRole);
+    roles.get(rawRole.serverId)?.set(rawRole.id, role);
+    storeEmitter.emit("server:create_role", role);
+  };
+
   const removeAll = (serverId: string) => {
     roles.delete(serverId);
   };
@@ -123,5 +129,5 @@ function createServerRoleStore() {
     });
   };
 
-  return { roles, setRoles, deleteRole, removeAll };
+  return { roles, setRoles, addRole, deleteRole, removeAll };
 }

@@ -1,6 +1,6 @@
 import type { ExpressionPickerProps } from "./ExpressionPicker";
 
 export const ExpressionPickerLazy = async (opts: ExpressionPickerProps) => {
-  const { createExpressionPicker } = await import("./ExpressionPicker");
-  createExpressionPicker(opts);
+  const { _createExpressionPicker } = await import("./ExpressionPicker");
+  _createExpressionPicker(opts);
 };

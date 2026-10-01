@@ -4,6 +4,7 @@ import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
 import type { Message, MessageReaction } from "../store/messageStore";
 import type { ServerMember } from "../store/serverMemberStore";
+import type { ServerRole } from "../store/serverRoleStore";
 import type { Server } from "../store/serverStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { User } from "../store/userStore";
@@ -45,6 +46,7 @@ type StoreEvents = {
   "channel:typing": { channelId: string; userId: string };
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
+  "server:create_role": ServerRole;
   "server:member_update": { serverId: string; userId: string; isMe: boolean };
   "attachment:upload_progress": {
     messageId?: string;

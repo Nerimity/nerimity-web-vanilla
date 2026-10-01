@@ -4,14 +4,20 @@ import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
 import { GradientText } from "../../../components/gradientText";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { createServerRole } from "../../../services/serverService";
 import {
   serverMemberStore,
   type ServerMember,
 } from "../../../store/serverMemberStore";
-import type { ServerRole } from "../../../store/serverRoleStore";
+import {
+  serverRoleStore,
+  type ServerRole,
+} from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import { resolveGradient } from "../../../utils/color";
+import { storeEmitter } from "../../../utils/EventEmitter";
 import { HoverAnimator } from "../../../utils/HoverAnimator";
+import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./rolesServerSettingsPage.module.css";
@@ -20,34 +26,74 @@ const getStrings = () => ({});
 
 const rolesServerSettingsPage = (context: ServerSettingsContext) => {
   const ac = new AbortController();
-  // const { signal } = ac;
+  const { signal } = ac;
 
   const getServerId = () => serverStore.currentServerId;
 
-  const orderedRoles = serverStore.currentServerSortedRoles.rerun();
+  let el = (<div class={style.page}></div>) as HTMLDivElement;
 
-  const members = [
-    ...(serverMemberStore.serverMembers.get(getServerId()!)?.values() || []),
-  ];
+  const rerender = () => {
+    const orderedRoles = serverStore.currentServerSortedRoles.rerun();
 
-  let el = (
-    <div class={style.page}>
+    const members = [
+      ...(serverMemberStore.serverMembers.get(getServerId()!)?.values() || []),
+    ];
+    el.replaceChildren(
       <SettingsBlock.Group>
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="leaderboard" />
           <SettingsBlock.Details title={t`Create New Role`} />
-          <Button icon="add" label={t`Create Role`} />
+          <Button data-action="create-role" icon="add" label={t`Create Role`} />
         </SettingsBlock.Root>
         {orderedRoles.map((r) => (
           <RoleItem role={r} members={members} />
         ))}
-      </SettingsBlock.Group>
-    </div>
-  ) as HTMLDivElement;
+      </SettingsBlock.Group>,
+    );
+  };
+
+  rerender();
+
+  storeEmitter.on(
+    "server:create_role",
+    (role) => {
+      if (role.serverId !== getServerId()) return;
+      rerender();
+      navigateToCreatedRole(role.id);
+    },
+    signal,
+  );
 
   const hoverAnimator = new HoverAnimator(el, [
     { image: "img", trigger: `.roleItem` },
   ]);
+
+  let createdRoleId = "";
+  el.addEventListener(
+    "click",
+    async (event) => {
+      const target = event.target as HTMLDivElement;
+
+      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const action = actionEl?.dataset?.action;
+      if (action === "create-role") {
+        const [role] = await createServerRole(getServerId()!);
+        if (role) {
+          createdRoleId = role.id;
+          navigateToCreatedRole(role.id);
+        }
+      }
+    },
+    { signal },
+  );
+
+  const navigateToCreatedRole = (roleId: string) => {
+    if (createdRoleId != roleId) return;
+    if (signal.aborted) return;
+    const role = serverRoleStore.roles.get(getServerId()!)?.has(roleId);
+    if (!role) return;
+    router.navigate(`./roles/${roleId}`);
+  };
 
   context.content.replaceChildren(el);
 

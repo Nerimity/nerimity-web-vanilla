@@ -100,7 +100,7 @@ const DesktopNotifications = (props: { signal: AbortSignal }) => {
 
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
       if (!actionEl) return;
-      const action = actionEl.dataset.action;
+      const action = actionEl?.dataset?.action;
 
       if (action === "toggle_desktop_notifications") {
         handleToggleDesktopNotifications();
@@ -190,7 +190,7 @@ const NotificationSound = (props: { signal: AbortSignal }) => {
 
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
       if (!actionEl) return;
-      const action = actionEl.dataset.action;
+      const action = actionEl?.dataset?.action;
 
       if (action === "toggle_desktop_sounds") {
         handleToggleNotificationSounds();

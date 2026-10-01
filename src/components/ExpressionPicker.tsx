@@ -27,7 +27,7 @@ let currentInstance: {
   destroy: () => void;
 } | null = null;
 
-export const createExpressionPicker = (props: ExpressionPickerProps) => {
+export const _createExpressionPicker = (props: ExpressionPickerProps) => {
   if (currentInstance) {
     const sameTarget = currentInstance.targetEl === props.targetEl;
     currentInstance.destroy();
