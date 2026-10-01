@@ -819,49 +819,49 @@ msgstr "General"
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:35
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:36
 msgid "Load More"
 msgstr "Load More"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:125
-msgid "<0>{username}</0> deleted channel <1>{channelName}</1>"
-msgstr "<0>{username}</0> deleted channel <1>{channelName}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:126
+msgid "<0><1>{username}</1></0> deleted channel <2>{channelName}</2>"
+msgstr "<0><1>{username}</1></0> deleted channel <2>{channelName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:137
-msgid "<0>{username}</0> created a channel"
-msgstr "<0>{username}</0> created a channel"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:143
+msgid "<0><1>{username}</1></0> created a channel"
+msgstr "<0><1>{username}</1></0> created a channel"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:159
-msgid "<0>{username}</0> updated the server"
-msgstr "<0>{username}</0> updated the server"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:171
+msgid "<0><1>{username}</1></0> updated the server"
+msgstr "<0><1>{username}</1></0> updated the server"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:186
-msgid "<0>{username}</0> updated the role <1>{roleName}</1>"
-msgstr "<0>{username}</0> updated the role <1>{roleName}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:204
+msgid "<0><1>{username}</1></0> updated the role <2>{roleName}</2>"
+msgstr "<0><1>{username}</1></0> updated the role <2>{roleName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:216
-msgid "<0>{username}</0> updated the channel <1>{channelName}</1>"
-msgstr "<0>{username}</0> updated the channel <1>{channelName}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:239
+msgid "<0><1>{username}</1></0> updated the channel <2>{channelName}</2>"
+msgstr "<0><1>{username}</1></0> updated the channel <2>{channelName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:247
-msgid "<0>{username}</0> unbanned <1>{unbannedUsername}</1>"
-msgstr "<0>{username}</0> unbanned <1>{unbannedUsername}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:275
+msgid "<0><1>{username}</1></0> unbanned <2><3>{unbannedUsername}</3></2>"
+msgstr "<0><1>{username}</1></0> unbanned <2><3>{unbannedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:261
-msgid "<0>{username}</0> banned <1>{bannedUsername}</1>"
-msgstr "<0>{username}</0> banned <1>{bannedUsername}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:300
+msgid "<0><1>{username}</1></0> banned <2><3>{bannedUsername}</3></2>"
+msgstr "<0><1>{username}</1></0> banned <2><3>{bannedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:274
-msgid "<0>{username}</0> kicked <1>{kickedUsername}</1>"
-msgstr "<0>{username}</0> kicked <1>{kickedUsername}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:325
+msgid "<0><1>{username}</1></0> kicked <2><3>{kickedUsername}</3></2>"
+msgstr "<0><1>{username}</1></0> kicked <2><3>{kickedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:289
-msgid "<0>{username}</0> updated their profile"
-msgstr "<0>{username}</0> updated their profile"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:352
+msgid "<0><1>{username}</1></0> updated their profile"
+msgstr "<0><1>{username}</1></0> updated their profile"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:293
-msgid "<0>{username}</0> updated <1>{updatedUsername}</1>'s profile"
-msgstr "<0>{username}</0> updated <1>{updatedUsername}</1>'s profile"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:362
+msgid "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
+msgstr "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
 
 #: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
 msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
