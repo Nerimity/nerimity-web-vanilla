@@ -130,6 +130,9 @@ export interface UserAuditLog {
     kickedUserId?: string;
     unbannedUserId?: string;
     name?: string;
+    userId?: string;
+    channelId?: string;
+    roleId?: string;
   };
 }
 interface UserAuditLogResponse {

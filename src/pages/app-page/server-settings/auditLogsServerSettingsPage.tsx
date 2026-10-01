@@ -8,6 +8,9 @@ import {
   getServerAuditLogs,
   type UserAuditLog,
 } from "../../../services/serverService";
+import { accountStore } from "../../../store/accountStore";
+import { channelStore } from "../../../store/channelStore";
+import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import type { RawUser } from "../../../Types";
 import { fullDate, getTime } from "../../../utils/date";
@@ -77,6 +80,7 @@ const auditLogsServerSettingsPage = (context: ServerSettingsContext) => {
         <>
           {res.auditLogs.map((a, i) => (
             <AuditItem
+              serverId={getServerId()!}
               audit={a}
               prev={res.auditLogs[i - 1]}
               users={res.users}
@@ -107,7 +111,7 @@ const auditLogsServerSettingsPage = (context: ServerSettingsContext) => {
   return { destroy };
 };
 
-const Transform = (audit: UserAuditLog, users: RawUser[]) => {
+const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
   const user = users.find((u) => audit.actionById === u.id);
   const username = user?.username || "";
 
@@ -149,7 +153,7 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
     }
     case "SERVER_UPDATE": {
       return {
-        icon: "tag",
+        icon: "dns",
         color: "var(--primary-color)",
         title: () => (
           <Trans>
@@ -169,23 +173,63 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
         ),
       };
     }
-    case "SERVER_CHANNEL_UPDATE": {
+    case "SERVER_ROLE_UPDATE": {
+      const role = serverRoleStore.roles
+        .get(serverId)
+        ?.get(audit.data?.roleId!);
+      const roleName = role?.name || "";
+
       return {
         icon: "tag",
         color: "var(--primary-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> updated a channel
+            <strong>{username}</strong> updated the role{" "}
+            <strong>{roleName}</strong>
           </Trans>
         ),
         description: () => (
           <div>
             {audit.data
-              ? Object.entries(audit.data).map(([k, v]) => (
-                  <div>
-                    {k}: <strong>{v || "Removed"}</strong>
-                  </div>
-                ))
+              ? Object.entries(audit.data).map(([k, v]) =>
+                  k === "roleId" ? (
+                    <></>
+                  ) : (
+                    <div>
+                      {k}: <strong>{v || "Removed"}</strong>
+                    </div>
+                  ),
+                )
+              : null}
+          </div>
+        ),
+      };
+    }
+    case "SERVER_CHANNEL_UPDATE": {
+      const channel = channelStore.channels.get(audit.data?.channelId!);
+      const channelName = channel?.name || "";
+
+      return {
+        icon: "tag",
+        color: "var(--primary-color)",
+        title: () => (
+          <Trans>
+            <strong>{username}</strong> updated the channel{" "}
+            <strong>{channelName}</strong>
+          </Trans>
+        ),
+        description: () => (
+          <div>
+            {audit.data
+              ? Object.entries(audit.data).map(([k, v]) =>
+                  k === "channelId" ? (
+                    <></>
+                  ) : (
+                    <div>
+                      {k}: <strong>{v || "Removed"}</strong>
+                    </div>
+                  ),
+                )
               : null}
           </div>
         ),
@@ -234,24 +278,35 @@ const Transform = (audit: UserAuditLog, users: RawUser[]) => {
       };
     }
     case "SERVER_USER_UPDATE": {
-      const updatedUsername = "User"; // TODO: get updated users username
+      const updatedUser = users.find((u) => u.id === audit.data?.userId);
+      const isCurrentUser = accountStore.currentUser?.id === updatedUser?.id;
+      const updatedUsername = updatedUser?.username || "";
       return {
         icon: "edit",
         color: "var(--primary-color)",
-        title: () => (
-          <Trans>
-            <strong>{username}</strong> updated{" "}
-            <strong>{updatedUsername}</strong>
-          </Trans>
-        ),
+        title: () =>
+          isCurrentUser ? (
+            <Trans>
+              <strong>{username}</strong> updated their profile
+            </Trans>
+          ) : (
+            <Trans>
+              <strong>{username}</strong> updated{" "}
+              <strong>{updatedUsername}</strong>'s profile
+            </Trans>
+          ),
         description: () => (
           <div>
             {audit.data
-              ? Object.entries(audit.data).map(([k, v]) => (
-                  <div>
-                    {k}: <strong>{v || "Removed"}</strong>
-                  </div>
-                ))
+              ? Object.entries(audit.data).map(([k, v]) =>
+                  k === "userId" ? (
+                    <></>
+                  ) : (
+                    <div>
+                      {k}: <strong>{v || "Removed"}</strong>
+                    </div>
+                  ),
+                )
               : null}
           </div>
         ),
@@ -283,11 +338,12 @@ const AuditItem = (props: {
   audit: UserAuditLog;
   prev?: UserAuditLog;
   users: RawUser[];
+  serverId: string;
 }) => {
   const newDay =
     !props.prev || isNewDay(props.prev || { createdAt: 0 }, props.audit);
 
-  const transformed = Transform(props.audit, props.users);
+  const transformed = Transform(props.serverId, props.audit, props.users);
 
   return (
     <>

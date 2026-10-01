@@ -74,6 +74,7 @@ msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
 
 #: src/components/EditServerRolesModal.tsx:152
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:139
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 
@@ -186,7 +187,7 @@ msgstr "Clear local settings"
 #: src/components/LogoutModal.tsx:39
 #: src/components/LogoutModal.tsx:52
 #: src/components/createAuthErrorModal.tsx:52
-#: src/components/miniProfile.tsx:353
+#: src/components/miniProfile.tsx:358
 msgid "Logout"
 msgstr "Logout"
 
@@ -223,8 +224,8 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/ServerContextMenu.tsx:68
-#: src/components/miniProfile.tsx:346
-#: src/components/server-settings/createServerSettingsDrawer.tsx:19
+#: src/components/miniProfile.tsx:351
+#: src/components/server-settings/createServerSettingsDrawer.tsx:20
 #: src/components/settings/createSettingsDrawer.tsx:15
 msgid "Settings"
 msgstr "Settings"
@@ -311,14 +312,14 @@ msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:316
-#: src/components/miniProfile.tsx:340
+#: src/components/miniProfile.tsx:321
+#: src/components/miniProfile.tsx:345
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/UserContextMenu.tsx:127
-#: src/components/miniProfile.tsx:316
+#: src/components/miniProfile.tsx:321
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Message"
 msgstr "Message"
@@ -336,7 +337,7 @@ msgid "Kick Member"
 msgstr "Kick Member"
 
 #: src/components/appHeader.tsx:34
-#: src/components/miniProfile.tsx:333
+#: src/components/miniProfile.tsx:338
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
@@ -565,7 +566,8 @@ msgstr "Mentions a random user."
 msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
-#: src/components/message-pane/inputSuggestions.tsx:550
+#: src/components/message-pane/inputSuggestions.tsx:551
+#: src/pages/app-page/server-settings/ServerSettings.ts:77
 msgid "Role"
 msgstr "Role"
 
@@ -598,7 +600,7 @@ msgstr "Owner"
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:355
+#: src/components/message-pane/messageItem.tsx:356
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -614,7 +616,7 @@ msgstr "Reply Message"
 msgid "Copy Content"
 msgstr "Copy Content"
 
-#: src/components/message-pane/repliesIndicator.tsx:73
+#: src/components/message-pane/repliesIndicator.tsx:74
 msgid "Mention"
 msgstr "Mention"
 
@@ -623,61 +625,62 @@ msgstr "Mention"
 msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
-#: src/components/miniProfile.tsx:262
+#: src/components/miniProfile.tsx:267
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:158
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
-#: src/components/miniProfile.tsx:271
+#: src/components/miniProfile.tsx:276
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:380
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:294
+#: src/components/miniProfile.tsx:299
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:403
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:306
+#: src/components/miniProfile.tsx:311
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:366
+#: src/components/miniProfile.tsx:371
+#: src/pages/app-page/server-settings/ServerSettings.ts:61
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:380
+#: src/components/miniProfile.tsx:385
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:397
+#: src/components/miniProfile.tsx:402
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:654
+#: src/components/miniProfile.tsx:659
 #: src/components/right-drawer/DrawerChannelNotice.tsx:16
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/miniProfile.tsx:704
+#: src/components/miniProfile.tsx:709
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:791
-#: src/components/miniProfile.tsx:834
+#: src/components/miniProfile.tsx:796
+#: src/components/miniProfile.tsx:839
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:840
+#: src/components/miniProfile.tsx:845
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:845
+#: src/components/miniProfile.tsx:850
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:846
+#: src/components/miniProfile.tsx:851
 #: src/components/settings-actions/SettingsActions.tsx:25
 #: src/components/settings-actions/SettingsActions.tsx:42
 msgid "Save"
@@ -808,35 +811,64 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:43
+#: src/pages/app-page/server-settings/ServerSettings.ts:47
 msgid "General"
 msgstr "General"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:50
+#: src/pages/app-page/server-settings/ServerSettings.ts:54
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:57
-msgid "<0>{username}</0> updated a channel"
-msgstr "<0>{username}</0> updated a channel"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:35
+msgid "Load More"
+msgstr "Load More"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:80
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:125
+msgid "<0>{username}</0> deleted channel <1>{channelName}</1>"
+msgstr "<0>{username}</0> deleted channel <1>{channelName}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:137
+msgid "<0>{username}</0> created a channel"
+msgstr "<0>{username}</0> created a channel"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:159
+msgid "<0>{username}</0> updated the server"
+msgstr "<0>{username}</0> updated the server"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:186
+msgid "<0>{username}</0> updated the role <1>{roleName}</1>"
+msgstr "<0>{username}</0> updated the role <1>{roleName}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:216
+msgid "<0>{username}</0> updated the channel <1>{channelName}</1>"
+msgstr "<0>{username}</0> updated the channel <1>{channelName}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:247
+msgid "<0>{username}</0> unbanned <1>{unbannedUsername}</1>"
+msgstr "<0>{username}</0> unbanned <1>{unbannedUsername}</1>"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:261
 msgid "<0>{username}</0> banned <1>{bannedUsername}</1>"
 msgstr "<0>{username}</0> banned <1>{bannedUsername}</1>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:92
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:274
 msgid "<0>{username}</0> kicked <1>{kickedUsername}</1>"
 msgstr "<0>{username}</0> kicked <1>{kickedUsername}</1>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:103
-msgid "<0>{username}</0> updated <1>{updatedUsername}</1>"
-msgstr "<0>{username}</0> updated <1>{updatedUsername}</1>"
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:289
+msgid "<0>{username}</0> updated their profile"
+msgstr "<0>{username}</0> updated their profile"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:293
+msgid "<0>{username}</0> updated <1>{updatedUsername}</1>'s profile"
+msgstr "<0>{username}</0> updated <1>{updatedUsername}</1>'s profile"
 
 #: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
 msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:25
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:24
 msgid "Name"
 msgstr "Name"
 
@@ -851,7 +883,7 @@ msgid "Banner"
 msgstr "Banner"
 
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:28
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:321
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:317
 msgid "Delete Server"
 msgstr "Delete Server"
 
@@ -886,6 +918,47 @@ msgstr "Where system messages should appear."
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:173
 msgid "Permanently delete this server and all associated data."
 msgstr "Permanently delete this server and all associated data."
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:25
+msgid "Role Color"
+msgstr "Role Color"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:26
+msgid "Role Icon"
+msgstr "Role Icon"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:27
+msgid "Hide Role"
+msgstr "Hide Role"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:28
+msgid "Apply on Join"
+msgstr "Apply on Join"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:29
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:228
+msgid "Delete Role"
+msgstr "Delete Role"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:119
+msgid "Display members with this role along with all the default members"
+msgstr "Display members with this role along with all the default members"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:131
+msgid "Apply this role to members when they join the server."
+msgstr "Apply this role to members when they join the server."
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:145
+msgid "Permanently delete this role and all associated data."
+msgstr "Permanently delete this role and all associated data."
+
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:45
+msgid "Create New Role"
+msgstr "Create New Role"
+
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:46
+msgid "Create Role"
+msgstr "Create Role"
 
 #: src/pages/app-page/settings/ChangePasswordModal.tsx:16
 #: src/pages/app-page/settings/accountSettingsPage.tsx:32
