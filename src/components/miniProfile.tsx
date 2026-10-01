@@ -617,7 +617,7 @@ const createRolesSection = (opts: {
     rolesEl = (document.querySelector(`.${style.roles}`) ||
       rolesEl) as HTMLDivElement;
 
-    const serverRoles = serverStore.currentServerSortedRoles.value();
+    const serverRoles = serverStore.currentServerSortedRoles.rerun();
 
     const roles = serverRoles.filter((role) =>
       member?.roleIds.includes(role.id),

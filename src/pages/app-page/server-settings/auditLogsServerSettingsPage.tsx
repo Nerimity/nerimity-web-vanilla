@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
 import { Button } from "../../../components/button";
+import { Link } from "../../../components/link";
 import { isNewDay } from "../../../components/message-pane/utils";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
@@ -123,8 +124,13 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--alert-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> deleted channel{" "}
-            <strong>{channelName}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            deleted channel <strong>{channelName}</strong>
           </Trans>
         ),
       };
@@ -135,7 +141,13 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--success-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> created a channel
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            created a channel
           </Trans>
         ),
         description: () => (
@@ -157,7 +169,13 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--primary-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> updated the server
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            updated the server
           </Trans>
         ),
         description: () => (
@@ -184,8 +202,13 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--primary-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> updated the role{" "}
-            <strong>{roleName}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            updated the role <strong>{roleName}</strong>
           </Trans>
         ),
         description: () => (
@@ -214,8 +237,13 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--primary-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> updated the channel{" "}
-            <strong>{channelName}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            updated the channel <strong>{channelName}</strong>
           </Trans>
         ),
         description: () => (
@@ -245,8 +273,19 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--success-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> unbanned{" "}
-            <strong>{unbannedUsername}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            unbanned{" "}
+            <Link
+              href={`/app/profile/${audit.data?.unbannedUserId}`}
+              data-user-id={audit.data?.unbannedUserId}
+            >
+              <strong>{unbannedUsername}</strong>
+            </Link>
           </Trans>
         ),
       };
@@ -259,7 +298,19 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--alert-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> banned <strong>{bannedUsername}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            banned{" "}
+            <Link
+              href={`/app/profile/${audit.data?.bannedUserId}`}
+              data-user-id={audit.data?.bannedUserId}
+            >
+              <strong>{bannedUsername}</strong>
+            </Link>
           </Trans>
         ),
       };
@@ -272,7 +323,19 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         color: "var(--alert-color)",
         title: () => (
           <Trans>
-            <strong>{username}</strong> kicked <strong>{kickedUsername}</strong>
+            <Link
+              data-user-id={audit.actionById}
+              href={`/app/profile/${audit.actionById}`}
+            >
+              <strong>{username}</strong>
+            </Link>{" "}
+            kicked{" "}
+            <Link
+              href={`/app/profile/${audit.data?.kickedUserId}`}
+              data-user-id={audit.data?.kickedUserId}
+            >
+              <strong>{kickedUsername}</strong>
+            </Link>
           </Trans>
         ),
       };
@@ -287,12 +350,30 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
         title: () =>
           isCurrentUser ? (
             <Trans>
-              <strong>{username}</strong> updated their profile
+              <Link
+                data-user-id={audit.actionById}
+                href={`/app/profile/${audit.actionById}`}
+              >
+                <strong>{username}</strong>
+              </Link>{" "}
+              updated their profile
             </Trans>
           ) : (
             <Trans>
-              <strong>{username}</strong> updated{" "}
-              <strong>{updatedUsername}</strong>'s profile
+              <Link
+                data-user-id={audit.actionById}
+                href={`/app/profile/${audit.actionById}`}
+              >
+                <strong>{username}</strong>
+              </Link>{" "}
+              updated{" "}
+              <Link
+                href={`/app/profile/${audit.data?.userId}`}
+                data-user-id={audit.data?.userId}
+              >
+                <strong>{updatedUsername}</strong>
+              </Link>
+              's profile
             </Trans>
           ),
         description: () => (
