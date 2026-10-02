@@ -6,11 +6,14 @@ import { ServerMember, serverMemberStore } from "../store/serverMemberStore";
 import type { ServerRole } from "../store/serverRoleStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
+import { hasBit } from "../utils/bitwise";
 import { resolveGradient } from "../utils/color";
 import { storeEmitter } from "../utils/EventEmitter";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { CdnIcon } from "./cdnIcon";
 import { Checkbox } from "./checkbox";
 import { GradientText } from "./gradientText";
+import { Icon } from "./icon";
 import { createModal, Modal } from "./modal";
 
 import style from "./EditServerRolesModal.module.css";
@@ -132,6 +135,8 @@ const RoleItem = (props: {
     ? true
     : member?.roleIds.includes(props.role.id);
 
+  const hasAdmin = hasBit(props.role.permissions, RolePermissionFlag.admin.bit);
+
   return (
     <div
       data-default={isDisabled}
@@ -145,9 +150,12 @@ const RoleItem = (props: {
         <div class={style.noIcon} style={{ background: color }} />
       )}
       <div class={style.details}>
-        <GradientText color={color} class={style.roleName}>
-          {props.role.name}
-        </GradientText>
+        <span>
+          <GradientText color={color} class={style.roleName}>
+            {props.role.name}
+          </GradientText>
+          {hasAdmin && <Icon name="shield" class={style.adminIndicator} />}
+        </span>
         <div class={style.memberCount}>
           {plural(memberCount, {
             0: "No members",
