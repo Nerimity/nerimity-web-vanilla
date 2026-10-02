@@ -60,6 +60,7 @@ const createHandler = (opts: {
           }
 
           opts.onChange(checked, checkEl);
+          update();
         }
       },
       { signal: opts.signal },
@@ -84,6 +85,7 @@ const createHandler = (opts: {
           }
 
           opts.onChange(checked, checkEl);
+          update();
         }
       },
       { signal: opts.signal },

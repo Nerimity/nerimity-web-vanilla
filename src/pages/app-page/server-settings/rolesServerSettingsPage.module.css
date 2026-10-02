@@ -21,3 +21,8 @@
   color: var(--gray-400);
   font-size: 12px;
 }
+.adminIndicator {
+  margin-left: 4px;
+  color: var(--text-muted);
+  font-size: 12px;
+}

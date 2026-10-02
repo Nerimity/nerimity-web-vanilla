@@ -19,6 +19,10 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "security",
+        "badge",
+        "person_remove",
+        "manage_accounts",
         "dns",
         "format_color_fill",
         "gradient",

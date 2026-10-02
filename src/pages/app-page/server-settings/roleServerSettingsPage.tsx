@@ -13,7 +13,9 @@ import {
 } from "../../../services/serverService";
 import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
+import { addBit, hasBit, removeBit } from "../../../utils/bitwise";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
 import { router } from "../../../utils/router";
 import { DefaultTheme } from "../../../utils/theme";
 import type { ServerSettingsContext } from "./ServerSettings";
@@ -27,6 +29,7 @@ const getStrings = () => ({
   hideRole: t`Hide Role`,
   applyOnJoin: t`Apply on Join`,
   deleteRole: t`Delete Role`,
+  permissions: t`Permissions`,
 });
 
 const roleServerSettingsPage = (context: ServerSettingsContext) => {
@@ -56,6 +59,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
       applyOnJoin: role?.applyOnJoin || false,
       hexColor: role?.gradient || role?.hexColor,
       icon: role?.icon,
+      permissions: role?.permissions || 0,
     };
   };
   const actions = createSettingsActions({ signal });
@@ -136,6 +140,27 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
         </SettingsBlock.Root>
       </SettingsBlock.Group>
 
+      <div class={style.gap}></div>
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="security" />
+          <SettingsBlock.Details title={strings.permissions} />
+        </SettingsBlock.Root>
+
+        {Object.values(RolePermissionFlag).map((p) => (
+          <SettingsBlock.Root data-perm={p.bit} clickable hideArrow>
+            <SettingsBlock.Icon name={p.icon} />
+            <SettingsBlock.Details
+              title={p.name()}
+              description={p.description()}
+            />
+            <Checkbox.Root>
+              <Checkbox.Box />
+            </Checkbox.Root>
+          </SettingsBlock.Root>
+        ))}
+      </SettingsBlock.Group>
+
       <div class={style.separator}></div>
 
       <SettingsBlock.Root data-action="delete-role" clickable>
@@ -149,6 +174,30 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     </div>
   ) as HTMLDivElement;
 
+  const permissionCheckboxHandlers = Object.values(RolePermissionFlag).map(
+    (p) => {
+      const triggerEl = el.querySelector(
+        `[data-perm="${p.bit}"]`,
+      ) as HTMLDivElement;
+
+      return Checkbox.createHandler({
+        el: triggerEl,
+        triggerEl,
+        signal,
+        onChange(checked) {
+          const perms = updateHandler.values.permissions;
+          updateHandler.changeValue(
+            "permissions",
+            (checked ? addBit : removeBit)(perms, p.bit),
+          );
+        },
+        initialState() {
+          return hasBit(updateHandler.values.permissions, p.bit);
+        },
+      });
+    },
+  );
+
   updateHandler.handleInput(el.querySelector(".nameInput")!, "name");
 
   updateHandler.onUpdate((_changes, hasChanges) => {
@@ -161,6 +210,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     hideRoleCheckbox.update();
     roleColorPicker.update();
     roleIconPicker.update();
+    permissionCheckboxHandlers.forEach((h) => h.update());
   };
 
   const applyOnJoinCheckbox = Checkbox.createHandler({
@@ -169,7 +219,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
       '[data-checkbox="applyOnJoin"]',
     ) as HTMLDivElement,
     initialState() {
-      return initialValues().applyOnJoin;
+      return updateHandler.values.applyOnJoin;
     },
     onChange(checked) {
       updateHandler.changeValue("applyOnJoin", checked);
@@ -180,7 +230,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
     el: el.querySelector('[data-checkbox="hideRole"]') as HTMLDivElement,
     triggerEl: el.querySelector('[data-checkbox="hideRole"]') as HTMLDivElement,
     initialState() {
-      return initialValues().hideRole;
+      return updateHandler.values.hideRole;
     },
     onChange(checked) {
       updateHandler.changeValue("hideRole", checked);

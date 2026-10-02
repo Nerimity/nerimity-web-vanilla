@@ -3,6 +3,7 @@ import { plural, t } from "@lingui/core/macro";
 import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
 import { GradientText } from "../../../components/gradientText";
+import { Icon } from "../../../components/icon";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { createServerRole } from "../../../services/serverService";
 import {
@@ -14,9 +15,11 @@ import {
   type ServerRole,
 } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
+import { hasBit } from "../../../utils/bitwise";
 import { resolveGradient } from "../../../utils/color";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { HoverAnimator } from "../../../utils/HoverAnimator";
+import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
 import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
@@ -60,6 +63,14 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
       if (role.serverId !== getServerId()) return;
       rerender();
       navigateToCreatedRole(role.id);
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:update_role",
+    (role) => {
+      if (role.serverId !== getServerId()) return;
+      rerender();
     },
     signal,
   );
@@ -119,6 +130,8 @@ const RoleItem = (props: { role: ServerRole; members: ServerMember[] }) => {
         .filter((member) => member.roleIds.includes(props.role.id))
         .length.toLocaleString();
 
+  const hasAdmin = hasBit(props.role.permissions, RolePermissionFlag.admin.bit);
+
   return (
     <SettingsBlock.Root
       class="roleItem"
@@ -132,9 +145,12 @@ const RoleItem = (props: { role: ServerRole; members: ServerMember[] }) => {
       )}
       {props.role.icon && <CdnIcon size={28} role={props.role} />}
       <div class={style.roleDetails}>
-        <GradientText class={style.roleText} color={color}>
-          {props.role.name}
-        </GradientText>
+        <span>
+          <GradientText class={style.roleText} color={color}>
+            {props.role.name}
+          </GradientText>
+          {hasAdmin && <Icon name="shield" class={style.adminIndicator} />}
+        </span>
         <div class={style.memberCount}>
           {plural(memberCount, {
             0: "No members",

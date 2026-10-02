@@ -16,3 +16,8 @@
   margin-bottom: 16px;
   background-color: var(--gray-700);
 }
+.gap {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+}
