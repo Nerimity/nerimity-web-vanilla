@@ -61,10 +61,14 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
       </SettingsBlock.Group>,
     );
 
+    sortable?.destroy();
     const Sortable = await lazySortable();
     if (signal.aborted) return;
 
     sortable = new Sortable(el.querySelector(".group")!, {
+      delayOnTouchOnly: true,
+      delay: 200,
+      touchStartThreshold: 5,
       draggable: ".roleItem",
       filter: ".ignoreDrag",
       onUpdate(event) {
