@@ -9,6 +9,10 @@
 .roleDetails {
   flex: 1;
 }
+.roleDetails > span {
+  display: inline-flex;
+  align-items: center;
+}
 .roleColorBlock {
   width: 28px;
   height: 28px;
