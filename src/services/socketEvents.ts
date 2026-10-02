@@ -63,6 +63,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
   "server:role_updated": onServerRoleUpdated,
   "server:role_created": onServerRoleCreated,
+  "server:role_order_updated": onServerRoleOrderUpdated,
   "server:member_updated": onServerMemberUpdated,
   "server:member_joined": onServerMemberJoined,
   "server:member_left": onServerMemberLeft,
@@ -346,6 +347,17 @@ function onServerRoleUpdated(payload: {
 }
 function onServerRoleCreated(payload: RawServerRole) {
   serverRoleStore.addRole(payload);
+}
+function onServerRoleOrderUpdated(payload: {
+  serverId: string;
+  roleIds: string[];
+}) {
+  const roles = serverRoleStore.roles.get(payload.serverId);
+  for (let i = 0; i < payload.roleIds.length; i++) {
+    const roleId = payload.roleIds[i];
+    const role = roles?.get(roleId!);
+    role?.update({ order: i + 1 });
+  }
 }
 
 function onServerMemberUpdated(payload: {

@@ -181,3 +181,11 @@ export async function createServerRole(serverId: string) {
     useToken: true,
   });
 }
+
+export async function updateRoleOrder(serverId: string, roleIds: string[]) {
+  return request(`/servers/${serverId}/roles/order`, {
+    method: "POST",
+    useToken: true,
+    body: { roleIds },
+  });
+}

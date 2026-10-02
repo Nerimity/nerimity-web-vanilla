@@ -1,11 +1,15 @@
 import { plural, t } from "@lingui/core/macro";
+import type Sortable from "sortablejs";
 
 import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
 import { GradientText } from "../../../components/gradientText";
 import { Icon } from "../../../components/icon";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { createServerRole } from "../../../services/serverService";
+import {
+  createServerRole,
+  updateRoleOrder,
+} from "../../../services/serverService";
 import {
   serverMemberStore,
   type ServerMember,
@@ -19,6 +23,7 @@ import { hasBit } from "../../../utils/bitwise";
 import { resolveGradient } from "../../../utils/color";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { HoverAnimator } from "../../../utils/HoverAnimator";
+import { lazySortable } from "../../../utils/lazySortable";
 import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
 import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
@@ -35,14 +40,16 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
 
   let el = (<div class={style.page}></div>) as HTMLDivElement;
 
-  const rerender = () => {
+  let sortable: Sortable | null = null;
+
+  const rerender = async () => {
     const orderedRoles = serverStore.currentServerSortedRoles.rerun();
 
     const members = [
       ...(serverMemberStore.serverMembers.get(getServerId()!)?.values() || []),
     ];
     el.replaceChildren(
-      <SettingsBlock.Group>
+      <SettingsBlock.Group class="group">
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="leaderboard" />
           <SettingsBlock.Details title={t`Create New Role`} />
@@ -53,6 +60,22 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
         ))}
       </SettingsBlock.Group>,
     );
+
+    const Sortable = await lazySortable();
+    if (signal.aborted) return;
+
+    sortable = new Sortable(el.querySelector(".group")!, {
+      draggable: ".roleItem",
+      filter: ".ignoreDrag",
+      onUpdate(event) {
+        const children = [...event.target.children].filter((c) =>
+          c.classList.contains("roleItem"),
+        ) as HTMLDivElement[];
+        const newRoleIds = children.map((el) => el.dataset.roleId) as string[];
+        updateRoleOrder(getServerId()!, newRoleIds.reverse());
+        rerender();
+      },
+    });
   };
 
   rerender();
@@ -109,6 +132,8 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
   context.content.replaceChildren(el);
 
   const destroy = () => {
+    sortable?.destroy();
+
     hoverAnimator.destroy();
     ac.abort();
     el.remove();
@@ -134,8 +159,9 @@ const RoleItem = (props: { role: ServerRole; members: ServerMember[] }) => {
 
   return (
     <SettingsBlock.Root
-      class="roleItem"
+      class={["roleItem", isDefaultRole && "ignoreDrag"]}
       href={`/app/servers/${props.role.serverId}/settings/roles/${props.role.id}`}
+      data-role-id={props.role.id}
     >
       {!props.role.icon && (
         <div

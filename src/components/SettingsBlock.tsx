@@ -26,7 +26,7 @@ export const SettingsBlock = {
     clickable?: boolean;
     hideArrow?: boolean;
     expandable?: boolean;
-    class?: string;
+    class?: any;
     href?: string;
     [key: string]: any;
   }) => {
