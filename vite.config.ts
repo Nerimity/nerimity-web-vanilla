@@ -1,5 +1,4 @@
-import { lingui, linguiTransformerBabelPreset } from "@lingui/vite-plugin";
-import babel from "@rolldown/plugin-babel";
+import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
 
 import { shikiLangsPlugin } from "./vite-plugins/vitePluginCopyShikiLangs.ts";
@@ -147,10 +146,7 @@ export default defineConfig({
         "tag",
       ],
     }),
-    lingui(),
-    babel({
-      presets: [linguiTransformerBabelPreset()],
-    }),
+    lingui({ macroTransform: true }),
   ],
 
   oxc: {
