@@ -1,31 +1,13 @@
-import { plural, t } from "@lingui/core/macro";
-import type Sortable from "sortablejs";
+import { t } from "@lingui/core/macro";
 
 import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
-import { GradientText } from "../../../components/gradientText";
 import { Icon } from "../../../components/icon";
+import { Link } from "../../../components/link";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import {
-  createServerRole,
-  updateRoleOrder,
-} from "../../../services/serverService";
-import {
-  serverMemberStore,
-  type ServerMember,
-} from "../../../store/serverMemberStore";
-import {
-  serverRoleStore,
-  type ServerRole,
-} from "../../../store/serverRoleStore";
+import type { Channel } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
-import { hasBit } from "../../../utils/bitwise";
-import { resolveGradient } from "../../../utils/color";
-import { storeEmitter } from "../../../utils/EventEmitter";
-import { HoverAnimator } from "../../../utils/HoverAnimator";
-import { lazySortable } from "../../../utils/lazySortable";
-import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
-import { router } from "../../../utils/router";
+import { ChannelType } from "../../../Types";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./channelsServerSettingsPage.module.css";
@@ -38,75 +20,37 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
 
   const getServerId = () => serverStore.currentServerId;
 
-  let el = (<div class={style.page}></div>) as HTMLDivElement;
+  let channelListEl = (<div class={style.channelList}></div>) as HTMLDivElement;
 
-  let sortable: Sortable | null = null;
+  let el = (
+    <div class={style.page}>
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="add" />
+        <SettingsBlock.Details title={t`Create new channel Or category`} />
+        <Button data-action="create-channel" icon="add" label={t`Create`} />
+      </SettingsBlock.Root>
+      {channelListEl}
+    </div>
+  ) as HTMLDivElement;
 
   const rerender = async () => {
-    const orderedRoles = serverStore.currentServerSortedRoles.rerun();
+    const serverChannels =
+      serverStore.sortedChannels(getServerId()!, false) || [];
 
-    const members = [
-      ...(serverMemberStore.serverMembers.get(getServerId()!)?.values() || []),
-    ];
-    el.replaceChildren(
-      <SettingsBlock.Group class="group">
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="leaderboard" />
-          <SettingsBlock.Details title={t`Create New Role`} />
-          <Button data-action="create-role" icon="add" label={t`Create Role`} />
-        </SettingsBlock.Root>
-        {orderedRoles.map((r) => (
-          <RoleItem role={r} members={members} />
+    const channelsWithoutCategory = serverChannels.filter((c) => !c.categoryId);
+
+    channelListEl.replaceChildren(
+      <>
+        {channelsWithoutCategory.map((channel) => (
+          <ChannelItem channel={channel} serverChannels={serverChannels} />
         ))}
-      </SettingsBlock.Group>,
+      </>,
     );
-
-    sortable?.destroy();
-    const Sortable = await lazySortable();
-    if (signal.aborted) return;
-
-    sortable = new Sortable(el.querySelector(".group")!, {
-      delayOnTouchOnly: true,
-      delay: 200,
-      touchStartThreshold: 5,
-      draggable: ".roleItem",
-      filter: ".ignoreDrag",
-      onUpdate(event) {
-        const children = [...event.target.children].filter((c) =>
-          c.classList.contains("roleItem"),
-        ) as HTMLDivElement[];
-        const newRoleIds = children.map((el) => el.dataset.roleId) as string[];
-        updateRoleOrder(getServerId()!, newRoleIds.reverse());
-        rerender();
-      },
-    });
   };
 
   rerender();
 
-  storeEmitter.on(
-    "server:create_role",
-    (role) => {
-      if (role.serverId !== getServerId()) return;
-      rerender();
-      navigateToCreatedRole(role.id);
-    },
-    signal,
-  );
-  storeEmitter.on(
-    "server:update_role",
-    (role) => {
-      if (role.serverId !== getServerId()) return;
-      rerender();
-    },
-    signal,
-  );
-
-  const hoverAnimator = new HoverAnimator(el, [
-    { image: "img", trigger: `.roleItem` },
-  ]);
-
-  let createdRoleId = "";
+  // let createdChannelId = "";
   el.addEventListener(
     "click",
     async (event) => {
@@ -114,32 +58,31 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
 
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
       const action = actionEl?.dataset?.action;
-      if (action === "create-role") {
-        const [role] = await createServerRole(getServerId()!);
-        if (role) {
-          createdRoleId = role.id;
-          navigateToCreatedRole(role.id);
-        }
+      if (action === "create-channel") {
+        // const [role] = await createServerRole(getServerId()!);
+        // if (role) {
+        //   createdChannelId = role.id;
+        //   navigateToCreatedChannel(role.id);
+        // }
       }
     },
     { signal },
   );
 
-  const navigateToCreatedRole = (roleId: string) => {
-    if (createdRoleId != roleId) return;
-    if (signal.aborted) return;
-    const role = serverRoleStore.roles.get(getServerId()!)?.has(roleId);
-    if (!role) return;
-    router.navigate(`./roles/${roleId}`);
-  };
+  // const navigateToCreatedChannel = (channelId: string) => {
+  //   if (createdChannelId != channelId) return;
+  //   if (signal.aborted) return;
+  //   const channel = channelStore.channels.get(channelId);
+  //   if (channel) return;
+  //   router.navigate(`./channels/${channelId}`);
+  // };
 
   context.content.replaceChildren(el);
 
   const destroy = () => {
-    sortable?.destroy();
-
-    hoverAnimator.destroy();
     ac.abort();
+    channelListEl.remove();
+    (channelListEl as any) = null;
     el.remove();
     (el as any) = null;
   };
@@ -147,49 +90,39 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
   return { destroy };
 };
 
-const RoleItem = (props: { role: ServerRole; members: ServerMember[] }) => {
-  const color = resolveGradient(props.role.gradient || props.role.hexColor);
+const ChannelItem = (props: {
+  channel: Channel;
+  serverChannels: Channel[];
+}) => {
+  const isCategory = props.channel.type === ChannelType.CATEGORY;
 
-  const server = serverStore.currentServer();
-  const isDefaultRole = server?.defaultRoleId === props.role.id;
-
-  const memberCount = isDefaultRole
-    ? props.members.length
-    : props.members
-        .filter((member) => member.roleIds.includes(props.role.id))
-        .length.toLocaleString();
-
-  const hasAdmin = hasBit(props.role.permissions, RolePermissionFlag.admin.bit);
+  const channelsInCategory = !isCategory
+    ? []
+    : props.serverChannels?.filter((c) => c.categoryId === props.channel.id) ||
+      [];
 
   return (
-    <SettingsBlock.Root
-      class={["roleItem", isDefaultRole && "ignoreDrag"]}
-      href={`/app/servers/${props.role.serverId}/settings/roles/${props.role.id}`}
-      data-role-id={props.role.id}
-    >
-      {!props.role.icon && (
-        <div
-          style={{ background: color || "var(--text-color" }}
-          class={style.roleColorBlock}
-        />
-      )}
-      {props.role.icon && <CdnIcon size={28} role={props.role} />}
-      <div class={style.roleDetails}>
-        <span>
-          <GradientText class={style.roleText} color={color}>
-            {props.role.name}
-          </GradientText>
-          {hasAdmin && <Icon name="shield" class={style.adminIndicator} />}
-        </span>
-        <div class={style.memberCount}>
-          {plural(memberCount, {
-            0: "No members",
-            one: "# member",
-            other: "# members",
-          })}
+    <div class={[style.channelItem, isCategory && style.categoryItem]}>
+      <Link
+        href={`/app/servers/${props.channel.serverId!}/settings/channels/${props.channel.id}`}
+        data-channel-id={props.channel.id}
+        class={[style.link, isCategory && style.categoryLink]}
+      >
+        <CdnIcon size={18} channel={props.channel} />
+        <div class={style.roleDetails}>
+          <span class={style.roleText}>{props.channel.name}</span>
         </div>
+        <Icon name="chevron_forward" class={style.arrow} />
+      </Link>
+      <div class={[style.channelList, style.categoryList]}>
+        {channelsInCategory.map((channel) => (
+          <ChannelItem
+            channel={channel}
+            serverChannels={props.serverChannels}
+          />
+        ))}
       </div>
-    </SettingsBlock.Root>
+    </div>
   );
 };
 

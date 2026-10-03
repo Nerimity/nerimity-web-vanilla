@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import type { CropPoints } from "../../../components/ImageCropModal";
 import * as auditLogsServerSettingsPage from "./auditLogsServerSettingsPage";
+import * as channelsServerSettingsPage from "./channelsServerSettingsPage";
 import * as generalServerSettingsPage from "./generalServerSettingsPage";
 import * as roleServerSettingsPage from "./roleServerSettingsPage";
 import * as rolesServerSettingsPage from "./rolesServerSettingsPage";
@@ -85,15 +86,6 @@ export const ServerSettings: ServerSetting[] = [
     name: () => t`Channels`,
     path: "/channels",
     pattern: "/channels{/*}?",
-    load: {
-      getStrings() {
-        return {};
-      },
-      create() {
-        return {
-          destroy() {},
-        };
-      },
-    },
+    load: channelsServerSettingsPage,
   },
 ];

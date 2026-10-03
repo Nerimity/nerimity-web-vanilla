@@ -3,30 +3,47 @@
   flex-direction: column;
   gap: 6px;
 }
-.roleText {
-  font-weight: bold;
+
+.channelList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.channelItem {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-12);
+  background-color: var(--gray-850);
+  .link {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 8px;
+    border-radius: var(--radius-12);
+    gap: 8px;
+    &:hover {
+      background-color: var(--gray-800);
+      .arrow {
+        color: var(--text-color);
+      }
+    }
+  }
+}
+
+.arrow {
+  color: var(--gray-500);
 }
 .roleDetails {
   flex: 1;
 }
-.roleDetails > span {
-  display: inline-flex;
-  align-items: center;
-}
-.roleColorBlock {
-  width: 28px;
-  height: 28px;
-  margin-right: 4px;
-  margin-left: 4px;
-  border-radius: var(--radius-8);
+
+.link.categoryLink {
+  background-color: red;
+  background-color: var(--gray-900);
+  font-weight: bold;
 }
 
-.memberCount {
-  color: var(--gray-400);
-  font-size: 12px;
-}
-.adminIndicator {
-  margin-left: 4px;
-  color: var(--text-muted);
-  font-size: 12px;
+.categoryList {
+  margin-left: 20px;
 }

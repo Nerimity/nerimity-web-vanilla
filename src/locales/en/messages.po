@@ -69,12 +69,12 @@ msgstr "Confirm"
 msgid "Confirming..."
 msgstr "Confirming..."
 
-#: src/components/EditServerRolesModal.tsx:56
+#: src/components/EditServerRolesModal.tsx:59
 msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
 
-#: src/components/EditServerRolesModal.tsx:152
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:139
+#: src/components/EditServerRolesModal.tsx:160
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:185
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 
@@ -567,7 +567,7 @@ msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
 #: src/components/message-pane/inputSuggestions.tsx:551
-#: src/pages/app-page/server-settings/ServerSettings.ts:77
+#: src/pages/app-page/server-settings/ServerSettings.ts:78
 msgid "Role"
 msgstr "Role"
 
@@ -646,7 +646,7 @@ msgid "Full Profile"
 msgstr "Full Profile"
 
 #: src/components/miniProfile.tsx:371
-#: src/pages/app-page/server-settings/ServerSettings.ts:61
+#: src/pages/app-page/server-settings/ServerSettings.ts:62
 msgid "Roles"
 msgstr "Roles"
 
@@ -811,64 +811,76 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:47
+#: src/pages/app-page/server-settings/ServerSettings.ts:48
 msgid "General"
 msgstr "General"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:54
+#: src/pages/app-page/server-settings/ServerSettings.ts:55
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:36
+#: src/pages/app-page/server-settings/ServerSettings.ts:86
+msgid "Channels"
+msgstr "Channels"
+
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:35
 msgid "Load More"
 msgstr "Load More"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:126
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:125
 msgid "<0><1>{username}</1></0> deleted channel <2>{channelName}</2>"
 msgstr "<0><1>{username}</1></0> deleted channel <2>{channelName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:143
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:142
 msgid "<0><1>{username}</1></0> created a channel"
 msgstr "<0><1>{username}</1></0> created a channel"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:171
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:170
 msgid "<0><1>{username}</1></0> updated the server"
 msgstr "<0><1>{username}</1></0> updated the server"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:204
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:203
 msgid "<0><1>{username}</1></0> updated the role <2>{roleName}</2>"
 msgstr "<0><1>{username}</1></0> updated the role <2>{roleName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:239
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:238
 msgid "<0><1>{username}</1></0> updated the channel <2>{channelName}</2>"
 msgstr "<0><1>{username}</1></0> updated the channel <2>{channelName}</2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:275
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:274
 msgid "<0><1>{username}</1></0> unbanned <2><3>{unbannedUsername}</3></2>"
 msgstr "<0><1>{username}</1></0> unbanned <2><3>{unbannedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:300
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:299
 msgid "<0><1>{username}</1></0> banned <2><3>{bannedUsername}</3></2>"
 msgstr "<0><1>{username}</1></0> banned <2><3>{bannedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:325
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:324
 msgid "<0><1>{username}</1></0> kicked <2><3>{kickedUsername}</3></2>"
 msgstr "<0><1>{username}</1></0> kicked <2><3>{kickedUsername}</3></2>"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:352
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:351
 msgid "<0><1>{username}</1></0> updated their profile"
 msgstr "<0><1>{username}</1></0> updated their profile"
 
-#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:362
+#: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:361
 msgid "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
 msgstr "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
+
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:29
+msgid "Create new channel Or category"
+msgstr "Create new channel Or category"
+
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:30
+msgid "Create"
+msgstr "Create"
 
 #: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
 msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:25
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:24
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:26
 msgid "Name"
 msgstr "Name"
 
@@ -919,44 +931,48 @@ msgstr "Where system messages should appear."
 msgid "Permanently delete this server and all associated data."
 msgstr "Permanently delete this server and all associated data."
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:25
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:27
 msgid "Role Color"
 msgstr "Role Color"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:26
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:28
 msgid "Role Icon"
 msgstr "Role Icon"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:27
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:29
 msgid "Hide Role"
 msgstr "Hide Role"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:28
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:30
 msgid "Apply on Join"
 msgstr "Apply on Join"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:29
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:228
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:31
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:281
 msgid "Delete Role"
 msgstr "Delete Role"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:119
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:32
+msgid "Permissions"
+msgstr "Permissions"
+
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:126
 msgid "Display members with this role along with all the default members"
 msgstr "Display members with this role along with all the default members"
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:131
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:138
 msgid "Apply this role to members when they join the server."
 msgstr "Apply this role to members when they join the server."
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:145
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:173
 msgid "Permanently delete this role and all associated data."
 msgstr "Permanently delete this role and all associated data."
 
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:45
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:55
 msgid "Create New Role"
 msgstr "Create New Role"
 
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:46
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:56
 msgid "Create Role"
 msgstr "Create Role"
 
@@ -1355,6 +1371,78 @@ msgstr "Away From Keyboard"
 #: src/store/userPresenceStore.ts:30
 msgid "Do Not Disturb"
 msgstr "Do Not Disturb"
+
+#: src/utils/RolePermissionFlag.ts:5
+msgid "Admin"
+msgstr "Admin"
+
+#: src/utils/RolePermissionFlag.ts:8
+msgid "Enables all permissions."
+msgstr "Enables all permissions."
+
+#: src/utils/RolePermissionFlag.ts:11
+msgid "Send Message"
+msgstr "Send Message"
+
+#: src/utils/RolePermissionFlag.ts:15
+msgid "Enable sending messages in this server. Server admins can still send messages."
+msgstr "Enable sending messages in this server. Server admins can still send messages."
+
+#: src/utils/RolePermissionFlag.ts:18
+msgid "Manage Roles"
+msgstr "Manage Roles"
+
+#: src/utils/RolePermissionFlag.ts:21
+msgid "Permission for updating or deleting roles."
+msgstr "Permission for updating or deleting roles."
+
+#: src/utils/RolePermissionFlag.ts:24
+msgid "Manage Channels"
+msgstr "Manage Channels"
+
+#: src/utils/RolePermissionFlag.ts:27
+msgid "Permission for updating or deleting channels."
+msgstr "Permission for updating or deleting channels."
+
+#: src/utils/RolePermissionFlag.ts:30
+msgid "Kick Members"
+msgstr "Kick Members"
+
+#: src/utils/RolePermissionFlag.ts:33
+msgid "Permission to kick users."
+msgstr "Permission to kick users."
+
+#: src/utils/RolePermissionFlag.ts:36
+msgid "Ban Members"
+msgstr "Ban Members"
+
+#: src/utils/RolePermissionFlag.ts:39
+msgid "Permission to ban users."
+msgstr "Permission to ban users."
+
+#: src/utils/RolePermissionFlag.ts:42
+msgid "Mention Everyone"
+msgstr "Mention Everyone"
+
+#: src/utils/RolePermissionFlag.ts:46
+msgid "Enable mentioning @everyone. Server admins can still mention everyone."
+msgstr "Enable mentioning @everyone. Server admins can still mention everyone."
+
+#: src/utils/RolePermissionFlag.ts:49
+msgid "Nickname Members"
+msgstr "Nickname Members"
+
+#: src/utils/RolePermissionFlag.ts:52
+msgid "Allow users to change their nickname in the server."
+msgstr "Allow users to change their nickname in the server."
+
+#: src/utils/RolePermissionFlag.ts:55
+msgid "Mention Roles"
+msgstr "Mention Roles"
+
+#: src/utils/RolePermissionFlag.ts:58
+msgid "Allow users to mention roles."
+msgstr "Allow users to mention roles."
 
 #: src/utils/UserBadgeFlag.ts:106
 msgid "Avatar Border by {author} on {platform}, edited by {editor}"
