@@ -79,4 +79,21 @@ export const ServerSettings: ServerSetting[] = [
     hideFromDrawer: true,
     load: roleServerSettingsPage,
   },
+  {
+    id: "channels",
+    icon: "tag",
+    name: () => t`Channels`,
+    path: "/channels",
+    pattern: "/channels{/*}?",
+    load: {
+      getStrings() {
+        return {};
+      },
+      create() {
+        return {
+          destroy() {},
+        };
+      },
+    },
+  },
 ];
