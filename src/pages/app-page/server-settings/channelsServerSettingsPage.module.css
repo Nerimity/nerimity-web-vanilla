@@ -1,0 +1,32 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.roleText {
+  font-weight: bold;
+}
+.roleDetails {
+  flex: 1;
+}
+.roleDetails > span {
+  display: inline-flex;
+  align-items: center;
+}
+.roleColorBlock {
+  width: 28px;
+  height: 28px;
+  margin-right: 4px;
+  margin-left: 4px;
+  border-radius: var(--radius-8);
+}
+
+.memberCount {
+  color: var(--gray-400);
+  font-size: 12px;
+}
+.adminIndicator {
+  margin-left: 4px;
+  color: var(--text-muted);
+  font-size: 12px;
+}

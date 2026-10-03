@@ -30,6 +30,9 @@ const getStrings = () => ({
   applyOnJoin: t`Apply on Join`,
   deleteRole: t`Delete Role`,
   permissions: t`Permissions`,
+  ...Object.fromEntries(
+    Object.entries(RolePermissionFlag).map(([k, v]) => [k, v.name()]),
+  ),
 });
 
 const roleServerSettingsPage = (context: ServerSettingsContext) => {

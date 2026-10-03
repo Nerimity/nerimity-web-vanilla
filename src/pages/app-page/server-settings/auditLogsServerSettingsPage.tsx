@@ -9,7 +9,6 @@ import {
   getServerAuditLogs,
   type UserAuditLog,
 } from "../../../services/serverService";
-import { accountStore } from "../../../store/accountStore";
 import { channelStore } from "../../../store/channelStore";
 import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
@@ -342,7 +341,7 @@ const Transform = (serverId: string, audit: UserAuditLog, users: RawUser[]) => {
     }
     case "SERVER_USER_UPDATE": {
       const updatedUser = users.find((u) => u.id === audit.data?.userId);
-      const isCurrentUser = accountStore.currentUser?.id === updatedUser?.id;
+      const isCurrentUser = audit.actionById === updatedUser?.id;
       const updatedUsername = updatedUser?.username || "";
       return {
         icon: "edit",
