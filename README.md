@@ -41,7 +41,7 @@ live: https://vanilla.nerimity.com
 - [x] `server:role_created`
 - [x] `server:role_updated`
 - [x] `server:role_order_updated`
-- [ ] `server:channel_order_updated`
+- [x] `server:channel_order_updated`
 - [x] `server:members_fetched`
 
 - [x] `server:role_deleted`

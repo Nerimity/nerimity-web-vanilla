@@ -6,6 +6,7 @@ import {
   type RawBotCommand,
   type RawChannel,
 } from "../Types";
+import { applyIfPresent } from "../utils/applyIfPresent";
 import { createTokenSource } from "../utils/createTokenSource";
 import { storeEmitter } from "../utils/EventEmitter";
 import { updateFavicon } from "../utils/favicon";
@@ -39,6 +40,16 @@ export class Channel {
     this.icon = data.icon;
     this.permissions = data.permissions;
     this.lastMessagedAt = data.lastMessagedAt;
+  }
+  update(updated: Partial<RawChannel>) {
+    applyIfPresent(this, updated, "name");
+    applyIfPresent(this, updated, "order");
+    applyIfPresent(this, updated, "categoryId");
+    applyIfPresent(this, updated, "icon");
+    applyIfPresent(this, updated, "permissions");
+    applyIfPresent(this, updated, "lastMessagedAt");
+
+    storeEmitter.emit("update_channel", this);
   }
 }
 

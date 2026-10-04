@@ -189,3 +189,16 @@ export async function updateRoleOrder(serverId: string, roleIds: string[]) {
     body: { roleIds },
   });
 }
+export async function updateChannelOrder(
+  serverId: string,
+  body: {
+    channelIds: string[];
+    categoryId?: string;
+  },
+) {
+  return request(`/servers/${serverId}/channels/order`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}

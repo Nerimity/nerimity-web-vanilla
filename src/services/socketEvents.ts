@@ -61,6 +61,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:joined": onServerJoined,
   "server:channel_created": onServerChannelCreated,
   "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
+  "server:channel_order_updated": onServerChannelOrderUpdated,
   "server:role_updated": onServerRoleUpdated,
   "server:role_created": onServerRoleCreated,
   "server:role_order_updated": onServerRoleOrderUpdated,
@@ -335,6 +336,45 @@ function onServerChannelPermissionsUpdated(payload: {
   channelId: string;
 }) {
   channelStore.updatePermissions(payload);
+}
+function onServerChannelOrderUpdated(payload: {
+  serverId: string;
+  categoryId?: string;
+  orderedChannelIds: string[];
+}) {
+  const channels = serverStore.sortedChannels(payload.serverId, false);
+
+  for (let i = 0; i < channels.length; i++) {
+    const channel = channels[i]!;
+
+    const updateOrder = payload.orderedChannelIds.includes(channel.id)
+      ? { order: payload.orderedChannelIds.indexOf(channel.id) + 1 }
+      : undefined;
+
+    const updateOrAddCategoryId =
+      payload.categoryId &&
+      payload.categoryId !== channel.categoryId &&
+      payload.orderedChannelIds.includes(channel.id)
+        ? {
+            categoryId: payload.categoryId,
+          }
+        : undefined;
+
+    const removeCategoryId =
+      !payload.categoryId &&
+      channel.categoryId &&
+      payload.orderedChannelIds.includes(channel.id)
+        ? {
+            categoryId: undefined,
+          }
+        : undefined;
+
+    channel.update({
+      ...updateOrder,
+      ...updateOrAddCategoryId,
+      ...removeCategoryId,
+    });
+  }
 }
 
 function onServerRoleUpdated(payload: {

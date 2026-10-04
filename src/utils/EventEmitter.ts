@@ -1,4 +1,4 @@
-import type { AttachmentProperty } from "../store/channelStore";
+import type { AttachmentProperty, Channel } from "../store/channelStore";
 import type { Friend } from "../store/friendStore";
 import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
@@ -47,6 +47,7 @@ type StoreEvents = {
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
   "server:create_role": ServerRole;
+  update_channel: Channel;
   "server:member_update": { serverId: string; userId: string; isMe: boolean };
   "attachment:upload_progress": {
     messageId?: string;
