@@ -77,7 +77,7 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
       draggable: `.${style.channelItem}`,
       group: "channel",
       filter: ".ignoreDrag",
-      onAdd(event) {
+      onAdd(_event) {
         rerender();
       },
       onUpdate(event) {
@@ -213,7 +213,7 @@ const ChannelItem = (props: {
         draggable: `.${style.channelItem}`,
         filter: ".ignoreDrag",
 
-        onAdd(event) {
+        onAdd(_event) {
           props.rerender?.();
         },
         onUpdate(event) {
