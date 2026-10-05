@@ -9,7 +9,7 @@ export const RolePermissionFlag = {
   },
   sendMessage: {
     name: () => t`Send Message`,
-    icon: "chat",
+    icon: "send",
     bit: 1 << 1,
     description: () =>
       t`Enable sending messages in this server. Server admins can still send messages.`,
