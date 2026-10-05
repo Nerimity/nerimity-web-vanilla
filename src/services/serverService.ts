@@ -1,5 +1,7 @@
 import type {
+  ChannelType,
   RawBotCommand,
+  RawChannel,
   RawExploreItem,
   RawServer,
   RawServerRole,
@@ -197,6 +199,19 @@ export async function updateChannelOrder(
   },
 ) {
   return request(`/servers/${serverId}/channels/order`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}
+export async function createServerChannel(
+  serverId: string,
+  body: {
+    name?: string;
+    type?: ChannelType;
+  },
+) {
+  return request<RawChannel>(`/servers/${serverId}/channels`, {
     method: "POST",
     useToken: true,
     body,

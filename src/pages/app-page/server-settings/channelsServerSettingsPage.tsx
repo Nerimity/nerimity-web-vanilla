@@ -1,17 +1,24 @@
 import { t } from "@lingui/core/macro";
 import type Sortable from "sortablejs";
+import type { SortableEvent } from "sortablejs";
 
 import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
+import { ContextMenu } from "../../../components/ContextMenu";
 import { Icon } from "../../../components/icon";
 import { Link } from "../../../components/link";
+import { createModal } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { updateChannelOrder } from "../../../services/serverService";
-import type { Channel } from "../../../store/channelStore";
+import {
+  createServerChannel,
+  updateChannelOrder,
+} from "../../../services/serverService";
+import { channelStore, type Channel } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
 import { ChannelType } from "../../../Types";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { lazySortable } from "../../../utils/lazySortable";
+import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./channelsServerSettingsPage.module.css";
@@ -40,6 +47,17 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
   ) as HTMLDivElement;
 
   let rerenderAc = new AbortController();
+
+  const handleEvent = (event: SortableEvent) => {
+    const children = [...event.target.children] as HTMLDivElement[];
+    const channelIds = children.map((el) => el.dataset.channelId!);
+
+    updateChannelOrder(getServerId()!, {
+      channelIds,
+    });
+
+    rerender();
+  };
 
   const rerender = async () => {
     rerenderAc.abort();
@@ -77,35 +95,32 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
       draggable: `.${style.channelItem}`,
       group: "channel",
       filter: ".ignoreDrag",
-      onAdd(_event) {
-        rerender();
-      },
-      onUpdate(event) {
-        // triggered when channel outside are re-ordered.
-        const children = [...event.target.children] as HTMLDivElement[];
-        const channelIds = children.map((el) => el.dataset.channelId!);
-
-        updateChannelOrder(getServerId()!, {
-          channelIds,
-        });
-
-        rerender();
-      },
+      onAdd: handleEvent,
+      onUpdate: handleEvent,
     });
   };
 
   rerender();
 
   storeEmitter.on(
-    "update_channel",
+    "channel:updated",
     (channel) => {
       if (channel.serverId !== getServerId()) return;
       rerender();
     },
     signal,
   );
+  storeEmitter.on(
+    "channel:created",
+    (channel) => {
+      if (channel.serverId !== getServerId()) return;
+      rerender();
+      navigateToCreatedChannel(channel.id);
+    },
+    signal,
+  );
 
-  // let createdChannelId = "";
+  let createdChannelId = "";
   el.addEventListener(
     "click",
     async (event) => {
@@ -114,23 +129,30 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
       const actionEl = target.closest("[data-action]") as HTMLDivElement;
       const action = actionEl?.dataset?.action;
       if (action === "create-channel") {
-        // const [role] = await createServerRole(getServerId()!);
-        // if (role) {
-        //   createdChannelId = role.id;
-        //   navigateToCreatedChannel(role.id);
-        // }
+        createContextMenu({
+          target,
+          async onClick(channelType) {
+            const [channel] = await createServerChannel(getServerId()!, {
+              type: channelType,
+            });
+            if (channel) {
+              createdChannelId = channel.id;
+              navigateToCreatedChannel(channel.id);
+            }
+          },
+        });
       }
     },
     { signal },
   );
 
-  // const navigateToCreatedChannel = (channelId: string) => {
-  //   if (createdChannelId != channelId) return;
-  //   if (signal.aborted) return;
-  //   const channel = channelStore.channels.get(channelId);
-  //   if (channel) return;
-  //   router.navigate(`./channels/${channelId}`);
-  // };
+  const navigateToCreatedChannel = (channelId: string) => {
+    if (createdChannelId != channelId) return;
+    if (signal.aborted) return;
+    const channel = channelStore.channels.get(channelId);
+    if (channel) return;
+    router.navigate(`./channels/${channelId}`);
+  };
 
   context.content.replaceChildren(el);
 
@@ -175,7 +197,7 @@ const ChannelItem = (props: {
         </div>
         <Icon name="chevron_forward" class={style.arrow} />
       </Link>
-      {categoryListEl}
+      {isCategory && categoryListEl}
     </div>
   ) as HTMLDivElement;
 
@@ -197,6 +219,18 @@ const ChannelItem = (props: {
 
   let sortable: Sortable | null = null;
 
+  const handleEvent = (event: SortableEvent) => {
+    const children = [...event.target.children] as HTMLDivElement[];
+    const channelIds = children.map((el) => el.dataset.channelId!);
+
+    updateChannelOrder(props.channel.serverId!, {
+      categoryId: props.channel.id,
+      channelIds,
+    });
+
+    props.rerender?.();
+  };
+
   if (isCategory) {
     (async () => {
       const Sortable = await lazySortable();
@@ -213,20 +247,8 @@ const ChannelItem = (props: {
         draggable: `.${style.channelItem}`,
         filter: ".ignoreDrag",
 
-        onAdd(_event) {
-          props.rerender?.();
-        },
-        onUpdate(event) {
-          const children = [...event.target.children] as HTMLDivElement[];
-          const channelIds = children.map((el) => el.dataset.channelId!);
-
-          updateChannelOrder(props.channel.serverId!, {
-            categoryId: props.channel.id,
-            channelIds,
-          });
-
-          props.rerender?.();
-        },
+        onAdd: handleEvent,
+        onUpdate: handleEvent,
       });
     })();
   }
@@ -243,6 +265,48 @@ const ChannelItem = (props: {
   );
 
   return el;
+};
+
+const createContextMenu = ({
+  target,
+  onClick,
+}: {
+  target: HTMLDivElement;
+  onClick: (channelType: ChannelType) => void;
+}) => {
+  const rect = target.getBoundingClientRect();
+
+  const modalAc = new AbortController();
+
+  const contextEl = (
+    <ContextMenu.Root
+      pos={{ x: rect.x + "px", y: rect.y + +rect.height + "px" }}
+    >
+      <ContextMenu.Item id={ChannelType.SERVER_TEXT.toString()}>
+        <ContextMenu.Icon name="tag" />
+        <ContextMenu.Label>{t`Text Channel`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item id={ChannelType.CATEGORY.toString()}>
+        <ContextMenu.Icon name="segment" />
+        <ContextMenu.Label>{t`Category`}</ContextMenu.Label>
+      </ContextMenu.Item>
+    </ContextMenu.Root>
+  ) as HTMLDivElement;
+
+  contextEl.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const actionEl = target.closest("[id]") as HTMLDivElement;
+      if (!actionEl) return;
+      const action = parseInt(actionEl.id!) as ChannelType;
+      onClick(action);
+      modalAc.abort();
+    },
+    { signal: modalAc.signal },
+  );
+
+  createModal(() => contextEl, modalAc);
 };
 
 export { getStrings, channelsServerSettingsPage as create };

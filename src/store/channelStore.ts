@@ -49,7 +49,7 @@ export class Channel {
     applyIfPresent(this, updated, "permissions");
     applyIfPresent(this, updated, "lastMessagedAt");
 
-    storeEmitter.emit("update_channel", this);
+    storeEmitter.emit("channel:updated", this);
   }
 }
 
@@ -261,8 +261,9 @@ function createChannelStore() {
     }
   };
 
-  const setChannel = (channel: RawChannel) => {
-    channels.set(channel.id, new Channel(channel));
+  const setChannel = (rawChannel: RawChannel) => {
+    const channel = new Channel(rawChannel);
+    channels.set(channel.id, channel);
     if (channel.serverId) {
       if (channel.type !== ChannelType.CATEGORY) {
         addNotification(channel.id, channel.serverId);
@@ -271,6 +272,7 @@ function createChannelStore() {
         serverStore.currentChannelsSorted.rerun();
       }
     }
+    storeEmitter.emit("channel:created", channel);
   };
 
   const removeChannel = (channelId: string) => {

@@ -45,5 +45,6 @@
 }
 
 .categoryList {
+  min-height: 20px;
   margin-left: 20px;
 }
