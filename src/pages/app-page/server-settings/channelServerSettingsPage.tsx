@@ -11,6 +11,7 @@ import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
   deleteServerChannel,
   updateServerChannel,
+  updateServerChannelPermissions,
 } from "../../../services/serverService";
 import { channelStore } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
@@ -411,19 +412,25 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
   actions.handleUndoClick(handleUndo);
 
   const handleSave = async (done: (msg?: string) => void) => {
-    const { ...updates } = updateHandler.changedValues;
+    const { permissions } = updateHandler.changedValues;
     const serverId = getServerId()!;
     const channelId = getChannelId()!;
 
-    const body = {
-      ...updates,
-    };
-
-    const [res, error] = await updateServerChannel(serverId, channelId, body);
+    const [, error] = await updateServerChannelPermissions({
+      serverId,
+      channelId,
+      roleId: selectedRoleId,
+      permissions: permissions!,
+    });
     if (error) {
       return done(error.message);
     }
-    channelStore.channels.get(channelId)?.update(res);
+    channelStore.updatePermissions({
+      channelId,
+      serverId,
+      roleId: selectedRoleId,
+      permissions: permissions!,
+    });
     done();
     handleUndo();
   };

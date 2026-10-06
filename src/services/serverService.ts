@@ -238,3 +238,19 @@ export async function deleteServerChannel(serverId: string, channelId: string) {
     useToken: true,
   });
 }
+
+export async function updateServerChannelPermissions(opts: {
+  serverId: string;
+  channelId: string;
+  roleId: string;
+  permissions: number;
+}) {
+  return request<any>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/permissions/${opts.roleId}`,
+    {
+      method: "POST",
+      useToken: true,
+      body: { permissions: opts.permissions },
+    },
+  );
+}

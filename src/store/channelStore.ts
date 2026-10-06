@@ -111,7 +111,7 @@ function createChannelStore() {
   };
 
   const updatePermissions = (payload: {
-    permissions: 0;
+    permissions: number;
     roleId: string;
     serverId: string;
     channelId: string;
