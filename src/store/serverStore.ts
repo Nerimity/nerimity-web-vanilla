@@ -247,12 +247,15 @@ function createServerStore() {
     return sortedChannels(currentServerId);
   });
 
-  const currentServerSortedRoles = new ManualMemo(() => {
+  const serverSortedRoles = (serverId: string) => {
     const serverRoles =
-      serverRoleStore.roles.get(currentServerId!) ||
-      new Map<string, ServerRole>();
+      serverRoleStore.roles.get(serverId!) || new Map<string, ServerRole>();
 
     return [...serverRoles.values()].sort((a, b) => b.order - a.order);
+  };
+
+  const currentServerSortedRoles = new ManualMemo(() => {
+    return serverSortedRoles(currentServerId!);
   });
 
   const memberTopColor = (member?: ServerMember) => {
@@ -410,6 +413,7 @@ function createServerStore() {
     memberTopColor,
     setCurrentServerId,
     currentChannelsSorted,
+    serverSortedRoles,
     currentServerSortedRoles,
     updateLastSeenServerChannel,
     memberTopColorAndIcon,

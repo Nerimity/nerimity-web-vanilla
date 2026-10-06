@@ -144,6 +144,9 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
       </SettingsBlock.Group>
 
       <div class={style.gap}></div>
+
+      {/* permissions */}
+
       <SettingsBlock.Group>
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="security" />

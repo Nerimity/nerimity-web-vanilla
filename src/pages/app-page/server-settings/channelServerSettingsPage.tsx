@@ -1,5 +1,7 @@
 import { t } from "@lingui/core/macro";
 
+import { Checkbox } from "../../../components/checkbox";
+import { Dropdown } from "../../../components/createDropdown";
 import { createEmojiSelector } from "../../../components/createEmojiSelector";
 import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import { Input } from "../../../components/input";
@@ -13,6 +15,7 @@ import {
 import { channelStore } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
 import { ChannelType } from "../../../Types";
+import { addBit, hasBit, removeBit } from "../../../utils/bitwise";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { router } from "../../../utils/router";
@@ -39,6 +42,7 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
   const strings = getStrings();
   const Tabs = {
     general: GeneralPage,
+    permissions: PermissionsPage,
   };
 
   const getChannelId = () => {
@@ -228,6 +232,180 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
   const handleUndo = () => {
     updateHandler.undo();
     channelIconPicker.update();
+  };
+
+  actions.handleUndoClick(handleUndo);
+
+  const handleSave = async (done: (msg?: string) => void) => {
+    const { slowModeSeconds, ...updates } = updateHandler.changedValues;
+    const serverId = getServerId()!;
+    const channelId = getChannelId()!;
+
+    const body = {
+      ...updates,
+      ...(slowModeSeconds !== undefined
+        ? { slowModeSeconds: parseInt(slowModeSeconds) }
+        : undefined),
+    };
+
+    const [res, error] = await updateServerChannel(serverId, channelId, body);
+    if (error) {
+      return done(error.message);
+    }
+    channelStore.channels.get(channelId)?.update(res);
+    done();
+    handleUndo();
+  };
+
+  actions.handleSaveClick(async (done) => {
+    handleSave(done);
+  });
+
+  el.addEventListener(
+    "click",
+    (event) => {
+      const target = event.target as HTMLDivElement;
+      const button = target.closest("[data-action]") as HTMLDivElement;
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === "delete-channel") {
+        createGenericDeleteModal({
+          confirmLabel: getChannel()?.name!,
+          title: t`Delete Channel`,
+          async onDelete(done) {
+            const [, error] = await deleteServerChannel(
+              getServerId()!,
+              getChannelId()!,
+            );
+            done(error?.message);
+            if (!error) {
+              router.navigate("../channels");
+            }
+          },
+        });
+      }
+    },
+    { signal: props.signal },
+  );
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      el.remove();
+      (el as any) = null;
+    },
+    { once: true },
+  );
+
+  return el;
+};
+const PermissionsPage = (props: { signal: AbortSignal }) => {
+  const strings = getStrings();
+
+  const getServerId = () => serverStore.currentServerId;
+  const getServer = () => serverStore.servers.get(getServerId()!);
+
+  const getChannelId = () => {
+    return router.match<{ channelId: string }>(
+      "/app/servers/:serverId/settings/channels/:channelId",
+    )?.params.channelId;
+  };
+
+  const getChannel = () => channelStore.channels.get(getChannelId()!);
+  const roles = serverStore.serverSortedRoles(getServerId()!);
+  let selectedRoleId = getServer()?.defaultRoleId!;
+
+  const initialValues = () => {
+    const channel = getChannel();
+
+    return {
+      permissions:
+        channel?.permissions?.find((p) => p.roleId === selectedRoleId)
+          ?.permissions || 0,
+    };
+  };
+  const actions = createSettingsActions({ signal: props.signal });
+  const updateHandler = createUpdatedHandler(initialValues, props.signal);
+
+  const rolesDropdown = Dropdown.create({
+    signal: props.signal,
+    initialSelectedId() {
+      return selectedRoleId;
+    },
+    onChange(id) {
+      selectedRoleId = id;
+      handleUndo();
+    },
+    items() {
+      return roles.map((r) => {
+        return (
+          <Dropdown.Item id={r.id}>
+            <Dropdown.Label>{r.name}</Dropdown.Label>
+          </Dropdown.Item>
+        );
+      });
+    },
+  });
+
+  let el = (
+    <div>
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="security" />
+          <SettingsBlock.Details title={strings.permissions} />
+          {rolesDropdown.el}
+        </SettingsBlock.Root>
+
+        {Object.values(ChannelPermissionFlag).map((p) => (
+          <SettingsBlock.Root data-perm={p.bit} clickable hideArrow>
+            <SettingsBlock.Icon name={p.icon} />
+            <SettingsBlock.Details
+              title={p.name()}
+              description={p.description()}
+            />
+            <Checkbox.Root>
+              <Checkbox.Box />
+            </Checkbox.Root>
+          </SettingsBlock.Root>
+        ))}
+      </SettingsBlock.Group>
+
+      {actions.el}
+    </div>
+  ) as HTMLDivElement;
+
+  const permissionCheckboxHandlers = Object.values(ChannelPermissionFlag).map(
+    (p) => {
+      const triggerEl = el.querySelector(
+        `[data-perm="${p.bit}"]`,
+      ) as HTMLDivElement;
+
+      return Checkbox.createHandler({
+        el: triggerEl,
+        triggerEl,
+        signal: props.signal,
+        onChange(checked) {
+          const perms = updateHandler.values.permissions;
+          updateHandler.changeValue(
+            "permissions",
+            (checked ? addBit : removeBit)(perms, p.bit),
+          );
+        },
+        initialState() {
+          return hasBit(updateHandler.values.permissions, p.bit);
+        },
+      });
+    },
+  );
+
+  updateHandler.onUpdate((_changes, hasChanges) => {
+    actions.setVisibility(hasChanges);
+  });
+
+  const handleUndo = () => {
+    updateHandler.undo();
+    permissionCheckboxHandlers.forEach((h) => h.update());
   };
 
   actions.handleUndoClick(handleUndo);
