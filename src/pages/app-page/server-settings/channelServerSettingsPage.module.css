@@ -44,4 +44,8 @@
 .tabs {
   display: flex;
   gap: 4px;
+  :global(.item) {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
 }
