@@ -58,6 +58,7 @@ export interface RawChannel {
   order?: number;
   permissions?: ChannelPermissions[];
   lastMessagedAt?: number;
+  slowModeSeconds?: number;
 }
 
 export interface ChannelPermissions {

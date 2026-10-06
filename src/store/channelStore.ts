@@ -30,6 +30,7 @@ export class Channel {
   icon?: string;
   permissions?: ChannelPermissions[];
   lastMessagedAt?: number;
+  slowModeSeconds?: number;
   constructor(data: RawChannel) {
     this.id = data.id;
     this.name = data.name;
@@ -40,6 +41,7 @@ export class Channel {
     this.icon = data.icon;
     this.permissions = data.permissions;
     this.lastMessagedAt = data.lastMessagedAt;
+    this.slowModeSeconds = data.slowModeSeconds;
   }
   update(updated: Partial<RawChannel>) {
     applyIfPresent(this, updated, "name");
@@ -48,6 +50,7 @@ export class Channel {
     applyIfPresent(this, updated, "icon");
     applyIfPresent(this, updated, "permissions");
     applyIfPresent(this, updated, "lastMessagedAt");
+    applyIfPresent(this, updated, "slowModeSeconds");
 
     storeEmitter.emit("channel:updated", this);
   }

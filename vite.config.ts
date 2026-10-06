@@ -18,6 +18,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "webhook",
+        "speed_2",
         "public",
         "security",
         "badge",

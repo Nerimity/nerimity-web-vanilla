@@ -21,3 +21,27 @@
   width: 10px;
   height: 10px;
 }
+
+.slowModeInput {
+  max-width: 80px;
+
+  .seconds {
+    margin-right: 6px;
+    color: var(--text-muted);
+  }
+
+  input {
+    appearance: textfield;
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      margin: 0;
+      appearance: none;
+    }
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+}

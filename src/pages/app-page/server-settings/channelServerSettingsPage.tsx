@@ -1,27 +1,29 @@
 import { t } from "@lingui/core/macro";
 
-import { Checkbox } from "../../../components/checkbox";
 import { createEmojiSelector } from "../../../components/createEmojiSelector";
 import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import { Input } from "../../../components/input";
+import { Item } from "../../../components/item";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { channelStore } from "../../../store/channelStore";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
-import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
 import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./channelServerSettingsPage.module.css";
 
 const getStrings = () => ({
+  general: t`General`,
+  webhooks: t`Webhooks`,
   name: t`Name`,
   channelIcon: t`Channel Icon`,
   deleteChannel: t`Delete Channel`,
+  slowMode: t`Slow Mode`,
   permissions: t`Permissions`,
   ...Object.fromEntries(
-    Object.entries(RolePermissionFlag).map(([k, v]) => [k, v.name()]),
+    Object.entries(ChannelPermissionFlag).map(([k, v]) => [k, v.name()]),
   ),
 });
 
@@ -29,16 +31,91 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
   const ac = new AbortController();
   const { signal } = ac;
   const strings = getStrings();
+  const Tabs = {
+    general: GeneralPage,
+  };
+
+  let currentTab = "general";
+
+  let tabs = (
+    <div class={style.tabs}>
+      <Item.Base selected handlePosition="bottom" data-tab="general">
+        <Item.Icon name="settings" />
+        <Item.Label>{strings.general}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-tab="permissions">
+        <Item.Icon name="security" />
+        <Item.Label>{strings.permissions}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-tab="webhooks">
+        <Item.Icon name="webhook" />
+        <Item.Label>{strings.webhooks}</Item.Label>
+      </Item.Base>
+    </div>
+  ) as HTMLDivElement;
+
+  let currentTabEl = (<div></div>) as HTMLDivElement;
+  let currentTabAc = new AbortController();
+  const renderCurrentTab = () => {
+    const tabEls = [...tabs.children] as HTMLDivElement[];
+    tabEls.forEach((el) => {
+      el.dataset.selected = currentTab === el.dataset.tab ? "true" : "false";
+    });
+
+    currentTabAc.abort();
+    currentTabAc = new AbortController();
+    const Tab = Tabs[currentTab as keyof typeof Tabs];
+
+    currentTabEl.replaceChildren(
+      Tab ? <Tab signal={currentTabAc.signal} /> : <></>,
+    );
+  };
+
+  renderCurrentTab();
+
+  tabs.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+      const tabEl = target.closest("[data-tab]") as HTMLDivElement;
+      if (!tabEl) return;
+      currentTab = tabEl.dataset.tab!;
+      renderCurrentTab();
+    },
+    { signal },
+  );
+
+  let el = (
+    <div class={style.page}>
+      {tabs}
+      {currentTabEl}
+    </div>
+  ) as HTMLDivElement;
+
+  context.content.replaceChildren(el);
+
+  const destroy = () => {
+    currentTabAc.abort();
+    ac.abort();
+    el.remove();
+    currentTabEl.remove();
+    tabs.remove();
+    (tabs as any) = null;
+    (el as any) = null;
+    (currentTabEl as any) = null;
+  };
+
+  return { destroy };
+};
+
+const GeneralPage = (props: { signal: AbortSignal }) => {
+  const strings = getStrings();
 
   const getChannelId = () => {
     return router.match<{ channelId: string }>(
       "/app/servers/:serverId/settings/channels/:channelId",
     )?.params.channelId;
   };
-
-  // const getServerId = () => serverStore.currentServerId;
-
-  // const getServer = () => serverStore.servers.get(getServerId()!);
 
   const getChannel = () => channelStore.channels.get(getChannelId()!);
 
@@ -48,14 +125,14 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
     return {
       name: channel?.name || "",
       icon: channel?.icon,
-      permissions: channel?.permissions || [],
+      slowModeSeconds: (channel?.slowModeSeconds || 0).toString(),
     };
   };
-  const actions = createSettingsActions({ signal });
-  const updateHandler = createUpdatedHandler(initialValues, signal);
+  const actions = createSettingsActions({ signal: props.signal });
+  const updateHandler = createUpdatedHandler(initialValues, props.signal);
 
   const channelIconPicker = createEmojiSelector({
-    signal,
+    signal: props.signal,
     initialEmoji() {
       return updateHandler.values.icon;
     },
@@ -65,7 +142,7 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
   });
 
   let el = (
-    <div class={style.page}>
+    <div>
       <SettingsBlock.Group>
         {/* name */}
         <SettingsBlock.Root>
@@ -84,27 +161,21 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
           <SettingsBlock.Details title={strings.channelIcon} />
           {channelIconPicker.el}
         </SettingsBlock.Root>
-      </SettingsBlock.Group>
 
-      <div class={style.gap}></div>
-      <SettingsBlock.Group>
+        {/* slow mode */}
         <SettingsBlock.Root>
-          <SettingsBlock.Icon name="security" />
-          <SettingsBlock.Details title={strings.permissions} />
+          <SettingsBlock.Icon name="speed_2" />
+          <SettingsBlock.Details
+            title={strings.slowMode}
+            description={t`Specify how long a user must wait before they can send a message.`}
+          />
+          <Input
+            type="number"
+            suffix={<span class={style.seconds}>s</span>}
+            class={style.slowModeInput}
+            value={initialValues().slowModeSeconds.toString()}
+          />
         </SettingsBlock.Root>
-
-        {Object.values(ChannelPermissionFlag).map((p) => (
-          <SettingsBlock.Root data-perm={p.bit} clickable hideArrow>
-            <SettingsBlock.Icon name={p.icon} />
-            <SettingsBlock.Details
-              title={p.name()}
-              description={p.description()}
-            />
-            <Checkbox.Root>
-              <Checkbox.Box />
-            </Checkbox.Root>
-          </SettingsBlock.Root>
-        ))}
       </SettingsBlock.Group>
 
       <div class={style.separator}></div>
@@ -120,30 +191,10 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
     </div>
   ) as HTMLDivElement;
 
-  // const permissionCheckboxHandlers = Object.values(RolePermissionFlag).map(
-  //   (p) => {
-  //     const triggerEl = el.querySelector(
-  //       `[data-perm="${p.bit}"]`,
-  //     ) as HTMLDivElement;
-
-  //     return Checkbox.createHandler({
-  //       el: triggerEl,
-  //       triggerEl,
-  //       signal,
-  //       onChange(checked) {
-  //         const perms = updateHandler.values.permissions;
-  //         updateHandler.changeValue(
-  //           "permissions",
-  //           (checked ? addBit : removeBit)(perms, p.bit),
-  //         );
-  //       },
-  //       initialState() {
-  //         return hasBit(updateHandler.values.permissions, p.bit);
-  //       },
-  //     });
-  //   },
-  // );
-
+  updateHandler.handleInput(
+    el.querySelector(`.${style.slowModeInput}`)!,
+    "slowModeSeconds",
+  );
   updateHandler.handleInput(el.querySelector(".nameInput")!, "name");
 
   updateHandler.onUpdate((_changes, hasChanges) => {
@@ -203,18 +254,19 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
         });
       }
     },
-    { signal },
+    { signal: props.signal },
   );
 
-  context.content.replaceChildren(el);
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      el.remove();
+      (el as any) = null;
+    },
+    { once: true },
+  );
 
-  const destroy = () => {
-    ac.abort();
-    el.remove();
-    (el as any) = null;
-  };
-
-  return { destroy };
+  return el;
 };
 
 export { getStrings, channelServerSettingsPage as create };
