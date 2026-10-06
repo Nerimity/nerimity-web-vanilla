@@ -119,6 +119,14 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
     },
     signal,
   );
+  storeEmitter.on(
+    "channel:notify_update",
+    (payload) => {
+      if (payload.serverId !== getServerId()) return;
+      rerender();
+    },
+    signal,
+  );
 
   let createdChannelId = "";
   el.addEventListener(

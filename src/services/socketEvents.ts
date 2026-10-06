@@ -60,6 +60,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "user:notification_settings_update": onNotificationSettingsUpdate,
   "server:joined": onServerJoined,
   "server:channel_created": onServerChannelCreated,
+  "server:channel_updated": onServerChannelUpdated,
   "server:channel_permissions_updated": onServerChannelPermissionsUpdated,
   "server:channel_order_updated": onServerChannelOrderUpdated,
   "server:role_updated": onServerRoleUpdated,
@@ -327,6 +328,14 @@ function onNotificationSettingsUpdate(payload: {
 
 function onServerChannelCreated(payload: { channel: RawChannel }) {
   channelStore.setChannel(payload.channel);
+}
+function onServerChannelUpdated(payload: {
+  channelId: string;
+  serverId: string;
+  updated: Partial<RawChannel>;
+}) {
+  const channel = channelStore.channels.get(payload.channelId);
+  channel?.update(payload.updated);
 }
 
 function onServerChannelPermissionsUpdated(payload: {

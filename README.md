@@ -50,7 +50,7 @@ live: https://vanilla.nerimity.com
 - [x] `server:member_left`
 - [x] `server:member_updated`
 - [x] `server:channel_created`
-- [ ] `server:channel_updated`
+- [x] `server:channel_updated`
 - [x] `server:channel_deleted`
 - [ ] `server:order_updated`
 - [ ] `server:folder_created`

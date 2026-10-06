@@ -231,3 +231,10 @@ export async function updateServerChannel(
     body,
   });
 }
+
+export async function deleteServerChannel(serverId: string, channelId: string) {
+  return request<RawChannel>(`/servers/${serverId}/channels/${channelId}`, {
+    method: "DELETE",
+    useToken: true,
+  });
+}

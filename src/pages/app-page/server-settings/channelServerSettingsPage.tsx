@@ -6,9 +6,13 @@ import { Input } from "../../../components/input";
 import { Item } from "../../../components/item";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { updateServerChannel } from "../../../services/serverService";
+import {
+  deleteServerChannel,
+  updateServerChannel,
+} from "../../../services/serverService";
 import { channelStore } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
+import { ChannelType } from "../../../Types";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { router } from "../../../utils/router";
@@ -36,6 +40,16 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
   const Tabs = {
     general: GeneralPage,
   };
+
+  const getChannelId = () => {
+    return router.match<{ channelId: string }>(
+      "/app/servers/:serverId/settings/channels/:channelId",
+    )?.params.channelId;
+  };
+
+  const getChannel = () => channelStore.channels.get(getChannelId()!);
+
+  const isCategory = getChannel()?.type === ChannelType.CATEGORY;
 
   let currentTab = "general";
 
@@ -89,7 +103,7 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
 
   let el = (
     <div class={style.page}>
-      {tabs}
+      {!isCategory && tabs}
       {currentTabEl}
     </div>
   ) as HTMLDivElement;
@@ -122,6 +136,8 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
   };
 
   const getChannel = () => channelStore.channels.get(getChannelId()!);
+
+  const isCategory = getChannel()?.type === ChannelType.CATEGORY;
 
   const initialValues = () => {
     const channel = getChannel();
@@ -167,19 +183,21 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
         </SettingsBlock.Root>
 
         {/* slow mode */}
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="speed_2" />
-          <SettingsBlock.Details
-            title={strings.slowMode}
-            description={t`Specify how long a user must wait before they can send a message.`}
-          />
-          <Input
-            type="number"
-            suffix={<span class={style.seconds}>s</span>}
-            class={style.slowModeInput}
-            value={initialValues().slowModeSeconds.toString()}
-          />
-        </SettingsBlock.Root>
+        {!isCategory && (
+          <SettingsBlock.Root>
+            <SettingsBlock.Icon name="speed_2" />
+            <SettingsBlock.Details
+              title={strings.slowMode}
+              description={t`Specify how long a user must wait before they can send a message.`}
+            />
+            <Input
+              type="number"
+              suffix={<span class={style.seconds}>s</span>}
+              class={style.slowModeInput}
+              value={initialValues().slowModeSeconds.toString()}
+            />
+          </SettingsBlock.Root>
+        )}
       </SettingsBlock.Group>
 
       <div class={style.separator}></div>
@@ -195,10 +213,12 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
     </div>
   ) as HTMLDivElement;
 
-  updateHandler.handleInput(
-    el.querySelector(`.${style.slowModeInput}`)!,
-    "slowModeSeconds",
-  );
+  if (!isCategory) {
+    updateHandler.handleInput(
+      el.querySelector(`.${style.slowModeInput}`)!,
+      "slowModeSeconds",
+    );
+  }
   updateHandler.handleInput(el.querySelector(".nameInput")!, "name");
 
   updateHandler.onUpdate((_changes, hasChanges) => {
@@ -208,7 +228,6 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
   const handleUndo = () => {
     updateHandler.undo();
     channelIconPicker.update();
-    // permissionCheckboxHandlers.forEach((h) => h.update());
   };
 
   actions.handleUndoClick(handleUndo);
@@ -250,15 +269,15 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
         createGenericDeleteModal({
           confirmLabel: getChannel()?.name!,
           title: t`Delete Channel`,
-          async onDelete(_done) {
-            // const [, error] = await deleteServerRole(
-            //   getServerId()!,
-            //   getChannelId()!,
-            // );
-            // done(error?.message);
-            // if (!error) {
-            //   router.navigate("../channels");
-            // }
+          async onDelete(done) {
+            const [, error] = await deleteServerChannel(
+              getServerId()!,
+              getChannelId()!,
+            );
+            done(error?.message);
+            if (!error) {
+              router.navigate("../channels");
+            }
           },
         });
       }
