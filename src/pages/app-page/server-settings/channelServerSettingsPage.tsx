@@ -411,15 +411,12 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
   actions.handleUndoClick(handleUndo);
 
   const handleSave = async (done: (msg?: string) => void) => {
-    const { slowModeSeconds, ...updates } = updateHandler.changedValues;
+    const { ...updates } = updateHandler.changedValues;
     const serverId = getServerId()!;
     const channelId = getChannelId()!;
 
     const body = {
       ...updates,
-      ...(slowModeSeconds !== undefined
-        ? { slowModeSeconds: parseInt(slowModeSeconds) }
-        : undefined),
     };
 
     const [res, error] = await updateServerChannel(serverId, channelId, body);
