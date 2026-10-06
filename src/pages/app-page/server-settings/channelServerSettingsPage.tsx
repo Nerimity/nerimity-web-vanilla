@@ -6,7 +6,9 @@ import { Input } from "../../../components/input";
 import { Item } from "../../../components/item";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { updateServerChannel } from "../../../services/serverService";
 import { channelStore } from "../../../store/channelStore";
+import { serverStore } from "../../../store/serverStore";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { router } from "../../../utils/router";
@@ -111,6 +113,8 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
 const GeneralPage = (props: { signal: AbortSignal }) => {
   const strings = getStrings();
 
+  const getServerId = () => serverStore.currentServerId;
+
   const getChannelId = () => {
     return router.match<{ channelId: string }>(
       "/app/servers/:serverId/settings/channels/:channelId",
@@ -209,20 +213,25 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
 
   actions.handleUndoClick(handleUndo);
 
-  const handleSave = async (_done: (msg?: string) => void) => {
-    // const { ...updates } = updateHandler.changedValues;
-    // const serverId = getServerId()!;
-    // const channelId =getChannelId()!;
-    // const body = {
-    //   ...updates,
-    // };
-    // const [res, error] = await updateServerRole(serverId, channelId, body);
-    // if (error) {
-    //   return done(error.message);
-    // }
-    // channelStore.channels.get(channelId)?.update(res);
-    // done();
-    // handleUndo();
+  const handleSave = async (done: (msg?: string) => void) => {
+    const { slowModeSeconds, ...updates } = updateHandler.changedValues;
+    const serverId = getServerId()!;
+    const channelId = getChannelId()!;
+
+    const body = {
+      ...updates,
+      ...(slowModeSeconds !== undefined
+        ? { slowModeSeconds: parseInt(slowModeSeconds) }
+        : undefined),
+    };
+
+    const [res, error] = await updateServerChannel(serverId, channelId, body);
+    if (error) {
+      return done(error.message);
+    }
+    channelStore.channels.get(channelId)?.update(res);
+    done();
+    handleUndo();
   };
 
   actions.handleSaveClick(async (done) => {

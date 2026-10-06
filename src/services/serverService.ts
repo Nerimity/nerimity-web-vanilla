@@ -217,3 +217,17 @@ export async function createServerChannel(
     body,
   });
 }
+
+interface UpdateServerChannelOptions {}
+
+export async function updateServerChannel(
+  serverId: string,
+  channelId: string,
+  body: UpdateServerChannelOptions,
+) {
+  return request<RawChannel>(`/servers/${serverId}/channels/${channelId}`, {
+    method: "POST",
+    useToken: true,
+    body,
+  });
+}
