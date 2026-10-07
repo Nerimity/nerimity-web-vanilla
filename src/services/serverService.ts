@@ -6,6 +6,7 @@ import type {
   RawServer,
   RawServerRole,
   RawUser,
+  RawWebhook,
 } from "../Types";
 import { request } from "./request";
 
@@ -251,6 +252,86 @@ export async function updateServerChannelPermissions(opts: {
       method: "POST",
       useToken: true,
       body: { permissions: opts.permissions },
+    },
+  );
+}
+export async function getWebhooks(opts: {
+  serverId: string;
+  channelId: string;
+}) {
+  return request<RawWebhook[]>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks`,
+    {
+      method: "GET",
+      useToken: true,
+    },
+  );
+}
+export async function createWebhook(opts: {
+  serverId: string;
+  channelId: string;
+}) {
+  return request<RawWebhook>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks`,
+    {
+      method: "POST",
+      useToken: true,
+    },
+  );
+}
+export async function getWebhook(opts: {
+  serverId: string;
+  channelId: string;
+  webhookId: string;
+}) {
+  return request<RawWebhook>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks/${opts.webhookId}`,
+    {
+      method: "GET",
+      useToken: true,
+    },
+  );
+}
+export async function updateWebhook(opts: {
+  serverId: string;
+  channelId: string;
+  webhookId: string;
+  update: {
+    name?: string;
+  };
+}) {
+  return request<RawWebhook>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks/${opts.webhookId}`,
+    {
+      method: "POST",
+      useToken: true,
+      body: opts.update,
+    },
+  );
+}
+export async function getWebhookToken(opts: {
+  serverId: string;
+  channelId: string;
+  webhookId: string;
+}) {
+  return request<{ token: string }>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks/${opts.webhookId}/token`,
+    {
+      method: "GET",
+      useToken: true,
+    },
+  );
+}
+export async function deleteWebhook(opts: {
+  serverId: string;
+  channelId: string;
+  webhookId: string;
+}) {
+  return request<{ token: string }>(
+    `/servers/${opts.serverId}/channels/${opts.channelId}/webhooks/${opts.webhookId}`,
+    {
+      method: "DELETE",
+      useToken: true,
     },
   );
 }

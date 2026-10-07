@@ -1,21 +1,29 @@
 import { t } from "@lingui/core/macro";
 
+import { Button } from "../../../components/button";
 import { Checkbox } from "../../../components/checkbox";
 import { Dropdown } from "../../../components/createDropdown";
 import { createEmojiSelector } from "../../../components/createEmojiSelector";
 import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
 import { Input } from "../../../components/input";
 import { Item } from "../../../components/item";
+import { alert } from "../../../components/modal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import {
+  createWebhook,
   deleteServerChannel,
+  deleteWebhook,
+  getWebhook,
+  getWebhooks,
+  getWebhookToken,
   updateServerChannel,
   updateServerChannelPermissions,
+  updateWebhook,
 } from "../../../services/serverService";
 import { channelStore } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
-import { ChannelType } from "../../../Types";
+import { ChannelType, type RawWebhook } from "../../../Types";
 import { addBit, hasBit, removeBit } from "../../../utils/bitwise";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
@@ -30,7 +38,9 @@ const getStrings = () => ({
   name: t`Name`,
   channelIcon: t`Channel Icon`,
   deleteChannel: t`Delete Channel`,
+  deleteWebhook: t`Delete Webhook`,
   slowMode: t`Slow Mode`,
+  webhookUrl: "Webhook URL",
   permissions: t`Permissions`,
   ...Object.fromEntries(
     Object.entries(ChannelPermissionFlag).map(([k, v]) => [k, v.name()]),
@@ -44,31 +54,49 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
   const Tabs = {
     general: GeneralPage,
     permissions: PermissionsPage,
+    webhooks: WebhooksPage,
   };
 
   const getChannelId = () => {
     return router.match<{ channelId: string }>(
-      "/app/servers/:serverId/settings/channels/:channelId",
+      "/app/servers/:serverId/settings/channels/:channelId{/*}?",
     )?.params.channelId;
   };
+
+  const getChannelSettingsPath = () =>
+    `/app/servers/${serverStore.currentServerId}/settings/channels/${getChannelId()}`;
 
   const getChannel = () => channelStore.channels.get(getChannelId()!);
 
   const isCategory = getChannel()?.type === ChannelType.CATEGORY;
 
   let currentTab = "general";
+  let currentWebhookId: string | undefined;
 
   let tabs = (
     <div class={style.tabs}>
-      <Item.Base selected handlePosition="bottom" data-tab="general">
+      <Item.Base
+        href={`${getChannelSettingsPath()}/general`}
+        selected
+        handlePosition="bottom"
+        data-tab="general"
+      >
         <Item.Icon name="settings" />
         <Item.Label>{strings.general}</Item.Label>
       </Item.Base>
-      <Item.Base handlePosition="bottom" data-tab="permissions">
+      <Item.Base
+        href={`${getChannelSettingsPath()}/permissions`}
+        handlePosition="bottom"
+        data-tab="permissions"
+      >
         <Item.Icon name="security" />
         <Item.Label>{strings.permissions}</Item.Label>
       </Item.Base>
-      <Item.Base handlePosition="bottom" data-tab="webhooks">
+      <Item.Base
+        href={`${getChannelSettingsPath()}/webhooks`}
+        handlePosition="bottom"
+        data-tab="webhooks"
+      >
         <Item.Icon name="webhook" />
         <Item.Label>{strings.webhooks}</Item.Label>
       </Item.Base>
@@ -88,24 +116,44 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
     const Tab = Tabs[currentTab as keyof typeof Tabs];
 
     currentTabEl.replaceChildren(
-      Tab ? <Tab signal={currentTabAc.signal} /> : <></>,
+      currentTab === "webhooks" && currentWebhookId ? (
+        <WebhookPage
+          signal={currentTabAc.signal}
+          webhookId={currentWebhookId}
+        />
+      ) : Tab ? (
+        <Tab signal={currentTabAc.signal} />
+      ) : (
+        <></>
+      ),
     );
   };
 
-  renderCurrentTab();
-
-  tabs.addEventListener(
-    "click",
-    (e) => {
-      const target = e.target as HTMLDivElement;
-      const tabEl = target.closest("[data-tab]") as HTMLDivElement;
-      if (!tabEl) return;
-      currentTab = tabEl.dataset.tab!;
+  router.createMatchListener<{ tab: string; webhookId?: string }>(
+    [
+      "/app/servers/:serverId/settings/channels/:channelId/:tab",
+      "/app/servers/:serverId/settings/channels/:channelId/:tab/:webhookId",
+    ],
+    (res) => {
+      const tab = res?.params.tab;
+      const isValidTab = Object.keys(Tabs).includes(tab!);
+      if (!tab || !isValidTab) {
+        router.navigate(
+          `/app/servers/${serverStore.currentServerId}/settings/channels/${getChannelId()}/general`,
+          {
+            replace: true,
+          },
+        );
+        return;
+      }
+      currentTab = tab;
+      currentWebhookId = tab === "webhooks" ? res.params.webhookId : undefined;
       renderCurrentTab();
     },
     { signal },
   );
 
+  renderCurrentTab();
   let el = (
     <div class={style.page}>
       {!isCategory && tabs}
@@ -136,7 +184,7 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
 
   const getChannelId = () => {
     return router.match<{ channelId: string }>(
-      "/app/servers/:serverId/settings/channels/:channelId",
+      "/app/servers/:serverId/settings/channels/:channelId{/*}?",
     )?.params.channelId;
   };
 
@@ -281,7 +329,8 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
             );
             done(error?.message);
             if (!error) {
-              router.navigate("../channels");
+              if (props.signal.aborted) return;
+              router.navigate("../../");
             }
           },
         });
@@ -309,7 +358,7 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
 
   const getChannelId = () => {
     return router.match<{ channelId: string }>(
-      "/app/servers/:serverId/settings/channels/:channelId",
+      "/app/servers/:serverId/settings/channels/:channelId{/*}?",
     )?.params.channelId;
   };
 
@@ -342,7 +391,13 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
       return roles.map((r) => {
         return (
           <Dropdown.Item id={r.id}>
-            <Dropdown.Label>{r.name}</Dropdown.Label>
+            <Dropdown.Label>
+              {r.name}
+              {getChannel()?.permissions?.find((c) => c.roleId === r.id)
+                ?.permissions
+                ? "*"
+                : ""}
+            </Dropdown.Label>
           </Dropdown.Item>
         );
       });
@@ -431,6 +486,7 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
       roleId: selectedRoleId,
       permissions: permissions!,
     });
+    rolesDropdown.update();
     done();
     handleUndo();
   };
@@ -458,7 +514,8 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
             );
             done(error?.message);
             if (!error) {
-              router.navigate("../channels");
+              if (props.signal.aborted) return;
+              router.navigate("../");
             }
           },
         });
@@ -466,6 +523,260 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
     },
     { signal: props.signal },
   );
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      el.remove();
+      (el as any) = null;
+    },
+    { once: true },
+  );
+
+  return el;
+};
+const WebhooksPage = (props: { signal: AbortSignal }) => {
+  const strings = getStrings();
+
+  const getServerId = () => serverStore.currentServerId;
+
+  const getChannelId = () => {
+    return router.match<{ channelId: string }>(
+      "/app/servers/:serverId/settings/channels/:channelId{/*}?",
+    )?.params.channelId;
+  };
+
+  let webhooksEl = (<div></div>) as HTMLDivElement;
+
+  let webhooks: RawWebhook[] = [];
+
+  const rerender = () => {
+    webhooksEl.replaceChildren(
+      <SettingsBlock.Group>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="webhook" />
+          <SettingsBlock.Details title={strings.webhooks} />
+          <Button icon="add" data-action="create" label={t`Create`} />
+        </SettingsBlock.Root>
+        {webhooks.map((w) => (
+          <SettingsBlock.Root href={`./${w.id}`}>
+            <SettingsBlock.Icon name="robot" />
+            <SettingsBlock.Details title={w.name} />
+          </SettingsBlock.Root>
+        ))}
+      </SettingsBlock.Group>,
+    );
+  };
+  rerender();
+  let el = (<div>{webhooksEl}</div>) as HTMLDivElement;
+
+  (async () => {
+    const [newWebhooks] = await getWebhooks({
+      serverId: getServerId()!,
+      channelId: getChannelId()!,
+    });
+    if (!newWebhooks) return;
+    if (props.signal.aborted) return;
+    webhooks = newWebhooks;
+    rerender();
+  })();
+
+  el.addEventListener("click", async (e) => {
+    const target = e.target as HTMLDivElement;
+    const actionEl = target.closest("[data-action]") as HTMLDivElement;
+    if (!actionEl) return;
+    const action = actionEl.dataset.action!;
+    if (action === "create") {
+      const [webhook, error] = await createWebhook({
+        serverId: getServerId()!,
+        channelId: getChannelId()!,
+      });
+      if (error) {
+        alert({ message: error.message });
+        return;
+      }
+      if (!webhook) return;
+      if (props.signal.aborted) return;
+
+      router.navigate(`./${webhook.id}`);
+    }
+  });
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      webhooksEl.remove();
+      (webhooksEl as any) = null;
+      el.remove();
+      (el as any) = null;
+    },
+    { once: true },
+  );
+
+  return el;
+};
+const WebhookPage = (props: { signal: AbortSignal; webhookId: string }) => {
+  const strings = getStrings();
+
+  const getServerId = () => serverStore.currentServerId;
+
+  const getIds = () => {
+    return router.match<{ channelId: string; webhookId: string }>(
+      "/app/servers/:serverId/settings/channels/:channelId/webhooks/:webhookId",
+    )?.params;
+  };
+
+  let webhook: RawWebhook | null = null;
+
+  const initialValues = () => {
+    return {
+      name: webhook?.name || "",
+    };
+  };
+
+  let el = (<div class={style.page}></div>) as HTMLDivElement;
+
+  const render = () => {
+    const actions = createSettingsActions({ signal: props.signal });
+    el.replaceChildren(
+      <>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="edit" />
+          <SettingsBlock.Details title={strings.name} />
+          <Input class="nameInput" value={initialValues().name} />
+        </SettingsBlock.Root>
+        <SettingsBlock.Root>
+          <SettingsBlock.Icon name="link" />
+          <SettingsBlock.Details
+            title={strings.webhookUrl}
+            description={t`Execute actions using this link`}
+          />
+          <Button
+            data-action="copy-link"
+            label="Copy Link"
+            icon="content_copy"
+          />
+        </SettingsBlock.Root>
+
+        <div class={style.separator}></div>
+
+        <SettingsBlock.Root data-action="delete-webhook" clickable>
+          <SettingsBlock.Icon name="delete" alert />
+          <SettingsBlock.Details
+            title={strings.deleteWebhook}
+            description={t`Permanently delete this webhook and all associated data.`}
+          />
+        </SettingsBlock.Root>
+
+        {actions.el}
+      </>,
+    );
+    const updateHandler = createUpdatedHandler(initialValues, props.signal);
+    updateHandler.handleInput(el.querySelector(".nameInput")!, "name");
+
+    updateHandler.onUpdate((_changes, hasChanges) => {
+      actions.setVisibility(hasChanges);
+    });
+
+    const handleUndo = () => {
+      updateHandler.undo();
+    };
+    actions.handleUndoClick(handleUndo);
+
+    const handleSave = async (done: (msg?: string) => void) => {
+      const { name } = updateHandler.changedValues;
+
+      const [newWebhook, error] = await updateWebhook({
+        serverId: getServerId()!,
+        channelId: getIds()?.channelId!,
+        webhookId: getIds()?.webhookId!,
+        update: {
+          name,
+        },
+      });
+      if (error) {
+        return done(error.message);
+      }
+
+      webhook = newWebhook;
+
+      done();
+      handleUndo();
+    };
+
+    actions.handleSaveClick(async (done) => {
+      handleSave(done);
+    });
+  };
+  let url = "";
+
+  const copyUrl = () => {
+    navigator.clipboard.writeText(url);
+    alert({
+      icon: "content_copy",
+      title: t`Copied Webhook URL`,
+      alert: false,
+      message: t`Webhook URL copied To clipboard.`,
+    });
+  };
+
+  el.addEventListener(
+    "click",
+    async (event) => {
+      const target = event.target as HTMLDivElement;
+      const button = target.closest("[data-action]") as HTMLDivElement;
+      if (!button) return;
+      const action = button.dataset.action;
+
+      if (action === "copy-link") {
+        if (url) {
+          copyUrl();
+          return;
+        }
+        const [res] = await getWebhookToken({
+          serverId: getServerId()!,
+          channelId: getIds()?.channelId!,
+          webhookId: getIds()?.webhookId!,
+        });
+        if (res) {
+          url = `https://nerimity.com/api/webhooks/${getIds()?.webhookId!}/${res.token}`;
+          copyUrl();
+        }
+      }
+
+      if (action === "delete-webhook") {
+        createGenericDeleteModal({
+          confirmLabel: webhook?.name!,
+          title: t`Delete Webhook`,
+          async onDelete(done) {
+            const [, error] = await deleteWebhook({
+              serverId: getServerId()!,
+              channelId: getIds()?.channelId!,
+              webhookId: getIds()?.webhookId!,
+            });
+            done(error?.message);
+            if (!error) {
+              if (props.signal.aborted) return;
+              router.navigate("../");
+            }
+          },
+        });
+      }
+    },
+    { signal: props.signal },
+  );
+
+  (async () => {
+    const [newWebhook] = await getWebhook({
+      serverId: getServerId()!,
+      channelId: getIds()?.channelId!,
+      webhookId: getIds()?.webhookId!,
+    });
+    if (!newWebhook) return;
+    if (props.signal.aborted) return;
+    webhook = newWebhook;
+    render();
+  })();
 
   props.signal.addEventListener(
     "abort",

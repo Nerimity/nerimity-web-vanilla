@@ -130,7 +130,8 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
     if (signal.aborted) return;
     const role = serverRoleStore.roles.get(getServerId()!)?.has(roleId);
     if (!role) return;
-    router.navigate(`./roles/${roleId}`);
+    if (signal.aborted) return;
+    router.navigate(`./${roleId}`);
   };
 
   context.content.replaceChildren(el);

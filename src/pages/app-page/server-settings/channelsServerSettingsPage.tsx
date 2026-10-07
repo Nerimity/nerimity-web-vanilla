@@ -158,8 +158,9 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
     if (createdChannelId != channelId) return;
     if (signal.aborted) return;
     const channel = channelStore.channels.get(channelId);
-    if (channel) return;
-    router.navigate(`./channels/${channelId}`);
+    if (!channel) return;
+    if (signal.aborted) return;
+    router.navigate(`./${channelId}`);
   };
 
   context.content.replaceChildren(el);

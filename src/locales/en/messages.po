@@ -74,7 +74,7 @@ msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
 
 #: src/components/EditServerRolesModal.tsx:160
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:185
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:186
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 
@@ -567,7 +567,7 @@ msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
 #: src/components/message-pane/inputSuggestions.tsx:551
-#: src/pages/app-page/server-settings/ServerSettings.ts:78
+#: src/pages/app-page/server-settings/ServerSettings.ts:79
 msgid "Role"
 msgstr "Role"
 
@@ -646,7 +646,7 @@ msgid "Full Profile"
 msgstr "Full Profile"
 
 #: src/components/miniProfile.tsx:371
-#: src/pages/app-page/server-settings/ServerSettings.ts:62
+#: src/pages/app-page/server-settings/ServerSettings.ts:63
 msgid "Roles"
 msgstr "Roles"
 
@@ -811,17 +811,22 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:48
+#: src/pages/app-page/server-settings/ServerSettings.ts:49
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:36
 msgid "General"
 msgstr "General"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:55
+#: src/pages/app-page/server-settings/ServerSettings.ts:56
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:86
+#: src/pages/app-page/server-settings/ServerSettings.ts:87
 msgid "Channels"
 msgstr "Channels"
+
+#: src/pages/app-page/server-settings/ServerSettings.ts:103
+msgid "Channel"
+msgstr "Channel"
 
 #: src/pages/app-page/server-settings/auditLogsServerSettingsPage.tsx:35
 msgid "Load More"
@@ -867,22 +872,84 @@ msgstr "<0><1>{username}</1></0> updated their profile"
 msgid "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
 msgstr "<0><1>{username}</1></0> updated <2><3>{updatedUsername}</3></2>'s profile"
 
-#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:29
-msgid "Create new channel Or category"
-msgstr "Create new channel Or category"
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:37
+msgid "Webhooks"
+msgstr "Webhooks"
 
-#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:30
-msgid "Create"
-msgstr "Create"
-
-#: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
-msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
-msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
-
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:38
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:25
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:26
 msgid "Name"
 msgstr "Name"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:39
+msgid "Channel Icon"
+msgstr "Channel Icon"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:40
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:324
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:509
+msgid "Delete Channel"
+msgstr "Delete Channel"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:41
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:750
+msgid "Delete Webhook"
+msgstr "Delete Webhook"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:42
+msgid "Slow Mode"
+msgstr "Slow Mode"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:44
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:32
+msgid "Permissions"
+msgstr "Permissions"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:244
+msgid "Specify how long a user must wait before they can send a message."
+msgstr "Specify how long a user must wait before they can send a message."
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:262
+msgid "Permanently delete this channel and all associated data."
+msgstr "Permanently delete this channel and all associated data."
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:559
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:43
+msgid "Create"
+msgstr "Create"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:652
+msgid "Execute actions using this link"
+msgstr "Execute actions using this link"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:667
+msgid "Permanently delete this webhook and all associated data."
+msgstr "Permanently delete this webhook and all associated data."
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:717
+msgid "Copied Webhook URL"
+msgstr "Copied Webhook URL"
+
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:719
+msgid "Webhook URL copied To clipboard."
+msgstr "Webhook URL copied To clipboard."
+
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:42
+msgid "Create new channel Or category"
+msgstr "Create new channel Or category"
+
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:296
+msgid "Text Channel"
+msgstr "Text Channel"
+
+#: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:300
+msgid "Category"
+msgstr "Category"
+
+#: src/pages/app-page/server-settings/createServerSettingsRoute.tsx:33
+msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
 #: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:26
 #: src/pages/app-page/settings/accountSettingsPage.tsx:30
@@ -948,13 +1015,9 @@ msgid "Apply on Join"
 msgstr "Apply on Join"
 
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:31
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:281
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:284
 msgid "Delete Role"
 msgstr "Delete Role"
-
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:32
-msgid "Permissions"
-msgstr "Permissions"
 
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:126
 msgid "Display members with this role along with all the default members"
@@ -964,7 +1027,7 @@ msgstr "Display members with this role along with all the default members"
 msgid "Apply this role to members when they join the server."
 msgstr "Apply this role to members when they join the server."
 
-#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:173
+#: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:176
 msgid "Permanently delete this role and all associated data."
 msgstr "Permanently delete this role and all associated data."
 
@@ -1381,6 +1444,7 @@ msgid "Enables all permissions."
 msgstr "Enables all permissions."
 
 #: src/utils/RolePermissionFlag.ts:11
+#: src/utils/channelPermissionFlag.ts:12
 msgid "Send Message"
 msgstr "Send Message"
 
@@ -1597,6 +1661,26 @@ msgstr "Palestine"
 #: src/utils/UserBadgeFlag.ts:519
 msgid "This user is a bot"
 msgstr "This user is a bot"
+
+#: src/utils/channelPermissionFlag.ts:5
+msgid "Public Channel"
+msgstr "Public Channel"
+
+#: src/utils/channelPermissionFlag.ts:7
+msgid "Enable access to the channel. Server admins can access any channel."
+msgstr "Enable access to the channel. Server admins can access any channel."
+
+#: src/utils/channelPermissionFlag.ts:14
+msgid "Enable sending messages in the channel. Server admins can still send messages."
+msgstr "Enable sending messages in the channel. Server admins can still send messages."
+
+#: src/utils/channelPermissionFlag.ts:19
+msgid "Join Voice"
+msgstr "Join Voice"
+
+#: src/utils/channelPermissionFlag.ts:21
+msgid "Enable joining voice channels in the channel. Server admins can still join voice channels."
+msgstr "Enable joining voice channels in the channel. Server admins can still join voice channels."
 
 #: src/utils/date.ts:125
 msgid "Expired"

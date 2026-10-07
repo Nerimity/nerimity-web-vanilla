@@ -289,7 +289,8 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
             );
             done(error?.message);
             if (!error) {
-              router.navigate("../roles");
+              if (signal.aborted) return;
+              router.navigate("../");
             }
           },
         });

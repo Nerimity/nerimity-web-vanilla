@@ -61,6 +61,17 @@ export interface RawChannel {
   slowModeSeconds?: number;
 }
 
+export interface RawWebhook {
+  name: string;
+  id: string;
+  hexColor: string;
+  avatar: string | null;
+  channelId: string;
+  serverId: string | null;
+  createdById: string;
+  createdAt: number;
+}
+
 export interface ChannelPermissions {
   permissions: number;
   roleId: string;

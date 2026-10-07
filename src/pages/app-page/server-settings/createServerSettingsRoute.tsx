@@ -106,6 +106,7 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
   let innerContent = (<div></div>) as HTMLDivElement;
   let page: Page | undefined = undefined;
+  let pageKey: string | undefined;
 
   let headerOverride: ServerHeaderOverrides = {};
 
@@ -160,6 +161,21 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
       );
       return;
     }
+    const routeParams = router.match<Record<string, string>>(
+      "/app/servers/:serverId/settings" + matchedRoute.path,
+    )?.params;
+    const routeParamNames = Array.from(
+      matchedRoute.path.matchAll(/:([A-Za-z][A-Za-z0-9_]*)/g),
+      (match) => match[1]!,
+    );
+    const nextPageKey = JSON.stringify([
+      serverId,
+      matchedRoute.id,
+      ...routeParamNames.map((name) => routeParams?.[name]),
+    ]);
+
+    if (page && nextPageKey === pageKey) return;
+
     getAppHeader()?.updateHeader({
       icon: matchedRoute.icon,
       label: matchedRoute.name(),
@@ -167,8 +183,10 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
 
     const user = accountStore.currentUser;
     if (!user) return;
+
     page?.destroy();
     page = matchedRoute.load.create(context);
+    pageKey = nextPageKey;
   };
 
   const render = () => {
@@ -196,6 +214,7 @@ const createServerSettingsRoute = ({ leftDrawer, content }: RouteContext) => {
   const destroy = () => {
     page?.destroy();
     page = undefined;
+    pageKey = undefined;
 
     headerAc?.abort();
     abortController.abort();

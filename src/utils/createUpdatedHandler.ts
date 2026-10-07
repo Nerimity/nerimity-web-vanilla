@@ -73,8 +73,8 @@ export function createUpdatedHandler<T extends ValueMap>(
 
   const undo = () => {
     for (const handler of handlers) {
-      if (changedValues[handler.key] === undefined) continue;
       if (handler.type === "input") {
+        console.log(initialValue()[handler.key]);
         handler.el.value = initialValue()[handler.key] as string;
       }
     }

@@ -101,7 +101,7 @@ export const ServerSettings: ServerSetting[] = [
     id: "channel",
     icon: "leaderboard",
     name: () => t`Channel`,
-    path: "/channels/:channelId",
+    path: "/channels/:channelId{/*}?",
     hideFromDrawer: true,
     load: channelServerSettingsPage,
   },

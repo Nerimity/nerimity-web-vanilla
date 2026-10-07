@@ -16,13 +16,45 @@ const createRouter = () => {
       }
     }
   });
+  const getSearchAndHash = () => location.search + location.hash;
 
-  const navigate = (pathname: string, options?: { replace?: boolean }) => {
-    if (options?.replace) {
-      history.replaceState(null, "", pathname);
-    } else {
-      history.pushState(null, "", pathname);
+  const stripTrailingSlash = (path: string) =>
+    path.length > 1 ? path.replace(/\/+$/, "") : path;
+
+  const navigate = (
+    pathname: string,
+    options?: { replace?: boolean; state?: any },
+  ) => {
+    let newPath = pathname;
+    const currentPathname = stripTrailingSlash(location.pathname);
+    const currentSearchAndHash = getSearchAndHash();
+
+    const isRelative =
+      newPath === "." ||
+      newPath === ".." ||
+      newPath.startsWith("./") ||
+      newPath.startsWith("../");
+
+    if (isRelative) {
+      const resolved = new URL(
+        newPath,
+        location.origin + currentPathname + "/",
+      );
+      newPath =
+        stripTrailingSlash(resolved.pathname) + resolved.search + resolved.hash;
     }
+
+    const pathAndSearch = currentPathname + currentSearchAndHash;
+    if (pathAndSearch === newPath) return;
+
+    const state = options?.state ?? null;
+
+    if (options?.replace) {
+      history.replaceState(state, "", newPath);
+    } else {
+      history.pushState(state, "", newPath);
+    }
+
     queueMicrotask(() => window.dispatchEvent(new Event("navigate")));
   };
 
