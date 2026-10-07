@@ -1,3 +1,4 @@
+import { channelStore } from "../store/channelStore";
 import { serverStore } from "../store/serverStore";
 import { storeEmitter } from "./EventEmitter";
 import { getLocalItem, setLocalItem } from "./localStorage";
@@ -28,8 +29,15 @@ export const getRecentServerChannelId = (serverId: string) => {
   const defaultChannelId = serverStore.servers.get(serverId)?.defaultChannelId;
 
   const recentServerChannels = getLocalItem("recentServerChannels", [])!;
-  return (
-    recentServerChannels.find((item) => item[0] === serverId)?.[1] ||
-    defaultChannelId
-  );
+
+  let recentChannelId = recentServerChannels.find(
+    (item) => item[0] === serverId,
+  )?.[1];
+
+  if (recentChannelId) {
+    const channelExists = channelStore.channels.get(recentChannelId);
+    if (!channelExists) recentChannelId = "";
+  }
+
+  return recentChannelId || defaultChannelId;
 };
