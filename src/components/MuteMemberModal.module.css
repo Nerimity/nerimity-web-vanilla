@@ -1,0 +1,14 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  color: var(--gray-300);
+}
+.notTalkFor,
+.username {
+  color: var(--text-color);
+  font-weight: 600;
+}

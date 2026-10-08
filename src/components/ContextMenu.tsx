@@ -86,7 +86,6 @@ const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
       const target = event.target as HTMLElement;
       if (config.shouldSkip?.(target)) {
         event.preventDefault();
-        event.stopPropagation();
         return;
       }
 

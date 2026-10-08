@@ -13,6 +13,7 @@ import { createBanMemberModal } from "./BanMemberModal";
 import { ContextMenu } from "./ContextMenu";
 import { createEditServerRolesModal } from "./EditServerRolesModal";
 import { createKickMemberModal } from "./KickMemberModal";
+import { createMuteMemberModal } from "./MuteMemberModal";
 
 export const createUserContextMenuHandler = (opts: {
   el?: HTMLElement;
@@ -56,6 +57,9 @@ export const createUserContextMenuHandler = (opts: {
         case "ban":
           createBanMemberModal({ userId, username });
           break;
+        case "mute":
+          createMuteMemberModal({ userId, username });
+          break;
         case "edit_roles":
           createEditServerRolesModal({ userId, username });
           break;
@@ -93,6 +97,7 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const targetIsAdmin = targetMember?.hasPerm(ADMIN_BIT);
   const selfHasBanPerm = selfMember?.hasPerm(BAN_BIT);
 
+  const selfHasAdminPerm = selfMember?.hasPerm(ADMIN_BIT);
   const selfHasKickPerm = selfMember?.hasPerm(KICK_BIT);
   const selfHasManageRolesPerm = selfMember?.hasPerm(MANAGE_ROLES_BIT);
 
@@ -107,8 +112,17 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
     !targetIsCreator &&
     (isSelfCreator || (selfHasKickPerm && !targetIsAdmin));
 
+  const canMute =
+    isTargetInServer &&
+    !isSelf &&
+    !targetIsCreator &&
+    (isSelfCreator || selfHasAdminPerm);
+
   const canEditRoles =
     isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
+
+  const muted =
+    targetMember?.muteExpireAt && targetMember.muteExpireAt! > Date.now();
 
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
@@ -136,14 +150,29 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
       {canBan && (
         <ContextMenu.Item id="ban" alert>
           <ContextMenu.Icon name="block" />
-          <ContextMenu.Label>{t`Ban Member`}</ContextMenu.Label>
+          <ContextMenu.Label>{t`Ban`}</ContextMenu.Label>
         </ContextMenu.Item>
       )}
       {canKick && (
         <ContextMenu.Item id="kick" alert>
           <ContextMenu.Icon name="logout" />
-          <ContextMenu.Label>{t`Kick Member`}</ContextMenu.Label>
+          <ContextMenu.Label>{t`Kick`}</ContextMenu.Label>
         </ContextMenu.Item>
+      )}
+      {canMute && (
+        <>
+          {muted ? (
+            <ContextMenu.Item id="unmute" alert>
+              <ContextMenu.Icon name="volume_up" />
+              <ContextMenu.Label>{t`Unmute`}</ContextMenu.Label>
+            </ContextMenu.Item>
+          ) : (
+            <ContextMenu.Item id="mute" alert>
+              <ContextMenu.Icon name="volume_off" />
+              <ContextMenu.Label>{t`Mute`}</ContextMenu.Label>
+            </ContextMenu.Item>
+          )}
+        </>
       )}
       <ContextMenu.Separator />
       <ContextMenu.Item id="copy_id">
