@@ -1,3 +1,5 @@
+import { t } from "@lingui/core/macro";
+
 import { alert } from "../components/modal";
 import { nerimityCDNUploadRequest } from "../services/cdnService";
 import {
@@ -339,6 +341,10 @@ function createMessageStore() {
 
     if (error) {
       setMessageState(channelId, localMessage.id, "error");
+      alert({
+        title: t`Failed to send message`,
+        message: error.message,
+      });
       return;
     }
     const channelMessages = messages.get(channelId);

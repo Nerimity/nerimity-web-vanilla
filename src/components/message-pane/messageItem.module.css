@@ -19,7 +19,9 @@
     opacity: 0.6;
   }
   &:global(.error) {
-    color: var(--alert-color);
+    .messageContent {
+      color: var(--alert-color);
+    }
   }
   &:global(.editing) {
     background-color: var(--gray-850);
