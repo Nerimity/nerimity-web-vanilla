@@ -28,11 +28,14 @@ interface PostMessageBody {
 }
 export const postMessage = async (channelId: string, body: PostMessageBody) => {
   return postMessagesQueue.add(() => {
-    return request<RawMessage>(`/channels/${channelId}/messages`, {
-      useToken: true,
-      method: "POST",
-      body,
-    });
+    return request<RawMessage, { slowMode?: boolean; ttl?: number }>(
+      `/channels/${channelId}/messages`,
+      {
+        useToken: true,
+        method: "POST",
+        body,
+      },
+    );
   });
 };
 

@@ -13,7 +13,10 @@ interface RequestOpts {
 export interface Error {
   message: string;
 }
-export async function request<T>(rawUrl: string, opts?: RequestOpts) {
+export async function request<T, E extends object = {}>(
+  rawUrl: string,
+  opts?: RequestOpts,
+): Promise<[T, null] | [null, Error & E]> {
   const url = new URL(`${apiUrl}${rawUrl}`);
   if (opts?.params) {
     Object.entries(opts.params).forEach(([key, value]) => {
@@ -36,13 +39,13 @@ export async function request<T>(rawUrl: string, opts?: RequestOpts) {
   }).catch(() => {
     return;
   });
-  if (!res) return [null, { message: "Network error" } as Error] as const;
+  if (!res) return [null, { message: "Network error" } as Error & E] as const;
   if (!res.ok) {
     const raw = await res.text();
     const error = safeParseJson(raw);
     console.error(raw);
-    if (!error) return [null, { message: raw } as Error] as const;
-    return [null, error as Error] as const;
+    if (!error) return [null, { message: raw } as Error & E] as const;
+    return [null, error as Error & E] as const;
   }
   if (opts?.text) {
     return [res.text() as T, null] as const;

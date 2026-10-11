@@ -340,6 +340,14 @@ function createMessageStore() {
     });
 
     if (error) {
+      if (error.slowMode) {
+        channelStore.setProperty(channelId, {
+          slowDownMode: {
+            startedAt: Date.now(),
+            ttl: error.ttl!,
+          },
+        });
+      }
       setMessageState(channelId, localMessage.id, "error");
       alert({
         title: t`Failed to send message`,

@@ -63,6 +63,29 @@ export const formatters = (() => {
   };
 })();
 
+/**
+ * Formats a remaining duration with narrow units, rounding up.
+ * This will return "0s" when the duration is empty.
+ */
+export function formatMillisRemainingNarrow(millis: number) {
+  try {
+    const duration = Temporal.Duration.from({
+      milliseconds: Math.round(millis),
+    });
+    const rounded = roundDuration(duration, undefined, {
+      roundingMode: "ceil",
+      largestUnit: "hour",
+    });
+    const formatter = rounded.secondsOnly
+      ? formatters.duration.narrowForceSeconds
+      : formatters.duration.narrow;
+    return formatter.format(rounded.duration);
+  } catch (e) {
+    console.warn(e);
+    return t`Error`;
+  }
+}
+
 // hh:mm | Yesterday at hh:mm | dd/mm/yyyy at hh:mm
 export function friendlyTimestamp(timestamp: number): string {
   const date = new Date(timestamp);

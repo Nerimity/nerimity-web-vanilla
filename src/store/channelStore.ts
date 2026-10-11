@@ -66,7 +66,7 @@ export interface AttachmentProperty {
   };
 }
 
-interface ChannelProperty {
+export interface ChannelProperty {
   content: string;
   canLoadTop: boolean;
   canLoadBottom: boolean;
@@ -76,6 +76,11 @@ interface ChannelProperty {
   replyingMessages?: Message[];
   attachment?: AttachmentProperty;
   selectedBotCommand?: RawBotCommand;
+
+  slowDownMode?: {
+    ttl: number;
+    startedAt: number;
+  };
 }
 
 function createChannelStore() {
@@ -245,6 +250,10 @@ function createChannelStore() {
     property: Partial<ChannelProperty>,
   ) => {
     properties.set(channelId, { ...getProperty(channelId)!, ...property });
+    storeEmitter.emit("channel:property_updated", {
+      channelId,
+      updated: property,
+    });
   };
   const updateSelectedBotCommand = (
     channelId: string,

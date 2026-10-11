@@ -21,6 +21,7 @@ import { createInputSuggestions } from "./inputSuggestions";
 import { createJumpToPresent } from "./JumpToPresent";
 import { createRepliesIndicator } from "./repliesIndicator";
 import { createSelectedCommandIndicator } from "./selectedCommandIndicator";
+import { createSlowdownModeIndicator } from "./slowdownModeIndicator";
 import { createTypingIndicator } from "./typingIndicator";
 import { formatMessage } from "./utils";
 
@@ -36,6 +37,7 @@ export const createChatbar = () => {
   const attachmentIndicator = createAttachmentIndicator(signal);
   let repliesIndicator = createRepliesIndicator(abortController);
   const jumpToPresent = createJumpToPresent({ signal });
+  const slowdownModeIndicator = createSlowdownModeIndicator({ signal });
 
   let emojiPickerButton = (
     <Button class={[style.button!]} icon="face" hoverBorder />
@@ -148,6 +150,7 @@ export const createChatbar = () => {
   let chatbar = (
     <div class={style.chatbarContainer}>
       {jumpToPresent}
+      {slowdownModeIndicator}
       {typingIndicator.el}
       {editMessageIndicator}
       {attachmentIndicator}
@@ -170,8 +173,11 @@ export const createChatbar = () => {
   };
 
   const sendMessage = () => {
-    lastInputAt = 0;
     const property = channelStore.currentChannelProperty()!;
+    if (property.slowDownMode) {
+      return;
+    }
+    lastInputAt = 0;
     inputEl.focus();
     const value = inputEl.value.trim();
     const hasAttachment = property.attachment;

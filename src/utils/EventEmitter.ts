@@ -1,4 +1,8 @@
-import type { AttachmentProperty, Channel } from "../store/channelStore";
+import type {
+  AttachmentProperty,
+  Channel,
+  ChannelProperty,
+} from "../store/channelStore";
 import type { Friend } from "../store/friendStore";
 import type { Inbox } from "../store/inboxStore";
 import type { MessageMention } from "../store/messageMentionStore";
@@ -38,6 +42,10 @@ type StoreEvents = {
   "message_property:editing": { message?: Message; prevMessage?: Message };
   "message_property:replying": { replies: Message[] };
   "message_property:attachment": { attachment: AttachmentProperty | undefined };
+  "channel:property_updated": {
+    channelId: string;
+    updated: Partial<ChannelProperty>;
+  };
   "message:reaction_updated": { reaction: MessageReaction; message: Message };
   "drawer:pageVisible": number;
   "drawer:modeChange": "mobile" | "desktop";
