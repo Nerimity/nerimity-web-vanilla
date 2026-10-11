@@ -25,7 +25,7 @@
     "@fontsource/roboto-slab": "^5.3.0",
     "@fontsource/sora": "^5.3.0",
     "@formatjs/intl-durationformat": "^0.11.1",
-    "@lingui/core": "^6.9.0",
+    "@lingui/core": "^6.9.1",
     "@melloware/coloris": "^0.25.0",
     "@nerimity/nevula": "^0.15.1",
     "@shikijs/langs": "^4.5.0",
@@ -42,14 +42,14 @@
     "zoomist": "^2.2.0"
   },
   "devDependencies": {
-    "@lingui/cli": "^6.9.0",
-    "@lingui/conf": "^6.9.0",
-    "@lingui/react": "^6.9.0",
-    "@lingui/vite-plugin": "^6.9.0",
+    "@lingui/cli": "^6.9.1",
+    "@lingui/conf": "^6.9.1",
+    "@lingui/react": "^6.9.1",
+    "@lingui/vite-plugin": "^6.9.1",
     "@types/sortablejs": "^1.15.9",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
     "typescript": "~7.0.2",
-    "vite": "^8.3.3"
+    "vite": "^8.3.4"
   }
 }
