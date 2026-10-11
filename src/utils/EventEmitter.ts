@@ -8,7 +8,12 @@ import type { ServerRole } from "../store/serverRoleStore";
 import type { Server } from "../store/serverStore";
 import type { UserPresence } from "../store/userPresenceStore";
 import type { User } from "../store/userStore";
-import type { RawBotCommand, RawMessage, RawServer } from "../Types";
+import type {
+  RawBotCommand,
+  RawMessage,
+  RawServer,
+  RawServerMember,
+} from "../Types";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 
@@ -49,7 +54,12 @@ type StoreEvents = {
   "server:create_role": ServerRole;
   "channel:updated": Channel;
   "channel:created": Channel;
-  "server:member_update": { serverId: string; userId: string; isMe: boolean };
+  "server:member_update": {
+    serverId: string;
+    userId: string;
+    isMe: boolean;
+    updated: Partial<RawServerMember>;
+  };
   "attachment:upload_progress": {
     messageId?: string;
     channelId?: string;

@@ -22,6 +22,7 @@ msgid "Are you sure you want to ban <0>{username}</0>"
 msgstr "Are you sure you want to ban <0>{username}</0>"
 
 #: src/components/BanMemberModal.tsx:42
+#: src/components/MuteMemberModal.tsx:58
 msgid "Reason (optional)"
 msgstr "Reason (optional)"
 
@@ -35,6 +36,7 @@ msgstr "Don't Ban"
 
 #: src/components/BanMemberModal.tsx:71
 #: src/components/BanMemberModal.tsx:97
+#: src/components/UserContextMenu.tsx:153
 msgid "Ban"
 msgstr "Ban"
 
@@ -153,6 +155,7 @@ msgstr "Don't Kick"
 
 #: src/components/KickMemberModal.tsx:53
 #: src/components/KickMemberModal.tsx:74
+#: src/components/UserContextMenu.tsx:159
 msgid "Kick"
 msgstr "Kick"
 
@@ -195,6 +198,93 @@ msgstr "Logout"
 msgid "Don't Logout"
 msgstr "Don't Logout"
 
+#: src/components/MuteMemberModal.tsx:15
+msgid "10 minutes"
+msgstr "10 minutes"
+
+#: src/components/MuteMemberModal.tsx:15
+msgid "10m"
+msgstr "10m"
+
+#: src/components/MuteMemberModal.tsx:16
+msgid "60 minutes"
+msgstr "60 minutes"
+
+#: src/components/MuteMemberModal.tsx:16
+msgid "60m"
+msgstr "60m"
+
+#: src/components/MuteMemberModal.tsx:17
+msgid "6h"
+msgstr "6h"
+
+#: src/components/MuteMemberModal.tsx:17
+#: src/components/TimeModal.tsx:154
+msgid "6 hours"
+msgstr "6 hours"
+
+#: src/components/MuteMemberModal.tsx:18
+msgid "12h"
+msgstr "12h"
+
+#: src/components/MuteMemberModal.tsx:18
+#: src/components/TimeModal.tsx:155
+msgid "12 hours"
+msgstr "12 hours"
+
+#: src/components/MuteMemberModal.tsx:19
+msgid "24 hours"
+msgstr "24 hours"
+
+#: src/components/MuteMemberModal.tsx:19
+msgid "24h"
+msgstr "24h"
+
+#: src/components/MuteMemberModal.tsx:20
+msgid "7 days"
+msgstr "7 days"
+
+#: src/components/MuteMemberModal.tsx:20
+msgid "7d"
+msgstr "7d"
+
+#: src/components/MuteMemberModal.tsx:21
+msgid "30 days"
+msgstr "30 days"
+
+#: src/components/MuteMemberModal.tsx:21
+msgid "30d"
+msgstr "30d"
+
+#: src/components/MuteMemberModal.tsx:22
+#: src/components/MuteMemberModal.tsx:22
+#: src/components/createAuthErrorModal.tsx:85
+#: src/components/createAuthErrorModal.tsx:118
+msgid "Never"
+msgstr "Never"
+
+#: src/components/MuteMemberModal.tsx:46
+msgid "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
+msgstr "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
+
+#: src/components/MuteMemberModal.tsx:76
+msgid "Mute {username}"
+msgstr "Mute {username}"
+
+#: src/components/MuteMemberModal.tsx:82
+msgid "Don't Mute"
+msgstr "Don't Mute"
+
+#: src/components/MuteMemberModal.tsx:89
+#: src/components/MuteMemberModal.tsx:126
+#: src/components/UserContextMenu.tsx:172
+msgid "Mute"
+msgstr "Mute"
+
+#: src/components/MuteMemberModal.tsx:103
+msgid "Muting..."
+msgstr "Muting..."
+
 #: src/components/Notice.tsx:9
 #: src/components/createWarnModal.tsx:15
 msgid "Warning"
@@ -235,13 +325,13 @@ msgid "Leave"
 msgstr "Leave"
 
 #: src/components/ServerContextMenu.tsx:81
-#: src/components/UserContextMenu.tsx:151
+#: src/components/UserContextMenu.tsx:180
 #: src/components/message-pane/messagePane.tsx:632
 msgid "Copy ID"
 msgstr "Copy ID"
 
 #: src/components/ServerContextMenu.tsx:85
-#: src/components/UserContextMenu.tsx:155
+#: src/components/UserContextMenu.tsx:184
 #: src/components/message-pane/messagePane.tsx:636
 msgid "Copy Object"
 msgstr "Copy Object"
@@ -291,14 +381,6 @@ msgstr "30 minutes"
 msgid "1 hour"
 msgstr "1 hour"
 
-#: src/components/TimeModal.tsx:154
-msgid "6 hours"
-msgstr "6 hours"
-
-#: src/components/TimeModal.tsx:155
-msgid "12 hours"
-msgstr "12 hours"
-
 #: src/components/TimeModal.tsx:156
 msgid "1 day"
 msgstr "1 day"
@@ -307,34 +389,30 @@ msgstr "1 day"
 msgid "Presets"
 msgstr "Presets"
 
-#: src/components/UserContextMenu.tsx:123
+#: src/components/UserContextMenu.tsx:137
 msgid "View Profile"
 msgstr "View Profile"
 
-#: src/components/UserContextMenu.tsx:127
+#: src/components/UserContextMenu.tsx:141
 #: src/components/miniProfile.tsx:321
 #: src/components/miniProfile.tsx:345
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/UserContextMenu.tsx:127
+#: src/components/UserContextMenu.tsx:141
 #: src/components/miniProfile.tsx:321
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:253
 msgid "Message"
 msgstr "Message"
 
-#: src/components/UserContextMenu.tsx:132
+#: src/components/UserContextMenu.tsx:146
 msgid "Edit Roles"
 msgstr "Edit Roles"
 
-#: src/components/UserContextMenu.tsx:139
-msgid "Ban Member"
-msgstr "Ban Member"
-
-#: src/components/UserContextMenu.tsx:145
-msgid "Kick Member"
-msgstr "Kick Member"
+#: src/components/UserContextMenu.tsx:167
+msgid "Unmute"
+msgstr "Unmute"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:338
@@ -383,11 +461,6 @@ msgstr "Login"
 #: src/components/createAuthErrorModal.tsx:114
 msgid "<0>Expires: </0><1>{date}</1>"
 msgstr "<0>Expires: </0><1>{date}</1>"
-
-#: src/components/createAuthErrorModal.tsx:85
-#: src/components/createAuthErrorModal.tsx:118
-msgid "Never"
-msgstr "Never"
 
 #: src/components/createAuthErrorModal.tsx:92
 msgid "Someone with the same IP has been suspended from Nerimity. Your account is not affected."

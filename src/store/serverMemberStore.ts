@@ -95,6 +95,7 @@ function createServerMemberStore() {
 
     patchProperty(member, updated, "roleIds");
     patchProperty(member, updated, "nickname");
+    patchProperty(member, updated, "muteExpireAt");
 
     const isMe = accountStore.currentUser?.id === userId;
 
@@ -104,7 +105,12 @@ function createServerMemberStore() {
       serverStore.currentChannelsSorted.rerun();
     }
 
-    storeEmitter.emit("server:member_update", { serverId, userId, isMe });
+    storeEmitter.emit("server:member_update", {
+      serverId,
+      userId,
+      isMe,
+      updated,
+    });
   };
 
   const removeAll = (serverId: string) => {

@@ -249,6 +249,9 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   storeEmitter.on(
     "server:member_update",
     (event) => {
+      if ("muteExpireAt" in event.updated) {
+        return rerender({ forceRecreate: true });
+      }
       if (!event.isMe) return;
       rerender({ forceRecreate: true });
     },

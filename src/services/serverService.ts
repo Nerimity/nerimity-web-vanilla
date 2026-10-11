@@ -39,6 +39,21 @@ export const kickServerMember = async (opts: {
   });
 };
 
+export const muteServerMember = async (opts: {
+  serverId: string;
+  userId: string;
+  body: {
+    reason?: string;
+    expireAt: number;
+  };
+}) => {
+  return request(`/servers/${opts.serverId}/mutes/${opts.userId}`, {
+    useToken: true,
+    method: "POST",
+    body: opts.body,
+  });
+};
+
 export const banServerMember = async (opts: {
   serverId: string;
   userId: string;

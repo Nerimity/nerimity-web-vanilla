@@ -19,6 +19,11 @@
     background-color: var(--gray-800);
   }
 
+  .muted {
+    color: var(--alert-color);
+    font-size: 18px;
+  }
+
   .memberInfo {
     display: inline-flex;
     overflow: hidden;

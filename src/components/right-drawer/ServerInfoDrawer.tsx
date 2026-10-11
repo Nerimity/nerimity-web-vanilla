@@ -9,6 +9,7 @@ import { userStore } from "../../store/userStore";
 import { hasBit } from "../../utils/bitwise";
 import { ChannelPermissionFlag } from "../../utils/channelPermissionFlag";
 import { resolveGradient } from "../../utils/color";
+import { formatTimestamp } from "../../utils/date";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -19,6 +20,7 @@ import { Banner } from "../Banner";
 import { CdnIcon } from "../cdnIcon";
 import { Drawer } from "../drawer";
 import { GradientText } from "../gradientText";
+import { Icon } from "../icon";
 import { Link } from "../link";
 import { ServerClanItem } from "../serverClanItem";
 import { UserPresence } from "../userPresence";
@@ -460,6 +462,14 @@ const memberItem = (cat: Categorized) => {
 
     const font = getFont(user?.profile?.font);
 
+    const member = cat.member;
+    const muted = member?.muteExpireAt
+      ? member.muteExpireAt > Date.now()
+      : null;
+    const mutedUntil = member?.muteExpireAt
+      ? formatTimestamp(member.muteExpireAt)
+      : null;
+
     return (
       <Link
         href={`/app/profile/${cat.member.userId}`}
@@ -485,6 +495,13 @@ const memberItem = (cat: Categorized) => {
           </span>
           <UserPresence class={style.presence} userId={cat.member.userId} />
         </div>
+        {muted && (
+          <Icon
+            title={mutedUntil ? t`Muted until ${mutedUntil}` : null}
+            name="volume_off"
+            class={style.muted}
+          />
+        )}
       </Link>
     );
   } else {

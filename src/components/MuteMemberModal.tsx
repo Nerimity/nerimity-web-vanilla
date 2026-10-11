@@ -1,7 +1,8 @@
 import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { banServerMember } from "../services/serverService";
+import { muteServerMember } from "../services/serverService";
+import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -104,11 +105,22 @@ export const createMuteMemberModal = (props: {
     const reason = (document.getElementById("mute-reason") as HTMLInputElement)
       .value;
 
-    const [, error] = await banServerMember({
-      serverId: "123",
-      userId: "456",
-      reason,
-      deleteRecentMessages: false,
+    let expireAt = new Date(Date.now() + selected || 0).getTime();
+
+    if (selected === 0) {
+      // set expireAt to 2099
+      const date = new Date();
+      date.setFullYear(2099);
+      expireAt = date.getTime();
+    }
+
+    const [, error] = await muteServerMember({
+      serverId: serverStore.currentServerId!,
+      userId: props.userId,
+      body: {
+        reason: reason || undefined,
+        expireAt,
+      },
     });
     requesting = false;
     label.textContent = t`Mute`;
