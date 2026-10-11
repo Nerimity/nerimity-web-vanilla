@@ -1,0 +1,8 @@
+.error {
+  padding: 0 16px 12px;
+  color: var(--alert-color);
+}
+
+.error:empty {
+  display: none;
+}

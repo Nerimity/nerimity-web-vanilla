@@ -54,6 +54,16 @@ export const muteServerMember = async (opts: {
   });
 };
 
+export const unmuteServerMember = async (opts: {
+  serverId: string;
+  userId: string;
+}) => {
+  return request(`/servers/${opts.serverId}/mutes/${opts.userId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};
+
 export const banServerMember = async (opts: {
   serverId: string;
   userId: string;

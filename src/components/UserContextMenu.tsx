@@ -13,7 +13,10 @@ import { createBanMemberModal } from "./BanMemberModal";
 import { ContextMenu } from "./ContextMenu";
 import { createEditServerRolesModal } from "./EditServerRolesModal";
 import { createKickMemberModal } from "./KickMemberModal";
-import { createMuteMemberModal } from "./MuteMemberModal";
+import {
+  createMuteMemberModal,
+  createUnmuteMemberModal,
+} from "./MuteMemberModal";
 
 export const createUserContextMenuHandler = (opts: {
   el?: HTMLElement;
@@ -59,6 +62,9 @@ export const createUserContextMenuHandler = (opts: {
           break;
         case "mute":
           createMuteMemberModal({ userId, username });
+          break;
+        case "unmute":
+          createUnmuteMemberModal({ userId, username });
           break;
         case "edit_roles":
           createEditServerRolesModal({ userId, username });

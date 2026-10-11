@@ -1,10 +1,14 @@
 import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { muteServerMember } from "../services/serverService";
+import {
+  muteServerMember,
+  unmuteServerMember,
+} from "../services/serverService";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { Button } from "./button";
+import { createGenericConfirmModal } from "./GenericConfirmModal";
 import { Input } from "./input";
 import { createModal, Modal } from "./modal";
 import { SteppedSlider } from "./SteppedSlider";
@@ -149,4 +153,41 @@ export const createMuteMemberModal = (props: {
   createModal(() => {
     return modal;
   }, abortController);
+};
+
+export const createUnmuteMemberModal = (props: {
+  userId: string;
+  username?: string;
+}) => {
+  const user = userStore.users.get(props.userId);
+  if (!user) return;
+
+  const username = props.username || user.username;
+
+  createGenericConfirmModal({
+    title: t`Unmute ${username}`,
+    body: (
+      <div class={style.body}>
+        <span class={style.message}>
+          <Trans>
+            Are you sure you want to unmute{" "}
+            <span class={style.username}>{username}</span>?
+          </Trans>
+        </span>
+      </div>
+    ),
+    cancelIcon: "close",
+    cancelLabel: t`Don't Unmute`,
+    confirmLabel: t`Unmute`,
+    confirmIcon: "volume_up",
+    headerIcon: "volume_up",
+    alert: true,
+    onConfirm: async (done) => {
+      const [, error] = await unmuteServerMember({
+        serverId: serverStore.currentServerId!,
+        userId: props.userId,
+      });
+      done(error?.message);
+    },
+  });
 };
