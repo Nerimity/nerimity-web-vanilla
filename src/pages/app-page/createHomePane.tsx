@@ -4,6 +4,7 @@ import { Avatar } from "../../components/avatar";
 import { Icon } from "../../components/icon";
 import { Link } from "../../components/link";
 import { buildEmojiUrl } from "../../components/markup/Emoji";
+import { PostsArea } from "../../components/posts/PostsArea";
 import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
@@ -27,7 +28,9 @@ const createHomePane = ({ content }: RouteContext) => {
 
   let el = (
     <div class={style.container}>
-      <div class={style.mainContent}>Main Content</div>
+      <div class={style.mainContent}>
+        <PostsArea signal={signal} type="feed" />
+      </div>
       <Sidebar signal={signal} />
     </div>
   ) as HTMLDivElement;

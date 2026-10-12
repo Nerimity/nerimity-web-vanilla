@@ -1,0 +1,11 @@
+.container {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 10px;
+}
+
+.posts {
+  width: 100%;
+  min-width: 0;
+}

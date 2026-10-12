@@ -18,6 +18,7 @@ import {
 import { setRecentServerChannel } from "../../utils/recentServerChannels";
 import { ContextMenu } from "../ContextMenu";
 import { Drawer } from "../drawer";
+import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { handleMarkupEvents } from "../markup/markup";
 import { MessageSkeleton } from "../skeleton";
 import { createChatbar } from "./chatbar";
@@ -467,12 +468,10 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
 
   handleBlockedMessageClick({ el, signal, updateMessage });
 
-  import("../ImagePreviewModal").then(({ handleImagePreviewModal }) => {
-    handleImagePreviewModal({
-      root: el,
-      signal,
-      selector: ".imageEmbed .image",
-    });
+  handleImagePreviewModal({
+    root: el,
+    signal,
+    selector: ".imageEmbed .image",
   });
 
   const destroy = () => {

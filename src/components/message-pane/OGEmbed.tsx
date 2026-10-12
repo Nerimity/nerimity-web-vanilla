@@ -6,6 +6,7 @@ import style from "./OGEmbed.module.css";
 interface OGEmbedProps {
   embed: RawMessageEmbed;
   container: HTMLDivElement;
+  customHeight?: number;
 }
 
 const getOrigSrc = (embed: RawMessageEmbed) => {
@@ -40,6 +41,7 @@ export const OGEmbed = (props: OGEmbedProps) => {
             maxWidth={100}
             embed={props.embed}
             container={props.container}
+            customHeight={props.customHeight}
           />
         )}
         <div class={style.detailsInner}>
@@ -54,6 +56,7 @@ export const OGEmbed = (props: OGEmbedProps) => {
           horizPadding={94}
           embed={props.embed}
           container={props.container}
+          customHeight={props.customHeight}
         />
       )}
     </div>

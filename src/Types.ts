@@ -15,6 +15,46 @@ export const FriendStatus = {
 };
 export type FriendStatus = (typeof FriendStatus)[keyof typeof FriendStatus];
 
+export interface RawPostChoice {
+  id: string;
+  content: string;
+  _count: { votedUsers: number };
+}
+export interface RawPostPoll {
+  id: string;
+  _count: { votedUsers: number };
+  choices: RawPostChoice[];
+  votedUsers:
+    | [
+        {
+          pollChoiceId: string;
+        },
+      ]
+    | [];
+}
+export interface RawPost {
+  id: string;
+  content?: string;
+  attachments?: Array<Attachment>;
+  deleted: boolean;
+  block?: boolean;
+  commentToId: string;
+  commentTo?: RawPost;
+  createdBy: RawUser;
+  embed?: RawMessageEmbed;
+  createdAt: number;
+  mentions: RawUser[];
+  editedAt: number;
+  likedBy: { id: string }[]; // if you liked this post, array will not be empty
+  reposts: { id: string; createdBy: { id: string; username: string } }[];
+  repost?: RawPost;
+  _count: { likedBy: number; comments: number; reposts: number };
+  views: number;
+  announcement: any;
+
+  poll?: RawPostPoll;
+}
+
 export interface RawServerMember {
   id: string;
   userId: string;

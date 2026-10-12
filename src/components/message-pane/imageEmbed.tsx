@@ -22,6 +22,7 @@ export const ImageEmbed = (props: {
   attachmentProperty?: AttachmentProperty;
   container: HTMLDivElement;
   maxWidth?: number;
+  customHeight?: number;
   class?: string;
   horizPadding?: number;
 }) => {
@@ -68,7 +69,9 @@ export const ImageEmbed = (props: {
     props.maxWidth || 600,
   );
 
-  const maxHeight = Math.max(props.container.clientHeight / 2, 200);
+  const maxHeight = props.customHeight
+    ? props.customHeight / 2
+    : Math.max(props.container.clientHeight / 2, 200);
 
   const skeleton = cached
     ? null
@@ -97,6 +100,7 @@ export const ImageEmbed = (props: {
   return (
     <div
       data-max-width={props.maxWidth}
+      data-custom-height={props.customHeight}
       data-horiz-padding={props.horizPadding}
       class={[style.imageContainer, props.class, "imageEmbed"]}
       data-width={width}
@@ -118,12 +122,14 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
   const onResize = throttle(() => {
     const imageEmbeds = logElement.querySelectorAll(`.${style.imageContainer}`);
     let maxWidth = clamp(logElement.offsetWidth - DefaultHorizPadding, 600);
-    const maxHeight = Math.max(logElement.clientHeight / 2, 200);
+    const defaultMaxHeight = Math.max(logElement.clientHeight / 2, 200);
 
     for (let i = 0; i < imageEmbeds.length; i++) {
       const embedEl = imageEmbeds[i] as HTMLDivElement;
       const maxWidthOverride = parseInt(embedEl.dataset.maxWidth!);
+      const customHeight = parseInt(embedEl.dataset.customHeight!);
       const horizPaddingOverride = parseInt(embedEl.dataset.horizPadding!);
+      const maxHeight = customHeight ? customHeight / 2 : defaultMaxHeight;
       maxWidth = clamp(
         logElement.offsetWidth - (horizPaddingOverride || DefaultHorizPadding),
         maxWidthOverride || 600,

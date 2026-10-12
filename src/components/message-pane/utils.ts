@@ -8,7 +8,7 @@ import {
 } from "../../store/serverMemberStore";
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { Server, serverStore } from "../../store/serverStore";
-import { userStore, type User } from "../../store/userStore";
+import { userStore } from "../../store/userStore";
 import { MessageType, type RawMessage } from "../../Types";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { randomKaomoji } from "../../utils/kaomoji";
@@ -49,7 +49,7 @@ export const getLastSeenMessage = (channelId: string, messages: Message[]) => {
   return message || null;
 };
 
-export const isNewUser = (user?: User) => {
+export const isNewUser = (user?: { joinedAt?: number }) => {
   const createdAt = user?.joinedAt;
   if (!createdAt) return false;
   const sevenDaysAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
