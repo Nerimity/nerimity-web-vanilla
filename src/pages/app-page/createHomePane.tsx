@@ -188,7 +188,7 @@ const PostSection = (props: { signal: AbortSignal }) => {
       </Item.Base>
       <Item.Base handlePosition="bottom" data-tab="discover">
         <Item.Icon name="public" />
-        <Item.Label>{t`Public`}</Item.Label>
+        <Item.Label>{t`Feed`}</Item.Label>
       </Item.Base>
       <Item.Base handlePosition="bottom" data-tab="notifications">
         <Item.Icon name="notifications" />
