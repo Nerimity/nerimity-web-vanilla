@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { Avatar } from "../../components/avatar";
+import { Dropdown } from "../../components/createDropdown";
 import { Icon } from "../../components/icon";
 import { Item } from "../../components/item";
 import { Link } from "../../components/link";
@@ -215,9 +216,36 @@ const PostSection = (props: { signal: AbortSignal }) => {
 
   let postsArea = (<div></div>) as HTMLDivElement;
 
+  let dropdownSelectedId = "latest";
+
+  const DropdownItems = [
+    { id: "latest", label: t`Latest` },
+    { id: "mostLiked7Days", label: t`Liked in 7 Days` },
+    { id: "mostLiked30days", label: t`Liked in 30 Days` },
+    { id: "mostLikedAllTime", label: t`Liked All Time` },
+  ];
+
+  const dropdown = Dropdown.create({
+    initialSelectedId() {
+      return dropdownSelectedId;
+    },
+    onChange(id) {
+      dropdownSelectedId = id;
+    },
+    signal: props.signal,
+    items() {
+      return DropdownItems.map((item) => (
+        <Dropdown.Item id={item.id}>
+          <Dropdown.Label>{item.label}</Dropdown.Label>
+        </Dropdown.Item>
+      ));
+    },
+  });
+
   let el = (
     <div>
       {tabs}
+      {dropdown.el}
       {postsArea}
     </div>
   ) as HTMLDivElement;
