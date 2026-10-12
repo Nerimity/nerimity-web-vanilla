@@ -17,6 +17,9 @@
     opacity: 1;
   }
   :global(.zoomist-wrapper) {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     background-color: transparent;
   }
   :global(.zoomist-container) {
