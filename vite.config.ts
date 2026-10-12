@@ -18,6 +18,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "repeat",
+        "notifications",
         "volume_up",
         "robot",
         "webhook",

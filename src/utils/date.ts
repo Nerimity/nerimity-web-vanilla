@@ -64,6 +64,42 @@ export const formatters = (() => {
 })();
 
 /**
+ * Format the duration since a timestamp with a single significant unit;
+ * falls back to using `formatTimestamp` if the duration is greater than
+ * a day unless `timestampFallback` is `false`.
+ */
+export function timeSince(timestamp: number, timestampFallback = true) {
+  try {
+    const now = Temporal.Now.zonedDateTimeISO();
+    const start = Temporal.Instant.fromEpochMilliseconds(
+      Math.round(timestamp),
+    ).toZonedDateTimeISO(now.timeZoneId);
+    const elapsed = start.until(now, {
+      largestUnit: "day",
+      roundingMode: "trunc",
+    });
+
+    if (elapsed.days < 1 || !timestampFallback) {
+      const formatter = formatters.relative;
+      if (elapsed.days) {
+        return formatter.format(-elapsed.days, "day");
+      } else if (elapsed.hours) {
+        return formatter.format(-elapsed.hours, "hour");
+      } else if (elapsed.minutes) {
+        return formatter.format(-elapsed.minutes, "minute");
+      } else {
+        return t`Less than a minute ago`;
+      }
+    } else {
+      return formatTimestamp(timestamp);
+    }
+  } catch (e) {
+    console.warn(e);
+    return t`Error`;
+  }
+}
+
+/**
  * Formats a remaining duration with narrow units, rounding up.
  * This will return "0s" when the duration is empty.
  */

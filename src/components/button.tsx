@@ -15,6 +15,7 @@ interface ButtonProps {
   warn?: boolean;
   success?: boolean;
   component?: any;
+  iconOutlined?: boolean;
   [key: string]: any;
 }
 
@@ -46,7 +47,13 @@ export const Button = (props: ButtonProps) => {
       data-primary={primary}
       {...rest}
     >
-      {icon && <Icon class={[style.icon, "icon"]} name={icon} />}
+      {icon && (
+        <Icon
+          outlined={props.iconOutlined}
+          class={[style.icon, "icon"]}
+          name={icon}
+        />
+      )}
       {label && <div class={[style.label, "label"]}>{label}</div>}
     </Dynamic>
   );

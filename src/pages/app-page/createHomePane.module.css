@@ -1,6 +1,8 @@
 .container {
   display: flex;
   justify-content: center;
+  margin-top: 12px;
+  margin-left: 4px;
 }
 
 .mainContent {
@@ -114,5 +116,15 @@
     .activityVideo {
       width: 111px;
     }
+  }
+}
+
+.postTabs {
+  display: flex;
+  margin-top: 6px;
+  margin-bottom: 6px;
+  gap: 4px;
+  :global(.item) {
+    padding: 12px 12px;
   }
 }

@@ -1,7 +1,9 @@
+import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { Avatar } from "../../components/avatar";
 import { Icon } from "../../components/icon";
+import { Item } from "../../components/item";
 import { Link } from "../../components/link";
 import { buildEmojiUrl } from "../../components/markup/Emoji";
 import { PostsArea } from "../../components/posts/PostsArea";
@@ -29,7 +31,7 @@ const createHomePane = ({ content }: RouteContext) => {
   let el = (
     <div class={style.container}>
       <div class={style.mainContent}>
-        <PostsArea signal={signal} type="feed" />
+        <PostSection signal={signal} />
       </div>
       <Sidebar signal={signal} />
     </div>
@@ -174,4 +176,91 @@ const HomeUserActivity = (props: {
       </div>
     </div>
   );
+};
+
+const PostSection = (props: { signal: AbortSignal }) => {
+  let currentTab: "feed" | "discover" | "notifications" = "feed";
+  let tabs = (
+    <div class={style.postTabs}>
+      <Item.Base selected handlePosition="bottom" data-tab="feed">
+        <Item.Icon name="group" />
+        <Item.Label>{t`Following`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-tab="discover">
+        <Item.Icon name="public" />
+        <Item.Label>{t`Public`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-tab="notifications">
+        <Item.Icon name="notifications" />
+        <Item.Label>{t`Notifications`}</Item.Label>
+      </Item.Base>
+    </div>
+  ) as HTMLDivElement;
+
+  tabs.addEventListener(
+    "click",
+    (e) => {
+      const tab = (e.target as HTMLElement)
+        .closest("[data-tab]")
+        ?.getAttribute("data-tab");
+      if (tab && tab !== currentTab) {
+        currentTab = tab as "feed" | "discover" | "notifications";
+        rerender();
+      }
+    },
+    {
+      signal: props.signal,
+    },
+  );
+
+  let postsArea = (<div></div>) as HTMLDivElement;
+
+  let el = (
+    <div>
+      {tabs}
+      {postsArea}
+    </div>
+  ) as HTMLDivElement;
+
+  let postsAc = new AbortController();
+  let signal = postsAc.signal;
+
+  const rerender = () => {
+    postsAc.abort();
+    postsAc = new AbortController();
+    signal = postsAc.signal;
+
+    tabs.querySelectorAll("[data-tab]").forEach((e) => {
+      const tabEl = e as HTMLElement;
+      tabEl.dataset.selected =
+        tabEl.getAttribute("data-tab") === currentTab ? "true" : "false";
+    });
+
+    if (currentTab === "notifications") {
+      postsArea.replaceChildren();
+      return;
+    }
+
+    postsArea.replaceChildren(<PostsArea signal={signal} type={currentTab} />);
+  };
+
+  rerender();
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      tabs.remove();
+      postsArea.remove();
+      el.remove();
+
+      (tabs as any) = null;
+      (postsArea as any) = null;
+      (el as any) = null;
+
+      postsAc.abort();
+    },
+    { signal },
+  );
+
+  return el;
 };

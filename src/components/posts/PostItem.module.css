@@ -1,8 +1,9 @@
 .marker {
   display: flex;
   align-items: center;
-  margin-top: 8px;
-  margin-left: 14px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  margin-left: 6px;
   text-align: center;
   font-size: 12px;
   gap: 10px;
@@ -28,7 +29,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  padding-top: 2px;
+  padding-top: 6px;
   padding-bottom: 2px;
   padding-left: 6px;
   margin-right: 4px;
@@ -79,7 +80,18 @@
     );
   }
   &.withDetails {
-    margin-top: 18px;
+    margin-top: 20px;
+  }
+  &.withBottomBorder {
+    &:after {
+      position: absolute;
+      right: 0;
+      bottom: -10px;
+      left: 0;
+      height: 1px;
+      background-color: var(--gray-700);
+      content: "";
+    }
   }
   .avatar {
     display: flex;
@@ -138,7 +150,6 @@
   }
 
   .postBody {
-    overflow: hidden;
     width: 100%;
     min-width: 0;
   }
@@ -155,5 +166,25 @@
   font-size: 14px;
   &:hover {
     color: var(--success-color);
+  }
+}
+
+.postInfo {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  :global(.button) {
+    transform: translateX(-6px);
+  }
+  .views {
+    display: flex;
+    align-items: center;
+    color: var(--gray-200);
+    font-size: 12px;
+    gap: 4px;
+    .viewsIcon {
+      color: var(--gray-400);
+      font-size: 16px;
+    }
   }
 }

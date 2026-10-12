@@ -1,4 +1,4 @@
-import { getFeedPosts } from "../../services/PostService";
+import { getDiscoverPosts, getFeedPosts } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { reconcile } from "../../utils/html";
 import { handleImagePreviewModal } from "../ImagePreviewModal";
@@ -33,11 +33,16 @@ export const PostsArea = (props: PostsAreaProps) => {
   ) as HTMLDivElement;
 
   const fetchAndRender = async () => {
+    if (props.type === "discover") {
+      const [newPosts] = await getDiscoverPosts();
+      posts = newPosts?.reverse() || null;
+    }
+
     if (props.type === "feed") {
       const [newPosts] = await getFeedPosts();
       posts = newPosts;
-      rerender();
     }
+    rerender();
   };
 
   const imageEmbedResizer = createImageEmbedResizer(containerEl);
@@ -54,8 +59,15 @@ export const PostsArea = (props: PostsAreaProps) => {
       values: posts ?? [],
       valueId: "id",
       dataAttr: "data-id",
-      create(item) {
-        return <PostItem post={item} container={postsEl} />;
+      create(item, index) {
+        return (
+          <PostItem
+            post={item}
+            container={postsEl}
+            prevPost={posts?.[index - 1]}
+            nextPost={posts?.[index + 1]}
+          />
+        );
       },
     });
   };
