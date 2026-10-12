@@ -1,7 +1,4 @@
 import { cdnUrl } from "../config";
-
-import "zoomist/css";
-
 import { portalElement } from "../utils/portal";
 import { transitionViewIfSupported } from "../utils/viewTransition";
 import { Button } from "./button";
@@ -15,7 +12,6 @@ export const handleImagePreviewModal = (opts: {
   selector: string;
   hideActions?: boolean;
 }) => {
-  if (opts.signal.aborted) return; // when lazy loading
   opts.root.addEventListener(
     "click",
     (e) => {
@@ -162,79 +158,14 @@ const createImagePreviewModal = (opts: {
     portalElement().appendChild(el);
     setTimeout(() => {
       el.classList.add(style.showOverlay!);
-      createZoomistInstance({
-        zoomistImage: el.querySelector(`.zoomist-image`) as HTMLDivElement,
-        img: el.querySelector(`.zoomist-container`) as HTMLImageElement,
-        signal,
+      import("./createZoomistInstance").then(({ createZoomistInstance }) => {
+        createZoomistInstance({
+          img: el.querySelector(`.zoomist-container`) as HTMLImageElement,
+          signal,
+        });
       });
     }, 200);
   });
-};
-const createZoomistInstance = async (opts: {
-  zoomistImage: HTMLDivElement;
-  img: HTMLElement;
-  signal: AbortSignal;
-}) => {
-  const { img, signal } = opts;
-
-  const { default: Zoomist } = await import("zoomist");
-
-  if (signal.aborted) return null;
-
-  let zoomist = new Zoomist(img, {
-    bounds: true,
-    smooth: true,
-    zoomRatio: 0.5,
-  });
-
-  let lastClickTime = 0;
-  let lastClickX = 0;
-  let lastClickY = 0;
-  const DOUBLE_CLICK_THRESHOLD = 300;
-  const POSITION_THRESHOLD = 20;
-  const TARGET_SCALE = 2.5;
-
-  img.addEventListener(
-    "pointerup",
-    (e) => {
-      const currentTime = Date.now();
-      const timeSinceLastClick = currentTime - lastClickTime;
-
-      const deltaX = Math.abs(e.clientX - lastClickX);
-      const deltaY = Math.abs(e.clientY - lastClickY);
-
-      if (
-        timeSinceLastClick < DOUBLE_CLICK_THRESHOLD &&
-        deltaX < POSITION_THRESHOLD &&
-        deltaY < POSITION_THRESHOLD
-      ) {
-        const currentScale = zoomist.getScaleRatio();
-
-        let zoom = currentScale !== 0 ? 0 : TARGET_SCALE;
-
-        zoomist.zoomTo(zoom, {
-          clientX: e.clientX,
-          clientY: e.clientY,
-        });
-
-        lastClickTime = 0;
-      } else {
-        lastClickTime = currentTime;
-        lastClickX = e.clientX;
-        lastClickY = e.clientY;
-      }
-    },
-    { signal },
-  );
-  signal.addEventListener(
-    "abort",
-    () => {
-      zoomist.destroy();
-    },
-    { once: true },
-  );
-
-  return zoomist;
 };
 
 function copyClipboard(imgSrc: string) {
