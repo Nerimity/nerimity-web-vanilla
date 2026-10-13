@@ -257,6 +257,7 @@ const rerenderPostInfo = (el: HTMLDivElement) => {
 
 const createPostHandler = () => {
   document.addEventListener("click", async (e) => {
+    if (accountStore.currentUser?.id === undefined) return;
     const target = e.target as HTMLElement;
     const postEl = target.closest(`.postItemOuter[data-id]`) as HTMLDivElement;
     if (!postEl) return;
