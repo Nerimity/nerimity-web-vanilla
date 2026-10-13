@@ -4,7 +4,7 @@ import {
   type DiscoverSort,
 } from "../../services/PostService";
 import type { RawPost } from "../../Types";
-import { reconcile } from "../../utils/html";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { createImageEmbedResizer } from "../message-pane/imageEmbed";
 import { PostItem } from "./PostItem";
@@ -54,6 +54,16 @@ export const PostsArea = (props: PostsAreaProps) => {
     rerender();
   };
 
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    (e) => {
+      if (e) {
+        rerender();
+      }
+    },
+    props.signal,
+  );
+
   const imageEmbedResizer = createImageEmbedResizer(containerEl);
 
   handleImagePreviewModal({
@@ -63,22 +73,18 @@ export const PostsArea = (props: PostsAreaProps) => {
   });
 
   const rerender = () => {
-    reconcile({
-      container: postsEl,
-      values: posts ?? [],
-      valueId: "id",
-      dataAttr: "data-id",
-      create(item, index) {
-        return (
+    postsEl.replaceChildren(
+      <>
+        {(posts || []).map((post, index) => (
           <PostItem
-            post={item}
+            post={post}
             container={postsEl}
             prevPost={posts?.[index - 1]}
             nextPost={posts?.[index + 1]}
           />
-        );
-      },
-    });
+        ))}
+      </>,
+    );
   };
 
   fetchAndRender();

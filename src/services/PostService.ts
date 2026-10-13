@@ -47,3 +47,30 @@ export const getDiscoverPosts = async (opts?: GetDiscoverPostsOpts) => {
     },
   });
 };
+
+export const likePost = async (postId: string) => {
+  return request<RawPost>(`/posts/${postId}/like`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+
+export const unlikePost = async (postId: string) => {
+  return request<RawPost>(`/posts/${postId}/unlike`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+export const repostPost = async (postId: string) => {
+  return request<RawPost>(`/posts/${postId}/repost`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+
+export const deletePost = async (postId: string) => {
+  return request(`/posts/${postId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};

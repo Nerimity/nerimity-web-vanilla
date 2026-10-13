@@ -1,5 +1,12 @@
 import { t } from "@lingui/core/macro";
 
+import {
+  deletePost,
+  likePost,
+  repostPost,
+  unlikePost,
+} from "../../services/PostService";
+import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
 import { formatTimestamp, fullDate, timeSince } from "../../utils/date";
 import { getFont } from "../../utils/font";
@@ -14,9 +21,12 @@ import { ImageEmbed } from "../message-pane/imageEmbed";
 import { InviteEmbed } from "../message-pane/InviteEmbed";
 import { OGEmbed } from "../message-pane/OGEmbed";
 import { isNewUser } from "../message-pane/utils";
+import { alert } from "../modal";
 import { ServerClanItem } from "../serverClanItem";
 
 import style from "./PostItem.module.css";
+
+const postElToPost = new WeakMap<HTMLDivElement, RawPost>();
 
 export const PostItem = (props: {
   post: RawPost;
@@ -39,8 +49,8 @@ export const PostItem = (props: {
 
   const font = getFont(creator.profile?.font);
 
-  return (
-    <div data-id={props.post.id}>
+  const el = (
+    <div class="postItemOuter" data-id={props.post.id}>
       {newDay && <Marker label={fullDate(props.post.createdAt)} />}
 
       <div
@@ -111,7 +121,11 @@ export const PostItem = (props: {
         </div>
       </div>
     </div>
-  );
+  ) as HTMLDivElement;
+
+  postElToPost.set(el, props.post);
+
+  return el;
 };
 
 const PostInfo = (props: { post: RawPost }) => {
@@ -121,7 +135,9 @@ const PostInfo = (props: { post: RawPost }) => {
   const views = props.post.views.toLocaleString();
 
   const liked = props.post.likedBy.length;
-  const reposted = props.post.reposts.length;
+  const reposted = props.post?.reposts?.find(
+    (r) => r.createdBy.id === accountStore.currentUser?.id,
+  );
 
   return (
     <div class={style.postInfo}>
@@ -131,10 +147,12 @@ const PostInfo = (props: { post: RawPost }) => {
         label={likes}
         alert
         hoverBorder={!liked}
+        data-action={liked ? "unlike" : "like"}
         primary={!!liked}
       />
-      <Button icon="chat" label={comments} hoverBorder />
+      <Button data-action="comment" icon="chat" label={comments} hoverBorder />
       <Button
+        data-action={reposted ? "unrepost" : "repost"}
         iconOutlined={!reposted}
         icon="repeat"
         label={reposts}
@@ -228,3 +246,77 @@ const isNewDay = (
   if (!prev) return true;
   return dayNumber(attach.createdAt) !== dayNumber(prev.createdAt);
 };
+
+const rerenderPostInfo = (el: HTMLDivElement) => {
+  const post = postElToPost.get(el);
+  if (!post) return;
+  const postInfoEl = el.querySelector(`.${style.postInfo}`) as HTMLDivElement;
+  if (!postInfoEl) return;
+  postInfoEl.replaceWith(<PostInfo post={post} />);
+};
+
+const createPostHandler = () => {
+  document.addEventListener("click", async (e) => {
+    const target = e.target as HTMLElement;
+    const postEl = target.closest(`.postItemOuter[data-id]`) as HTMLDivElement;
+    if (!postEl) return;
+    const post = postElToPost.get(postEl);
+    if (!post) return;
+
+    const actionEl = target.closest(`[data-action]`) as HTMLDivElement;
+    if (!actionEl) return;
+    const action = actionEl.dataset.action;
+    if (action === "like") {
+      const [res, err] = await likePost(post.id);
+      if (err) {
+        alert({ message: err.message });
+        return;
+      }
+      post._count.likedBy = res._count.likedBy;
+      post.likedBy = res.likedBy;
+      rerenderPostInfo(postEl);
+    }
+    if (action === "unlike") {
+      const [res, err] = await unlikePost(post.id);
+      if (err) {
+        alert({ message: err.message });
+        return;
+      }
+      post._count.likedBy = res._count.likedBy;
+      post.likedBy = res.likedBy;
+      rerenderPostInfo(postEl);
+    }
+    if (action === "repost") {
+      console.log("repost");
+      const [res, err] = await repostPost(post.id);
+      if (err) {
+        alert({ message: err.message });
+        return;
+      }
+      post.repost = res.repost;
+      post._count.reposts = res.repost?._count.reposts || 0;
+      post.reposts = res.repost?.reposts || [];
+      rerenderPostInfo(postEl);
+    }
+    if (action === "unrepost") {
+      console.log("unrepost");
+      const repostId = post.reposts.find(
+        (r) => r.createdBy.id === accountStore.currentUser?.id!,
+      )?.id;
+      if (!repostId) return;
+
+      const [, error] = await deletePost(repostId);
+      if (error) {
+        alert({ message: error.message });
+        return;
+      }
+      post.reposts = post.reposts.filter(
+        (r) => r.createdBy.id != accountStore.currentUser?.id!,
+      );
+      post._count.reposts = post._count.reposts - 1;
+      rerenderPostInfo(postEl);
+    }
+  });
+};
+
+createPostHandler();

@@ -218,7 +218,10 @@ const PostSection = (props: { signal: AbortSignal }) => {
 
   let postsArea = (<div></div>) as HTMLDivElement;
 
-  let dropdownSelectedId: DiscoverSort = getLocalItem("discoverSort", "")!;
+  let dropdownSelectedId: DiscoverSort = getLocalItem(
+    "discoverSort",
+    "mostLiked7Days",
+  )!;
 
   const DropdownItems = [
     { id: "", label: t`Latest` },
