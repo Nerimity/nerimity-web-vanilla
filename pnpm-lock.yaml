@@ -45,7 +45,7 @@ importers:
         specifier: ^0.25.0
         version: 0.25.0
       '@nerimity/nevula':
-        specifier: 0.15.3
+        specifier: ^0.15.3
         version: 0.15.3
       '@shikijs/langs':
         specifier: ^4.5.0
