@@ -23,6 +23,7 @@ export const getFeedPosts = async (opts?: GetFeedPostsOpts) => {
 };
 
 export type DiscoverSort =
+  | ""
   | "mostLiked7Days"
   | "mostLiked30days"
   | "mostLikedAllTime";

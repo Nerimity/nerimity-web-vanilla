@@ -142,12 +142,8 @@ const PostInfo = (props: { post: RawPost }) => {
         primary={!!reposted}
         success
       />
-      <div class={style.views}>
-        <Icon
-          class={style.viewsIcon}
-          name="visibility"
-          title={t`Estimated Views`}
-        />
+      <div class={style.views} title={t`Estimated Views`}>
+        <Icon class={style.viewsIcon} name="visibility" />
         {views}
       </div>
     </div>

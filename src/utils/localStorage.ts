@@ -1,3 +1,4 @@
+import type { DiscoverSort } from "../services/PostService";
 import type { Sound, SoundType } from "./sounds";
 
 export interface RecentEmoji {
@@ -18,6 +19,7 @@ interface LocalStorageData {
   soundNotification: boolean;
   soundNotificationVolume: number;
   soundNotificationTypes: Partial<Record<SoundType, Sound>>;
+  discoverSort: DiscoverSort;
 }
 
 const defaultValues: Partial<LocalStorageData> = {

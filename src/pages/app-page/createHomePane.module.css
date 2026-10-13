@@ -128,3 +128,16 @@
     padding: 12px 12px;
   }
 }
+
+.postContainer {
+  &[data-current-tab="discover"] {
+    .postDropdown {
+      display: flex;
+      margin-top: 12px;
+    }
+  }
+
+  .postDropdown {
+    display: none;
+  }
+}

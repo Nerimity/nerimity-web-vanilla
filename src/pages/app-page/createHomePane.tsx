@@ -11,6 +11,7 @@ import { PostsArea } from "../../components/posts/PostsArea";
 import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
+import type { DiscoverSort } from "../../services/PostService";
 import { friendStore } from "../../store/friendStore";
 import {
   UserPresenceDetails,
@@ -20,6 +21,7 @@ import { userStore } from "../../store/userStore";
 import type { RawUserActivity } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
+import { getLocalItem, setLocalItem } from "../../utils/localStorage";
 import { throttle } from "../../utils/throttle";
 import type { RouteContext } from "./AppPage";
 
@@ -183,13 +185,13 @@ const PostSection = (props: { signal: AbortSignal }) => {
   let currentTab: "feed" | "discover" | "notifications" = "feed";
   let tabs = (
     <div class={style.postTabs}>
-      <Item.Base selected handlePosition="bottom" data-tab="feed">
-        <Item.Icon name="group" />
-        <Item.Label>{t`Following`}</Item.Label>
-      </Item.Base>
       <Item.Base handlePosition="bottom" data-tab="discover">
         <Item.Icon name="public" />
         <Item.Label>{t`Feed`}</Item.Label>
+      </Item.Base>
+      <Item.Base selected handlePosition="bottom" data-tab="feed">
+        <Item.Icon name="group" />
+        <Item.Label>{t`Following`}</Item.Label>
       </Item.Base>
       <Item.Base handlePosition="bottom" data-tab="notifications">
         <Item.Icon name="notifications" />
@@ -216,10 +218,10 @@ const PostSection = (props: { signal: AbortSignal }) => {
 
   let postsArea = (<div></div>) as HTMLDivElement;
 
-  let dropdownSelectedId = "latest";
+  let dropdownSelectedId: DiscoverSort = getLocalItem("discoverSort", "")!;
 
   const DropdownItems = [
-    { id: "latest", label: t`Latest` },
+    { id: "", label: t`Latest` },
     { id: "mostLiked7Days", label: t`Liked in 7 Days` },
     { id: "mostLiked30days", label: t`Liked in 30 Days` },
     { id: "mostLikedAllTime", label: t`Liked All Time` },
@@ -230,7 +232,9 @@ const PostSection = (props: { signal: AbortSignal }) => {
       return dropdownSelectedId;
     },
     onChange(id) {
-      dropdownSelectedId = id;
+      dropdownSelectedId = id as DiscoverSort;
+      setLocalItem("discoverSort", dropdownSelectedId);
+      rerender();
     },
     signal: props.signal,
     items() {
@@ -243,9 +247,9 @@ const PostSection = (props: { signal: AbortSignal }) => {
   });
 
   let el = (
-    <div>
+    <div class={style.postContainer} data-current-tab={currentTab}>
       {tabs}
-      {dropdown.el}
+      <div class={style.postDropdown}>{dropdown.el}</div>
       {postsArea}
     </div>
   ) as HTMLDivElement;
@@ -254,6 +258,7 @@ const PostSection = (props: { signal: AbortSignal }) => {
   let signal = postsAc.signal;
 
   const rerender = () => {
+    postsArea.replaceChildren();
     postsAc.abort();
     postsAc = new AbortController();
     signal = postsAc.signal;
@@ -264,12 +269,20 @@ const PostSection = (props: { signal: AbortSignal }) => {
         tabEl.getAttribute("data-tab") === currentTab ? "true" : "false";
     });
 
+    el.dataset.currentTab = currentTab;
+
     if (currentTab === "notifications") {
-      postsArea.replaceChildren();
       return;
     }
 
-    postsArea.replaceChildren(<PostsArea signal={signal} type={currentTab} />);
+    const posts =
+      currentTab === "discover" ? (
+        <PostsArea type="discover" sort={dropdownSelectedId} signal={signal} />
+      ) : (
+        <PostsArea type="feed" signal={signal} />
+      );
+
+    postsArea.replaceChildren(posts);
   };
 
   rerender();

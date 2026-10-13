@@ -1,4 +1,8 @@
-import { getDiscoverPosts, getFeedPosts } from "../../services/PostService";
+import {
+  getDiscoverPosts,
+  getFeedPosts,
+  type DiscoverSort,
+} from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { reconcile } from "../../utils/html";
 import { handleImagePreviewModal } from "../ImagePreviewModal";
@@ -10,7 +14,12 @@ import style from "./PostsArea.module.css";
 type PostsAreaProps =
   | {
       signal: AbortSignal;
-      type: "feed" | "discover";
+      type: "feed";
+    }
+  | {
+      signal: AbortSignal;
+      type: "discover";
+      sort: DiscoverSort;
     }
   | {
       signal: AbortSignal;
@@ -34,7 +43,7 @@ export const PostsArea = (props: PostsAreaProps) => {
 
   const fetchAndRender = async () => {
     if (props.type === "discover") {
-      const [newPosts] = await getDiscoverPosts();
+      const [newPosts] = await getDiscoverPosts({ sort: props.sort });
       posts = newPosts?.reverse() || null;
     }
 
