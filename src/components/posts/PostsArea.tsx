@@ -83,7 +83,7 @@ export const PostsArea = (props: PostsAreaProps) => {
         {(posts || []).map((post, index) => (
           <PostItem
             hideNewDayMarker={
-              props.type === "discover" && props.sort !== "" ? false : true
+              props.type === "discover" && props.sort !== "" ? true : false
             }
             post={post}
             container={postsEl}
