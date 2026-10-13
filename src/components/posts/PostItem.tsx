@@ -288,7 +288,6 @@ const createPostHandler = () => {
       rerenderPostInfo(postEl);
     }
     if (action === "repost") {
-      console.log("repost");
       const [res, err] = await repostPost(post.id);
       if (err) {
         alert({ message: err.message });
@@ -300,7 +299,6 @@ const createPostHandler = () => {
       rerenderPostInfo(postEl);
     }
     if (action === "unrepost") {
-      console.log("unrepost");
       const repostId = post.reposts.find(
         (r) => r.createdBy.id === accountStore.currentUser?.id!,
       )?.id;
