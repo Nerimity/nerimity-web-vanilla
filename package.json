@@ -27,7 +27,7 @@
     "@formatjs/intl-durationformat": "^0.11.1",
     "@lingui/core": "^6.9.1",
     "@melloware/coloris": "^0.25.0",
-    "@nerimity/nevula": "^0.15.1",
+    "@nerimity/nevula": "^0.15.2",
     "@shikijs/langs": "^4.5.0",
     "@shikijs/themes": "^4.5.0",
     "cropt": "^1.3.0",
