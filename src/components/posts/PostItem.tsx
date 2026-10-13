@@ -11,6 +11,7 @@ import type { RawPost } from "../../Types";
 import { formatTimestamp, fullDate, timeSince } from "../../utils/date";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
+import { HoverAnimator } from "../../utils/HoverAnimator";
 import { inviteLinkRegex } from "../../utils/regex";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
@@ -265,10 +266,17 @@ export const createPostHandler = (opts: {
     ".imageEmbed .image, .focusAnimate .emoji",
   );
 
+  const hoverAnimator = new HoverAnimator(opts.container, [
+    { trigger: `.postItemOuter`, image: ".clanIcon img" },
+    { trigger: `.postItemOuter`, image: ".avatar img" },
+    { trigger: `.postItemOuter`, image: "details .emoji" },
+  ]);
+
   opts.signal.addEventListener(
     "abort",
     () => {
       imageEmbedFocusAnimator.destroy();
+      hoverAnimator.destroy();
     },
     { signal: opts.signal },
   );
