@@ -7,7 +7,7 @@ import type { RawPost } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { createImageEmbedResizer } from "../message-pane/imageEmbed";
-import { PostItem } from "./PostItem";
+import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";
 
@@ -36,6 +36,11 @@ export const PostsArea = (props: PostsAreaProps) => {
   let posts: RawPost[] | null = null;
 
   let postsEl = (<div class={style.posts}></div>) as HTMLDivElement;
+
+  createPostHandler({
+    signal: props.signal,
+    container: postsEl,
+  });
 
   let containerEl = (
     <div class={style.container}>{postsEl}</div>

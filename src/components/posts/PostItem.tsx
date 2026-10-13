@@ -9,6 +9,7 @@ import {
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
 import { formatTimestamp, fullDate, timeSince } from "../../utils/date";
+import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { inviteLinkRegex } from "../../utils/regex";
 import { Avatar } from "../avatar";
@@ -255,67 +256,87 @@ const rerenderPostInfo = (el: HTMLDivElement) => {
   postInfoEl.replaceWith(<PostInfo post={post} />);
 };
 
-const createPostHandler = () => {
-  document.addEventListener("click", async (e) => {
-    if (accountStore.currentUser?.id === undefined) return;
-    const target = e.target as HTMLElement;
-    const postEl = target.closest(`.postItemOuter[data-id]`) as HTMLDivElement;
-    if (!postEl) return;
-    const post = postElToPost.get(postEl);
-    if (!post) return;
+export const createPostHandler = (opts: {
+  signal: AbortSignal;
+  container: HTMLDivElement;
+}) => {
+  const imageEmbedFocusAnimator = new FocusAnimator(
+    opts.container,
+    ".imageEmbed .image, .focusAnimate .emoji",
+  );
 
-    const actionEl = target.closest(`[data-action]`) as HTMLDivElement;
-    if (!actionEl) return;
-    const action = actionEl.dataset.action;
-    if (action === "like") {
-      const [res, err] = await likePost(post.id);
-      if (err) {
-        alert({ message: err.message });
-        return;
-      }
-      post._count.likedBy = res._count.likedBy;
-      post.likedBy = res.likedBy;
-      rerenderPostInfo(postEl);
-    }
-    if (action === "unlike") {
-      const [res, err] = await unlikePost(post.id);
-      if (err) {
-        alert({ message: err.message });
-        return;
-      }
-      post._count.likedBy = res._count.likedBy;
-      post.likedBy = res.likedBy;
-      rerenderPostInfo(postEl);
-    }
-    if (action === "repost") {
-      const [res, err] = await repostPost(post.id);
-      if (err) {
-        alert({ message: err.message });
-        return;
-      }
-      post.repost = res.repost;
-      post._count.reposts = res.repost?._count.reposts || 0;
-      post.reposts = res.repost?.reposts || [];
-      rerenderPostInfo(postEl);
-    }
-    if (action === "unrepost") {
-      const repostId = post.reposts.find(
-        (r) => r.createdBy.id === accountStore.currentUser?.id!,
-      )?.id;
-      if (!repostId) return;
+  opts.signal.addEventListener(
+    "abort",
+    () => {
+      imageEmbedFocusAnimator.destroy();
+    },
+    { signal: opts.signal },
+  );
 
-      const [, error] = await deletePost(repostId);
-      if (error) {
-        alert({ message: error.message });
-        return;
+  opts.container.addEventListener(
+    "click",
+    async (e) => {
+      if (accountStore.currentUser?.id === undefined) return;
+      const target = e.target as HTMLElement;
+      const postEl = target.closest(
+        `.postItemOuter[data-id]`,
+      ) as HTMLDivElement;
+      if (!postEl) return;
+      const post = postElToPost.get(postEl);
+      if (!post) return;
+
+      const actionEl = target.closest(`[data-action]`) as HTMLDivElement;
+      if (!actionEl) return;
+      const action = actionEl.dataset.action;
+      if (action === "like") {
+        const [res, err] = await likePost(post.id);
+        if (err) {
+          alert({ message: err.message });
+          return;
+        }
+        post._count.likedBy = res._count.likedBy;
+        post.likedBy = res.likedBy;
+        rerenderPostInfo(postEl);
       }
-      post.reposts = post.reposts.filter(
-        (r) => r.createdBy.id != accountStore.currentUser?.id!,
-      );
-      post._count.reposts = post._count.reposts - 1;
-      rerenderPostInfo(postEl);
-    }
-  });
+      if (action === "unlike") {
+        const [res, err] = await unlikePost(post.id);
+        if (err) {
+          alert({ message: err.message });
+          return;
+        }
+        post._count.likedBy = res._count.likedBy;
+        post.likedBy = res.likedBy;
+        rerenderPostInfo(postEl);
+      }
+      if (action === "repost") {
+        const [res, err] = await repostPost(post.id);
+        if (err) {
+          alert({ message: err.message });
+          return;
+        }
+        post.repost = res.repost;
+        post._count.reposts = res.repost?._count.reposts || 0;
+        post.reposts = res.repost?.reposts || [];
+        rerenderPostInfo(postEl);
+      }
+      if (action === "unrepost") {
+        const repostId = post.reposts.find(
+          (r) => r.createdBy.id === accountStore.currentUser?.id!,
+        )?.id;
+        if (!repostId) return;
+
+        const [, error] = await deletePost(repostId);
+        if (error) {
+          alert({ message: error.message });
+          return;
+        }
+        post.reposts = post.reposts.filter(
+          (r) => r.createdBy.id != accountStore.currentUser?.id!,
+        );
+        post._count.reposts = post._count.reposts - 1;
+        rerenderPostInfo(postEl);
+      }
+    },
+    { signal: opts.signal },
+  );
 };
-
-createPostHandler();
