@@ -97,6 +97,7 @@
   .sidebar {
     overflow: auto;
     flex-direction: row;
+    min-height: 108px;
     &::-webkit-scrollbar {
       display: none;
     }

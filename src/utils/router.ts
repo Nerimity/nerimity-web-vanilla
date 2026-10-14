@@ -21,6 +21,26 @@ const createRouter = () => {
   const stripTrailingSlash = (path: string) =>
     path.length > 1 ? path.replace(/\/+$/, "") : path;
 
+  type ShouldNavigate = boolean | void;
+
+  const beforeNavigateCallbacks: Array<
+    (event: { newPath: string; currentPath: string }) => ShouldNavigate
+  > = [];
+
+  const beforeNavigate = (
+    callback: (event: {
+      newPath: string;
+      currentPath: string;
+    }) => ShouldNavigate,
+    signal: AbortSignal,
+  ) => {
+    beforeNavigateCallbacks.push(callback);
+    signal.addEventListener("abort", () => {
+      const index = beforeNavigateCallbacks.indexOf(callback);
+      if (index !== -1) beforeNavigateCallbacks.splice(index, 1);
+    });
+  };
+
   const navigate = (
     pathname: string,
     options?: { replace?: boolean; state?: any },
@@ -48,6 +68,14 @@ const createRouter = () => {
     if (pathAndSearch === newPath) return;
 
     const state = options?.state ?? null;
+
+    for (let i = 0; i < beforeNavigateCallbacks.length; i++) {
+      const shouldNavigate = beforeNavigateCallbacks[i]!({
+        newPath,
+        currentPath: currentPathname,
+      });
+      if (shouldNavigate === false) return;
+    }
 
     if (options?.replace) {
       history.replaceState(state, "", newPath);
@@ -92,6 +120,27 @@ const createRouter = () => {
     T extends Record<string, unknown> = Record<string, string | null>,
   >() => {
     return () => parseQuery<T>(getQueryParams());
+  };
+
+  const setQuery = (
+    key: string,
+    value: string | null,
+    options?: { replace?: boolean },
+  ) => {
+    const searchParams = getQueryParams();
+    if (value === null) {
+      searchParams.delete(key);
+    } else {
+      searchParams.set(key, value);
+    }
+
+    const search = searchParams.toString();
+    navigate(
+      location.pathname +
+        (search ? `?${search}` : "") +
+        location.hash,
+      options,
+    );
   };
 
   type QueryListenerOptions<T> = {
@@ -190,9 +239,11 @@ const createRouter = () => {
   return {
     navigate,
     match,
+    beforeNavigate,
     createMatchListener,
     createQueryListener,
     query,
+    setQuery,
   };
 };
 

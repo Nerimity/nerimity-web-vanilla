@@ -13,6 +13,7 @@ import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { inviteLinkRegex } from "../../utils/regex";
+import { router } from "../../utils/router";
 import { Avatar } from "../avatar";
 import { Button } from "../button";
 import { Icon } from "../icon";
@@ -38,6 +39,8 @@ export const PostItem = (props: {
   container: HTMLDivElement;
   showFullDate?: boolean;
 }) => {
+  const link = `/p/${props.post.id}`;
+
   const creator = props.post.createdBy;
 
   const newDay =
@@ -97,14 +100,16 @@ export const PostItem = (props: {
               )}
 
               {creator.bot && <div class={style.badge}>{t`Bot`}</div>}
-              <span
+              <Link
+                href={link}
+                decoration
                 class={style.timestamp}
                 title={formatTimestamp(props.post.createdAt)}
               >
                 {(props.showFullDate ? formatTimestamp : timeSince)(
                   props.post.createdAt,
                 )}
-              </span>
+              </Link>
             </span>
             <div class={style.content}>
               {!isImageEmbedOnly && (
@@ -281,6 +286,13 @@ export const createPostHandler = (opts: {
     { signal: opts.signal },
   );
 
+  const lastDownPos = { x: 0, y: 0 };
+
+  opts.container.addEventListener("pointerdown", (e) => {
+    lastDownPos.x = e.clientX;
+    lastDownPos.y = e.clientY;
+  });
+
   opts.container.addEventListener(
     "click",
     async (e) => {
@@ -294,8 +306,7 @@ export const createPostHandler = (opts: {
       if (!post) return;
 
       const actionEl = target.closest(`[data-action]`) as HTMLDivElement;
-      if (!actionEl) return;
-      const action = actionEl.dataset.action;
+      const action = actionEl?.dataset?.action;
       if (action === "like") {
         const [res, err] = await likePost(post.id);
         if (err) {
@@ -305,6 +316,7 @@ export const createPostHandler = (opts: {
         post._count.likedBy = res._count.likedBy;
         post.likedBy = res.likedBy;
         rerenderPostInfo(postEl);
+        return;
       }
       if (action === "unlike") {
         const [res, err] = await unlikePost(post.id);
@@ -315,6 +327,7 @@ export const createPostHandler = (opts: {
         post._count.likedBy = res._count.likedBy;
         post.likedBy = res.likedBy;
         rerenderPostInfo(postEl);
+        return;
       }
       if (action === "repost") {
         const [res, err] = await repostPost(post.id);
@@ -326,6 +339,7 @@ export const createPostHandler = (opts: {
         post._count.reposts = res.repost?._count.reposts || 0;
         post.reposts = res.repost?.reposts || [];
         rerenderPostInfo(postEl);
+        return;
       }
       if (action === "unrepost") {
         const repostId = post.reposts.find(
@@ -343,7 +357,18 @@ export const createPostHandler = (opts: {
         );
         post._count.reposts = post._count.reposts - 1;
         rerenderPostInfo(postEl);
+        return;
       }
+
+      if (target.closest("a")) return;
+      if (target.closest("img")) return;
+
+      const isClick =
+        Math.abs(e.clientX - lastDownPos.x) < 5 &&
+        Math.abs(e.clientY - lastDownPos.y) < 5;
+      if (!isClick) return;
+
+      router.navigate(`/p/${post.id}`);
     },
     { signal: opts.signal },
   );

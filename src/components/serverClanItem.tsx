@@ -32,14 +32,20 @@ export const ServerClanItem = (props: {
 };
 
 const createClanClickHandler = () => {
-  document.addEventListener("click", (e) => {
-    const target = e.target as HTMLDivElement;
-    const clanEl = target.closest(`.${style.clanItem}`) as HTMLDivElement;
-    if (!clanEl) return;
-    const clan = elementToClan.get(clanEl);
-    if (!clan) return;
-    createClanDetailsModal({ clan });
-  });
+  document.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+      const clanEl = target.closest(`.${style.clanItem}`) as HTMLDivElement;
+      if (!clanEl) return;
+      const clan = elementToClan.get(clanEl);
+      if (!clan) return;
+      e.preventDefault();
+      e.stopPropagation();
+      createClanDetailsModal({ clan });
+    },
+    { capture: true },
+  );
 };
 createClanClickHandler();
 

@@ -202,6 +202,18 @@ const createAppPage = () => {
   window.addEventListener("resize", handleResize, { signal });
   handleDangerLink(signal);
 
+  router.beforeNavigate((event) => {
+    const postMatched = router.match<{ postId: string }>(
+      `/p/:postId`,
+      event.newPath,
+    );
+
+    if (postMatched) {
+      router.setQuery("postId", postMatched.params.postId);
+      return false;
+    }
+  }, abortController.signal);
+
   const destroy = () => {
     abortController.abort();
     socket.disconnect();

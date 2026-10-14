@@ -86,6 +86,15 @@ updateFavicon();
       handleEnter(() => navigate(HomePage)),
       { signal },
     );
+    router.createMatchListener<{ postId: string }>(
+      "/p/:postId",
+      (res) => {
+        if (res) {
+          location.replace(`/app?postId=${res.params.postId}`);
+        }
+      },
+      { signal },
+    );
   };
 
   App();
