@@ -228,6 +228,8 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
         expr.trim().match(CustomColorExprRegex)?.groups ?? {};
       if (colors == null || text == null) break;
 
+      ctx.textCount += text.length;
+
       return (
         <span
           class={style.gradient}
@@ -307,6 +309,7 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
     case "checkbox": {
       const { checked } = entity.params;
       const props = ctx.props();
+      ctx.textCount += 1;
 
       const checkbox = (
         <Checkbox.Root
