@@ -1,0 +1,218 @@
+import { t } from "@lingui/core/macro";
+
+import { isMobileWidth } from "../../config";
+import type { CustomEmoji, EmojiData } from "../../utils/emojis";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { portalElement } from "../../utils/portal";
+import { Button } from "./button";
+import { createEmojiPicker } from "./EmojiPicker";
+
+import style from "./ExpressionPicker.module.css";
+
+export interface ExpressionPickerProps {
+  // onSelect: (expression: string) => void;
+  targetEl: HTMLElement;
+  anchorEl?: HTMLElement;
+  defaultTab?: "GIFs" | "emojis";
+  tabs?: ("GIFs" | "emojis")[];
+  offset?: {
+    left?: number;
+    top?: number;
+  };
+  onEmojiPick: (emoji?: EmojiData, custom?: CustomEmoji) => void;
+}
+
+let currentInstance: {
+  targetEl: HTMLElement;
+  destroy: () => void;
+} | null = null;
+
+export const _createExpressionPicker = (props: ExpressionPickerProps) => {
+  if (currentInstance) {
+    const sameTarget = currentInstance.targetEl === props.targetEl;
+    currentInstance.destroy();
+    currentInstance = null;
+    if (sameTarget) {
+      return;
+    }
+  }
+
+  let contentEl = (<div class={style.content}></div>) as HTMLDivElement;
+  let tabs = props.tabs || ["GIFs", "emojis"];
+  let currentTab = props.defaultTab || "emojis";
+  const abortController = new AbortController();
+
+  let currentPage: {
+    abortController: AbortController;
+    el: HTMLDivElement;
+  } | null = null;
+
+  const updatePage = () => {
+    currentPage?.abortController.abort();
+    if (currentTab === "emojis") {
+      currentPage = createEmojiPicker({
+        abortController,
+        onPick: props.onEmojiPick,
+      });
+      contentEl.replaceChildren(currentPage.el);
+    }
+  };
+  updatePage();
+
+  const footer = (
+    <div class={style.footer}>
+      {tabs?.map((tab) =>
+        tab === "GIFs" ? (
+          <Button
+            class={style.button}
+            data-name="GIFs"
+            label={t`GIFs`}
+            icon="gif"
+            hoverBorder
+          />
+        ) : (
+          <Button
+            class={style.button}
+            data-selected
+            data-name="emojis"
+            label={t`Emojis`}
+            hoverBorder
+            icon="face"
+          />
+        ),
+      )}
+    </div>
+  ) as HTMLElement;
+
+  const el = (
+    <div class={style.expressionPicker}>
+      {contentEl}
+      {footer}
+    </div>
+  ) as HTMLElement;
+  const updatePos = () => {
+    const app = document.getElementById("app")!;
+    const targetRect = (
+      props.anchorEl || props.targetEl
+    ).getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const padding = 8;
+
+    if (isMobileWidth()) {
+      app.style.height = window.innerHeight - elRect.height + "px";
+    }
+
+    const desiredTop =
+      targetRect.top - elRect.height - (props.offset?.top || 0);
+    const minTop = padding;
+    const maxTop = Math.max(
+      padding,
+      window.innerHeight - elRect.height - padding,
+    );
+    const clampedTop = Math.min(Math.max(desiredTop, minTop), maxTop);
+
+    const desiredLeft =
+      targetRect.left -
+      elRect.width +
+      targetRect.width +
+      (props.offset?.left || 0);
+    const minLeft = padding;
+    const maxLeft = Math.max(
+      padding,
+      window.innerWidth - elRect.width - padding,
+    );
+    const clampedLeft = Math.min(Math.max(desiredLeft, minLeft), maxLeft);
+
+    el.style.setProperty("--top", `${clampedTop}px`);
+    el.style.setProperty("--left", `${clampedLeft}px`);
+  };
+  portalElement().appendChild(el);
+  updatePos();
+
+  window.addEventListener("resize", updatePos, {
+    signal: abortController.signal,
+    passive: true,
+  });
+
+  let downX = 0;
+  let downY = 0;
+  document.addEventListener(
+    "mousedown",
+    (e) => {
+      downX = e.clientX;
+      downY = e.clientY;
+    },
+    { signal: abortController.signal },
+  );
+
+  document.addEventListener(
+    "click",
+    (e) => {
+      const target = e.target as HTMLDivElement;
+      if (!target.closest(`.${style.expressionPicker}`)) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const movedX = Math.abs(e.clientX - downX);
+      const movedY = Math.abs(e.clientY - downY);
+      if (movedX > 10 || movedY > 10) return;
+      if (!el.contains(e.target as Node)) {
+        abortController.abort();
+      }
+    },
+    { signal: abortController.signal, capture: true },
+  );
+
+  abortController.signal.addEventListener(
+    "abort",
+    () => {
+      const app = document.getElementById("app")!;
+      app.style.height = "";
+      el.remove();
+      currentPage?.abortController.abort();
+      if (currentInstance?.targetEl === props.targetEl) {
+        currentInstance = null;
+      }
+    },
+    { once: true },
+  );
+
+  storeEmitter.on(
+    "drawer:modeChange",
+    () => {
+      abortController.abort();
+    },
+    abortController.signal,
+  );
+
+  footer.addEventListener(
+    "click",
+    (e) => {
+      const button = (e.target as HTMLElement).closest("button");
+      if (!button) return;
+      const selectedTab = button.dataset.name as "GIFs" | "emojis";
+      if (selectedTab === currentTab) return;
+
+      const previousTab = currentTab;
+      currentTab = selectedTab;
+
+      footer
+        .querySelector(`[data-name="${selectedTab}"]`)
+        ?.setAttribute("data-selected", "true");
+      footer
+        .querySelector(`[data-name="${previousTab}"]`)
+        ?.removeAttribute("data-selected");
+      updatePage();
+    },
+    { signal: abortController.signal },
+  );
+
+  currentInstance = {
+    targetEl: props.targetEl,
+    destroy: () => abortController.abort(),
+  };
+
+  return {
+    destroy: () => abortController.abort(),
+  };
+};

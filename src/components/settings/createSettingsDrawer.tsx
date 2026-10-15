@@ -3,11 +3,11 @@ import { matchSorter } from "match-sorter";
 
 import { Settings, type Setting } from "../../pages/app-page/settings/Settings";
 import { router } from "../../utils/router";
-import { Drawer } from "../drawer";
 import { Icon } from "../icon";
-import { Input } from "../input";
-import { Item } from "../item";
 import { Pill } from "../Pill";
+import { Drawer } from "../ui/drawer";
+import { Input } from "../ui/input";
+import { Item } from "../ui/item";
 
 import style from "./createSettingsDrawer.module.css";
 

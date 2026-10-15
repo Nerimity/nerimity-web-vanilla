@@ -1,14 +1,14 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { createConfirmPasswordModal } from "../../../components/ConfirmPasswordModal";
 import { createFileInput } from "../../../components/FileInput";
-import type { CropPoints } from "../../../components/ImageCropModal";
-import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
-import { Input } from "../../../components/input";
-import { alert } from "../../../components/modal";
+import { createConfirmPasswordModal } from "../../../components/modals/ConfirmPasswordModal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import type { CropPoints } from "../../../components/ui/ImageCropModal";
+import { createImageCropModalLazy } from "../../../components/ui/ImageCropModalLazy";
+import { Input } from "../../../components/ui/input";
+import { alert } from "../../../components/ui/modal";
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
 import { postResetPassword, updateUser } from "../../../services/userService";

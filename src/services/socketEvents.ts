@@ -101,7 +101,8 @@ export const socketEventHandler = async (event: string, payload: any) => {
 
 const showWarnModal = async () => {
   if (!accountStore.currentUser?.notices.length) return;
-  const { createWarnModal } = await import("../components/createWarnModal");
+  const { createWarnModal } =
+    await import("../components/modals/createWarnModal");
 
   createWarnModal();
 };
@@ -110,7 +111,7 @@ async function onAuthError(payload: any) {
   console.error("Auth Error", payload);
   accountStore.setAuthError(payload);
   const { createAuthErrorModal } =
-    await import("../components/createAuthErrorModal");
+    await import("../components/modals/createAuthErrorModal");
   createAuthErrorModal();
 }
 

@@ -1,10 +1,10 @@
 import { Plural, Trans } from "@trans";
 import morphdom from "morphdom";
 
-import { Avatar } from "../../../components/avatar";
 import { Banner, bannerCroppedHandler } from "../../../components/Banner";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsDrawer } from "../../../components/settings/createSettingsDrawer";
+import { Avatar } from "../../../components/ui/avatar";
 import { isMobileWidth } from "../../../config";
 import { accountStore } from "../../../store/accountStore";
 import { friendStore } from "../../../store/friendStore";

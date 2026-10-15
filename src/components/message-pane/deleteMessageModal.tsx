@@ -2,8 +2,8 @@ import { t } from "@lingui/core/macro";
 
 import { deleteMessage } from "../../services/messageService";
 import type { Message } from "../../store/messageStore";
-import { Button } from "../button";
-import { createModal, Modal } from "../modal";
+import { Button } from "../ui/button";
+import { createModal, Modal } from "../ui/modal";
 import { MessageItem } from "./messageItem";
 
 import style from "./deleteMessageModal.module.css";

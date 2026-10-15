@@ -1,11 +1,11 @@
 import { plural, t } from "@lingui/core/macro";
 import type Sortable from "sortablejs";
 
-import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
-import { GradientText } from "../../../components/gradientText";
 import { Icon } from "../../../components/icon";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { GradientText } from "../../../components/ui/gradientText";
 import {
   createServerRole,
   updateRoleOrder,

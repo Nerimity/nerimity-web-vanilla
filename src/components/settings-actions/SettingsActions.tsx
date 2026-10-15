@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../button";
+import { Button } from "../ui/button";
 
 import style from "./SettingsActions.module.css";
 

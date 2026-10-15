@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 
-import type { CropPoints } from "../../../components/ImageCropModal";
+import type { CropPoints } from "../../../components/ui/ImageCropModal";
 import * as auditLogsServerSettingsPage from "./auditLogsServerSettingsPage";
 import * as channelServerSettingsPage from "./channelServerSettingsPage";
 import * as channelsServerSettingsPage from "./channelsServerSettingsPage";

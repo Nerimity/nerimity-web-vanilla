@@ -1,7 +1,7 @@
 import { channelStore } from "../../store/channelStore";
 import { userStore } from "../../store/userStore";
 import { storeEmitter } from "../../utils/EventEmitter";
-import { Avatar } from "../avatar";
+import { Avatar } from "../ui/avatar";
 
 import style from "./selectedCommandIndicator.module.css";
 

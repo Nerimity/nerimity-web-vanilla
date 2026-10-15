@@ -7,9 +7,9 @@ import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
-import { Button } from "./button";
-import { Drawer } from "./drawer";
 import { createPillUpdater, Pill } from "./Pill";
+import { Button } from "./ui/button";
+import { Drawer } from "./ui/drawer";
 
 import style from "./appHeader.module.css";
 

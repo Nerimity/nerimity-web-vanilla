@@ -1,18 +1,18 @@
 import { t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
-import { Avatar } from "../../../components/avatar";
 import { Banner } from "../../../components/Banner";
-import { Button } from "../../../components/button";
-import { Drawer } from "../../../components/drawer";
+import { createUserContextMenuHandler } from "../../../components/context-menus/UserContextMenu";
 import { Icon } from "../../../components/icon";
-import { Link } from "../../../components/link";
 import { Markup } from "../../../components/markup/markup";
-import { alert } from "../../../components/modal";
 import { ServerClanItem } from "../../../components/serverClanItem";
+import { Avatar } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
+import { Drawer } from "../../../components/ui/drawer";
+import { Link } from "../../../components/ui/link";
+import { alert } from "../../../components/ui/modal";
 import { updateActivity, UserActivity } from "../../../components/UserActivity";
 import { UserBadgeItem } from "../../../components/UserBadgeItem";
-import { createUserContextMenuHandler } from "../../../components/UserContextMenu";
 import { UserPresence } from "../../../components/userPresence";
 import { Dynamic } from "../../../dynamic";
 import {
@@ -753,7 +753,7 @@ const createProfilePane = ({ content }: RouteContext) => {
     { once: true },
   );
 
-  import("../../../components/ImagePreviewModal").then(
+  import("../../../components/ui/ImagePreviewModal").then(
     ({ handleImagePreviewModal }) => {
       handleImagePreviewModal({
         root: content,

@@ -2,13 +2,13 @@ import { t } from "@lingui/core/macro";
 import type Sortable from "sortablejs";
 import type { SortableEvent } from "sortablejs";
 
-import { Button } from "../../../components/button";
 import { CdnIcon } from "../../../components/cdnIcon";
-import { ContextMenu } from "../../../components/ContextMenu";
 import { Icon } from "../../../components/icon";
-import { Link } from "../../../components/link";
-import { createModal } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { ContextMenu } from "../../../components/ui/ContextMenu";
+import { Link } from "../../../components/ui/link";
+import { createModal } from "../../../components/ui/modal";
 import {
   createServerChannel,
   updateChannelOrder,

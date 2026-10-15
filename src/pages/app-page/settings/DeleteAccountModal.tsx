@@ -1,10 +1,10 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { Checkbox } from "../../../components/checkbox";
-import { Input } from "../../../components/input";
-import { createModal, Modal } from "../../../components/modal";
 import { Notice } from "../../../components/Notice";
+import { Button } from "../../../components/ui/button";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Input } from "../../../components/ui/input";
+import { createModal, Modal } from "../../../components/ui/modal";
 import { deleteAccount } from "../../../services/userService";
 import { serverStore } from "../../../store/serverStore";
 import { logout } from "../../../utils/logout";

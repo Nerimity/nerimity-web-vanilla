@@ -1,6 +1,6 @@
-import { Drawer } from "../../components/drawer";
-import { createRightDrawer } from "../../components/right-drawer/RightDrawer";
-import { createServerChannelList } from "../../components/serverChannelList";
+import { createServerChannelDrawer } from "../../components/drawer-left/serverChannelDrawer";
+import { createRightDrawer } from "../../components/drawer-right/RightDrawer";
+import { Drawer } from "../../components/ui/drawer";
 import { channelStore } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -10,11 +10,11 @@ const createServerChannelRoute = ({ leftDrawer }: RouteContext) => {
   const abortController = new AbortController();
   const { signal } = abortController;
 
-  const serverChannelList = createServerChannelList();
+  const serverChannelDrawer = createServerChannelDrawer();
   const rightDrawer = createRightDrawer();
   const drawer = Drawer();
 
-  leftDrawer.replaceChildren(serverChannelList.render());
+  leftDrawer.replaceChildren(serverChannelDrawer.render());
 
   drawer.rightDrawer.replaceChildren(rightDrawer.render());
 
@@ -33,7 +33,7 @@ const createServerChannelRoute = ({ leftDrawer }: RouteContext) => {
   const destroy = () => {
     channelStore.setCurrentChannelId();
     abortController.abort();
-    serverChannelList.destroy();
+    serverChannelDrawer.destroy();
     rightDrawer.destroy();
   };
 

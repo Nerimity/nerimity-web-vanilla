@@ -1,15 +1,15 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { Checkbox } from "../../../components/checkbox";
-import { Dropdown } from "../../../components/createDropdown";
-import { createEmojiSelector } from "../../../components/createEmojiSelector";
-import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
-import { Input } from "../../../components/input";
-import { Item } from "../../../components/item";
-import { alert } from "../../../components/modal";
+import { createGenericDeleteModal } from "../../../components/modals/GenericDeleteModal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Dropdown } from "../../../components/ui/createDropdown";
+import { createEmojiSelector } from "../../../components/ui/createEmojiSelector";
+import { Input } from "../../../components/ui/input";
+import { Item } from "../../../components/ui/item";
+import { alert } from "../../../components/ui/modal";
 import {
   createWebhook,
   deleteServerChannel,

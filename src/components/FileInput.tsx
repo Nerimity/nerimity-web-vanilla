@@ -1,6 +1,6 @@
 import { ph, t } from "@lingui/core/macro";
 
-import { alert } from "./modal";
+import { alert } from "./ui/modal";
 
 export const createFileInput = (opts: {
   signal: AbortSignal;

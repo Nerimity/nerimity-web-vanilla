@@ -1,6 +1,6 @@
 import { Dynamic } from "../dynamic";
 import { Icon, Icon as MaterialIcon } from "./icon";
-import { Link } from "./link";
+import { Link } from "./ui/link";
 
 import style from "./SettingsBlock.module.css";
 

@@ -6,8 +6,8 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import type { RawMessage } from "../../Types";
 import { createEventEmitter, storeEmitter } from "../../utils/EventEmitter";
-import { Avatar } from "../avatar";
 import { Icon } from "../icon";
+import { Avatar } from "../ui/avatar";
 
 import style from "./typingIndicator.module.css";
 

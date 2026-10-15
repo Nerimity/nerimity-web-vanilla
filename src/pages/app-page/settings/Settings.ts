@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 
-import type { CropPoints } from "../../../components/ImageCropModal";
+import type { CropPoints } from "../../../components/ui/ImageCropModal";
 import * as accountSettingsPage from "./accountSettingsPage";
 import * as badgeSettingsPage from "./badgeSettingsPage";
 import * as notificationSettingsPage from "./notificationSettingsPage";

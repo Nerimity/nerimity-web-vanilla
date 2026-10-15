@@ -1,10 +1,10 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { Checkbox } from "../../../components/checkbox";
-import { Dropdown } from "../../../components/createDropdown";
-import { alert } from "../../../components/modal";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Dropdown } from "../../../components/ui/createDropdown";
+import { alert } from "../../../components/ui/modal";
 import { getLocalItem, setLocalItem } from "../../../utils/localStorage";
 import {
   playSound,

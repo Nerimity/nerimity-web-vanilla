@@ -1,9 +1,9 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { handleFormatBar, Input } from "../../../components/input";
 import { formatMessage } from "../../../components/message-pane/utils";
-import { createModal, Modal } from "../../../components/modal";
+import { Button } from "../../../components/ui/button";
+import { handleFormatBar, Input } from "../../../components/ui/input";
+import { createModal, Modal } from "../../../components/ui/modal";
 import {
   deleteUserChannelNotice,
   getUserChannelNotice,

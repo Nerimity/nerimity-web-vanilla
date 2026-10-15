@@ -1,6 +1,6 @@
 import { t } from "@lingui/core/macro";
 
-import { alert } from "../components/modal";
+import { alert } from "../components/ui/modal";
 import { nerimityCDNUploadRequest } from "../services/cdnService";
 import {
   fetchMessages,

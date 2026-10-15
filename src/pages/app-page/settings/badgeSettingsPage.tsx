@@ -1,12 +1,12 @@
 import { ph, t } from "@lingui/core/macro";
 
-import { Avatar } from "../../../components/avatar";
-import { Checkbox } from "../../../components/checkbox";
 import { Icon } from "../../../components/icon";
 import { Markup } from "../../../components/markup/markup";
-import { alert } from "../../../components/modal";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Avatar } from "../../../components/ui/avatar";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { alert } from "../../../components/ui/modal";
 import { UserBadgeItem } from "../../../components/UserBadgeItem";
 import { getInventory, toggleBadge } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";

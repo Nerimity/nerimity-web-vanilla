@@ -14,18 +14,18 @@ import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { inviteLinkRegex } from "../../utils/regex";
 import { router } from "../../utils/router";
-import { Avatar } from "../avatar";
-import { Button } from "../button";
 import { Icon } from "../icon";
-import { Link } from "../link";
 import { Markup } from "../markup/markup";
 import { FileEmbed } from "../message-pane/FileEmbed";
 import { ImageEmbed } from "../message-pane/imageEmbed";
 import { InviteEmbed } from "../message-pane/InviteEmbed";
 import { OGEmbed } from "../message-pane/OGEmbed";
 import { isNewUser } from "../message-pane/utils";
-import { alert } from "../modal";
 import { ServerClanItem } from "../serverClanItem";
+import { Avatar } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Link } from "../ui/link";
+import { alert } from "../ui/modal";
 
 import style from "./PostItem.module.css";
 

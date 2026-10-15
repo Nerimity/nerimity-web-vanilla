@@ -1,14 +1,14 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
-import { Dropdown } from "../../../components/createDropdown";
 import { createFileInput } from "../../../components/FileInput";
-import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
-import type { CropPoints } from "../../../components/ImageCropModal";
-import { createImageCropModalLazy } from "../../../components/ImageCropModalLazy";
-import { Input } from "../../../components/input";
+import { createGenericDeleteModal } from "../../../components/modals/GenericDeleteModal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { Dropdown } from "../../../components/ui/createDropdown";
+import type { CropPoints } from "../../../components/ui/ImageCropModal";
+import { createImageCropModalLazy } from "../../../components/ui/ImageCropModalLazy";
+import { Input } from "../../../components/ui/input";
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
 import { deleteServer, updateServer } from "../../../services/serverService";

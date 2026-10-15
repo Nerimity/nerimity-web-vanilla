@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 
-import { Button } from "../components/button";
-import { Input } from "../components/input";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
 import { postLogin } from "../services/authService";
 import { setLocalItem } from "../utils/localStorage";
 

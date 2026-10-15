@@ -1,8 +1,8 @@
 import { ph, t } from "@lingui/core/macro";
 
-import { Avatar } from "../../../components/avatar";
-import { Button } from "../../../components/button";
-import { createModal, Modal } from "../../../components/modal";
+import { Avatar } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
+import { createModal, Modal } from "../../../components/ui/modal";
 import { removeFriend } from "../../../services/friendService";
 import { userStore } from "../../../store/userStore";
 

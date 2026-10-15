@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { channelStore } from "../../store/channelStore";
 import { messageMentionStore } from "../../store/messageMentionStore";
 import { storeEmitter } from "../../utils/EventEmitter";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 
 import style from "./JumpToPresent.module.css";
 

@@ -1,5 +1,5 @@
-import { Button } from "../button";
 import { SyntaxHighlighter } from "../SyntaxHighlighter";
+import { Button } from "../ui/button";
 
 import style from "./CodeBlock.module.css";
 

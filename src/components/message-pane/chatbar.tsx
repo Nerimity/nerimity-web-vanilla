@@ -11,10 +11,14 @@ import { MessageType } from "../../Types";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { userAgent } from "../../utils/userAgent";
-import { Button } from "../button";
-import { ExpressionPickerLazy } from "../ExpressionPickerLazy";
 import { createFileInput } from "../FileInput";
-import { createTextareaHeightHandler, handleFormatBar, Input } from "../input";
+import { Button } from "../ui/button";
+import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
+import {
+  createTextareaHeightHandler,
+  handleFormatBar,
+  Input,
+} from "../ui/input";
 import { createAttachmentIndicator } from "./attachmentIndicator";
 import { createEditMessageIndicator } from "./editMessageIndicator";
 import { createInputSuggestions } from "./inputSuggestions";

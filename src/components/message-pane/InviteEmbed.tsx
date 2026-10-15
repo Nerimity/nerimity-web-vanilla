@@ -14,11 +14,11 @@ import { customEmojiById } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getRecentServerChannelId } from "../../utils/recentServerChannels";
 import { router } from "../../utils/router";
-import { Avatar } from "../avatar";
-import { Button } from "../button";
 import { Icon } from "../icon";
-import { alert } from "../modal";
-import { InviteSkeleton } from "../skeleton";
+import { Avatar } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { alert } from "../ui/modal";
+import { InviteSkeleton } from "../ui/skeleton";
 
 import style from "./InviteEmbed.module.css";
 

@@ -5,8 +5,8 @@ import {
 } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
-import { handleImagePreviewModal } from "../ImagePreviewModal";
 import { createImageEmbedResizer } from "../message-pane/imageEmbed";
+import { handleImagePreviewModal } from "../ui/ImagePreviewModal";
 import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";

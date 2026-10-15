@@ -1,9 +1,9 @@
 import { h } from "../../h";
 import { resolveGradient } from "../../utils/color";
-import { Avatar } from "../avatar";
-import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
-import { Link } from "../link";
+import { Avatar } from "../ui/avatar";
+import { GradientText } from "../ui/gradientText";
+import { Link } from "../ui/link";
 
 import style from "./Mention.module.css";
 

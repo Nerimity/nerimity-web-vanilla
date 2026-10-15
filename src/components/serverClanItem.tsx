@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import type { ServerClan } from "../Types";
 import { CdnIcon } from "./cdnIcon";
 import { InviteEmbed } from "./message-pane/InviteEmbed";
-import { createModal, Modal } from "./modal";
+import { createModal, Modal } from "./ui/modal";
 
 import style from "./serverClanItem.module.css";
 

@@ -1,6 +1,6 @@
-import { Drawer } from "../../components/drawer";
-import createInboxDrawer from "../../components/inboxDrawer";
-import { createRightDrawer } from "../../components/right-drawer/RightDrawer";
+import createInboxDrawer from "../../components/drawer-left/inboxDrawer";
+import { createRightDrawer } from "../../components/drawer-right/RightDrawer";
+import { Drawer } from "../../components/ui/drawer";
 import { channelStore } from "../../store/channelStore";
 import { storeEmitter } from "../../utils/EventEmitter";
 import type { RouteContext } from "./AppPage";

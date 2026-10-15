@@ -1,9 +1,9 @@
 import { Plural, Trans } from "@trans";
 import morphdom from "morphdom";
 
-import { Avatar } from "../../../components/avatar";
 import { Banner, bannerCroppedHandler } from "../../../components/Banner";
 import { createServerSettingsDrawer } from "../../../components/server-settings/createServerSettingsDrawer";
+import { Avatar } from "../../../components/ui/avatar";
 import { isMobileWidth } from "../../../config";
 import { accountStore } from "../../../store/accountStore";
 import { serverMemberStore } from "../../../store/serverMemberStore";

@@ -1,10 +1,10 @@
 import { createAppHeader } from "../../components/appHeader";
-import { Drawer } from "../../components/drawer";
+import { createServerContextMenuHandler } from "../../components/context-menus/ServerContextMenu";
+import { createUserContextMenuHandler } from "../../components/context-menus/UserContextMenu";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
-import { createServerContextMenuHandler } from "../../components/ServerContextMenu";
 import { createSidebar } from "../../components/sidebar";
-import { createUserContextMenuHandler } from "../../components/UserContextMenu";
+import { Drawer } from "../../components/ui/drawer";
 import { isMobileWidth } from "../../config";
 import { socket } from "../../services/socket";
 import { channelStore } from "../../store/channelStore";

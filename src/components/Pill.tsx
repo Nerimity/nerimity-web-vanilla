@@ -4,9 +4,9 @@ import { Channel } from "../store/channelStore";
 import type { Server } from "../store/serverStore";
 import type { User } from "../store/userStore";
 import { debounce } from "../utils/debounce";
-import { Avatar } from "./avatar";
 import { CdnIcon } from "./cdnIcon";
 import { Icon } from "./icon";
+import { Avatar } from "./ui/avatar";
 
 import style from "./Pill.module.css";
 

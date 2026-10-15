@@ -8,12 +8,12 @@ import { resolveGradient } from "../../utils/color";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
 import { getLocalItem, setLocalItem } from "../../utils/localStorage";
-import { Avatar } from "../avatar";
-import { Button } from "../button";
-import { Checkbox } from "../checkbox";
-import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
+import { Avatar } from "../ui/avatar";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { GradientText } from "../ui/gradientText";
 
 import style from "./repliesIndicator.module.css";
 

@@ -1,19 +1,19 @@
 import { t } from "@lingui/core/macro";
 
-import { Avatar } from "../../../components/avatar";
-import { Button } from "../../../components/button";
-import { createColorPicker } from "../../../components/ColorPicker";
-import { Dropdown } from "../../../components/createDropdown";
-import { handleFormatBar, Input } from "../../../components/input";
 import { formatMessage } from "../../../components/message-pane/utils";
 import {
   createMiniProfileModal,
   MiniProfile,
 } from "../../../components/miniProfile";
-import { createModal, Modal } from "../../../components/modal";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Avatar } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
+import { createColorPicker } from "../../../components/ui/ColorPicker";
+import { Dropdown } from "../../../components/ui/createDropdown";
+import { handleFormatBar, Input } from "../../../components/ui/input";
+import { createModal, Modal } from "../../../components/ui/modal";
 import {
   getUserDetails,
   updateUser,

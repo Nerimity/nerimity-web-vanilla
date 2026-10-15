@@ -1,13 +1,13 @@
 import { ph, plural, t } from "@lingui/core/macro";
 
-import { Button } from "../../../components/button";
+import { Icon } from "../../../components/icon";
 import {
   createConfirmPasswordModal,
   type ConfirmPasswordModal,
-} from "../../../components/ConfirmPasswordModal";
-import { Icon } from "../../../components/icon";
+} from "../../../components/modals/ConfirmPasswordModal";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
 import {
   destroySession,
   DeviceType,

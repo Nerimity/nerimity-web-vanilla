@@ -4,8 +4,8 @@ import type { LocalAttachment } from "../../store/messageStore";
 import { formatExpiry } from "../../utils/date";
 import { prettyBytes } from "../../utils/file";
 import { getFilenameFromPath, safeDecodeURIComponent } from "../../utils/url";
-import { Button } from "../button";
 import { Icon } from "../icon";
+import { Button } from "../ui/button";
 
 import style from "./FileEmbed.module.css";
 

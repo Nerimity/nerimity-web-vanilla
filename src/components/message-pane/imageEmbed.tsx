@@ -2,7 +2,7 @@ import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment, LocalEmbed } from "../../store/messageStore";
 import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { throttle } from "../../utils/throttle";
-import { Skeleton } from "../skeleton";
+import { Skeleton } from "../ui/skeleton";
 
 import style from "./imageEmbed.module.css";
 

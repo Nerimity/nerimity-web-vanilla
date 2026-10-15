@@ -8,11 +8,11 @@ import {
 } from "../../pages/app-page/server-settings/ServerSettings";
 import { serverStore } from "../../store/serverStore";
 import { router } from "../../utils/router";
-import { Drawer } from "../drawer";
 import { Icon } from "../icon";
-import { Input } from "../input";
-import { Item } from "../item";
 import { Pill } from "../Pill";
+import { Drawer } from "../ui/drawer";
+import { Input } from "../ui/input";
+import { Item } from "../ui/item";
 
 import style from "./createServerSettingsDrawer.module.css";
 

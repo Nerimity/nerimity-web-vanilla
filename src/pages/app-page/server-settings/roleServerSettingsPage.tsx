@@ -1,12 +1,12 @@
 import { t } from "@lingui/core/macro";
 
-import { Checkbox } from "../../../components/checkbox";
-import { createColorPicker } from "../../../components/ColorPicker";
-import { createEmojiSelector } from "../../../components/createEmojiSelector";
-import { createGenericDeleteModal } from "../../../components/GenericDeleteModal";
-import { Input } from "../../../components/input";
+import { createGenericDeleteModal } from "../../../components/modals/GenericDeleteModal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { createColorPicker } from "../../../components/ui/ColorPicker";
+import { createEmojiSelector } from "../../../components/ui/createEmojiSelector";
+import { Input } from "../../../components/ui/input";
 import {
   deleteServerRole,
   updateServerRole,

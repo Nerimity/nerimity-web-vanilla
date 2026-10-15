@@ -5,10 +5,10 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { resolveGradient } from "../../utils/color";
 import { friendlyTimestamp } from "../../utils/date";
-import { Avatar } from "../avatar";
-import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
-import { Link } from "../link";
+import { Avatar } from "../ui/avatar";
+import { GradientText } from "../ui/gradientText";
+import { Link } from "../ui/link";
 import { MessageReactions } from "./MessageReactions";
 
 import style from "./SystemMessage.module.css";

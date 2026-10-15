@@ -2,9 +2,9 @@ import { t } from "@lingui/core/macro";
 
 import type { Message } from "../../store/messageStore";
 import type { RawMessage } from "../../Types";
-import { Avatar } from "../avatar";
-import { Link } from "../link";
 import { ImageEmbed } from "../message-pane/imageEmbed";
+import { Avatar } from "../ui/avatar";
+import { Link } from "../ui/link";
 import { Markup } from "./markup";
 
 import style from "./QuoteMessage.module.css";

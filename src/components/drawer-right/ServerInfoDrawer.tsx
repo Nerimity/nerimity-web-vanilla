@@ -1,0 +1,523 @@
+import { t } from "@lingui/core/macro";
+
+import { channelStore } from "../../store/channelStore";
+import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
+import { ServerRole, serverRoleStore } from "../../store/serverRoleStore";
+import { serverStore } from "../../store/serverStore";
+import { userPresenceStore } from "../../store/userPresenceStore";
+import { userStore } from "../../store/userStore";
+import { hasBit } from "../../utils/bitwise";
+import { ChannelPermissionFlag } from "../../utils/channelPermissionFlag";
+import { resolveGradient } from "../../utils/color";
+import { formatTimestamp } from "../../utils/date";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { getFont } from "../../utils/font";
+import { HoverAnimator } from "../../utils/HoverAnimator";
+import { ManualMemo } from "../../utils/memo";
+import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
+import { Banner } from "../Banner";
+import { CdnIcon } from "../cdnIcon";
+import { Icon } from "../icon";
+import { ServerClanItem } from "../serverClanItem";
+import { Avatar } from "../ui/avatar";
+import { Drawer } from "../ui/drawer";
+import { GradientText } from "../ui/gradientText";
+import { Link } from "../ui/link";
+import { createVirtualList } from "../ui/virtualList";
+import { UserPresence } from "../userPresence";
+import { DrawerChannelNotice } from "./DrawerChannelNotice";
+
+import style from "./ServerInfoDrawer.module.css";
+
+const CategoryType = {
+  role: 0,
+  member: 1,
+} as const;
+
+type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
+
+type Categorized =
+  | { type: 0; role: ServerRole; count: number }
+  | { type: 1; member: ServerMember; role: ServerRole };
+
+const offlineRole: ServerRole = new ServerRole({
+  name: t`Offline`,
+  id: "offline",
+  permissions: 0,
+  hideRole: true,
+  order: 0,
+  serverId: "",
+  createdById: "",
+});
+
+const currentServerDefaultRole = () => {
+  const server = serverStore.servers.get(serverStore.currentServerId!);
+  const currentServerRoles = serverRoleStore.roles.get(server?.id!);
+  return currentServerRoles?.get(server?.defaultRoleId!);
+};
+
+const currentPermissions = () => {
+  const channel = channelStore.channels.get(channelStore.currentChannelId!);
+  if (!channel?.permissions) return {};
+  const permissions: Record<string, number> = {};
+
+  for (let i = 0; i < channel.permissions.length; i++) {
+    const permission = channel.permissions[i]!;
+    permissions[permission.roleId!] = permission.permissions;
+  }
+
+  return permissions;
+};
+
+const isDefaultPublic = () => {
+  const channelPermissions = currentPermissions();
+  const defaultRole = currentServerDefaultRole();
+  return (
+    hasBit(
+      channelPermissions[defaultRole?.id!],
+      ChannelPermissionFlag.publicChannel.bit,
+    ) || hasBit(defaultRole?.permissions, RolePermissionFlag.admin.bit)
+  );
+};
+
+const visibleRoleIds = () => {
+  const channelPermissions = currentPermissions();
+  const serverRoles =
+    serverRoleStore.roles.get(serverStore.currentServerId!) ||
+    new Map<string, ServerRole>();
+  const set = new Set<string>();
+  for (const roleId of Object.keys(channelPermissions)) {
+    if (
+      hasBit(
+        channelPermissions[roleId],
+        ChannelPermissionFlag.publicChannel.bit,
+      )
+    )
+      set.add(roleId);
+  }
+  for (const [roleId, role] of serverRoles) {
+    if (hasBit(role?.permissions, RolePermissionFlag.admin.bit))
+      set.add(roleId);
+  }
+  return set;
+};
+
+const roleOrder = () => {
+  const sorted = serverStore.currentServerSortedRoles
+    .value()
+    .filter((r) => !r.hideRole);
+  const order: Record<string, number> = {};
+  for (let i = 0; i < sorted.length; i++) order[sorted[i]!.id] = i;
+  return { sorted, order };
+};
+
+export const createServerInfoDrawer = (props: {
+  containerEl: HTMLDivElement;
+}) => {
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  let membersListEl = (<div class={style.membersList}></div>) as HTMLDivElement;
+  let bannerContainerEl = (
+    <div class={style.bannerContainer}></div>
+  ) as HTMLDivElement;
+
+  let infoContainerEl = (
+    <div class={style.memberListContainer}>
+      {bannerContainerEl}
+      <DrawerChannelNotice signal={signal} />
+      {membersListEl}
+    </div>
+  ) as HTMLDivElement;
+
+  let hoverAnimator: HoverAnimator | null = null;
+
+  const roleOrderMemoized = new ManualMemo(roleOrder);
+  const visibleRoleIdsMemoized = new ManualMemo(visibleRoleIds);
+  const isDefaultPublicMemoized = new ManualMemo(isDefaultPublic);
+  let isMemberListHidden = () =>
+    (Drawer().currentMode === "mobile" && Drawer().visiblePage !== 2) ||
+    (Drawer().currentMode === "desktop" && Drawer().desktopHideRightDrawer);
+
+  let memberListHidden = isMemberListHidden();
+  const categorizedMembersMemoized = new ManualMemo((prev) => {
+    if (memberListHidden) return { result: [], userIdToRoleId: {} };
+    const result = ((prev as any)?.result || []) as Categorized[];
+    const userIdToRoleId: Record<string, string | null> = {};
+
+    const members = [
+      ...(serverMemberStore.serverMembers
+        .get(serverStore.currentServerId!)
+        ?.values() || []),
+    ].sort((a, b) => {
+      const au = a.nickname || userStore.users.get(a.userId)!.username;
+      const bu = b.nickname || userStore.users.get(b.userId)!.username;
+      return au.localeCompare(bu);
+    });
+
+    const server = serverStore.servers.get(serverStore.currentServerId!);
+    const creatorId = server?.createdById;
+
+    const { sorted: sortedRoles, order: roleOrder } = roleOrderMemoized.value();
+    const vRoleIds = visibleRoleIdsMemoized.value();
+    const presences = userPresenceStore.presences;
+    const defaultRole = currentServerDefaultRole();
+    const isDefaultPublic = isDefaultPublicMemoized.value();
+
+    const buckets: Record<string, ServerMember[]> = {};
+    const offlineMembers: ServerMember[] = [];
+
+    for (let i = 0; i < sortedRoles.length; i++)
+      buckets[sortedRoles[i]!.id] = [];
+
+    for (let i = 0; i < members.length; i++) {
+      const member = members[i]!;
+      const isCreator = member.userId === creatorId;
+      let canViewChannel = isCreator || isDefaultPublic;
+
+      let topRoleId: string | null = null;
+      let bestIndex = Infinity;
+
+      const roleIds = member.roleIds;
+      for (let y = 0; y < roleIds.length; y++) {
+        const roleId = roleIds[y]!;
+
+        if (!canViewChannel && vRoleIds.has(roleId)) canViewChannel = true;
+
+        const idx = roleOrder[roleId];
+        if (idx !== undefined && idx < bestIndex) {
+          bestIndex = idx;
+          topRoleId = roleId;
+        }
+
+        if (canViewChannel && bestIndex === 0) break;
+      }
+
+      if (!canViewChannel) continue;
+
+      if (!presences.has(member.userId)) {
+        offlineMembers.push(member);
+        continue;
+      }
+
+      const targetRoleId = topRoleId ?? defaultRole?.id;
+      if (targetRoleId) {
+        userIdToRoleId[member.userId] = targetRoleId;
+        buckets[targetRoleId]?.push(member);
+      }
+    }
+
+    let cursor = 0;
+
+    const isSame = (a: Categorized, b: Categorized) =>
+      a.type === b.type &&
+      (a.type === CategoryType.role
+        ? a.role.id === (b as any).role?.id
+        : a.member.userId === (b as any).member?.userId &&
+          a.role.id === (b as any).role?.id);
+
+    const place = (item: Categorized) => {
+      const curr = result[cursor];
+
+      if (curr && isSame(curr, item)) {
+        if (item.type === CategoryType.role) {
+          if ((curr as any).count !== item.count)
+            (curr as any).count = item.count;
+          (curr as any).role = item.role;
+        }
+        cursor++;
+        return;
+      }
+
+      let found = -1;
+      for (let i = cursor + 1; i < result.length; i++) {
+        if (isSame(result[i]!, item)) {
+          found = i;
+          break;
+        }
+      }
+
+      if (found !== -1) {
+        const [existing] = result.splice(found, 1);
+        result.splice(cursor, 0, existing!);
+        if (item.type === CategoryType.role) {
+          if ((result[cursor] as any).count !== item.count)
+            (result[cursor] as any).count = item.count;
+          (result[cursor] as any).role = item.role; // ← add this
+        }
+      } else {
+        result.splice(cursor, 0, item);
+      }
+
+      cursor++;
+    };
+
+    for (let i = 0; i < sortedRoles.length; i++) {
+      const role = sortedRoles[i]!;
+      const bucket = buckets[role.id];
+      if (bucket?.length) {
+        place({ type: CategoryType.role, role, count: bucket.length });
+        for (let j = 0; j < bucket.length; j++)
+          place({ type: CategoryType.member, member: bucket[j]!, role });
+      }
+    }
+
+    if (offlineMembers.length && offlineRole) {
+      place({
+        type: CategoryType.role,
+        role: offlineRole,
+        count: offlineMembers.length,
+      });
+      for (let i = 0; i < offlineMembers.length; i++)
+        place({
+          type: CategoryType.member,
+          member: offlineMembers[i]!,
+          role: offlineRole,
+        });
+    }
+
+    if (result.length > cursor) result.splice(cursor);
+
+    return { result, userIdToRoleId };
+  });
+
+  let vt: ReturnType<typeof createVirtualList> | null = null;
+  const renderList = () => {
+    if (!infoContainerEl) return;
+
+    if (vt) {
+      vt.updateItems();
+      return;
+    }
+    vt = createVirtualList({
+      id: (i) => (i.type === CategoryType.member ? i.member.userId : i.role.id),
+      items: () => categorizedMembersMemoized.value().result,
+      type: {
+        [CategoryType.role]: { height: 40 },
+        [CategoryType.member]: { height: 44 },
+      },
+      parentEl: props.containerEl,
+      renderItem: memberItem,
+    });
+
+    membersListEl.replaceChildren(vt.render());
+  };
+
+  storeEmitter.on(
+    "server:update_role",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:member_removed",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:members_added",
+    (event) => {
+      if (event.member.serverId !== serverStore.currentServerId) return;
+      serverStore.currentServerSortedRoles.rerun();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "navigate:channelId",
+    () => {
+      memberListHidden = isMemberListHidden();
+      rerunAndRender(true);
+    },
+    signal,
+  );
+
+  const rerenderBanner = () => {
+    const server = serverStore.currentServer();
+    if (!server?.banner) return bannerContainerEl.replaceChildren();
+    bannerContainerEl.replaceChildren(
+      <Banner server={serverStore.currentServer()} size={400} />,
+    );
+  };
+  storeEmitter.on("navigate:serverId", rerenderBanner, signal);
+  storeEmitter.on("ws:authStateUpdate", rerenderBanner, signal);
+
+  const updateVisibility = () => {
+    if (memberListHidden) {
+      memberListHidden = isMemberListHidden();
+      categorizedMembersMemoized.rerun();
+      renderList();
+    }
+  };
+
+  storeEmitter.on("drawer:pageVisible", updateVisibility, signal);
+  storeEmitter.on("drawer:modeChange", updateVisibility, signal);
+  storeEmitter.on("drawer:toggleRightDesktop", updateVisibility, signal);
+
+  serverStore.currentServerSortedRoles.onUpdate(() => {
+    rerunAndRender(true);
+  }, signal);
+
+  const rerunAndRender = (rerender?: boolean) => {
+    // serverStore.currentServerSortedRoles.rerun();
+    roleOrderMemoized.rerun();
+    visibleRoleIdsMemoized.rerun();
+    isDefaultPublicMemoized.rerun();
+    categorizedMembersMemoized.rerun();
+    renderList();
+    if (rerender) {
+      vt?.rerenderItems();
+    }
+  };
+
+  storeEmitter.on(
+    "server:members_fetched",
+    ({ serverId }) => {
+      if (serverId !== serverStore.currentServerId) return;
+      rerunAndRender();
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "user:presence_update",
+    (event) => {
+      const oldRoleId =
+        categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+        "offline";
+      categorizedMembersMemoized.rerun();
+      renderList();
+      const newRoleId =
+        categorizedMembersMemoized.value().userIdToRoleId[event.userId] ??
+        "offline";
+      vt?.rerenderItem(event.userId);
+      if (oldRoleId) vt?.rerenderItem(oldRoleId);
+      if (newRoleId !== oldRoleId) vt?.rerenderItem(newRoleId);
+    },
+    signal,
+  );
+
+  const render = () => {
+    renderList();
+    rerenderBanner();
+    return infoContainerEl;
+  };
+  hoverAnimator = new HoverAnimator(infoContainerEl, [
+    { trigger: `.${style.memberItemContainer}`, image: ".clanIcon img" },
+    {
+      trigger: `.${style.memberItemContainer}`,
+      image: "img.avatar",
+      crossAnimate: {
+        attr: "data-role-id",
+        targetAttr: "data-role-header-id",
+        target: "img",
+      },
+    },
+    { trigger: `.${style.roleItemContainer}`, image: "img" },
+    {
+      trigger: `.${style.memberListContainer}`,
+      image: `.${style.bannerContainer}` + " img",
+    },
+  ]);
+
+  const destroy = () => {
+    ac.abort();
+    vt?.destroy();
+    hoverAnimator?.destroy();
+
+    infoContainerEl?.remove?.();
+    (infoContainerEl as any) = null;
+
+    membersListEl?.remove?.();
+    (membersListEl as any) = null;
+  };
+
+  return {
+    destroy,
+    render,
+  };
+};
+
+const memberItem = (cat: Categorized) => {
+  if (cat.type === CategoryType.member) {
+    const user = userStore.users.get(cat.member.userId);
+    const topRoleColor = serverStore.memberTopColor(cat.member);
+
+    const color =
+      resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
+
+    const font = getFont(user?.profile?.font);
+
+    const member = cat.member;
+    const muted = member?.muteExpireAt
+      ? member.muteExpireAt > Date.now()
+      : null;
+    const mutedUntil = member?.muteExpireAt
+      ? formatTimestamp(member.muteExpireAt)
+      : null;
+
+    return (
+      <Link
+        href={`/app/profile/${cat.member.userId}`}
+        class={[style.memberItemContainer, "memberItem"]}
+        data-user-id={user?.id}
+        data-role-id={cat.role.id}
+      >
+        <Avatar
+          size={32}
+          user={user!}
+          imgClass="avatar"
+          hoverSelector={`.${style.memberItemContainer}`}
+        />
+        <div class={style.info}>
+          <span class={style.memberInfo}>
+            <GradientText
+              color={color}
+              class={[style.memberName, font?.class, "font"]}
+            >
+              {cat.member.nickname || user?.username}
+            </GradientText>
+            {user?.profile?.clan && <ServerClanItem clan={user.profile.clan} />}
+          </span>
+          <UserPresence class={style.presence} userId={cat.member.userId} />
+        </div>
+        {muted && (
+          <Icon
+            title={mutedUntil ? t`Muted until ${mutedUntil}` : null}
+            name="volume_off"
+            class={style.muted}
+          />
+        )}
+      </Link>
+    );
+  } else {
+    const role = cat.role;
+
+    return (
+      <div class={style.roleItemContainer} data-role-header-id={role.id}>
+        <div class={style.roleInnerContainer} data-has-icon={!!role.icon}>
+          {role.icon ? (
+            <CdnIcon class={style.roleIcon} role={role} size={14} />
+          ) : null}
+          <span class={style.roleName}>
+            {role?.name} ~ {cat.count}
+          </span>
+        </div>
+      </div>
+    );
+  }
+};

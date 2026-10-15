@@ -1,10 +1,10 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
-import { Button } from "../../../components/button";
-import { Link } from "../../../components/link";
 import { isNewDay } from "../../../components/message-pane/utils";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Button } from "../../../components/ui/button";
+import { Link } from "../../../components/ui/link";
 import {
   getServerAuditLogs,
   type UserAuditLog,

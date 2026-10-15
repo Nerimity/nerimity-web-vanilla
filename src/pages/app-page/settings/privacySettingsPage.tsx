@@ -1,8 +1,8 @@
 import { t } from "@lingui/core/macro";
 
-import { Checkbox } from "../../../components/checkbox";
-import { Radiobox } from "../../../components/radiobox";
 import { SettingsBlock } from "../../../components/SettingsBlock";
+import { Checkbox } from "../../../components/ui/checkbox";
+import { Radiobox } from "../../../components/ui/radiobox";
 import { updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { storeEmitter } from "../../../utils/EventEmitter";

@@ -13,320 +13,29 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/BanMemberModal.tsx:31
-msgid "Delete messages sent in the past 7 hours."
-msgstr "Delete messages sent in the past 7 hours."
-
-#: src/components/BanMemberModal.tsx:37
-msgid "Are you sure you want to ban <0>{username}</0>"
-msgstr "Are you sure you want to ban <0>{username}</0>"
-
-#: src/components/BanMemberModal.tsx:42
-#: src/components/MuteMemberModal.tsx:62
-msgid "Reason (optional)"
-msgstr "Reason (optional)"
-
-#: src/components/BanMemberModal.tsx:58
-msgid "Ban {username}"
-msgstr "Ban {username}"
-
-#: src/components/BanMemberModal.tsx:64
-msgid "Don't Ban"
-msgstr "Don't Ban"
-
-#: src/components/BanMemberModal.tsx:71
-#: src/components/BanMemberModal.tsx:97
-#: src/components/UserContextMenu.tsx:159
-msgid "Ban"
-msgstr "Ban"
-
-#: src/components/BanMemberModal.tsx:85
-msgid "Banning..."
-msgstr "Banning..."
-
-#: src/components/ConfirmPasswordModal.tsx:41
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:62
-msgid "Confirm Password"
-msgstr "Confirm Password"
-
-#: src/components/ConfirmPasswordModal.tsx:46
-msgid "Enter your password to continue."
-msgstr "Enter your password to continue."
-
-#: src/components/ConfirmPasswordModal.tsx:51
-msgid "Remember for 5 minutes"
-msgstr "Remember for 5 minutes"
-
-#: src/components/ConfirmPasswordModal.tsx:58
-msgid "Don't Confirm"
-msgstr "Don't Confirm"
-
-#: src/components/ConfirmPasswordModal.tsx:62
-#: src/components/ConfirmPasswordModal.tsx:151
-#: src/components/TimeModal.tsx:67
-msgid "Confirm"
-msgstr "Confirm"
-
-#: src/components/ConfirmPasswordModal.tsx:124
-msgid "Confirming..."
-msgstr "Confirming..."
-
-#: src/components/EditServerRolesModal.tsx:59
-msgid "Edit Roles - {username}"
-msgstr "Edit Roles - {username}"
-
-#: src/components/EditServerRolesModal.tsx:160
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:186
-msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
-msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
-
-#: src/components/EmojiPicker.tsx:170
-msgid "Search Emojis..."
-msgstr "Search Emojis..."
-
-#: src/components/EmojiPicker.tsx:463
-msgid "Recent Emojis"
-msgstr "Recent Emojis"
-
-#: src/components/ExpressionPicker.tsx:69
-msgid "GIFs"
-msgstr "GIFs"
-
-#: src/components/ExpressionPicker.tsx:78
-msgid "Emojis"
-msgstr "Emojis"
-
 #: src/components/FileInput.tsx:25
 msgid "Maximum file size allowed is {size} MB"
 msgstr "Maximum file size allowed is {size} MB"
 
-#: src/components/GenericConfirmModal.tsx:41
-msgid "Cancel"
-msgstr "Cancel"
-
-#: src/components/GenericConfirmModal.tsx:81
-msgid "Working..."
-msgstr "Working..."
-
-#: src/components/GenericDeleteModal.tsx:25
-msgid "Type <0>{confirmLabel}</0> to confirm"
-msgstr "Type <0>{confirmLabel}</0> to confirm"
-
-#: src/components/GenericDeleteModal.tsx:37
-#: src/components/message-pane/deleteMessageModal.tsx:45
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:73
-msgid "Don't Delete"
-msgstr "Don't Delete"
-
-#: src/components/GenericDeleteModal.tsx:43
-#: src/components/GenericDeleteModal.tsx:82
-#: src/components/message-pane/deleteMessageModal.tsx:52
-#: src/components/message-pane/deleteMessageModal.tsx:73
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
-msgid "Delete"
-msgstr "Delete"
-
-#: src/components/GenericDeleteModal.tsx:74
-msgid "Text doesn't match, try again."
-msgstr "Text doesn't match, try again."
-
-#: src/components/GenericDeleteModal.tsx:77
-#: src/components/message-pane/deleteMessageModal.tsx:66
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:108
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
-msgid "Deleting..."
-msgstr "Deleting..."
-
-#: src/components/ImageCropModal.tsx:68
-msgid "Crop Image"
-msgstr "Crop Image"
-
-#: src/components/ImageCropModal.tsx:74
-msgid "Don't Crop"
-msgstr "Don't Crop"
-
-#: src/components/ImageCropModal.tsx:77
-msgid "Crop"
-msgstr "Crop"
-
-#: src/components/KickMemberModal.tsx:29
-msgid "Are you sure you want to kick <0>{username}</0>"
-msgstr "Are you sure you want to kick <0>{username}</0>"
-
-#: src/components/KickMemberModal.tsx:40
-msgid "Kick {username}"
-msgstr "Kick {username}"
-
-#: src/components/KickMemberModal.tsx:46
-msgid "Don't Kick"
-msgstr "Don't Kick"
-
-#: src/components/KickMemberModal.tsx:53
-#: src/components/KickMemberModal.tsx:74
-#: src/components/UserContextMenu.tsx:165
-msgid "Kick"
-msgstr "Kick"
-
-#: src/components/KickMemberModal.tsx:67
-msgid "Kicking..."
-msgstr "Kicking..."
-
-#: src/components/LinkWarnModal.tsx:13
-msgid "External link"
-msgstr "External link"
-
-#: src/components/LinkWarnModal.tsx:16
-msgid "You are about to visit an external link."
-msgstr "You are about to visit an external link."
-
-#: src/components/LinkWarnModal.tsx:21
-msgid "Don't visit"
-msgstr "Don't visit"
-
-#: src/components/LinkWarnModal.tsx:24
-msgid "Visit site"
-msgstr "Visit site"
-
-#: src/components/LogoutModal.tsx:20
-msgid "Are you sure you want to logout?"
-msgstr "Are you sure you want to logout?"
-
-#: src/components/LogoutModal.tsx:23
-msgid "Clear local settings"
-msgstr "Clear local settings"
-
-#: src/components/LogoutModal.tsx:39
-#: src/components/LogoutModal.tsx:52
-#: src/components/createAuthErrorModal.tsx:52
-#: src/components/miniProfile.tsx:358
-msgid "Logout"
-msgstr "Logout"
-
-#: src/components/LogoutModal.tsx:45
-msgid "Don't Logout"
-msgstr "Don't Logout"
-
-#: src/components/MuteMemberModal.tsx:19
-msgid "10 minutes"
-msgstr "10 minutes"
-
-#: src/components/MuteMemberModal.tsx:19
-msgid "10m"
-msgstr "10m"
-
-#: src/components/MuteMemberModal.tsx:20
-msgid "60 minutes"
-msgstr "60 minutes"
-
-#: src/components/MuteMemberModal.tsx:20
-msgid "60m"
-msgstr "60m"
-
-#: src/components/MuteMemberModal.tsx:21
-#: src/components/TimeModal.tsx:154
-msgid "6 hours"
-msgstr "6 hours"
-
-#: src/components/MuteMemberModal.tsx:21
-msgid "6h"
-msgstr "6h"
-
-#: src/components/MuteMemberModal.tsx:22
-#: src/components/TimeModal.tsx:155
-msgid "12 hours"
-msgstr "12 hours"
-
-#: src/components/MuteMemberModal.tsx:22
-msgid "12h"
-msgstr "12h"
-
-#: src/components/MuteMemberModal.tsx:23
-msgid "24 hours"
-msgstr "24 hours"
-
-#: src/components/MuteMemberModal.tsx:23
-msgid "24h"
-msgstr "24h"
-
-#: src/components/MuteMemberModal.tsx:24
-msgid "7 days"
-msgstr "7 days"
-
-#: src/components/MuteMemberModal.tsx:24
-msgid "7d"
-msgstr "7d"
-
-#: src/components/MuteMemberModal.tsx:25
-msgid "30 days"
-msgstr "30 days"
-
-#: src/components/MuteMemberModal.tsx:25
-msgid "30d"
-msgstr "30d"
-
-#: src/components/MuteMemberModal.tsx:26
-#: src/components/MuteMemberModal.tsx:26
-#: src/components/createAuthErrorModal.tsx:85
-#: src/components/createAuthErrorModal.tsx:118
-msgid "Never"
-msgstr "Never"
-
-#: src/components/MuteMemberModal.tsx:50
-msgid "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
-msgstr "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
-
-#: src/components/MuteMemberModal.tsx:80
-msgid "Mute {username}"
-msgstr "Mute {username}"
-
-#: src/components/MuteMemberModal.tsx:86
-msgid "Don't Mute"
-msgstr "Don't Mute"
-
-#: src/components/MuteMemberModal.tsx:93
-#: src/components/MuteMemberModal.tsx:130
-#: src/components/UserContextMenu.tsx:178
-msgid "Mute"
-msgstr "Mute"
-
-#: src/components/MuteMemberModal.tsx:107
-msgid "Muting..."
-msgstr "Muting..."
-
-#: src/components/MuteMemberModal.tsx:168
-msgid "Unmute {username}"
-msgstr "Unmute {username}"
-
-#: src/components/MuteMemberModal.tsx:172
-msgid "Are you sure you want to unmute <0>{username}</0>?"
-msgstr "Are you sure you want to unmute <0>{username}</0>?"
-
-#: src/components/MuteMemberModal.tsx:180
-msgid "Don't Unmute"
-msgstr "Don't Unmute"
-
-#: src/components/MuteMemberModal.tsx:181
-#: src/components/UserContextMenu.tsx:173
-msgid "Unmute"
-msgstr "Unmute"
-
 #: src/components/Notice.tsx:9
-#: src/components/createWarnModal.tsx:15
+#: src/components/modals/createWarnModal.tsx:15
 msgid "Warning"
 msgstr "Warning"
 
 #: src/components/Notice.tsx:14
-#: src/utils/date.ts:119
-#: src/utils/date.ts:147
-#: src/utils/date.ts:267
-#: src/utils/date.ts:304
-#: src/utils/date.ts:334
-#: src/utils/date.ts:380
+#: src/utils/date.ts:98
+#: src/utils/date.ts:121
+#: src/utils/date.ts:178
+#: src/utils/date.ts:206
+#: src/utils/date.ts:326
+#: src/utils/date.ts:363
+#: src/utils/date.ts:393
+#: src/utils/date.ts:439
 msgid "Error"
 msgstr "Error"
 
 #: src/components/Notice.tsx:19
-#: src/components/right-drawer/RightDrawer.tsx:24
+#: src/components/drawer-right/RightDrawer.tsx:24
 msgid "Info"
 msgstr "Info"
 
@@ -337,103 +46,6 @@ msgstr "Caution"
 #: src/components/Notice.tsx:29
 msgid "Success"
 msgstr "Success"
-
-#: src/components/ServerContextMenu.tsx:68
-#: src/components/miniProfile.tsx:351
-#: src/components/server-settings/createServerSettingsDrawer.tsx:20
-#: src/components/settings/createSettingsDrawer.tsx:15
-msgid "Settings"
-msgstr "Settings"
-
-#: src/components/ServerContextMenu.tsx:74
-msgid "Leave"
-msgstr "Leave"
-
-#: src/components/ServerContextMenu.tsx:81
-#: src/components/UserContextMenu.tsx:186
-#: src/components/message-pane/messagePane.tsx:635
-msgid "Copy ID"
-msgstr "Copy ID"
-
-#: src/components/ServerContextMenu.tsx:85
-#: src/components/UserContextMenu.tsx:190
-#: src/components/message-pane/messagePane.tsx:639
-msgid "Copy Object"
-msgstr "Copy Object"
-
-#: src/components/ServerContextMenu.tsx:100
-msgid "Leave {serverName}"
-msgstr "Leave {serverName}"
-
-#: src/components/ServerContextMenu.tsx:102
-msgid "Are you sure you want to leave {serverName}?"
-msgstr "Are you sure you want to leave {serverName}?"
-
-#: src/components/ServerContextMenu.tsx:109
-msgid "Don't Leave"
-msgstr "Don't Leave"
-
-#: src/components/ServerContextMenu.tsx:116
-#: src/components/ServerContextMenu.tsx:128
-msgid "Leave Server"
-msgstr "Leave Server"
-
-#: src/components/ServerContextMenu.tsx:128
-msgid "Leaving..."
-msgstr "Leaving..."
-
-#: src/components/TimeModal.tsx:40
-msgid "Relative"
-msgstr "Relative"
-
-#: src/components/TimeModal.tsx:44
-msgid "Offset"
-msgstr "Offset"
-
-#: src/components/TimeModal.tsx:61
-msgid "Time"
-msgstr "Time"
-
-#: src/components/TimeModal.tsx:151
-msgid "15 minutes"
-msgstr "15 minutes"
-
-#: src/components/TimeModal.tsx:152
-msgid "30 minutes"
-msgstr "30 minutes"
-
-#: src/components/TimeModal.tsx:153
-msgid "1 hour"
-msgstr "1 hour"
-
-#: src/components/TimeModal.tsx:156
-msgid "1 day"
-msgstr "1 day"
-
-#: src/components/TimeModal.tsx:278
-msgid "Presets"
-msgstr "Presets"
-
-#: src/components/UserContextMenu.tsx:143
-msgid "View Profile"
-msgstr "View Profile"
-
-#: src/components/UserContextMenu.tsx:147
-#: src/components/miniProfile.tsx:321
-#: src/components/miniProfile.tsx:345
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
-msgid "Notes"
-msgstr "Notes"
-
-#: src/components/UserContextMenu.tsx:147
-#: src/components/miniProfile.tsx:321
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
-msgid "Message"
-msgstr "Message"
-
-#: src/components/UserContextMenu.tsx:152
-msgid "Edit Roles"
-msgstr "Edit Roles"
 
 #: src/components/appHeader.tsx:34
 #: src/components/miniProfile.tsx:338
@@ -446,102 +58,153 @@ msgstr "Profile"
 msgid "Home"
 msgstr "Home"
 
-#: src/components/createAuthErrorModal.tsx:23
-msgid "Suspended"
-msgstr "Suspended"
+#: src/components/context-menus/MessageContextMenu.tsx:22
+msgid "Edit Message"
+msgstr "Edit Message"
 
-#: src/components/createAuthErrorModal.tsx:24
-msgid "IP Banned"
-msgstr "IP Banned"
+#: src/components/context-menus/MessageContextMenu.tsx:27
+msgid "Reply Message"
+msgstr "Reply Message"
 
-#: src/components/createAuthErrorModal.tsx:25
-msgid "Authentication Error"
-msgstr "Authentication Error"
+#: src/components/context-menus/MessageContextMenu.tsx:32
+#: src/components/message-pane/deleteMessageModal.tsx:39
+msgid "Delete Message"
+msgstr "Delete Message"
 
-#: src/components/createAuthErrorModal.tsx:29
-msgid "Token not provided."
-msgstr "Token not provided."
+#: src/components/context-menus/MessageContextMenu.tsx:38
+msgid "Copy Content"
+msgstr "Copy Content"
 
-#: src/components/createAuthErrorModal.tsx:30
-msgid "You are suspended."
-msgstr "You are suspended."
+#: src/components/context-menus/MessageContextMenu.tsx:42
+#: src/components/context-menus/ServerContextMenu.tsx:81
+#: src/components/context-menus/UserContextMenu.tsx:186
+msgid "Copy ID"
+msgstr "Copy ID"
 
-#: src/components/createAuthErrorModal.tsx:54
-#: src/components/createAuthErrorModal.tsx:59
-#: src/components/createWarnModal.tsx:89
-msgid "Dismiss"
-msgstr "Dismiss"
+#: src/components/context-menus/MessageContextMenu.tsx:46
+#: src/components/context-menus/ServerContextMenu.tsx:85
+#: src/components/context-menus/UserContextMenu.tsx:190
+msgid "Copy Object"
+msgstr "Copy Object"
 
-#: src/components/createAuthErrorModal.tsx:64
-#: src/pages/LoginPage.tsx:22
-#: src/pages/LoginPage.tsx:57
-msgid "Login"
-msgstr "Login"
+#: src/components/context-menus/ServerContextMenu.tsx:68
+#: src/components/miniProfile.tsx:351
+#: src/components/server-settings/createServerSettingsDrawer.tsx:20
+#: src/components/settings/createSettingsDrawer.tsx:15
+msgid "Settings"
+msgstr "Settings"
 
-#: src/components/createAuthErrorModal.tsx:81
-#: src/components/createAuthErrorModal.tsx:114
-msgid "<0>Expires: </0><1>{date}</1>"
-msgstr "<0>Expires: </0><1>{date}</1>"
+#: src/components/context-menus/ServerContextMenu.tsx:74
+msgid "Leave"
+msgstr "Leave"
 
-#: src/components/createAuthErrorModal.tsx:92
-msgid "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
-msgstr "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
+#: src/components/context-menus/ServerContextMenu.tsx:100
+msgid "Leave {serverName}"
+msgstr "Leave {serverName}"
 
-#: src/components/createAuthErrorModal.tsx:104
-#: src/components/createWarnModal.tsx:40
-msgid "<0>Reason: </0><1>{reason}</1>"
-msgstr "<0>Reason: </0><1>{reason}</1>"
+#: src/components/context-menus/ServerContextMenu.tsx:102
+msgid "Are you sure you want to leave {serverName}?"
+msgstr "Are you sure you want to leave {serverName}?"
 
-#: src/components/createAuthErrorModal.tsx:108
-#: src/components/createWarnModal.tsx:44
-msgid "Violating the Terms of Servie."
-msgstr "Violating the Terms of Servie."
+#: src/components/context-menus/ServerContextMenu.tsx:109
+msgid "Don't Leave"
+msgstr "Don't Leave"
 
-#: src/components/createAuthErrorModal.tsx:124
-#: src/components/createWarnModal.tsx:51
-msgid "<0>By: </0><1>{username}</1>"
-msgstr "<0>By: </0><1>{username}</1>"
+#: src/components/context-menus/ServerContextMenu.tsx:116
+#: src/components/context-menus/ServerContextMenu.tsx:128
+msgid "Leave Server"
+msgstr "Leave Server"
 
-#: src/components/createAuthErrorModal.tsx:128
-#: src/components/createWarnModal.tsx:55
-msgid "Not Provided"
-msgstr "Not Provided"
+#: src/components/context-menus/ServerContextMenu.tsx:128
+msgid "Leaving..."
+msgstr "Leaving..."
 
-#: src/components/createAuthErrorModal.tsx:136
-msgid "Your account and data will be deleted in 15 days."
-msgstr "Your account and data will be deleted in 15 days."
+#: src/components/context-menus/UserContextMenu.tsx:143
+msgid "View Profile"
+msgstr "View Profile"
 
-#: src/components/createWarnModal.tsx:17
-msgid "You have been warned."
-msgstr "You have been warned."
+#: src/components/context-menus/UserContextMenu.tsx:147
+#: src/components/miniProfile.tsx:321
+#: src/components/miniProfile.tsx:345
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
+msgid "Notes"
+msgstr "Notes"
 
-#: src/components/createWarnModal.tsx:62
-msgid "if you continue with this behavior, your account will be suspended."
-msgstr "if you continue with this behavior, your account will be suspended."
+#: src/components/context-menus/UserContextMenu.tsx:147
+#: src/components/miniProfile.tsx:321
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
+msgid "Message"
+msgstr "Message"
 
-#: src/components/createWarnModal.tsx:88
-msgid "Dismiss ~ {countdown}"
-msgstr "Dismiss ~ {countdown}"
+#: src/components/context-menus/UserContextMenu.tsx:152
+msgid "Edit Roles"
+msgstr "Edit Roles"
 
-#: src/components/inboxDrawer.tsx:330
+#: src/components/context-menus/UserContextMenu.tsx:159
+#: src/components/modals/BanMemberModal.tsx:71
+#: src/components/modals/BanMemberModal.tsx:97
+msgid "Ban"
+msgstr "Ban"
+
+#: src/components/context-menus/UserContextMenu.tsx:165
+#: src/components/modals/KickMemberModal.tsx:53
+#: src/components/modals/KickMemberModal.tsx:74
+msgid "Kick"
+msgstr "Kick"
+
+#: src/components/context-menus/UserContextMenu.tsx:173
+#: src/components/modals/MuteMemberModal.tsx:181
+msgid "Unmute"
+msgstr "Unmute"
+
+#: src/components/context-menus/UserContextMenu.tsx:178
+#: src/components/modals/MuteMemberModal.tsx:93
+#: src/components/modals/MuteMemberModal.tsx:130
+msgid "Mute"
+msgstr "Mute"
+
+#: src/components/drawer-left/inboxDrawer.tsx:330
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/inboxDrawer.tsx:333
+#: src/components/drawer-left/inboxDrawer.tsx:333
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/inboxDrawer.tsx:336
+#: src/components/drawer-left/inboxDrawer.tsx:336
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/inboxDrawer.tsx:403
+#: src/components/drawer-left/inboxDrawer.tsx:403
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/inboxDrawer.tsx:409
+#: src/components/drawer-left/inboxDrawer.tsx:409
 msgid "Friends"
 msgstr "Friends"
+
+#: src/components/drawer-right/DrawerChannelNotice.tsx:16
+#: src/components/miniProfile.tsx:659
+msgid "Notice"
+msgstr "Notice"
+
+#: src/components/drawer-right/RightDrawer.tsx:25
+msgid "Files"
+msgstr "Files"
+
+#: src/components/drawer-right/RightDrawer.tsx:26
+msgid "Search"
+msgstr "Search"
+
+#: src/components/drawer-right/ServerInfoDrawer.tsx:44
+#: src/store/userPresenceStore.ts:34
+msgid "Offline"
+msgstr "Offline"
+
+#: src/components/drawer-right/ServerInfoDrawer.tsx:500
+#: src/components/message-pane/messageItem.tsx:156
+msgid "Muted until {mutedUntil}"
+msgstr "Muted until {mutedUntil}"
 
 #: src/components/markup/Emoji.tsx:87
 msgid "Custom Emoji"
@@ -628,12 +291,12 @@ msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
 #. placeholder {0}: channel.name
-#: src/components/message-pane/chatbar.tsx:282
+#: src/components/message-pane/chatbar.tsx:292
 msgid "Message in {0}"
 msgstr "Message in {0}"
 
 #. placeholder {0}: user?.username ?? ""
-#: src/components/message-pane/chatbar.tsx:287
+#: src/components/message-pane/chatbar.tsx:297
 msgid "Message {0}"
 msgstr "Message {0}"
 
@@ -641,10 +304,26 @@ msgstr "Message {0}"
 msgid "Are you sure you want to delete this message?"
 msgstr "Are you sure you want to delete this message?"
 
-#: src/components/message-pane/deleteMessageModal.tsx:39
-#: src/components/message-pane/messagePane.tsx:625
-msgid "Delete Message"
-msgstr "Delete Message"
+#: src/components/message-pane/deleteMessageModal.tsx:45
+#: src/components/modals/GenericDeleteModal.tsx:37
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:73
+msgid "Don't Delete"
+msgstr "Don't Delete"
+
+#: src/components/message-pane/deleteMessageModal.tsx:52
+#: src/components/message-pane/deleteMessageModal.tsx:73
+#: src/components/modals/GenericDeleteModal.tsx:43
+#: src/components/modals/GenericDeleteModal.tsx:82
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/message-pane/deleteMessageModal.tsx:66
+#: src/components/modals/GenericDeleteModal.tsx:77
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:108
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:22
+msgid "Deleting..."
+msgstr "Deleting..."
 
 #: src/components/message-pane/inputSuggestions.tsx:237
 #: src/components/message-pane/inputSuggestions.tsx:271
@@ -665,12 +344,8 @@ msgstr "Mentions everyone."
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:156
-#: src/components/right-drawer/ServerInfoDrawer.tsx:500
-msgid "Muted until {mutedUntil}"
-msgstr "Muted until {mutedUntil}"
-
 #: src/components/message-pane/messageItem.tsx:176
+#: src/components/posts/PostItem.tsx:95
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -683,6 +358,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:202
+#: src/components/posts/PostItem.tsx:102
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -699,21 +375,15 @@ msgstr "Silent"
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
-#: src/components/message-pane/messagePane.tsx:615
-msgid "Edit Message"
-msgstr "Edit Message"
-
-#: src/components/message-pane/messagePane.tsx:620
-msgid "Reply Message"
-msgstr "Reply Message"
-
-#: src/components/message-pane/messagePane.tsx:631
-msgid "Copy Content"
-msgstr "Copy Content"
-
 #: src/components/message-pane/repliesIndicator.tsx:74
 msgid "Mention"
 msgstr "Mention"
+
+#: src/components/message-pane/slowdownModeIndicator.tsx:22
+#: src/components/message-pane/slowdownModeIndicator.tsx:52
+#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:42
+msgid "Slow Mode"
+msgstr "Slow Mode"
 
 #. placeholder {0}: names.length
 #: src/components/message-pane/typingIndicator.tsx:195
@@ -740,6 +410,13 @@ msgstr "<0>{following}</0> Following"
 msgid "Full Profile"
 msgstr "Full Profile"
 
+#: src/components/miniProfile.tsx:358
+#: src/components/modals/LogoutModal.tsx:39
+#: src/components/modals/LogoutModal.tsx:52
+#: src/components/modals/createAuthErrorModal.tsx:52
+msgid "Logout"
+msgstr "Logout"
+
 #: src/components/miniProfile.tsx:371
 #: src/pages/app-page/server-settings/ServerSettings.ts:63
 msgid "Roles"
@@ -752,11 +429,6 @@ msgstr "Joined"
 #: src/components/miniProfile.tsx:402
 msgid "About Me"
 msgstr "About Me"
-
-#: src/components/miniProfile.tsx:659
-#: src/components/right-drawer/DrawerChannelNotice.tsx:16
-msgid "Notice"
-msgstr "Notice"
 
 #: src/components/miniProfile.tsx:709
 msgid "Appear As Offline"
@@ -781,24 +453,334 @@ msgstr "Don't save"
 msgid "Save"
 msgstr "Save"
 
-#: src/components/modal.tsx:755
-msgid "Understood"
-msgstr "Understood"
+#: src/components/modals/BanMemberModal.tsx:31
+msgid "Delete messages sent in the past 7 hours."
+msgstr "Delete messages sent in the past 7 hours."
 
-#: src/components/right-drawer/RightDrawer.tsx:25
-msgid "Files"
-msgstr "Files"
+#: src/components/modals/BanMemberModal.tsx:37
+msgid "Are you sure you want to ban <0>{username}</0>"
+msgstr "Are you sure you want to ban <0>{username}</0>"
 
-#: src/components/right-drawer/RightDrawer.tsx:26
-msgid "Search"
-msgstr "Search"
+#: src/components/modals/BanMemberModal.tsx:42
+#: src/components/modals/MuteMemberModal.tsx:62
+msgid "Reason (optional)"
+msgstr "Reason (optional)"
 
-#: src/components/right-drawer/ServerInfoDrawer.tsx:44
-#: src/store/userPresenceStore.ts:34
-msgid "Offline"
-msgstr "Offline"
+#: src/components/modals/BanMemberModal.tsx:58
+msgid "Ban {username}"
+msgstr "Ban {username}"
 
-#: src/components/serverClanItem.tsx:51
+#: src/components/modals/BanMemberModal.tsx:64
+msgid "Don't Ban"
+msgstr "Don't Ban"
+
+#: src/components/modals/BanMemberModal.tsx:85
+msgid "Banning..."
+msgstr "Banning..."
+
+#: src/components/modals/ConfirmPasswordModal.tsx:41
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:62
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: src/components/modals/ConfirmPasswordModal.tsx:46
+msgid "Enter your password to continue."
+msgstr "Enter your password to continue."
+
+#: src/components/modals/ConfirmPasswordModal.tsx:51
+msgid "Remember for 5 minutes"
+msgstr "Remember for 5 minutes"
+
+#: src/components/modals/ConfirmPasswordModal.tsx:58
+msgid "Don't Confirm"
+msgstr "Don't Confirm"
+
+#: src/components/modals/ConfirmPasswordModal.tsx:62
+#: src/components/modals/ConfirmPasswordModal.tsx:151
+#: src/components/modals/TimeModal.tsx:67
+msgid "Confirm"
+msgstr "Confirm"
+
+#: src/components/modals/ConfirmPasswordModal.tsx:124
+msgid "Confirming..."
+msgstr "Confirming..."
+
+#: src/components/modals/EditServerRolesModal.tsx:59
+msgid "Edit Roles - {username}"
+msgstr "Edit Roles - {username}"
+
+#: src/components/modals/EditServerRolesModal.tsx:160
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:186
+msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
+msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
+
+#: src/components/modals/GenericConfirmModal.tsx:41
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/modals/GenericConfirmModal.tsx:81
+msgid "Working..."
+msgstr "Working..."
+
+#: src/components/modals/GenericDeleteModal.tsx:25
+msgid "Type <0>{confirmLabel}</0> to confirm"
+msgstr "Type <0>{confirmLabel}</0> to confirm"
+
+#: src/components/modals/GenericDeleteModal.tsx:74
+msgid "Text doesn't match, try again."
+msgstr "Text doesn't match, try again."
+
+#: src/components/modals/KickMemberModal.tsx:29
+msgid "Are you sure you want to kick <0>{username}</0>"
+msgstr "Are you sure you want to kick <0>{username}</0>"
+
+#: src/components/modals/KickMemberModal.tsx:40
+msgid "Kick {username}"
+msgstr "Kick {username}"
+
+#: src/components/modals/KickMemberModal.tsx:46
+msgid "Don't Kick"
+msgstr "Don't Kick"
+
+#: src/components/modals/KickMemberModal.tsx:67
+msgid "Kicking..."
+msgstr "Kicking..."
+
+#: src/components/modals/LinkWarnModal.tsx:13
+msgid "External link"
+msgstr "External link"
+
+#: src/components/modals/LinkWarnModal.tsx:16
+msgid "You are about to visit an external link."
+msgstr "You are about to visit an external link."
+
+#: src/components/modals/LinkWarnModal.tsx:21
+msgid "Don't visit"
+msgstr "Don't visit"
+
+#: src/components/modals/LinkWarnModal.tsx:24
+msgid "Visit site"
+msgstr "Visit site"
+
+#: src/components/modals/LogoutModal.tsx:20
+msgid "Are you sure you want to logout?"
+msgstr "Are you sure you want to logout?"
+
+#: src/components/modals/LogoutModal.tsx:23
+msgid "Clear local settings"
+msgstr "Clear local settings"
+
+#: src/components/modals/LogoutModal.tsx:45
+msgid "Don't Logout"
+msgstr "Don't Logout"
+
+#: src/components/modals/MuteMemberModal.tsx:19
+msgid "10 minutes"
+msgstr "10 minutes"
+
+#: src/components/modals/MuteMemberModal.tsx:19
+msgid "10m"
+msgstr "10m"
+
+#: src/components/modals/MuteMemberModal.tsx:20
+msgid "60 minutes"
+msgstr "60 minutes"
+
+#: src/components/modals/MuteMemberModal.tsx:20
+msgid "60m"
+msgstr "60m"
+
+#: src/components/modals/MuteMemberModal.tsx:21
+#: src/components/modals/TimeModal.tsx:154
+msgid "6 hours"
+msgstr "6 hours"
+
+#: src/components/modals/MuteMemberModal.tsx:21
+msgid "6h"
+msgstr "6h"
+
+#: src/components/modals/MuteMemberModal.tsx:22
+#: src/components/modals/TimeModal.tsx:155
+msgid "12 hours"
+msgstr "12 hours"
+
+#: src/components/modals/MuteMemberModal.tsx:22
+msgid "12h"
+msgstr "12h"
+
+#: src/components/modals/MuteMemberModal.tsx:23
+msgid "24 hours"
+msgstr "24 hours"
+
+#: src/components/modals/MuteMemberModal.tsx:23
+msgid "24h"
+msgstr "24h"
+
+#: src/components/modals/MuteMemberModal.tsx:24
+msgid "7 days"
+msgstr "7 days"
+
+#: src/components/modals/MuteMemberModal.tsx:24
+msgid "7d"
+msgstr "7d"
+
+#: src/components/modals/MuteMemberModal.tsx:25
+msgid "30 days"
+msgstr "30 days"
+
+#: src/components/modals/MuteMemberModal.tsx:25
+msgid "30d"
+msgstr "30d"
+
+#: src/components/modals/MuteMemberModal.tsx:26
+#: src/components/modals/MuteMemberModal.tsx:26
+#: src/components/modals/createAuthErrorModal.tsx:85
+#: src/components/modals/createAuthErrorModal.tsx:118
+msgid "Never"
+msgstr "Never"
+
+#: src/components/modals/MuteMemberModal.tsx:50
+msgid "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
+msgstr "<0>{username}</0>  will not be able to talk in this server for: <1>{time}</1>"
+
+#: src/components/modals/MuteMemberModal.tsx:80
+msgid "Mute {username}"
+msgstr "Mute {username}"
+
+#: src/components/modals/MuteMemberModal.tsx:86
+msgid "Don't Mute"
+msgstr "Don't Mute"
+
+#: src/components/modals/MuteMemberModal.tsx:107
+msgid "Muting..."
+msgstr "Muting..."
+
+#: src/components/modals/MuteMemberModal.tsx:168
+msgid "Unmute {username}"
+msgstr "Unmute {username}"
+
+#: src/components/modals/MuteMemberModal.tsx:172
+msgid "Are you sure you want to unmute <0>{username}</0>?"
+msgstr "Are you sure you want to unmute <0>{username}</0>?"
+
+#: src/components/modals/MuteMemberModal.tsx:180
+msgid "Don't Unmute"
+msgstr "Don't Unmute"
+
+#: src/components/modals/TimeModal.tsx:40
+msgid "Relative"
+msgstr "Relative"
+
+#: src/components/modals/TimeModal.tsx:44
+msgid "Offset"
+msgstr "Offset"
+
+#: src/components/modals/TimeModal.tsx:61
+msgid "Time"
+msgstr "Time"
+
+#: src/components/modals/TimeModal.tsx:151
+msgid "15 minutes"
+msgstr "15 minutes"
+
+#: src/components/modals/TimeModal.tsx:152
+msgid "30 minutes"
+msgstr "30 minutes"
+
+#: src/components/modals/TimeModal.tsx:153
+msgid "1 hour"
+msgstr "1 hour"
+
+#: src/components/modals/TimeModal.tsx:156
+msgid "1 day"
+msgstr "1 day"
+
+#: src/components/modals/TimeModal.tsx:278
+msgid "Presets"
+msgstr "Presets"
+
+#: src/components/modals/createAuthErrorModal.tsx:23
+msgid "Suspended"
+msgstr "Suspended"
+
+#: src/components/modals/createAuthErrorModal.tsx:24
+msgid "IP Banned"
+msgstr "IP Banned"
+
+#: src/components/modals/createAuthErrorModal.tsx:25
+msgid "Authentication Error"
+msgstr "Authentication Error"
+
+#: src/components/modals/createAuthErrorModal.tsx:29
+msgid "Token not provided."
+msgstr "Token not provided."
+
+#: src/components/modals/createAuthErrorModal.tsx:30
+msgid "You are suspended."
+msgstr "You are suspended."
+
+#: src/components/modals/createAuthErrorModal.tsx:54
+#: src/components/modals/createAuthErrorModal.tsx:59
+#: src/components/modals/createWarnModal.tsx:89
+msgid "Dismiss"
+msgstr "Dismiss"
+
+#: src/components/modals/createAuthErrorModal.tsx:64
+#: src/pages/LoginPage.tsx:22
+#: src/pages/LoginPage.tsx:57
+msgid "Login"
+msgstr "Login"
+
+#: src/components/modals/createAuthErrorModal.tsx:81
+#: src/components/modals/createAuthErrorModal.tsx:114
+msgid "<0>Expires: </0><1>{date}</1>"
+msgstr "<0>Expires: </0><1>{date}</1>"
+
+#: src/components/modals/createAuthErrorModal.tsx:92
+msgid "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
+msgstr "Someone with the same IP has been suspended from Nerimity. Your account is not affected."
+
+#: src/components/modals/createAuthErrorModal.tsx:104
+#: src/components/modals/createWarnModal.tsx:40
+msgid "<0>Reason: </0><1>{reason}</1>"
+msgstr "<0>Reason: </0><1>{reason}</1>"
+
+#: src/components/modals/createAuthErrorModal.tsx:108
+#: src/components/modals/createWarnModal.tsx:44
+msgid "Violating the Terms of Servie."
+msgstr "Violating the Terms of Servie."
+
+#: src/components/modals/createAuthErrorModal.tsx:124
+#: src/components/modals/createWarnModal.tsx:51
+msgid "<0>By: </0><1>{username}</1>"
+msgstr "<0>By: </0><1>{username}</1>"
+
+#: src/components/modals/createAuthErrorModal.tsx:128
+#: src/components/modals/createWarnModal.tsx:55
+msgid "Not Provided"
+msgstr "Not Provided"
+
+#: src/components/modals/createAuthErrorModal.tsx:136
+msgid "Your account and data will be deleted in 15 days."
+msgstr "Your account and data will be deleted in 15 days."
+
+#: src/components/modals/createWarnModal.tsx:17
+msgid "You have been warned."
+msgstr "You have been warned."
+
+#: src/components/modals/createWarnModal.tsx:62
+msgid "if you continue with this behavior, your account will be suspended."
+msgstr "if you continue with this behavior, your account will be suspended."
+
+#: src/components/modals/createWarnModal.tsx:88
+msgid "Dismiss ~ {countdown}"
+msgstr "Dismiss ~ {countdown}"
+
+#: src/components/posts/PostItem.tsx:170
+msgid "Estimated Views"
+msgstr "Estimated Views"
+
+#: src/components/serverClanItem.tsx:57
 msgid "Server Clan"
 msgstr "Server Clan"
 
@@ -809,6 +791,38 @@ msgstr "Undo"
 #: src/components/settings-actions/SettingsActions.tsx:64
 msgid "Saving..."
 msgstr "Saving..."
+
+#: src/components/ui/EmojiPicker.tsx:170
+msgid "Search Emojis..."
+msgstr "Search Emojis..."
+
+#: src/components/ui/EmojiPicker.tsx:463
+msgid "Recent Emojis"
+msgstr "Recent Emojis"
+
+#: src/components/ui/ExpressionPicker.tsx:69
+msgid "GIFs"
+msgstr "GIFs"
+
+#: src/components/ui/ExpressionPicker.tsx:78
+msgid "Emojis"
+msgstr "Emojis"
+
+#: src/components/ui/ImageCropModal.tsx:68
+msgid "Crop Image"
+msgstr "Crop Image"
+
+#: src/components/ui/ImageCropModal.tsx:74
+msgid "Don't Crop"
+msgstr "Don't Crop"
+
+#: src/components/ui/ImageCropModal.tsx:77
+msgid "Crop"
+msgstr "Crop"
+
+#: src/components/ui/modal.tsx:755
+msgid "Understood"
+msgstr "Understood"
 
 #. placeholder {0}: formatTimestamp(user.lastOnlineAt)
 #: src/components/userPresence.tsx:62
@@ -831,6 +845,35 @@ msgstr "Login to continue"
 #: src/pages/LoginPage.tsx:65
 msgid "Logging in..."
 msgstr "Logging in..."
+
+#: src/pages/app-page/createHomePane.tsx:190
+msgid "Feed"
+msgstr "Feed"
+
+#: src/pages/app-page/createHomePane.tsx:194
+msgid "Following"
+msgstr "Following"
+
+#: src/pages/app-page/createHomePane.tsx:198
+#: src/pages/app-page/settings/Settings.ts:76
+msgid "Notifications"
+msgstr "Notifications"
+
+#: src/pages/app-page/createHomePane.tsx:227
+msgid "Latest"
+msgstr "Latest"
+
+#: src/pages/app-page/createHomePane.tsx:228
+msgid "Liked in 7 Days"
+msgstr "Liked in 7 Days"
+
+#: src/pages/app-page/createHomePane.tsx:229
+msgid "Liked in 30 Days"
+msgstr "Liked in 30 Days"
+
+#: src/pages/app-page/createHomePane.tsx:230
+msgid "Liked All Time"
+msgstr "Liked All Time"
 
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:182
 msgid "Unblock"
@@ -991,10 +1034,6 @@ msgstr "Delete Channel"
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:750
 msgid "Delete Webhook"
 msgstr "Delete Webhook"
-
-#: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:42
-msgid "Slow Mode"
-msgstr "Slow Mode"
 
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:44
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:32
@@ -1227,10 +1266,6 @@ msgstr "Account"
 #: src/pages/app-page/settings/Settings.ts:62
 msgid "Sessions"
 msgstr "Sessions"
-
-#: src/pages/app-page/settings/Settings.ts:76
-msgid "Notifications"
-msgstr "Notifications"
 
 #: src/pages/app-page/settings/Settings.ts:83
 msgid "Privacy"
@@ -1514,6 +1549,10 @@ msgstr "Connecting..."
 msgid "Connected!"
 msgstr "Connected!"
 
+#: src/store/messageStore.ts:353
+msgid "Failed to send message"
+msgstr "Failed to send message"
+
 #: src/store/userPresenceStore.ts:18
 msgid "Online"
 msgstr "Online"
@@ -1777,43 +1816,47 @@ msgstr "Join Voice"
 msgid "Enable joining voice channels in the channel. Server admins can still join voice channels."
 msgstr "Enable joining voice channels in the channel. Server admins can still join voice channels."
 
-#: src/utils/date.ts:125
+#: src/utils/date.ts:91
+msgid "Less than a minute ago"
+msgstr "Less than a minute ago"
+
+#: src/utils/date.ts:184
 msgid "Expired"
 msgstr "Expired"
 
-#: src/utils/date.ts:128
+#: src/utils/date.ts:187
 msgid "Expires in {minutes}m"
 msgstr "Expires in {minutes}m"
 
-#: src/utils/date.ts:131
+#: src/utils/date.ts:190
 msgid "Expires in {hours}h"
 msgstr "Expires in {hours}h"
 
-#: src/utils/date.ts:296
+#: src/utils/date.ts:355
 msgid "Yesterday at {time}"
 msgstr "Yesterday at {time}"
 
-#: src/utils/date.ts:300
+#: src/utils/date.ts:359
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/utils/date.ts:318
+#: src/utils/date.ts:377
 msgid "Invalid Timezone."
 msgstr "Invalid Timezone."
 
-#: src/utils/date.ts:365
+#: src/utils/date.ts:424
 msgid "now"
 msgstr "now"
 
-#: src/utils/date.ts:372
+#: src/utils/date.ts:431
 msgid "for {duration}"
 msgstr "for {duration}"
 
-#: src/utils/date.ts:374
+#: src/utils/date.ts:433
 msgid "in {duration}"
 msgstr "in {duration}"
 
-#: src/utils/date.ts:376
+#: src/utils/date.ts:435
 msgid "{duration} ago"
 msgstr "{duration} ago"
 

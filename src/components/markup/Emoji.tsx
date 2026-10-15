@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { unicodeToTwemojiUrl } from "../../utils/emojis";
 import { buildImageUrl } from "../../utils/image";
 import { InviteEmbed } from "../message-pane/InviteEmbed";
-import { createModal, Modal } from "../modal";
+import { createModal, Modal } from "../ui/modal";
 
 import style from "./Emoji.module.css";
 

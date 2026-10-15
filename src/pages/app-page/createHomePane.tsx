@@ -1,13 +1,13 @@
 import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
-import { Avatar } from "../../components/avatar";
-import { Dropdown } from "../../components/createDropdown";
 import { Icon } from "../../components/icon";
-import { Item } from "../../components/item";
-import { Link } from "../../components/link";
 import { buildEmojiUrl } from "../../components/markup/Emoji";
 import { PostsArea } from "../../components/posts/PostsArea";
+import { Avatar } from "../../components/ui/avatar";
+import { Dropdown } from "../../components/ui/createDropdown";
+import { Item } from "../../components/ui/item";
+import { Link } from "../../components/ui/link";
 import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";

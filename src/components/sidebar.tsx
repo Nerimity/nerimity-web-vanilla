@@ -16,12 +16,12 @@ import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
 import { getRecentServerChannelId } from "../utils/recentServerChannels";
 import { router } from "../utils/router";
-import { Avatar } from "./avatar";
-import { Drawer } from "./drawer";
 import { Icon } from "./icon";
-import { Item } from "./item";
 import { LogoMono } from "./LogoMono";
 import { NotificationPill } from "./NotificationPill";
+import { Avatar } from "./ui/avatar";
+import { Drawer } from "./ui/drawer";
+import { Item } from "./ui/item";
 
 import style from "./sidebar.module.css";
 

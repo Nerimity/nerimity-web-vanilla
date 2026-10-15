@@ -7,8 +7,8 @@ import { messageStore } from "../../store/messageStore";
 import { MessageType } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
 import { storeEmitter } from "../../utils/EventEmitter";
-import { Button } from "../button";
-import { ExpressionPickerLazy } from "../ExpressionPickerLazy";
+import { Button } from "../ui/button";
+import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
 import { createDeleteMessageModal } from "./deleteMessageModal";
 import { canDeleteMessage } from "./utils";
 

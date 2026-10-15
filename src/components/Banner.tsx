@@ -1,6 +1,6 @@
 import { buildImageUrl } from "../utils/image";
 import { createResizeObserver } from "../utils/observer";
-import type { CropPoints } from "./ImageCropModal";
+import type { CropPoints } from "./ui/ImageCropModal";
 
 import style from "./Banner.module.css";
 

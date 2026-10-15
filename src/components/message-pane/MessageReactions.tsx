@@ -15,10 +15,10 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverHandler } from "../../utils/HoverHandler";
 import { portalElement } from "../../utils/portal";
-import { Avatar } from "../avatar";
 import { CdnIcon } from "../cdnIcon";
-import { ExpressionPickerLazy } from "../ExpressionPickerLazy";
 import { Icon } from "../icon";
+import { Avatar } from "../ui/avatar";
+import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
 
 import style from "./MessageReactions.module.css";
 

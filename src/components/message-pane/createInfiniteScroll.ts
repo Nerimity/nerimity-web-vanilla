@@ -4,7 +4,7 @@ import { messageStore } from "../../store/messageStore";
 import { debounce } from "../../utils/debounce";
 import { createIntersectionObserver } from "../../utils/observer";
 import { router } from "../../utils/router";
-import { Drawer } from "../drawer";
+import { Drawer } from "../ui/drawer";
 
 interface InfiniteScrollParams {
   el: HTMLDivElement;

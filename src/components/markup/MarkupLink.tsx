@@ -1,5 +1,5 @@
 import { addHttps } from "../../utils/url";
-import { createLinkWarnModal } from "../LinkWarnModal";
+import { createLinkWarnModal } from "../modals/LinkWarnModal";
 
 interface MarkupLink {
   name: string;

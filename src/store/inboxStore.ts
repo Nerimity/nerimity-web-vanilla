@@ -1,4 +1,4 @@
-import { alert } from "../components/modal";
+import { alert } from "../components/ui/modal";
 import { closeInbox, openInbox } from "../services/inboxService";
 import type { RawInbox } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";

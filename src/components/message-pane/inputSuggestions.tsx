@@ -16,11 +16,11 @@ import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getLocalItem } from "../../utils/localStorage";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
-import { Avatar } from "../avatar";
-import { GradientText } from "../gradientText";
 import { Icon } from "../icon";
-import { Item } from "../item";
 import { Emoji } from "../markup/Emoji";
+import { Avatar } from "../ui/avatar";
+import { GradientText } from "../ui/gradientText";
+import { Item } from "../ui/item";
 
 import style from "./inputSuggestions.module.css";
 
