@@ -3,6 +3,10 @@ import { createServerContextMenuHandler } from "../../components/context-menus/S
 import { createUserContextMenuHandler } from "../../components/context-menus/UserContextMenu";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
+import {
+  createPostModal,
+  destroyPostModal,
+} from "../../components/modals/createPostModal";
 import { createSidebar } from "../../components/sidebar";
 import { Drawer } from "../../components/ui/drawer";
 import { isMobileWidth } from "../../config";
@@ -202,6 +206,8 @@ const createAppPage = () => {
   window.addEventListener("resize", handleResize, { signal });
   handleDangerLink(signal);
 
+  handlePostPopup(signal);
+
   router.beforeNavigate((event) => {
     const postMatched = router.match<{ postId: string }>(
       `/p/:postId`,
@@ -212,7 +218,7 @@ const createAppPage = () => {
       router.setQuery("postId", postMatched.params.postId);
       return false;
     }
-  }, abortController.signal);
+  }, signal);
 
   const destroy = () => {
     abortController.abort();
@@ -228,3 +234,19 @@ const createAppPage = () => {
 };
 
 export default createAppPage;
+
+const handlePostPopup = (signal: AbortSignal) => {
+  router.createQueryListener<{ postId: string }>(
+    (params) => {
+      const postId = params?.postId;
+      destroyPostModal();
+
+      if (postId) {
+        createPostModal({ postId });
+      }
+    },
+    {
+      signal: signal,
+    },
+  );
+};

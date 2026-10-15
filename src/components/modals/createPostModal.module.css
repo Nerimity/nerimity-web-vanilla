@@ -1,0 +1,10 @@
+.body {
+}
+.tabs {
+  display: flex;
+  margin-top: 18px;
+  gap: 4px;
+  :global(.item) {
+    padding: 10px 8px;
+  }
+}

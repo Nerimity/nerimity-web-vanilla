@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import {
   deletePost,
+  getPost,
   likePost,
   repostPost,
   unlikePost,
@@ -17,46 +18,77 @@ import { router } from "../../utils/router";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
 import { FileEmbed } from "../message-pane/FileEmbed";
-import { ImageEmbed } from "../message-pane/imageEmbed";
+import {
+  createImageEmbedResizer,
+  ImageEmbed,
+} from "../message-pane/imageEmbed";
 import { InviteEmbed } from "../message-pane/InviteEmbed";
 import { OGEmbed } from "../message-pane/OGEmbed";
 import { isNewUser } from "../message-pane/utils";
 import { ServerClanItem } from "../serverClanItem";
 import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { handleImagePreviewModal } from "../ui/ImagePreviewModal";
 import { Link } from "../ui/link";
 import { alert } from "../ui/modal";
 
 import style from "./PostItem.module.css";
 
+const postCache = new Map<string, RawPost>();
+const POST_CACHE_LIMIT = 100;
+
+const setPostCache = (post: RawPost) => {
+  if (postCache.size >= POST_CACHE_LIMIT) {
+    const firstKey = postCache.keys().next().value;
+    if (firstKey) postCache.delete(firstKey);
+  }
+  postCache.set(post.id, post);
+};
+
+export const cacheOrFetchPost = async (postId: string) => {
+  let post: RawPost | null = postCache.get(postId) || null;
+  if (!post) {
+    [post] = await getPost(postId);
+    if (post) setPostCache(post);
+  }
+  return post;
+};
+
 const postElToPost = new WeakMap<HTMLDivElement, RawPost>();
 
 export const PostItem = (props: {
-  post: RawPost;
+  postId?: string;
+  post?: RawPost | null;
   prevPost?: RawPost;
+  forceBottomBorder?: boolean;
+  disableHover?: boolean;
   nextPost?: RawPost;
   hideNewDayMarker?: boolean;
   container: HTMLDivElement;
   showFullDate?: boolean;
 }) => {
-  const link = `/p/${props.post.id}`;
+  const post = props.post || postCache.get(props.postId!);
 
-  const creator = props.post.createdBy;
+  if (!post) return <div>Post not found</div>;
 
-  const newDay =
-    !props.hideNewDayMarker && isNewDay(props.post, props.prevPost);
+  const link = `/p/${post.id}`;
+
+  const creator = post.createdBy;
+
+  const newDay = !props.hideNewDayMarker && isNewDay(post, props.prevPost);
   const hasBottomBorder =
-    props.nextPost &&
-    (props.hideNewDayMarker || !isNewDay(props.nextPost, props.post));
+    props.forceBottomBorder ||
+    (props.nextPost &&
+      (props.hideNewDayMarker || !isNewDay(props.nextPost, post)));
 
   const isImageEmbedOnly =
-    props.post.embed?.type == "image" && !props.post.content?.includes(" ");
+    post.embed?.type == "image" && !post.content?.includes(" ");
 
   const font = getFont(creator.profile?.font);
 
   const el = (
-    <div class="postItemOuter" data-id={props.post.id}>
-      {newDay && <Marker label={fullDate(props.post.createdAt)} />}
+    <div class="postItemOuter" data-id={post.id}>
+      {newDay && <Marker label={fullDate(post.createdAt)} />}
 
       <div
         class={[
@@ -65,6 +97,7 @@ export const PostItem = (props: {
           style.withDetails,
           hasBottomBorder && style.withBottomBorder,
         ]}
+        data-disable-hover={props.disableHover}
       >
         <div class={[style.postContainer, "postContainer"]}>
           <Link
@@ -104,10 +137,10 @@ export const PostItem = (props: {
                 href={link}
                 decoration
                 class={style.timestamp}
-                title={formatTimestamp(props.post.createdAt)}
+                title={formatTimestamp(post.createdAt)}
               >
                 {(props.showFullDate ? formatTimestamp : timeSince)(
-                  props.post.createdAt,
+                  post.createdAt,
                 )}
               </Link>
             </span>
@@ -116,21 +149,24 @@ export const PostItem = (props: {
                 <Markup
                   replaceCommandBotId
                   animateInitialOnFocus
-                  text={props.post.content || ""}
+                  text={post.content || ""}
                   container={props.container}
                   class={["focusAnimate", style.postContent]}
                 />
               )}
-              <PostEmbeds post={props.post} container={props.container} />
+              <PostEmbeds post={post} container={props.container} />
             </div>
-            <PostInfo post={props.post} />
+            <PostInfo post={post} />
           </div>
         </div>
       </div>
     </div>
   ) as HTMLDivElement;
 
-  postElToPost.set(el, props.post);
+  postElToPost.set(el, post);
+  if (props.post) {
+    setPostCache(props.post);
+  }
 
   return el;
 };
@@ -271,6 +307,14 @@ export const createPostHandler = (opts: {
     ".imageEmbed .image, .focusAnimate .emoji",
   );
 
+  const imageEmbedResizer = createImageEmbedResizer(opts.container);
+
+  handleImagePreviewModal({
+    root: opts.container,
+    signal: opts.signal,
+    selector: ".imageEmbed .image",
+  });
+
   const hoverAnimator = new HoverAnimator(opts.container, [
     { trigger: `.postItemOuter`, image: ".clanIcon img" },
     { trigger: `.postItemOuter`, image: ".avatar img" },
@@ -280,6 +324,7 @@ export const createPostHandler = (opts: {
   opts.signal.addEventListener(
     "abort",
     () => {
+      imageEmbedResizer.destroy();
       imageEmbedFocusAnimator.destroy();
       hoverAnimator.destroy();
     },

@@ -37,7 +37,7 @@
   border-radius: var(--radius-6);
 
   &:global(.force-hover),
-  &:hover {
+  &:not([data-disable-hover="true"]):hover {
     background-color: var(--gray-850);
   }
 

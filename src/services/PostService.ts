@@ -74,3 +74,29 @@ export const deletePost = async (postId: string) => {
     method: "DELETE",
   });
 };
+
+export const getPost = async (postId: string) => {
+  return request<RawPost>(`/posts/${postId}`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+
+export const getPostReplies = async (
+  postId: string,
+  opts?: {
+    limit?: number;
+    beforeId?: string;
+    afterId?: string;
+  },
+) => {
+  return request<RawPost[]>(`/posts/${postId}/comments`, {
+    useToken: true,
+    method: "GET",
+    params: {
+      ...(opts?.limit ? { limit: opts.limit } : undefined),
+      ...(opts?.beforeId ? { beforeId: opts.beforeId } : undefined),
+      ...(opts?.afterId ? { afterId: opts.afterId } : undefined),
+    },
+  });
+};

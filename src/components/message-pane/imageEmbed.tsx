@@ -65,7 +65,7 @@ export const ImageEmbed = (props: {
   ) as HTMLImageElement;
   if (cached) img.classList.add(style.loaded!);
   const maxWidth = clamp(
-    props.container.offsetWidth - (props.horizPadding || DefaultHorizPadding),
+    props.container.clientWidth - (props.horizPadding || DefaultHorizPadding),
     props.maxWidth || 600,
   );
 
@@ -121,7 +121,6 @@ export const ImageEmbed = (props: {
 export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
   const onResize = throttle(() => {
     const imageEmbeds = logElement.querySelectorAll(`.${style.imageContainer}`);
-    let maxWidth = clamp(logElement.offsetWidth - DefaultHorizPadding, 600);
     const defaultMaxHeight = Math.max(logElement.clientHeight / 2, 200);
 
     for (let i = 0; i < imageEmbeds.length; i++) {
@@ -130,8 +129,9 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
       const customHeight = parseInt(embedEl.dataset.customHeight!);
       const horizPaddingOverride = parseInt(embedEl.dataset.horizPadding!);
       const maxHeight = customHeight ? customHeight / 2 : defaultMaxHeight;
-      maxWidth = clamp(
-        logElement.offsetWidth - (horizPaddingOverride || DefaultHorizPadding),
+      const maxWidth = clamp(
+        logElement.clientWidth -
+          (horizPaddingOverride || DefaultHorizPadding),
         maxWidthOverride || 600,
       );
 

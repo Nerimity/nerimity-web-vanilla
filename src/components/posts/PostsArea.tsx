@@ -1,36 +1,39 @@
 import {
   getDiscoverPosts,
   getFeedPosts,
+  getPostReplies,
   type DiscoverSort,
 } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
-import { createImageEmbedResizer } from "../message-pane/imageEmbed";
-import { handleImagePreviewModal } from "../ui/ImagePreviewModal";
 import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";
 
-type PostsAreaProps =
+type PostsAreaProps = {
+  hideNewDayMarker?: boolean;
+  signal: AbortSignal;
+} & (
   | {
-      signal: AbortSignal;
+      type: "replies";
+      postId: string;
+    }
+  | {
       type: "feed";
     }
   | {
-      signal: AbortSignal;
       type: "discover";
       sort: DiscoverSort;
     }
   | {
-      signal: AbortSignal;
       type: "post_replies";
       postId: string;
     }
   | {
-      signal: AbortSignal;
       type: "user_posts" | "user_posts_and_replies" | "user_liked_posts";
       userId: string;
-    };
+    }
+);
 
 export const PostsArea = (props: PostsAreaProps) => {
   let posts: RawPost[] | null = null;
@@ -47,6 +50,10 @@ export const PostsArea = (props: PostsAreaProps) => {
   ) as HTMLDivElement;
 
   const fetchAndRender = async () => {
+    if (props.type === "replies") {
+      const [newPosts] = await getPostReplies(props.postId);
+      posts = newPosts?.reverse() || null;
+    }
     if (props.type === "discover") {
       const [newPosts] = await getDiscoverPosts({ sort: props.sort });
       posts = newPosts?.reverse() || null;
@@ -69,20 +76,15 @@ export const PostsArea = (props: PostsAreaProps) => {
     props.signal,
   );
 
-  const imageEmbedResizer = createImageEmbedResizer(containerEl);
-
-  handleImagePreviewModal({
-    root: containerEl,
-    signal: props.signal,
-    selector: ".imageEmbed .image",
-  });
-
   const rerender = () => {
     postsEl.replaceChildren(
       <>
         {(posts || []).map((post, index) => (
           <PostItem
-            hideNewDayMarker={props.type === "discover" && props.sort !== ""}
+            hideNewDayMarker={
+              props.hideNewDayMarker ||
+              (props.type === "discover" && props.sort !== "")
+            }
             post={post}
             container={postsEl}
             prevPost={posts?.[index - 1]}
@@ -102,7 +104,6 @@ export const PostsArea = (props: PostsAreaProps) => {
       containerEl.remove();
       (postsEl as any) = null;
       (containerEl as any) = null;
-      imageEmbedResizer.destroy();
     },
     { once: true },
   );
