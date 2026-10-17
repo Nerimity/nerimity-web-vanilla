@@ -98,6 +98,7 @@ export const PostItem = (props: {
           hasBottomBorder && style.withBottomBorder,
         ]}
         data-disable-hover={props.disableHover}
+        data-status={post.local?.status}
       >
         <div class={[style.postContainer, "postContainer"]}>
           <Link

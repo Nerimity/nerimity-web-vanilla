@@ -178,6 +178,7 @@ const applyFormat = ({
   onTextUpdate: (text: string) => void;
 }) => {
   const transformFunc = Formats[format];
+  if (!transformFunc) return;
 
   const start = inputEl.selectionStart!;
   const finish = inputEl.selectionEnd!;

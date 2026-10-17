@@ -2,12 +2,15 @@ import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
 import {
+  createPost,
   getDiscoverPosts,
   getFeedPosts,
   getPostReplies,
   type DiscoverSort,
 } from "../../services/PostService";
+import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
+import { getClosestElementFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../ui/button";
 import {
@@ -15,7 +18,7 @@ import {
   handleFormatBar,
   Input,
 } from "../ui/input";
-import { createModal, Modal } from "../ui/modal";
+import { alert, createModal, Modal } from "../ui/modal";
 import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";
@@ -57,9 +60,50 @@ export const PostsArea = (props: PostsAreaProps) => {
 
   const showInputArea = ["replies", "feed"].includes(props.type);
 
+  const handlePostCreate = async (event: PostCreateEvent) => {
+    const content = event.content.trim();
+    if (!content) return;
+    const newPost: RawPost = {
+      content,
+
+      id: Math.random().toString(),
+      _count: { comments: 0, likedBy: 0, reposts: 0 },
+      createdAt: Date.now(),
+      createdBy: accountStore.currentUser!,
+      deleted: false,
+      block: false,
+      likedBy: [],
+      mentions: [],
+      reposts: [],
+      views: 0,
+      local: {
+        status: "failed",
+      },
+    };
+    posts = [newPost, ...(posts || [])];
+    rerender();
+
+    const [createdPost, err] = await createPost({
+      content,
+      replyToPostId: props.type === "replies" ? props.postId : undefined,
+    });
+    if (props.signal.aborted) return;
+    if (err) {
+      alert({ message: err.message });
+      newPost.local!.status = "failed";
+      rerender();
+      return;
+    }
+    posts = posts.filter((post) => post.id !== newPost.id);
+    posts = [createdPost!, ...(posts || [])];
+    rerender();
+  };
+
   let containerEl = (
     <div class={style.container}>
-      {showInputArea && <PostInputArea signal={props.signal} />}
+      {showInputArea && (
+        <PostInputArea onPostCreate={handlePostCreate} signal={props.signal} />
+      )}
       {postsEl}
     </div>
   ) as HTMLDivElement;
@@ -130,10 +174,22 @@ let inputContent = "";
 
 let respectfulPopupShown = false;
 
-const PostInputArea = (props: { signal: AbortSignal }) => {
+interface PostCreateEvent {
+  content: string;
+}
+
+const PostInputArea = (props: {
+  signal: AbortSignal;
+  onPostCreate: (e: PostCreateEvent) => void;
+}) => {
   const footer = (
     <div class={style.footerContainer}>
-      <Button icon="send" hoverBorder class={style.sendButton} />
+      <Button
+        icon="send"
+        hoverBorder
+        class={style.sendButton}
+        data-action="send"
+      />
     </div>
   );
   const el = (
@@ -170,6 +226,16 @@ const PostInputArea = (props: { signal: AbortSignal }) => {
     "input",
     () => {
       inputContent = textareaEl.value;
+    },
+    { signal: props.signal },
+  );
+
+  el.addEventListener(
+    "click",
+    (event) => {
+      if (getClosestElementFromEvent(event, `[data-action="send"]`)) {
+        props.onPostCreate({ content: inputContent });
+      }
     },
     { signal: props.signal },
   );

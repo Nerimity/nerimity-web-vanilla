@@ -1,4 +1,6 @@
+import { accountStore } from "../store/accountStore";
 import type { RawPost } from "../Types";
+import { nerimityCDNUploadRequest } from "./cdnService";
 import { request } from "./request";
 
 interface GetFeedPostsOpts {
@@ -98,5 +100,42 @@ export const getPostReplies = async (
       ...(opts?.beforeId ? { beforeId: opts.beforeId } : undefined),
       ...(opts?.afterId ? { afterId: opts.afterId } : undefined),
     },
+  });
+};
+
+export const createPost = async (opts: {
+  content?: string;
+  attachment?: File;
+  replyToPostId?: string;
+  poll?: { choices: string[] };
+}) => {
+  const userId = accountStore.currentUser!.id;
+
+  let fileId: string | undefined;
+  if (opts.attachment) {
+    const [res, err] = await nerimityCDNUploadRequest({
+      file: opts.attachment,
+      type: "attachments",
+      groupId: userId,
+    });
+
+    if (err) {
+      return [null, err] as const;
+    }
+
+    fileId = res!.fileId;
+  }
+
+  const body = {
+    content: opts.content,
+    poll: opts.poll,
+    ...(fileId ? { nerimityCdnFileId: fileId } : undefined),
+    ...(opts.replyToPostId ? { postId: opts.replyToPostId } : undefined),
+  };
+
+  return request<RawPost>(`/posts`, {
+    useToken: true,
+    method: "POST",
+    body,
   });
 };

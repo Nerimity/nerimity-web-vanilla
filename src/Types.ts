@@ -38,21 +38,33 @@ export interface RawPost {
   attachments?: Array<Attachment>;
   deleted: boolean;
   block?: boolean;
-  commentToId: string;
+  commentToId?: string;
   commentTo?: RawPost;
   createdBy: RawUser;
   embed?: RawMessageEmbed;
   createdAt: number;
   mentions: RawUser[];
-  editedAt: number;
+  editedAt?: number;
   likedBy: { id: string }[]; // if you liked this post, array will not be empty
   reposts: { id: string; createdBy: { id: string; username: string } }[];
   repost?: RawPost;
   _count: { likedBy: number; comments: number; reposts: number };
   views: number;
-  announcement: any;
+  announcement?: any;
 
   poll?: RawPostPoll;
+
+  local?: {
+    status: "creating" | "failed";
+    attachmentProperty?: {
+      file: File;
+      image?: {
+        width: number;
+        height: number;
+        src: string;
+      };
+    };
+  };
 }
 
 export interface RawServerMember {
