@@ -261,14 +261,25 @@ export const createModal = (
   let startedAtInitialPosition = false;
   let lastMobileWidth = isMobileWidth();
 
-  let inertiaFrame: number | null = null;
-  let lastInertiaTime = 0;
+  let inertiaAnimation: Animation | null = null;
+  let inertiaFooterAnimation: Animation | null = null;
 
   const cancelInertia = () => {
-    if (inertiaFrame !== null) {
-      cancelAnimationFrame(inertiaFrame);
-      inertiaFrame = null;
+    if (!inertiaAnimation) {
+      inertiaFooterAnimation?.cancel();
+      inertiaFooterAnimation = null;
+      return;
     }
+
+    const transform = getComputedStyle(modal).transform;
+    const currentY =
+      transform === "none" ? modalY : new DOMMatrixReadOnly(transform).m42;
+
+    inertiaAnimation.cancel();
+    inertiaAnimation = null;
+    inertiaFooterAnimation?.cancel();
+    inertiaFooterAnimation = null;
+    setModalY(currentY);
   };
 
   const stackEntry = { destroy: () => {} };
@@ -383,45 +394,49 @@ export const createModal = (
         return;
       }
 
-      const step = (now: number) => {
-        if (inertiaFrame === null) return;
+      const direction = Math.sign(velocityY);
+      const boundaryY = direction > 0 ? currentInitialY : minY;
+      const speed = Math.abs(velocityY);
+      const stoppingDistance = (speed * speed) / (2 * deceleration);
+      const distance = Math.min(stoppingDistance, Math.abs(boundaryY - modalY));
 
-        const dt = now - lastInertiaTime;
-        lastInertiaTime = now;
-        const sign = Math.sign(velocityY);
-        const decay = deceleration * dt;
-        velocityY = Math.abs(velocityY) <= decay ? 0 : velocityY - sign * decay;
+      if (distance === 0) return;
 
-        let nextY = modalY + velocityY * dt;
-        if (nextY >= currentInitialY) {
-          nextY = currentInitialY;
-          velocityY = 0;
-        }
-        if (nextY < minY) {
-          nextY = minY;
-          velocityY = 0;
-        }
-        if (nextY > windowHeight) {
-          nextY = windowHeight;
-          velocityY = 0;
-        }
-
-        setModalY(nextY);
-
-        if (
-          Math.abs(velocityY) < velocityThreshold ||
-          modalY >= currentInitialY ||
-          modalY <= minY
-        ) {
-          inertiaFrame = null;
-          return;
-        }
-
-        inertiaFrame = requestAnimationFrame(step);
+      const duration =
+        distance < stoppingDistance
+          ? (speed - Math.sqrt(speed * speed - 2 * deceleration * distance)) /
+            deceleration
+          : speed / deceleration;
+      const targetY = modalY + direction * distance;
+      const inertiaOptions: KeyframeAnimationOptions = {
+        duration,
+        fill: "forwards",
+        easing: "cubic-bezier(0.3333, 0.6667, 0.6667, 1)",
       };
 
-      lastInertiaTime = performance.now();
-      inertiaFrame = requestAnimationFrame(step);
+      const animation = modal.animate(
+        [
+          { transform: `translateY(${modalY}px)` },
+          { transform: `translateY(${targetY}px)` },
+        ],
+        inertiaOptions,
+      );
+      inertiaAnimation = animation;
+
+      const startFooterOffset = getFooterTranslateY(modalY);
+      const targetFooterOffset = getFooterTranslateY(targetY);
+      inertiaFooterAnimation = animateFooter(
+        startFooterOffset,
+        targetFooterOffset,
+        inertiaOptions,
+      );
+
+      animation.onfinish = () => {
+        if (inertiaAnimation !== animation) return;
+        inertiaAnimation = null;
+        setModalY(targetY);
+        animation.cancel();
+      };
     },
     { signal, passive: true },
   );
