@@ -84,6 +84,33 @@ export const getPost = async (postId: string) => {
   });
 };
 
+export const getUserPosts = async (opts: {
+  userId?: string;
+  withReplies?: boolean;
+  limit?: number;
+  beforeId?: string;
+  afterId?: string;
+}) => {
+  const defaultOpts = {
+    ...opts,
+    withReplies: opts.withReplies ?? true,
+  };
+  return request<RawPost[]>(`/users/${opts.userId}/posts`, {
+    useToken: true,
+    method: "GET",
+    params: {
+      ...(defaultOpts.withReplies
+        ? { withReplies: defaultOpts.withReplies }
+        : undefined),
+      ...(defaultOpts.limit ? { limit: defaultOpts.limit } : undefined),
+      ...(defaultOpts.beforeId
+        ? { beforeId: defaultOpts.beforeId }
+        : undefined),
+      ...(defaultOpts.afterId ? { afterId: defaultOpts.afterId } : undefined),
+    },
+  });
+};
+
 export const getPostReplies = async (
   postId: string,
   opts?: {

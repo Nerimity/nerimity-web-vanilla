@@ -167,6 +167,18 @@ export function fullDate(timestamp: number, short = false): string {
   });
 }
 
+export function dateMarkerLabel(timestamp: number): string {
+  const date = new Date(timestamp);
+  const now = new Date();
+
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  return isToday ? t`Today` : fullDate(timestamp);
+}
+
 export function getTime(timestamp = Date.now(), seconds = false): string {
   try {
     const formatter = seconds

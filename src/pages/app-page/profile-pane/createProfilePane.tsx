@@ -5,6 +5,7 @@ import { Banner } from "../../../components/Banner";
 import { createUserContextMenuHandler } from "../../../components/context-menus/UserContextMenu";
 import { Icon } from "../../../components/icon";
 import { Markup } from "../../../components/markup/markup";
+import { PostsArea } from "../../../components/posts/PostsArea";
 import { ServerClanItem } from "../../../components/serverClanItem";
 import { Avatar } from "../../../components/ui/avatar";
 import { Button } from "../../../components/ui/button";
@@ -58,6 +59,7 @@ const Content = (opts: {
   userDetails?: UserDetails;
   user?: RawUser;
   mobile: boolean;
+  postsAreaEl?: HTMLDivElement;
 }) => {
   const { userDetails, user } = opts;
   contentAbortController?.abort();
@@ -114,6 +116,7 @@ const Content = (opts: {
         />
       )}
       <Bio userDetails={userDetails} />
+      {opts.postsAreaEl}
       {opts.mobile && <Sidebar {...opts} mobile />}
     </div>
   );
@@ -685,9 +688,25 @@ const createProfilePane = ({ content }: RouteContext) => {
 
   const focusAnim = new FocusAnimator(content, "img");
 
+  let postsAreaEl: HTMLDivElement | undefined = undefined;
+
   const fetchUser = async () => {
     const param = router.match<{ userId: string }>("/app/profile/:userId");
     const userId = param?.params.userId;
+
+    if (userId) {
+      postsAreaEl = (
+        <div class={style.postsAreaContainer}>
+          <PostsArea
+            signal={signal}
+            type="profile"
+            userId={userId}
+            withReplies={false}
+          />
+        </div>
+      ) as HTMLDivElement;
+    }
+
     if (!userId) return rerender();
     localUser = userStore.users.get(userId);
     rerender();
@@ -705,7 +724,12 @@ const createProfilePane = ({ content }: RouteContext) => {
 
     let el = (
       <div class={[style.container, !desktop && style.mobile]}>
-        <Content user={getUser()} userDetails={userDetails} mobile={!desktop} />
+        <Content
+          user={getUser()}
+          userDetails={userDetails}
+          mobile={!desktop}
+          postsAreaEl={postsAreaEl}
+        />
         {desktop && <Sidebar user={getUser()} userDetails={userDetails} />}
       </div>
     ) as HTMLDivElement;

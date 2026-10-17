@@ -10,7 +10,11 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { MessageType, type RawReplyMessage } from "../../Types";
 import { resolveGradient } from "../../utils/color";
-import { formatTimestamp, friendlyTimestamp, fullDate } from "../../utils/date";
+import {
+  dateMarkerLabel,
+  formatTimestamp,
+  friendlyTimestamp,
+} from "../../utils/date";
 import { getFont } from "../../utils/font";
 import { inviteLinkRegex } from "../../utils/regex";
 import { CdnIcon } from "../cdnIcon";
@@ -108,7 +112,9 @@ export const MessageItem = (props: {
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
-      {newDay && <Marker label={fullDate(props.message.createdAt)} />}
+      {newDay && (
+        <Marker label={dateMarkerLabel(props.message.createdAt)} />
+      )}
       {props.newMarker && <Marker alert label={t`New Messages`} />}
       {isFriendBlocked && (
         <div class={style.blocked} data-blocked>

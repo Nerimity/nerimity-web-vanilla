@@ -6,6 +6,7 @@ import {
   getDiscoverPosts,
   getFeedPosts,
   getPostReplies,
+  getUserPosts,
   type DiscoverSort,
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
@@ -27,6 +28,11 @@ type PostsAreaProps = {
   hideNewDayMarker?: boolean;
   signal: AbortSignal;
 } & (
+  | {
+      type: "profile";
+      userId: string;
+      withReplies?: boolean;
+    }
   | {
       type: "replies";
       postId: string;
@@ -100,7 +106,7 @@ export const PostsArea = (props: PostsAreaProps) => {
   };
 
   let containerEl = (
-    <div class={style.container}>
+    <div class={[style.container, "postArea"]}>
       {showInputArea && (
         <PostInputArea onPostCreate={handlePostCreate} signal={props.signal} />
       )}
@@ -109,6 +115,13 @@ export const PostsArea = (props: PostsAreaProps) => {
   ) as HTMLDivElement;
 
   const fetchAndRender = async () => {
+    if (props.type === "profile") {
+      const [newPosts] = await getUserPosts({
+        userId: props.userId,
+        withReplies: props.withReplies,
+      });
+      posts = newPosts?.reverse() || null;
+    }
     if (props.type === "replies") {
       const [newPosts] = await getPostReplies(props.postId);
       posts = newPosts?.reverse() || null;

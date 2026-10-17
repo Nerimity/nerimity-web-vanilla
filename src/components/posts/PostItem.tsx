@@ -9,7 +9,11 @@ import {
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
-import { formatTimestamp, fullDate, timeSince } from "../../utils/date";
+import {
+  dateMarkerLabel,
+  formatTimestamp,
+  timeSince,
+} from "../../utils/date";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -88,7 +92,7 @@ export const PostItem = (props: {
 
   const el = (
     <div class="postItemOuter" data-id={post.id}>
-      {newDay && <Marker label={fullDate(post.createdAt)} />}
+      {newDay && <Marker label={dateMarkerLabel(post.createdAt)} />}
 
       <div
         class={[
