@@ -43,7 +43,7 @@ import { getFont } from "../../../utils/font";
 import { getRecentServerChannelId } from "../../../utils/recentServerChannels";
 import { router } from "../../../utils/router";
 import { UserBadgeValues, type UserBadge } from "../../../utils/UserBadgeFlag";
-import type { RouteContext } from "../AppPage";
+import { getAppHeader, type RouteContext } from "../AppPage";
 import { createRemoveFriendModal } from "./removeFriendModal";
 
 import style from "./createProfilePane.module.css";
@@ -734,6 +734,8 @@ const createProfilePane = ({ content }: RouteContext) => {
       </div>
     ) as HTMLDivElement;
 
+    getAppHeader()?.updateHeader({ user: getUser() });
+
     const colorOne = userDetails?.profile?.bgColorOne || "#000000";
     const colorTwo = userDetails?.profile?.bgColorTwo || "#000000";
 
@@ -794,6 +796,7 @@ const createProfilePane = ({ content }: RouteContext) => {
     contentAbortController?.abort();
     sidebarAbortController?.abort();
     abortController.abort();
+    getAppHeader()?.updateHeader({ user: null, trigger: false });
 
     content.replaceChildren();
     (content as any) = null;

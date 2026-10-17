@@ -5,6 +5,7 @@ import { channelStore } from "../store/channelStore";
 import { inboxStore } from "../store/inboxStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
+import type { RawUser } from "../Types";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
 import { createPillUpdater, Pill } from "./Pill";
@@ -15,31 +16,41 @@ import style from "./appHeader.module.css";
 
 let overrideIcon = "";
 let overrideLabel = "";
+let overrideUser: RawUser | null = null;
 
 const AppPill = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);
   const channel = channelStore.channels.get(channelStore.currentChannelId!);
   const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);
-  const user = inbox ? userStore.users.get(inbox.recipientId)! : null;
+  const inboxUser = inbox ? userStore.users.get(inbox.recipientId)! : null;
 
   const authError = accountStore.authError;
   const authenticated = accountStore.authenticated;
-  const isProfilePage = router.match("/app/profile/:id");
+  const profileRoute = router.match<{ userId: string }>(
+    "/app/profile/:userId",
+  );
+  const isProfilePage = !!profileRoute;
+  const profileUser =
+    profileRoute && overrideUser?.id === profileRoute.params.userId
+      ? overrideUser
+      : null;
 
   const getLabel = () => {
     if (!authenticated) return accountStore.connectionState();
     if (overrideLabel) return overrideLabel;
+    if (isProfilePage) return profileUser?.username || t`Profile`;
     if (channel?.name) return channel.name;
-    if (user?.username) return user.username;
-    return isProfilePage ? t`Profile` : t`Home`;
+    if (inboxUser?.username) return inboxUser.username;
+    return t`Home`;
   };
 
   const getIcon = () => {
     if (authError) return "gpp_maybe";
     if (!authenticated) return "cached";
     if (overrideIcon) return overrideIcon;
+    if (isProfilePage) return profileUser ? null : "article_person";
     if (server || channel) return null;
-    return isProfilePage ? "article_person" : "home";
+    return "home";
   };
 
   const label = getLabel();
@@ -47,9 +58,9 @@ const AppPill = () => {
 
   return (
     <Pill
-      server={server}
-      user={user}
-      channel={channel}
+      server={isProfilePage ? undefined : server}
+      user={isProfilePage ? profileUser : inboxUser}
+      channel={isProfilePage ? undefined : channel}
       label={label}
       icon={icon}
       warn={!authenticated}
@@ -130,10 +141,12 @@ export const createAppHeader = () => {
   const updateHeader = (opts?: {
     label?: string;
     icon?: string;
+    user?: RawUser | null;
     trigger?: boolean;
   }) => {
     overrideIcon = opts?.icon || "";
     overrideLabel = opts?.label || "";
+    overrideUser = opts?.user || null;
     if (opts?.trigger === false) return;
     updatePill();
   };

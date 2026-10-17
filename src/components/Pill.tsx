@@ -2,7 +2,7 @@ import morphdom from "morphdom";
 
 import { Channel } from "../store/channelStore";
 import type { Server } from "../store/serverStore";
-import type { User } from "../store/userStore";
+import type { RawUser } from "../Types";
 import { debounce } from "../utils/debounce";
 import { CdnIcon } from "./cdnIcon";
 import { Icon } from "./icon";
@@ -24,7 +24,7 @@ export const Pill = ({
   error?: boolean;
   icon?: string | null;
   server?: Server;
-  user?: User | null;
+  user?: RawUser | null;
   channel?: Channel;
   label?: string;
   suffix?: any;
@@ -56,6 +56,12 @@ export const createPillUpdater = (
   pill: () => any,
 ) => {
   let pendingAnim: Animation | null = null;
+  const getPillAnimationKey = (el: HTMLElement) =>
+    JSON.stringify([
+      el.querySelector(`.${style.label}`)?.textContent,
+      el.firstElementChild?.outerHTML,
+    ]);
+
   const updatePill = debounce(() => {
     const pillEl = pillContainer()?.querySelector(
       `.${style.pill}`,
@@ -64,10 +70,18 @@ export const createPillUpdater = (
 
     const oldWidth = pillEl.getBoundingClientRect().width;
     const oldHTML = pillEl.innerHTML;
+    const oldAnimationKey = getPillAnimationKey(pillEl);
+    const nextPill = pill() as HTMLElement;
+    const nextAnimationKey = getPillAnimationKey(nextPill);
 
-    morphdom(pillEl, pill());
+    morphdom(pillEl, nextPill);
 
-    if (pillEl.innerHTML === oldHTML) return;
+    if (
+      pillEl.innerHTML === oldHTML ||
+      oldAnimationKey === nextAnimationKey
+    ) {
+      return;
+    }
 
     pendingAnim?.cancel();
     pendingAnim = null;
