@@ -24,7 +24,7 @@
 .inputInnerContainer {
   display: flex;
   overflow: hidden;
-  align-items: center;
+  flex-direction: column;
   border: solid 1px var(--gray-700);
   border-radius: var(--radius-10);
 
@@ -34,6 +34,11 @@
   &:has(input:focus) {
     border-bottom-color: var(--primary-color);
   }
+}
+
+.inputInnerInnerContainer {
+  display: flex;
+  align-items: center;
 }
 
 .formatBar {

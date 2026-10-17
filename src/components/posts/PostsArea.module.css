@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  flex-direction: column;
   width: 100%;
   min-width: 0;
   min-height: 10px;
@@ -8,4 +9,34 @@
 .posts {
   width: 100%;
   min-width: 0;
+}
+
+.inputAreaContainer {
+  margin-top: 10px;
+
+  textarea {
+    min-height: 74px;
+  }
+
+  .footerContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin: 4px;
+    :global(.button) {
+      padding: 6px 4px;
+      border-radius: var(--radius-6);
+      :global(.icon) {
+        font-size: 22px;
+      }
+    }
+    .sendButton {
+      width: 60px;
+    }
+  }
+}
+.respectfulModal {
+  .warningText {
+    margin-top: 10px;
+    color: var(--gray-200);
+  }
 }

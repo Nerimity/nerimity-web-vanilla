@@ -22,6 +22,7 @@ interface InputProps {
   showFormatBar?: boolean;
   showFormatBarHtml?: boolean;
   showFormatBarEmoji?: boolean;
+  footer?: any;
 }
 export const Input = (props: InputProps) => {
   return (
@@ -35,20 +36,23 @@ export const Input = (props: InputProps) => {
       )}
 
       <div class={[style.inputInnerContainer, "inputContainer"]}>
-        {props.prefix}
-        <Dynamic
-          id={props.id}
-          placeholder={props.placeholder}
-          maxlength={props.maxLength}
-          class={["input", style.input]}
-          component={props.type === "textarea" ? "textarea" : "input"}
-          type={props.type || "text"}
-          value={props.type != "textarea" ? props.value : undefined}
-          autocomplete={props.autocomplete}
-        >
-          {props.type === "textarea" ? props.value || "" : ""}
-        </Dynamic>
-        {props.suffix}
+        <div class={style.inputInnerInnerContainer}>
+          {props.prefix}
+          <Dynamic
+            id={props.id}
+            placeholder={props.placeholder}
+            maxlength={props.maxLength}
+            class={["input", style.input]}
+            component={props.type === "textarea" ? "textarea" : "input"}
+            type={props.type || "text"}
+            value={props.type != "textarea" ? props.value : undefined}
+            autocomplete={props.autocomplete}
+          >
+            {props.type === "textarea" ? props.value || "" : ""}
+          </Dynamic>
+          {props.suffix}
+        </div>
+        {props.footer}
       </div>
     </div>
   );

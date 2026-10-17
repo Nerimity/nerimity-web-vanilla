@@ -1,3 +1,6 @@
+import { t } from "@lingui/core/macro";
+import { Trans } from "@trans";
+
 import {
   getDiscoverPosts,
   getFeedPosts,
@@ -6,6 +9,13 @@ import {
 } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { Button } from "../ui/button";
+import {
+  createTextareaHeightHandler,
+  handleFormatBar,
+  Input,
+} from "../ui/input";
+import { createModal, Modal } from "../ui/modal";
 import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";
@@ -19,10 +29,10 @@ type PostsAreaProps = {
       postId: string;
     }
   | {
-      type: "feed";
+      type: "feed"; // now called "following"
     }
   | {
-      type: "discover";
+      type: "discover"; // now called "Feed"
       sort: DiscoverSort;
     }
   | {
@@ -45,8 +55,13 @@ export const PostsArea = (props: PostsAreaProps) => {
     container: postsEl,
   });
 
+  const showInputArea = ["replies", "feed"].includes(props.type);
+
   let containerEl = (
-    <div class={style.container}>{postsEl}</div>
+    <div class={style.container}>
+      {showInputArea && <PostInputArea signal={props.signal} />}
+      {postsEl}
+    </div>
   ) as HTMLDivElement;
 
   const fetchAndRender = async () => {
@@ -109,4 +124,115 @@ export const PostsArea = (props: PostsAreaProps) => {
   );
 
   return containerEl;
+};
+
+let inputContent = "";
+
+let respectfulPopupShown = false;
+
+const PostInputArea = (props: { signal: AbortSignal }) => {
+  const footer = (
+    <div class={style.footerContainer}>
+      <Button icon="send" hoverBorder class={style.sendButton} />
+    </div>
+  );
+  const el = (
+    <div class={style.inputAreaContainer}>
+      <Input
+        showFormatBar
+        value={inputContent}
+        showFormatBarEmoji
+        type="textarea"
+        placeholder={t`Create a post...`}
+        footer={footer}
+      />
+    </div>
+  ) as HTMLDivElement;
+
+  const textareaEl = el.querySelector("textarea") as HTMLTextAreaElement;
+
+  textareaEl.addEventListener(
+    "click",
+    (event) => {
+      if (!respectfulPopupShown) {
+        event.stopImmediatePropagation();
+        event.stopPropagation();
+        event.preventDefault();
+        textareaEl.blur();
+        createRespectfulModal();
+        respectfulPopupShown = true;
+      }
+    },
+    { signal: props.signal },
+  );
+
+  textareaEl.addEventListener(
+    "input",
+    () => {
+      inputContent = textareaEl.value;
+    },
+    { signal: props.signal },
+  );
+
+  handleFormatBar({
+    signal: props.signal,
+    inputContainer: el,
+    onTextUpdate(text) {
+      inputContent = text;
+      textareaEl.value = text;
+    },
+  });
+
+  createTextareaHeightHandler({
+    textarea: textareaEl,
+    signal: props.signal,
+  });
+
+  return el;
+};
+
+const createRespectfulModal = () => {
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  const modalEl = (
+    <Modal.Root disableGestures ignoreBgClick>
+      <Modal.Header warn label={t`Respectful Posting`} icon="diversity_1" />
+      <Modal.Body maxWidth="400px" class={style.respectfulModal}>
+        <div>
+          <Trans>
+            Please be <strong>respectful</strong> when creating posts.
+          </Trans>
+        </div>
+        <div>
+          <Trans>
+            <strong>Self-harm</strong> content is not allowed.
+          </Trans>
+        </div>
+
+        <div class={style.warningText}>
+          <Trans>
+            Violating these rules may result in content removal or account
+            suspension.
+          </Trans>
+        </div>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          warn
+          primary
+          data-action="close"
+          icon="diversity_1"
+          label={t`I Will Be Respectful`}
+          onClick={() => ac.abort()}
+        />
+      </Modal.Footer>
+    </Modal.Root>
+  ) as HTMLDivElement;
+
+  modalEl
+    .querySelector('[data-action="close"]')
+    ?.addEventListener("click", () => ac.abort(), { signal });
+
+  createModal(() => modalEl, ac);
 };
