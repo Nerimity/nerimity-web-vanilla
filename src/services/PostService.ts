@@ -30,6 +30,9 @@ export type DiscoverSort =
   | "mostLiked30days"
   | "mostLikedAllTime";
 interface GetDiscoverPostsOpts {
+  /**
+   * @default 30
+   */
   limit?: number;
   beforeId?: string;
   afterId?: string;
@@ -87,6 +90,9 @@ export const getPost = async (postId: string) => {
 export const getUserPosts = async (opts: {
   userId?: string;
   withReplies?: boolean;
+  /**
+   * @default 30
+   */
   limit?: number;
   beforeId?: string;
   afterId?: string;
@@ -114,6 +120,9 @@ export const getUserPosts = async (opts: {
 export const getPostReplies = async (
   postId: string,
   opts?: {
+    /**
+     * @default 30
+     */
     limit?: number;
     beforeId?: string;
     afterId?: string;

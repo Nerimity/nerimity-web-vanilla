@@ -1,4 +1,13 @@
+:global(.mobileWidth) {
+  .body {
+    margin-right: 0;
+    margin-bottom: 4px;
+    margin-left: 4px;
+  }
+}
+
 .body {
+  margin-bottom: 12px;
 }
 .tabs {
   display: flex;

@@ -20,6 +20,7 @@ import {
   Input,
 } from "../ui/input";
 import { alert, createModal, Modal } from "../ui/modal";
+import { PostSkeleton } from "../ui/skeleton";
 import { createPostHandler, PostItem } from "./PostItem";
 
 import style from "./PostsArea.module.css";
@@ -63,6 +64,18 @@ export const PostsArea = (props: PostsAreaProps) => {
     signal: props.signal,
     container: postsEl,
   });
+
+  const skeletonsContainer = (
+    <div>
+      {Array.from({ length: 10 }, () => (
+        <PostSkeleton />
+      ))}
+    </div>
+  ) as HTMLDivElement;
+
+  const setSkeletonVisibility = (visible: boolean) => {
+    skeletonsContainer.style.display = visible ? "block" : "none";
+  };
 
   const showInputArea = ["replies", "feed"].includes(props.type);
 
@@ -135,6 +148,18 @@ export const PostsArea = (props: PostsAreaProps) => {
       const [newPosts] = await getFeedPosts();
       posts = newPosts;
     }
+
+    let showSkeleton = true;
+
+    if (!posts?.length) {
+      setSkeletonVisibility(true);
+    }
+    if (posts && posts?.length < 30) {
+      showSkeleton = false;
+    }
+
+    setSkeletonVisibility(showSkeleton);
+
     rerender();
   };
 
@@ -163,9 +188,11 @@ export const PostsArea = (props: PostsAreaProps) => {
             nextPost={posts?.[index + 1]}
           />
         ))}
+        {skeletonsContainer}
       </>,
     );
   };
+  rerender();
 
   fetchAndRender();
 

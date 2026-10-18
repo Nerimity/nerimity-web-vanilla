@@ -10,6 +10,27 @@ export const MessageSkeleton = (props: { wide?: boolean }) => (
   </div>
 );
 
+export const PostSkeleton = () => (
+  <div class={[style.skeletonItem, style.post]} aria-hidden="true">
+    <div class={style.avatarSkeleton} />
+    <div class={style.postBody}>
+      <div class={style.detailsLine}>
+        <div class={[style.line, style.usernameSkeleton]} />
+        <div class={[style.line, style.timestampSkeleton]} />
+      </div>
+      <div class={style.postContent}>
+        <div class={[style.line, style.contentLine]} />
+        <div class={[style.line, style.contentLine, style.shortContentLine]} />
+      </div>
+      <div class={style.postInfo}>
+        <div class={style.actionSkeleton} />
+        <div class={style.actionSkeleton} />
+        <div class={style.actionSkeleton} />
+      </div>
+    </div>
+  </div>
+);
+
 export const Skeleton = (props: { class?: string; style?: any }) => (
   <div
     class={[style.skeletonItem, style.raw, props.class]}
