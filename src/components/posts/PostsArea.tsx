@@ -13,6 +13,7 @@ import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
 import { getClosestElementFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { createIntersectionObserver } from "../../utils/observer";
 import { Button } from "../ui/button";
 import {
   createTextareaHeightHandler,
@@ -21,7 +22,11 @@ import {
 } from "../ui/input";
 import { alert, createModal, Modal } from "../ui/modal";
 import { PostSkeleton } from "../ui/skeleton";
-import { createPostHandler, PostItem } from "./PostItem";
+import {
+  createPostHandler,
+  PostItem,
+  updatePostItemNextPost,
+} from "./PostItem";
 
 import style from "./PostsArea.module.css";
 
@@ -59,6 +64,13 @@ export const PostsArea = (props: PostsAreaProps) => {
   let posts: RawPost[] | null = null;
 
   let postsEl = (<div class={style.posts}></div>) as HTMLDivElement;
+
+  let loading = false;
+  let offsetId = undefined;
+  let lastPostEl: HTMLDivElement | undefined;
+
+  const hideNewDayMarker =
+    props.hideNewDayMarker || (props.type === "discover" && props.sort !== "");
 
   createPostHandler({
     signal: props.signal,
@@ -127,38 +139,70 @@ export const PostsArea = (props: PostsAreaProps) => {
     </div>
   ) as HTMLDivElement;
 
-  const fetchAndRender = async () => {
+  createIntersectionObserver(
+    skeletonsContainer,
+    null,
+    async () => {
+      if (loading) return;
+
+      const previousPostCount = posts?.length || 0;
+      offsetId = posts?.[posts.length - 1]?.id;
+      await fetchPosts(offsetId);
+      appendPosts(previousPostCount);
+    },
+    { signal: props.signal },
+  );
+
+  const fetchPosts = async (afterId?: string) => {
+    if (loading) return;
+    loading = true;
+    let fetchedPosts: RawPost[] | null = null;
     if (props.type === "profile") {
       const [newPosts] = await getUserPosts({
         userId: props.userId,
         withReplies: props.withReplies,
+        afterId,
       });
-      posts = newPosts?.reverse() || null;
+      fetchedPosts = newPosts?.reverse() || null;
     }
     if (props.type === "replies") {
-      const [newPosts] = await getPostReplies(props.postId);
-      posts = newPosts?.reverse() || null;
+      const [newPosts] = await getPostReplies(props.postId, { afterId });
+      fetchedPosts = newPosts?.reverse() || null;
     }
     if (props.type === "discover") {
-      const [newPosts] = await getDiscoverPosts({ sort: props.sort });
-      posts = newPosts?.reverse() || null;
+      const [newPosts] = await getDiscoverPosts({ sort: props.sort, afterId });
+      fetchedPosts = newPosts?.reverse() || null;
     }
 
     if (props.type === "feed") {
-      const [newPosts] = await getFeedPosts();
-      posts = newPosts;
+      const [newPosts] = await getFeedPosts({ afterId });
+      fetchedPosts = newPosts;
+    }
+
+    if (afterId && fetchedPosts) {
+      posts = [...(posts || []), ...fetchedPosts];
+    }
+    if (!afterId && fetchedPosts) {
+      posts = fetchedPosts;
     }
 
     let showSkeleton = true;
 
-    if (!posts?.length) {
-      setSkeletonVisibility(true);
+    if (!fetchedPosts?.length) {
+      showSkeleton = true;
     }
-    if (posts && posts?.length < 30) {
+    if (fetchedPosts && fetchedPosts?.length < 30) {
       showSkeleton = false;
     }
-
     setSkeletonVisibility(showSkeleton);
+
+    requestAnimationFrame(() => {
+      loading = false;
+    });
+  };
+
+  const fetchAndRender = async () => {
+    await fetchPosts();
 
     rerender();
   };
@@ -174,24 +218,46 @@ export const PostsArea = (props: PostsAreaProps) => {
   );
 
   const rerender = () => {
-    postsEl.replaceChildren(
-      <>
-        {(posts || []).map((post, index) => (
-          <PostItem
-            hideNewDayMarker={
-              props.hideNewDayMarker ||
-              (props.type === "discover" && props.sort !== "")
-            }
-            post={post}
-            container={postsEl}
-            prevPost={posts?.[index - 1]}
-            nextPost={posts?.[index + 1]}
-          />
-        ))}
-        {skeletonsContainer}
-      </>,
+    const currentPosts = posts || [];
+    const postItems = currentPosts.map((post, index) =>
+      renderPost(post, index, currentPosts),
     );
+    lastPostEl = postItems.at(-1);
+    postsEl.replaceChildren(...postItems, skeletonsContainer);
   };
+
+  const appendPosts = (previousPostCount: number) => {
+    const currentPosts = posts || [];
+    const newPosts = currentPosts.slice(previousPostCount);
+    if (!newPosts.length) return;
+
+    const firstNewPost = newPosts[0];
+    if (lastPostEl && firstNewPost) {
+      updatePostItemNextPost(lastPostEl, firstNewPost, hideNewDayMarker);
+    }
+
+    const postItems = newPosts.map((post, index) =>
+      renderPost(post, previousPostCount + index, currentPosts),
+    );
+    lastPostEl = postItems.at(-1);
+    postsEl.insertBefore(<>{postItems}</>, skeletonsContainer);
+  };
+
+  const renderPost = (
+    post: RawPost,
+    index: number,
+    currentPosts: RawPost[],
+  ): HTMLDivElement =>
+    (
+      <PostItem
+        hideNewDayMarker={hideNewDayMarker}
+        post={post}
+        container={postsEl}
+        prevPost={currentPosts[index - 1]}
+        nextPost={currentPosts[index + 1]}
+      />
+    ) as HTMLDivElement;
+
   rerender();
 
   fetchAndRender();

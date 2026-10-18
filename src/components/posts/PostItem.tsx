@@ -9,11 +9,7 @@ import {
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
-import {
-  dateMarkerLabel,
-  formatTimestamp,
-  timeSince,
-} from "../../utils/date";
+import { dateMarkerLabel, formatTimestamp, timeSince } from "../../utils/date";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -293,6 +289,21 @@ const isNewDay = (
 ) => {
   if (!prev) return true;
   return dayNumber(attach.createdAt) !== dayNumber(prev.createdAt);
+};
+
+export const updatePostItemNextPost = (
+  el: HTMLDivElement,
+  nextPost: RawPost,
+  hideNewDayMarker: boolean,
+) => {
+  const post = postElToPost.get(el);
+  const postItem = el.querySelector(`.${style.postItem}`);
+  if (!post || !postItem) return;
+
+  postItem.classList.toggle(
+    style.withBottomBorder!,
+    hideNewDayMarker || !isNewDay(nextPost, post),
+  );
 };
 
 const rerenderPostInfo = (el: HTMLDivElement) => {

@@ -1,6 +1,6 @@
 export const createIntersectionObserver = (
   target: HTMLDivElement,
-  root: HTMLDivElement,
+  root: Element | null,
   onIntersect: () => void,
   opts: { rootMargin?: string; signal: AbortSignal },
 ) => {
