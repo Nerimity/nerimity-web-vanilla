@@ -1,5 +1,6 @@
 :global(.mobileWidth) {
   .body {
+    min-height: initial;
     margin-right: 0;
     margin-bottom: 4px;
     margin-left: 4px;
@@ -7,6 +8,7 @@
 }
 
 .body {
+  min-height: 80vh;
   margin-bottom: 12px;
 }
 .tabs {
@@ -15,5 +17,56 @@
   gap: 4px;
   :global(.item) {
     padding: 10px 8px;
+  }
+}
+
+.postActivityList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  gap: 4px;
+  .postActivitySkeletons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .postActivitySkeleton {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    gap: 4px;
+  }
+  .postActivityAvatarSkeleton {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+  }
+  .postActivityUsernameSkeleton {
+    width: 120px;
+    height: 12px;
+    border-radius: var(--radius-max);
+  }
+  .postActivityTimestampSkeleton {
+    width: 54px;
+    height: 10px;
+    margin-left: auto;
+    border-radius: var(--radius-max);
+  }
+  .postActivityUser {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    border-radius: var(--radius-max);
+    color: inherit;
+    text-decoration: none;
+    gap: 8px;
+    &:hover {
+      background-color: var(--gray-900);
+    }
+    .postActivityTimestamp {
+      margin-left: auto;
+      color: var(--gray-500);
+      font-size: 12px;
+    }
   }
 }

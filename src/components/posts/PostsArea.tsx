@@ -321,7 +321,11 @@ const PostInputArea = (props: {
         event.stopPropagation();
         event.preventDefault();
         textareaEl.blur();
-        createRespectfulModal();
+        createRespectfulModal({
+          accepted() {
+            textareaEl.focus();
+          },
+        });
         respectfulPopupShown = true;
       }
     },
@@ -363,7 +367,7 @@ const PostInputArea = (props: {
   return el;
 };
 
-const createRespectfulModal = () => {
+const createRespectfulModal = (opts: { accepted: () => void }) => {
   const ac = new AbortController();
   const { signal } = ac;
 
@@ -402,9 +406,14 @@ const createRespectfulModal = () => {
     </Modal.Root>
   ) as HTMLDivElement;
 
-  modalEl
-    .querySelector('[data-action="close"]')
-    ?.addEventListener("click", () => ac.abort(), { signal });
+  modalEl.querySelector('[data-action="close"]')?.addEventListener(
+    "click",
+    () => {
+      opts.accepted();
+      ac.abort();
+    },
+    { signal },
+  );
 
   createModal(() => modalEl, ac);
 };

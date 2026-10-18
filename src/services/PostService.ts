@@ -1,5 +1,5 @@
 import { accountStore } from "../store/accountStore";
-import type { RawPost } from "../Types";
+import type { RawPost, RawUser } from "../Types";
 import { nerimityCDNUploadRequest } from "./cdnService";
 import { request } from "./request";
 
@@ -82,6 +82,29 @@ export const deletePost = async (postId: string) => {
 
 export const getPost = async (postId: string) => {
   return request<RawPost>(`/posts/${postId}`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+
+interface LikedPost {
+  likedBy: RawUser;
+  createdAt: number;
+}
+
+export const getPostLikes = async (postId: string) => {
+  return request<LikedPost[]>(`/posts/${postId}/likes`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+
+interface RepostedPost {
+  createdBy: RawUser;
+  createdAt: number;
+}
+export const getPostReposts = async (postId: string) => {
+  return request<RepostedPost[]>(`/posts/${postId}/reposts`, {
     useToken: true,
     method: "GET",
   });
