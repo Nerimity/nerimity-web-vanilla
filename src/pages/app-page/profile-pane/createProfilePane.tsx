@@ -847,7 +847,7 @@ const PostsSection = (props: {
           <Item.Label>{t`Posts`}</Item.Label>
         </Item.Base>
         <Item.Base handlePosition="bottom" data-value="replies">
-          <Item.Icon name="forum" />
+          <Item.Icon name="reply" />
           <Item.Label>{t`Replies ~ ${ph({ count: postsCount })}`}</Item.Label>
         </Item.Base>
         <Item.Base handlePosition="bottom" data-value="liked">
