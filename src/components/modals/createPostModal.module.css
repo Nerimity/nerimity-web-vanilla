@@ -1,15 +1,19 @@
 :global(.mobileWidth) {
   .body {
     min-height: initial;
+    padding-bottom: 4px;
     margin-right: 0;
-    margin-bottom: 4px;
     margin-left: 4px;
   }
 }
 
 .body {
   min-height: 80vh;
-  margin-bottom: 12px;
+  padding-bottom: 12px;
+  :global(.postItem) {
+    margin-right: 0;
+    margin-left: 0;
+  }
 }
 .tabs {
   display: flex;
