@@ -89,7 +89,11 @@ export const PostsArea = (props: PostsAreaProps) => {
     skeletonsContainer.style.display = visible ? "block" : "none";
   };
 
-  const showInputArea = ["replies", "feed"].includes(props.type);
+  const isOnSelfProfile =
+    props.type === "profile" && props.userId === accountStore.currentUser?.id;
+
+  const showInputArea =
+    isOnSelfProfile || ["replies", "feed"].includes(props.type);
 
   const handlePostCreate = async (event: PostCreateEvent) => {
     const content = event.content.trim();
