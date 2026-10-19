@@ -485,7 +485,7 @@ const NotificationItemItem = (props: {
           <Avatar
             class={style.notificationAvatar}
             user={props.notification.by}
-            size={32}
+            size={40}
           />
 
           <div class={style.notificationDetails}>
