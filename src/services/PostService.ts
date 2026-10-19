@@ -139,6 +139,12 @@ export const getUserPosts = async (opts: {
     },
   });
 };
+export const getUserLikedPosts = async (opts: { userId?: string }) => {
+  return request<RawPost[]>(`/users/${opts.userId}/posts/liked`, {
+    useToken: true,
+    method: "GET",
+  });
+};
 
 export const getPostReplies = async (
   postId: string,

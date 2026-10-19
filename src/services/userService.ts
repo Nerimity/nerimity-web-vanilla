@@ -195,3 +195,15 @@ export const toggleBadge = async (bit: number) => {
     method: "POST",
   });
 };
+export const getFollowingUsers = async (userId: string) => {
+  return request<RawUser[]>(`/users/${userId}/following`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+export const getFollowers = async (userId: string) => {
+  return request<RawUser[]>(`/users/${userId}/followers`, {
+    useToken: true,
+    method: "GET",
+  });
+};

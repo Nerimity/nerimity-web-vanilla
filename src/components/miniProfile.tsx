@@ -175,8 +175,16 @@ export const MiniProfile = (props: {
     const followers = details?.user._count?.followers;
     const following = details?.user._count?.following;
 
+    const isCurrentUser = accountStore.currentUser?.id === details?.user.id;
+
+    if (isCurrentUser && details) {
+      details.hideFollowers = false;
+      details.hideFollowing = false;
+    }
+
     const hideFollowers = details?.hideFollowers;
     const hideFollowing = details?.hideFollowing || user?.bot;
+
     const showStats = details && (!hideFollowers || !hideFollowing);
     const isSelf = props.userId === accountStore.currentUser?.id;
     const inbox = inboxStore.inboxes.get(channelStore.currentChannelId!);

@@ -13,6 +13,7 @@ import { Drawer } from "../../../components/ui/drawer";
 import { Item } from "../../../components/ui/item";
 import { Link } from "../../../components/ui/link";
 import { alert } from "../../../components/ui/modal";
+import { Skeleton } from "../../../components/ui/skeleton";
 import { updateActivity, UserActivity } from "../../../components/UserActivity";
 import { UserBadgeItem } from "../../../components/UserBadgeItem";
 import { UserPresence } from "../../../components/userPresence";
@@ -24,6 +25,8 @@ import {
 } from "../../../services/friendService";
 import {
   followUser,
+  getFollowers,
+  getFollowingUsers,
   getUserDetails,
   unfollowUser,
   type UserDetails,
@@ -369,16 +372,30 @@ const Stats = ({
   const el = (<div class={style.stats}></div>) as HTMLDivElement;
 
   const rerender = () => {
-    const followers = details?.user._count?.followers;
     const following = details?.user._count?.following;
+    const followers = details?.user._count?.followers;
 
-    const hideFollowers = details?.hideFollowers;
+    const isCurrentUser = accountStore.currentUser?.id === details?.user.id;
+
+    if (isCurrentUser && details) {
+      details.hideFollowers = false;
+      details.hideFollowing = false;
+    }
+
     const hideFollowing = details?.hideFollowing || details?.user.bot;
+    const hideFollowers = details?.hideFollowers;
     const showStats = details && (!hideFollowers || !hideFollowing);
 
     if (!showStats) return null;
     el.replaceChildren(
       <>
+        {!hideFollowing && (
+          <span class={style.stat}>
+            <Trans>
+              <span class={style.full}>{following}</span> Following
+            </Trans>
+          </span>
+        )}
         {!hideFollowers && (
           <span class={style.stat}>
             <Plural
@@ -400,13 +417,6 @@ const Stats = ({
                 </Trans>
               }
             />
-          </span>
-        )}
-        {!hideFollowing && (
-          <span class={style.stat}>
-            <Trans>
-              <span class={style.full}>{following}</span> Following
-            </Trans>
           </span>
         )}
       </>,
@@ -817,38 +827,65 @@ const PostsSection = (props: {
   const postsCount = props.details.user._count.posts.toLocaleString();
   const likedCount = props.details.user._count.likedPosts.toLocaleString();
 
-  const tabsEl = (
-    <div class={style.tabsContainer}>
-      <Item.Base handlePosition="bottom" data-value="posts">
-        <Item.Icon name="post" />
-        <Item.Label>{t`Posts`}</Item.Label>
-      </Item.Base>
-      <Item.Base handlePosition="bottom" data-value="replies">
-        <Item.Icon name="forum" />
-        <Item.Label>{t`Posts & Replies ~ ${ph({ count: postsCount })}`}</Item.Label>
-      </Item.Base>
-      <Item.Base handlePosition="bottom" data-value="liked">
-        <Item.Icon name="favorite" />
-        <Item.Label>{t`Liked ~ ${ph({ count: likedCount })}`}</Item.Label>
-      </Item.Base>
-      <Item.Base handlePosition="bottom" data-value="following">
-        <Item.Icon name="person_check" />
-        <Item.Label>{t`Following`}</Item.Label>
-      </Item.Base>
-      <Item.Base handlePosition="bottom" data-value="followers">
-        <Item.Icon name="group" />
-        <Item.Label>{t`Followers`}</Item.Label>
-      </Item.Base>
-    </div>
-  ) as HTMLDivElement;
+  let hideFollowing = props.details?.hideFollowing || props.details?.user.bot;
+  let hideFollowers = props.details?.hideFollowers;
+
+  const tabsEl = (<div class={style.tabsContainer}></div>) as HTMLDivElement;
+  const rerenderTabs = () => {
+    const isCurrentUser =
+      accountStore.currentUser?.id === props.details?.user.id;
+
+    if (isCurrentUser) {
+      hideFollowing = false;
+      hideFollowers = false;
+    }
+
+    tabsEl.replaceChildren(
+      <>
+        <Item.Base handlePosition="bottom" data-value="posts">
+          <Item.Icon name="post" />
+          <Item.Label>{t`Posts`}</Item.Label>
+        </Item.Base>
+        <Item.Base handlePosition="bottom" data-value="replies">
+          <Item.Icon name="forum" />
+          <Item.Label>{t`Replies ~ ${ph({ count: postsCount })}`}</Item.Label>
+        </Item.Base>
+        <Item.Base handlePosition="bottom" data-value="liked">
+          <Item.Icon name="favorite" />
+          <Item.Label>{t`Liked ~ ${ph({ count: likedCount })}`}</Item.Label>
+        </Item.Base>
+        {!hideFollowing && (
+          <Item.Base handlePosition="bottom" data-value="following">
+            <Item.Icon name="person_check" />
+            <Item.Label>{t`Following`}</Item.Label>
+          </Item.Base>
+        )}
+        {!hideFollowers && (
+          <Item.Base handlePosition="bottom" data-value="followers">
+            <Item.Icon name="group" />
+            <Item.Label>{t`Followers`}</Item.Label>
+          </Item.Base>
+        )}
+      </>,
+    );
+    itemHandler.update();
+  };
+
+  storeEmitter.on("ws:authStateUpdate", rerenderTabs, props.signal);
 
   const getQueryTab = () => {
     const getQuery = router.query<{ tab: PostTab }>();
     const tab = getQuery().tab;
+
     return PostTabs.includes(tab) ? tab : "posts";
   };
+  const currentTabContent = (<div></div>) as HTMLDivElement;
 
-  Item.handler<PostTab>({
+  let currentTab: PostTab | "" = "";
+
+  let tabAc = new AbortController();
+
+  const itemHandler = Item.handler<PostTab>({
     container: tabsEl,
     signal: props.signal,
     initialTab: getQueryTab(),
@@ -858,18 +895,108 @@ const PostsSection = (props: {
       } else {
         router.setQuery("tab", value);
       }
+
+      if (currentTab === value) {
+        return;
+      }
+      tabAc.abort();
+      tabAc = new AbortController();
+      currentTab = value;
+      currentTabContent.replaceChildren();
+      if (value === "posts") {
+        currentTabContent.appendChild(
+          <PostsArea
+            signal={tabAc.signal}
+            type="profile"
+            userId={props.userId}
+            withReplies={false}
+          />,
+        );
+      }
+      if (value === "replies") {
+        currentTabContent.appendChild(
+          <PostsArea
+            signal={tabAc.signal}
+            type="profile"
+
+            userId={props.userId}
+            withReplies={true}
+          />,
+        );
+      }
+      if (value === "liked") {
+        currentTabContent.appendChild(
+          <PostsArea
+            signal={tabAc.signal}
+            type="user_liked_posts"
+            hideNewDayMarker
+            userId={props.userId}
+          />,
+        );
+      }
+      if (value === "following") {
+        currentTabContent.appendChild(
+          <Following userId={props.userId} type="following" />,
+        );
+      }
+      if (value === "followers") {
+        currentTabContent.appendChild(
+          <Following userId={props.userId} type="followers" />,
+        );
+      }
     },
   });
+  rerenderTabs();
 
   return (
     <div class={style.postsAreaContainer}>
       {tabsEl}
-      <PostsArea
-        signal={props.signal}
-        type="profile"
-        userId={props.userId}
-        withReplies={false}
-      />
+      {currentTabContent}
     </div>
   );
+};
+
+const UserListSkeleton = () => {
+  return (
+    <div class={style.userListSkeletons} aria-hidden="true">
+      {Array.from({ length: 20 }, () => (
+        <div class={style.userListSkeleton}>
+          <Skeleton class={style.userAvatarSkeleton} />
+          <Skeleton class={style.userNameSkeleton} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Following = (props: {
+  userId: string;
+  type: "following" | "followers";
+}) => {
+  const el = (
+    <div>
+      <UserListSkeleton />
+    </div>
+  ) as HTMLDivElement;
+
+  const func = props.type === "following" ? getFollowingUsers : getFollowers;
+
+  func(props.userId).then(([users]) => {
+    if (!users) return;
+    el.replaceChildren(
+      ...users.map((user) => (
+        <Link
+          class={style.postActivityUser}
+          data-user={user.id}
+          href={`/app/profile/${user.id}`}
+        >
+          <Avatar size={26} user={user} />
+
+          {user.username}
+        </Link>
+      )),
+    );
+  });
+
+  return el;
 };

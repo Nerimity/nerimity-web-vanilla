@@ -6,6 +6,7 @@ import {
   getDiscoverPosts,
   getFeedPosts,
   getPostReplies,
+  getUserLikedPosts,
   getUserPosts,
   type DiscoverSort,
 } from "../../services/PostService";
@@ -38,6 +39,10 @@ type PostsAreaProps = {
       type: "profile";
       userId: string;
       withReplies?: boolean;
+    }
+  | {
+      type: "user_liked_posts";
+      userId: string;
     }
   | {
       type: "replies";
@@ -89,11 +94,11 @@ export const PostsArea = (props: PostsAreaProps) => {
     skeletonsContainer.style.display = visible ? "block" : "none";
   };
 
-  const isOnSelfProfile =
+  const isOnSelfProfile = () =>
     props.type === "profile" && props.userId === accountStore.currentUser?.id;
 
-  const showInputArea =
-    isOnSelfProfile || ["replies", "feed"].includes(props.type);
+  const showInputArea = () =>
+    isOnSelfProfile() || ["replies", "feed"].includes(props.type);
 
   const handlePostCreate = async (event: PostCreateEvent) => {
     const content = event.content.trim();
@@ -134,11 +139,12 @@ export const PostsArea = (props: PostsAreaProps) => {
     rerender();
   };
 
+  const postInputArea = (
+    <PostInputArea onPostCreate={handlePostCreate} signal={props.signal} />
+  ) as HTMLDivElement;
   let containerEl = (
     <div class={[style.container, "postArea"]}>
-      {showInputArea && (
-        <PostInputArea onPostCreate={handlePostCreate} signal={props.signal} />
-      )}
+      {postInputArea}
       {postsEl}
     </div>
   ) as HTMLDivElement;
@@ -161,6 +167,11 @@ export const PostsArea = (props: PostsAreaProps) => {
     if (loading) return;
     loading = true;
     let fetchedPosts: RawPost[] | null = null;
+
+    if (props.type === "user_liked_posts") {
+      const [newPosts] = await getUserLikedPosts({ userId: props.userId });
+      fetchedPosts = newPosts?.reverse() || null;
+    }
     if (props.type === "profile") {
       const [newPosts] = await getUserPosts({
         userId: props.userId,
@@ -198,6 +209,9 @@ export const PostsArea = (props: PostsAreaProps) => {
     if (fetchedPosts && fetchedPosts?.length < 30) {
       showSkeleton = false;
     }
+    if (props.type === "user_liked_posts") {
+      showSkeleton = false;
+    }
     setSkeletonVisibility(showSkeleton);
 
     requestAnimationFrame(() => {
@@ -222,6 +236,8 @@ export const PostsArea = (props: PostsAreaProps) => {
   );
 
   const rerender = () => {
+    postInputArea.style.display = showInputArea() ? "block" : "none";
+
     const currentPosts = posts || [];
     const postItems = currentPosts.map((post, index) =>
       renderPost(post, index, currentPosts),
@@ -303,7 +319,7 @@ const PostInputArea = (props: {
     </div>
   );
   const el = (
-    <div class={style.inputAreaContainer}>
+    <div class={style.inputAreaContainer} style={{ display: "none" }}>
       <Input
         showFormatBar
         value={inputContent}
