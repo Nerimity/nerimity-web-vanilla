@@ -13,7 +13,7 @@ import { channelStore } from "../../../store/channelStore";
 import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import type { RawUser } from "../../../Types";
-import { fullDate, getTime } from "../../../utils/date";
+import { dateMarkerLabel, getTime } from "../../../utils/date";
 import type { ServerSettingsContext } from "./ServerSettings";
 
 import style from "./auditLogsServerSettingsPage.module.css";
@@ -428,7 +428,9 @@ const AuditItem = (props: {
   return (
     <>
       {newDay && (
-        <div class={style.newDay}>{fullDate(props.audit.createdAt, true)}</div>
+        <div class={style.newDay}>
+          {dateMarkerLabel(props.audit.createdAt, true)}
+        </div>
       )}
 
       <SettingsBlock.Root>

@@ -1,7 +1,7 @@
 import { getAttachments } from "../../services/channelService";
 import { channelStore } from "../../store/channelStore";
 import type { FullAttachment } from "../../Types";
-import { fullDate } from "../../utils/date";
+import { dateMarkerLabel } from "../../utils/date";
 import { buildImageUrl } from "../../utils/image";
 import { Icon } from "../icon";
 import { Link } from "../ui/link";
@@ -64,7 +64,7 @@ export const createFilesDrawer = () => {
         {categorized.map((category) => (
           <div class={style.category}>
             <div class={style.marker}>
-              <span>{fullDate(category[0]?.createdAt || 0)}</span>
+              <span>{dateMarkerLabel(category[0]?.createdAt || 0, true)}</span>
               <div class={style.line} />
             </div>
             <div class={style.categoryItems}>

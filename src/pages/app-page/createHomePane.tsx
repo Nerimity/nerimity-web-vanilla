@@ -1,9 +1,14 @@
 import { t } from "@lingui/core/macro";
+import { Trans } from "@trans";
 import morphdom from "morphdom";
 
 import { Icon } from "../../components/icon";
 import { buildEmojiUrl } from "../../components/markup/Emoji";
+import { Markup } from "../../components/markup/markup";
+import { NotificationPill } from "../../components/NotificationPill";
+import { isNewDay, PostItem } from "../../components/posts/PostItem";
 import { PostsArea } from "../../components/posts/PostsArea";
+import { SettingsBlock } from "../../components/SettingsBlock";
 import { Avatar } from "../../components/ui/avatar";
 import { Dropdown } from "../../components/ui/createDropdown";
 import { Item } from "../../components/ui/item";
@@ -11,14 +16,23 @@ import { Link } from "../../components/ui/link";
 import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
-import type { DiscoverSort } from "../../services/PostService";
+import {
+  getPostNotificationCount,
+  getPostNotifications,
+  type DiscoverSort,
+} from "../../services/PostService";
 import { friendStore } from "../../store/friendStore";
 import {
   UserPresenceDetails,
   userPresenceStore,
 } from "../../store/userPresenceStore";
 import { userStore } from "../../store/userStore";
-import type { RawUserActivity } from "../../Types";
+import {
+  PostNotificationType,
+  type RawPostNotification,
+  type RawUserActivity,
+} from "../../Types";
+import { dateMarkerLabel, getTime } from "../../utils/date";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
 import { getLocalItem, setLocalItem } from "../../utils/localStorage";
@@ -184,6 +198,11 @@ const HomeUserActivity = (props: {
 const PostSection = (props: { signal: AbortSignal }) => {
   type Tab = "feed" | "discover" | "notifications";
   let currentTab: Tab = "feed";
+
+  const notificationPill = (
+    <NotificationPill count={10} class={style.notificationPill} />
+  ) as HTMLDivElement;
+
   let tabs = (
     <div class={style.postTabs}>
       <Item.Base handlePosition="bottom" data-value="discover">
@@ -197,9 +216,16 @@ const PostSection = (props: { signal: AbortSignal }) => {
       <Item.Base handlePosition="bottom" data-value="notifications">
         <Item.Icon name="notifications" />
         <Item.Label>{t`Notifications`}</Item.Label>
+        {notificationPill}
       </Item.Base>
     </div>
   ) as HTMLDivElement;
+
+  getPostNotificationCount().then(([count]) => {
+    if (!count) return;
+    notificationPill.innerText = count.toLocaleString();
+    notificationPill.style.display = count ? "flex" : "none";
+  });
 
   let postsArea = (<div></div>) as HTMLDivElement;
 
@@ -254,6 +280,7 @@ const PostSection = (props: { signal: AbortSignal }) => {
     el.dataset.currentTab = currentTab;
 
     if (currentTab === "notifications") {
+      postsArea.replaceChildren(<NotificationsArea signal={signal} />);
       return;
     }
 
@@ -297,4 +324,181 @@ const PostSection = (props: { signal: AbortSignal }) => {
   );
 
   return el;
+};
+
+const NotificationsArea = (props: { signal: AbortSignal }) => {
+  const el = (
+    <div class={style.notificationsContainer}></div>
+  ) as HTMLDivElement;
+  getPostNotifications().then(([notifications, err]) => {
+    if (props.signal.aborted) return;
+    if (err) {
+      console.error(err);
+      return;
+    }
+    el.replaceChildren(
+      <>
+        {notifications.map((notification, i) => (
+          <NotificationItemItem
+            container={el}
+            prev={notifications[i - 1]}
+            notification={notification}
+          />
+        ))}
+      </>,
+    );
+  });
+
+  return el;
+};
+
+const Transform = (notification: RawPostNotification) => {
+  switch (notification.type) {
+    case PostNotificationType.LIKED: {
+      return {
+        icon: "favorite",
+        color: "var(--alert-color)",
+        title: () => (
+          <Trans>
+            <Link
+              data-user-id={notification.by.id}
+              href={`/app/profile/${notification.by.id}`}
+            >
+              <strong>{notification.by.username}</strong>
+            </Link>{" "}
+            liked your post
+          </Trans>
+        ),
+      };
+    }
+    case PostNotificationType.REPLIED: {
+      return {
+        icon: "reply",
+        color: "var(--primary-color)",
+        title: () => (
+          <Trans>
+            <Link
+              data-user-id={notification.by.id}
+              href={`/app/profile/${notification.by.id}`}
+            >
+              <strong>{notification.by.username}</strong>
+            </Link>{" "}
+            replied to your post
+          </Trans>
+        ),
+      };
+    }
+    case PostNotificationType.FOLLOWED: {
+      return {
+        icon: "person_add",
+        color: "var(--primary-color)",
+        title: () => (
+          <Trans>
+            <Link
+              data-user-id={notification.by.id}
+              href={`/app/profile/${notification.by.id}`}
+            >
+              <strong>{notification.by.username}</strong>
+            </Link>{" "}
+            followed you
+          </Trans>
+        ),
+      };
+    }
+    case PostNotificationType.REPOSTED: {
+      return {
+        icon: "repeat",
+        color: "var(--success-color)",
+        title: () => (
+          <Trans>
+            <Link
+              data-user-id={notification.by.id}
+              href={`/app/profile/${notification.by.id}`}
+            >
+              <strong>{notification.by.username}</strong>
+            </Link>{" "}
+            reposted your post
+          </Trans>
+        ),
+      };
+    }
+    case PostNotificationType.MENTIONED: {
+      return {
+        icon: "alternate_email",
+        color: "var(--primary-color)",
+        title: () => (
+          <Trans>
+            <Link
+              data-user-id={notification.by.id}
+              href={`/app/profile/${notification.by.id}`}
+            >
+              <strong>{notification.by.username}</strong>
+            </Link>{" "}
+            mentioned you
+          </Trans>
+        ),
+      };
+    }
+
+    default: {
+      return {
+        icon: "",
+        color: "var(--primary-color)",
+        title: () => <Trans>Unknown notification</Trans>,
+      };
+    }
+  }
+};
+
+const NotificationItemItem = (props: {
+  notification: RawPostNotification;
+  prev?: RawPostNotification;
+  container: HTMLDivElement;
+}) => {
+  const newDay =
+    !props.prev || isNewDay(props.notification, props.prev || { createdAt: 0 });
+
+  const transformed = Transform(props.notification);
+
+  const postContent = props.notification.post?.content;
+
+  const replyOrMentioned =
+    props.notification.type === PostNotificationType.REPLIED ||
+    props.notification.type === PostNotificationType.MENTIONED;
+
+  return (
+    <>
+      {newDay && (
+        <div class={style.newDay}>
+          {dateMarkerLabel(props.notification.createdAt)}
+        </div>
+      )}
+
+      {replyOrMentioned ? (
+        <PostItem
+          hideNewDayMarker
+          post={props.notification.post}
+          container={props.container}
+        />
+      ) : (
+        <SettingsBlock.Root class={style.notificationContainer}>
+          <Avatar
+            class={style.notificationAvatar}
+            user={props.notification.by}
+            size={32}
+          />
+
+          <div class={style.notificationDetails}>
+            <div class={style.innerDetails}>
+              <div>{transformed.title()}</div>
+              {postContent && !replyOrMentioned && (
+                <Markup class={style.postContent} inline text={postContent} />
+              )}
+            </div>
+          </div>
+          <div class={style.time}>{getTime(props.notification.createdAt)}</div>
+        </SettingsBlock.Root>
+      )}
+    </>
+  );
 };

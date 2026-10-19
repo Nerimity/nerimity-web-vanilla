@@ -15,6 +15,25 @@ export const FriendStatus = {
 };
 export type FriendStatus = (typeof FriendStatus)[keyof typeof FriendStatus];
 
+export const PostNotificationType = {
+  LIKED: 0,
+  REPLIED: 1,
+  FOLLOWED: 2,
+  REPOSTED: 3,
+  MENTIONED: 4,
+} as const;
+
+export type PostNotificationType =
+  (typeof PostNotificationType)[keyof typeof PostNotificationType];
+
+export interface RawPostNotification {
+  id: string;
+  createdAt: number;
+  type: PostNotificationType;
+  by: RawUser;
+  post?: RawPost;
+}
+
 export interface RawPostChoice {
   id: string;
   content: string;

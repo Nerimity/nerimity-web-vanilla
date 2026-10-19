@@ -284,7 +284,7 @@ const TZ_OFFSET = new Date().getTimezoneOffset() * 60000;
 
 const dayNumber = (ts: number) => Math.floor((ts - TZ_OFFSET) / MS_PER_DAY);
 
-const isNewDay = (
+export const isNewDay = (
   attach: { createdAt: number },
   prev?: { createdAt: number },
 ) => {

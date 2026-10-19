@@ -128,6 +128,10 @@
   :global(.item) {
     padding: 12px 12px;
   }
+  .notificationPill {
+    display: none;
+    background-color: var(--primary-color);
+  }
 }
 
 .postContainer {
@@ -140,5 +144,74 @@
 
   .postDropdown {
     display: none;
+  }
+}
+
+.notificationsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-right: 4px;
+  margin-left: 4px;
+  gap: 8px;
+
+  :global(.postItem) {
+    margin: 0;
+    border-radius: var(--radius-16);
+    background-color: var(--gray-850);
+    &:hover {
+      background-color: var(--gray-900);
+    }
+  }
+  .notificationContainer {
+    align-items: flex-start;
+    cursor: pointer;
+    user-select: none;
+    &:hover {
+      background-color: var(--gray-900);
+    }
+  }
+  .innerDetails {
+    overflow: hidden;
+  }
+  .notificationAvatar {
+    align-self: center;
+    flex-shrink: 0;
+  }
+  .notificationDetails {
+    align-self: center;
+    overflow: hidden;
+  }
+  .postContent {
+    display: block;
+    overflow: hidden;
+    opacity: 0.6;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .time {
+    align-self: center;
+    margin-left: auto;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+  .newDay {
+    margin-top: 6px;
+    margin-bottom: 6px;
+    margin-left: 4px;
+    font-weight: bold;
+  }
+
+  .iconContainer {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-max);
+    .icon {
+      font-size: 18px;
+    }
   }
 }

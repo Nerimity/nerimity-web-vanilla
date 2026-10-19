@@ -1,5 +1,5 @@
 import { accountStore } from "../store/accountStore";
-import type { RawPost, RawUser } from "../Types";
+import type { RawPost, RawPostNotification, RawUser } from "../Types";
 import { nerimityCDNUploadRequest } from "./cdnService";
 import { request } from "./request";
 
@@ -141,6 +141,19 @@ export const getUserPosts = async (opts: {
 };
 export const getUserLikedPosts = async (opts: { userId?: string }) => {
   return request<RawPost[]>(`/users/${opts.userId}/posts/liked`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+export const getPostNotificationCount = async () => {
+  return request<number>(`/posts/notifications/count`, {
+    useToken: true,
+    method: "GET",
+  });
+};
+
+export const getPostNotifications = async () => {
+  return request<RawPostNotification[]>(`/posts/notifications`, {
     useToken: true,
     method: "GET",
   });
