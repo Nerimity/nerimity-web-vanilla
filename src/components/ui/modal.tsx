@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { mobileWidth } from "../../config";
+import { closestFromEvent } from "../../utils/dom";
 import { createResizeObserver } from "../../utils/observer";
 import { portalElement } from "../../utils/portal";
 import { Icon } from "../icon";
@@ -673,8 +674,7 @@ export const createModal = (
         if (movedX > 10 || movedY > 10) return;
         destroy();
       }
-      const target = e.target as HTMLElement;
-      const isCloseButton = target.closest(`.${style.closeButton}`);
+      const isCloseButton = closestFromEvent(e, `.${style.closeButton}`);
       if (isCloseButton) {
         destroy();
         return;
@@ -772,13 +772,12 @@ export const alert = (opts: {
           />
         </Modal.Footer>
       </Modal.Root>
-    );
+    ) as HTMLDivElement;
 
     el.addEventListener(
       "click",
       (e) => {
-        const target = e.target as HTMLDivElement;
-        const action = target.closest("[data-action]") as HTMLDivElement;
+        const action = closestFromEvent(e, "[data-action]");
         if (action?.dataset.action === "close") {
           ac.abort();
         }

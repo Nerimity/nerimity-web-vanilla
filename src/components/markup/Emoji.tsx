@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { unicodeToTwemojiUrl } from "../../utils/emojis";
 import { buildImageUrl } from "../../utils/image";
 import { InviteEmbed } from "../message-pane/InviteEmbed";
@@ -48,8 +49,7 @@ export const handleMarkupEmojiClick = (opts: {
   opts.el.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-      const emojiEl = target.closest(`.${style.emoji}`) as HTMLDivElement;
+      const emojiEl = closestFromEvent(e, `.${style.emoji}`);
       if (!emojiEl) return;
 
       const icon = emojiEl.dataset.icon!;

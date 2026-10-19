@@ -5,6 +5,7 @@ import type { Message } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { resolveGradient } from "../../utils/color";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { reconcile } from "../../utils/html";
 import { getLocalItem, setLocalItem } from "../../utils/localStorage";
@@ -102,8 +103,7 @@ export const createRepliesIndicator = (abortController: AbortController) => {
   el.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLElement;
-      const deleteButton = target.closest(`.${style.deleteButton}`);
+      const deleteButton = closestFromEvent(e, `.${style.deleteButton}`);
       if (deleteButton) {
         const item = deleteButton.closest(
           `.${style.messageItem}`,

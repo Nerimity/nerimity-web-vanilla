@@ -1,6 +1,7 @@
 import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { createModal, Modal } from "../ui/modal";
@@ -61,9 +62,7 @@ export const createGenericDeleteModal = (opts: GenericDeleteModalOpts) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-
-      const actionBtn = target.closest("[data-action]") as HTMLDivElement;
+      const actionBtn = closestFromEvent(event, "[data-action]");
       const action = actionBtn?.dataset.action;
       if (action === "close") return abortController.abort();
 

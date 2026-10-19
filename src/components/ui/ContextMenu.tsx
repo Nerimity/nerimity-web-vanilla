@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../../utils/dom";
 import { portalElement } from "../../utils/portal";
 import { Icon } from "../icon";
 import { createModal, Modal } from "./modal";
@@ -108,8 +109,7 @@ const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
       portalElement().addEventListener(
         "click",
         (e: MouseEvent) => {
-          const clickTarget = e.target as HTMLElement;
-          const item = clickTarget?.closest(".ctx-item");
+          const item = closestFromEvent(e, ".ctx-item");
           const actionId = item?.id;
 
           if (abortController) {

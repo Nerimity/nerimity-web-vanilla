@@ -1,5 +1,6 @@
-import fs from "node:fs/promises";
 import { createHash } from "node:crypto";
+import fs from "node:fs/promises";
+
 import type { Plugin } from "vite";
 
 const FONTS_DIR = "public/fonts";

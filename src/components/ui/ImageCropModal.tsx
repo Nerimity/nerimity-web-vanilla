@@ -1,9 +1,10 @@
 import { t } from "@lingui/core/macro";
 import { Cropt, type CroptState } from "cropt";
 
-import { Button } from "./button";
+import { closestFromEvent } from "../../utils/dom";
 
 import "cropt/src/cropt.css";
+import { Button } from "./button";
 import { createModal, Modal } from "./modal";
 
 export type CropPoints = [number, number, number, number];
@@ -85,8 +86,7 @@ export const createImageCropModal = (props: ImageCropModalProps) => {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action as "close" | "crop";
 
       if (action === "close") {

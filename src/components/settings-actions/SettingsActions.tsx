@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 
 import style from "./SettingsActions.module.css";
@@ -53,8 +54,7 @@ export const createSettingsActions = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action as "undo" | "save";
       if (action === "save") {

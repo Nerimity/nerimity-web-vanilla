@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../../utils/dom";
 import { Icon } from "../icon";
 
 import style from "./checkbox.module.css";
@@ -68,11 +69,8 @@ const createHandler = (opts: {
   } else {
     opts.el.addEventListener(
       "click",
-      (el) => {
-        const target = el.target as HTMLElement;
-        const checkEl = target?.closest(
-          `.${style.checkboxContainer}`,
-        ) as HTMLDivElement;
+      (e) => {
+        const checkEl = closestFromEvent(e, `.${style.checkboxContainer}`);
         if (checkEl) {
           if (checkEl.dataset.disabled) {
             return;

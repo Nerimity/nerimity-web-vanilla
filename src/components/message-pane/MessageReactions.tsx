@@ -11,6 +11,7 @@ import {
   MessageReaction,
   messageStore,
 } from "../../store/messageStore";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverHandler } from "../../utils/HoverHandler";
@@ -130,13 +131,13 @@ export const createMessageReactionHandler = (opts: {
   opts.logs.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-      const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+      const messageEl = closestFromEvent(event, `[data-message-id]`);
       const messageId = messageEl?.dataset.messageId!;
       if (!messageId) return;
-      const reactionEl = target.closest(
+      const reactionEl = closestFromEvent(
+        event,
         `.${style.messageReactions} .reactionItem`,
-      ) as HTMLElement | null;
+      );
 
       const messages = messageStore.messages.get(
         channelStore.currentChannelId!,

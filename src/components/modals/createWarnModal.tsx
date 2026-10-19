@@ -4,6 +4,7 @@ import { Trans } from "@trans";
 import { dismissNotice } from "../../services/userService";
 import { accountStore } from "../../store/accountStore";
 import type { RawNotice } from "../../Types";
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { createModal, Modal } from "../ui/modal";
 
@@ -110,8 +111,8 @@ export const createWarnModal = () => {
     "click",
     async (event) => {
       if (countdown !== 0) return;
-      const target = event.target as HTMLDivElement;
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+
+      const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
       if (action === "dismiss") {
         const currentUser = accountStore.currentUser;

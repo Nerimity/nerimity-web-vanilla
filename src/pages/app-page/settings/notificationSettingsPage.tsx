@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/button";
 import { Checkbox } from "../../../components/ui/checkbox";
 import { Dropdown } from "../../../components/ui/createDropdown";
 import { alert } from "../../../components/ui/modal";
+import { closestFromEvent } from "../../../utils/dom";
 import { getLocalItem, setLocalItem } from "../../../utils/localStorage";
 import {
   playSound,
@@ -96,9 +97,7 @@ const DesktopNotifications = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLDivElement;
-
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(e, "[data-action]");
       if (!actionEl) return;
       const action = actionEl?.dataset?.action;
 
@@ -186,9 +185,7 @@ const NotificationSound = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLDivElement;
-
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(e, "[data-action]");
       if (!actionEl) return;
       const action = actionEl?.dataset?.action;
 
@@ -224,10 +221,7 @@ const NotificationSoundCustomize = (props: { signal: AbortSignal }) => {
   document.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const playButton = target.closest(
-        `.${style.playButton}`,
-      ) as HTMLDivElement;
+      const playButton = closestFromEvent(event, `.${style.playButton}`);
       if (!playButton) return;
       event.preventDefault();
       event.stopPropagation();

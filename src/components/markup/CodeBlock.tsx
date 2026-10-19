@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../../utils/dom";
 import { SyntaxHighlighter } from "../SyntaxHighlighter";
 import { Button } from "../ui/button";
 
@@ -19,8 +20,8 @@ export const CodeBlock = (props: { value: string; lang?: string }) => {
 
   const details = el.querySelector(`.${style.details}`) as HTMLElement;
   details.onclick = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    const button = target.closest(`.${style.button}`) as HTMLElement;
+    const button = closestFromEvent(event, `.${style.button}`);
+    if (!button) return;
     const action = button.dataset.action;
     switch (action) {
       case "copy": {

@@ -8,6 +8,7 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { hasBit } from "../../utils/bitwise";
 import { resolveGradient } from "../../utils/color";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { CdnIcon } from "../cdnIcon";
@@ -73,8 +74,7 @@ export const createEditServerRolesModal = (props: {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(`.${style.roleItem}`) as HTMLElement | null;
+      const button = closestFromEvent(e, `.${style.roleItem}`);
       const roleId = button?.dataset.roleId;
       if (!roleId) return;
 

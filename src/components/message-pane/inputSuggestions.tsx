@@ -12,6 +12,7 @@ import { User, userStore } from "../../store/userStore";
 import type { RawBotCommand } from "../../Types";
 import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
+import { closestFromEvent } from "../../utils/dom";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getLocalItem } from "../../utils/localStorage";
@@ -100,8 +101,7 @@ export const createInputSuggestions = (opts: {
   };
 
   const handleMouseMove = (event: MouseEvent) => {
-    const target = event.target as HTMLElement;
-    const item = target.closest(`.${style.suggestionItem}`);
+    const item = closestFromEvent(event, `.${style.suggestionItem}`);
     if (!item) return;
     const children = [...container.children];
     selectedIndex = children.indexOf(item);
@@ -495,11 +495,7 @@ export const createInputSuggestions = (opts: {
   document.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-
-      const item = target.closest(
-        `.${style.suggestionItem}`,
-      ) as HTMLElement | null;
+      const item = closestFromEvent(event, `.${style.suggestionItem}`);
 
       if (item) {
         insert(item);

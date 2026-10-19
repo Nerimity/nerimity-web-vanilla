@@ -24,6 +24,7 @@ import { accountStore } from "../../../store/accountStore";
 import { Server, serverStore } from "../../../store/serverStore";
 import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { closestFromEvent } from "../../../utils/dom";
 import { FocusAnimator } from "../../../utils/FocusAnimator";
 import { Fonts } from "../../../utils/font";
 import { createResizeObserver } from "../../../utils/observer";
@@ -150,10 +151,7 @@ const profileSettingsPage = (context: SettingsContext) => {
   context.content.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest(
-        "[data-action], [data-delete]",
-      ) as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action], [data-delete]");
       if (!button) return;
       if (button.dataset.action === "updateBio") {
         createUpdateBioModal({
@@ -480,8 +478,7 @@ export const createUpdateBioModal = (props: {
   modal.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-action]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-action]`);
       if (!button) return;
 
       if (button.dataset.action === "update") {

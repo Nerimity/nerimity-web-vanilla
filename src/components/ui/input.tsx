@@ -1,4 +1,5 @@
 import { Dynamic } from "../../dynamic";
+import { closestFromEvent } from "../../utils/dom";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { createResizeObserver } from "../../utils/observer";
 import { createTimeModal } from "../modals/TimeModal";
@@ -222,8 +223,7 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
   opts.inputContainer.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(event, "[data-action]");
       if (!actionEl) return;
 
       const action = actionEl.dataset.action as keyof typeof Formats | "emoji";

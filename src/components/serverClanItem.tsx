@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import type { ServerClan } from "../Types";
+import { closestFromEvent } from "../utils/dom";
 import { CdnIcon } from "./cdnIcon";
 import { InviteEmbed } from "./message-pane/InviteEmbed";
 import { createModal, Modal } from "./ui/modal";
@@ -35,8 +36,7 @@ const createClanClickHandler = () => {
   document.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-      const clanEl = target.closest(`.${style.clanItem}`) as HTMLDivElement;
+      const clanEl = closestFromEvent(e, `.${style.clanItem}`);
       if (!clanEl) return;
       const clan = elementToClan.get(clanEl);
       if (!clan) return;

@@ -12,6 +12,7 @@ import type { Message } from "../../store/messageStore";
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import { closestFromEvent } from "../../utils/dom";
 import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
 import { Timezones } from "../../utils/Timezones";
 import { Icon } from "../icon";
@@ -462,8 +463,7 @@ export function handleMarkupEvents(opts: {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const spoiler = target.closest("." + style.spoiler);
+      const spoiler = closestFromEvent(event, "." + style.spoiler);
       if (spoiler) {
         spoiler.classList.add(style.spoil!);
       }

@@ -5,6 +5,7 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message, messageStore } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -553,8 +554,7 @@ const handleBlockedMessageClick = (opts: {
   opts.el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-      const messageEl = target.closest(`[data-message-id]`) as HTMLElement;
+      const messageEl = closestFromEvent(event, `[data-message-id]`);
       const messageId = messageEl?.dataset?.messageId!;
       if (!messageId) return;
       const isBlocked = messageEl.querySelector(`[data-blocked="true"]`);

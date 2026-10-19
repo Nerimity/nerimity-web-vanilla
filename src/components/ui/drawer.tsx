@@ -1,4 +1,5 @@
 import { mobileWidth } from "../../config";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { portalElement } from "../../utils/portal";
 import { userAgent } from "../../utils/userAgent";
@@ -273,26 +274,24 @@ function createDrawer() {
       pauseTouches = true;
     }
 
-    const target = event.target as HTMLElement;
-
-    if (target.closest("input[type=range]")) {
+    if (closestFromEvent(event, "input[type=range]")) {
       pauseTouches = true;
       return;
     }
-    if (target.closest("input[type=text]")) {
+    if (closestFromEvent(event, "input[type=text]")) {
       pauseTouches = true;
       return;
     }
-    if (target.closest("canvas")) {
+    if (closestFromEvent(event, "canvas")) {
       pauseTouches = true;
       return;
     }
 
-    if (target.closest("textarea")) {
+    if (closestFromEvent(event, "textarea")) {
       pauseTouches = true;
       return;
     }
-    if (target.closest(".pauseDrawerTouches")) {
+    if (closestFromEvent(event, ".pauseDrawerTouches")) {
       pauseTouches = true;
       return;
     }

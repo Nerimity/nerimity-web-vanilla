@@ -2,6 +2,7 @@ import { BasicBorder } from "../../avatar-borders/BasicBorder";
 import { BorderWithWings } from "../../avatar-borders/BorderWithWings";
 import { Dynamic } from "../../dynamic";
 import { hasBit } from "../../utils/bitwise";
+import { closestFromEvent } from "../../utils/dom";
 import { HoverHandler } from "../../utils/HoverHandler";
 import { buildImageUrl } from "../../utils/image";
 import {
@@ -237,8 +238,7 @@ new HoverHandler(document.body, [
 ]);
 
 document.addEventListener("contextmenu", (e) => {
-  const target = e.target as HTMLDivElement;
-  if (target.closest(`.${style.avatar}`)) {
+  if (closestFromEvent(e, `.${style.avatar}`)) {
     e.preventDefault();
   }
 });

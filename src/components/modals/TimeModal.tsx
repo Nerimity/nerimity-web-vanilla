@@ -4,6 +4,7 @@ import morphdom from "morphdom";
 
 import { formatTimestampOffset } from "../../utils/date";
 import { debounce } from "../../utils/debounce";
+import { closestFromEvent } from "../../utils/dom";
 import { myTimezone, Timezones } from "../../utils/Timezones";
 import { Button } from "../ui/button";
 import { Dropdown } from "../ui/createDropdown";
@@ -30,11 +31,7 @@ interface TimeModalOts {
 
 const Tabs = () => (
   <div class={style.tabs}>
-    <Item.Base
-      data-value="relative"
-      class={style.tab}
-      handlePosition="bottom"
-    >
+    <Item.Base data-value="relative" class={style.tab} handlePosition="bottom">
       <Item.Icon name="schedule" />
       <Item.Label>{t`Relative`}</Item.Label>
     </Item.Base>
@@ -55,7 +52,7 @@ export const createTimeModal = (opts: TimeModalOts) => {
   let currentTab: Tab | null = null;
 
   const contentEl = (<div></div>) as HTMLDivElement;
-  const tabsEl = <Tabs /> as HTMLDivElement;
+  const tabsEl = (<Tabs />) as HTMLDivElement;
   const el = (
     <Modal.Root disableGestures fullHeight>
       <Modal.Header label={t`Time`} icon="schedule" />
@@ -94,9 +91,7 @@ export const createTimeModal = (opts: TimeModalOts) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-
-      const actionBtn = target.closest("[data-action]") as HTMLDivElement;
+      const actionBtn = closestFromEvent(event, "[data-action]");
       const action = actionBtn?.dataset.action;
 
       if (action === "confirm") {
@@ -321,8 +316,7 @@ const RelativeContent = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const presetBtn = target.closest("[data-preset-index]") as HTMLDivElement;
+      const presetBtn = closestFromEvent(event, "[data-preset-index]");
       if (!presetBtn) return;
       const presetIndex = parseInt(presetBtn.dataset.presetIndex!);
       handlePresetClick(presetIndex);
@@ -466,9 +460,7 @@ const OffsetContent = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-
-      const tzEl = target.closest("[data-tz]") as HTMLDivElement;
+      const tzEl = closestFromEvent(event, "[data-tz]");
       if (!tzEl) return;
       const tz = tzEl.dataset.tz!;
       selectedTz = tz;

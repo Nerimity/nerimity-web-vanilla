@@ -4,6 +4,7 @@ import morphdom from "morphdom";
 
 import { serverStore } from "../../store/serverStore";
 import { debounce } from "../../utils/debounce";
+import { closestFromEvent } from "../../utils/dom";
 import {
   addRecentEmoji,
   allCustomEmojis,
@@ -291,8 +292,10 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
   emojiContainer.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLDivElement;
-      const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
+      const emojiEl = closestFromEvent(
+        e,
+        `.${style.emojiItem}`,
+      ) as HTMLDivElement;
       if (!emojiEl) return;
       const { emoji, custom } = await getEmojiByElement(emojiEl);
 
@@ -318,10 +321,8 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
     async (e) => {
       e.preventDefault();
       e.stopPropagation();
-      const target = e.target as HTMLDivElement;
-      const sidebarItemEl = target.closest(
-        `.${style.sidebarItem}`,
-      ) as HTMLDivElement;
+
+      const sidebarItemEl = closestFromEvent(e, `.${style.sidebarItem}`);
       if (!sidebarItemEl) return;
       if (inputEl.value.trim()) {
         inputEl.value = "";
@@ -410,8 +411,8 @@ export const createEmojiPicker = (opts: EmojiPickerOpts) => {
     "mouseover",
     async (e) => {
       if (userAgent.mobile) return;
-      const target = e.target as HTMLDivElement;
-      const emojiEl = target.closest(`.${style.emojiItem}`) as HTMLDivElement;
+
+      const emojiEl = closestFromEvent(e, `.${style.emojiItem}`);
       if (!emojiEl) return;
       const { emoji, custom } = await getEmojiByElement(emojiEl);
 

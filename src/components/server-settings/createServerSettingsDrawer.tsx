@@ -7,6 +7,7 @@ import {
   type ServerSetting,
 } from "../../pages/app-page/server-settings/ServerSettings";
 import { serverStore } from "../../store/serverStore";
+import { closestFromEvent } from "../../utils/dom";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
 import { Pill } from "../Pill";
@@ -92,9 +93,7 @@ export const createServerSettingsDrawer = () => {
   containerEl.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-
-      if (target.closest(`.${style.item}`)) {
+      if (closestFromEvent(e, `.${style.item}`)) {
         Drawer().updatePage({ page: 1 });
       }
     },

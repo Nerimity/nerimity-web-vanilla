@@ -1,3 +1,5 @@
+import { closestFromEvent } from "./dom";
+
 export interface MatchResult<P = {}> {
   params: P;
 }
@@ -5,9 +7,10 @@ export interface MatchResult<P = {}> {
 const createRouter = () => {
   document.addEventListener("click", (e) => {
     if (e.target instanceof Element) {
-      const href = e.target
-        .closest("a[data-route]")
-        ?.attributes.getNamedItem("href")?.value;
+      const href = closestFromEvent(
+        e,
+        "a[data-route]",
+      )?.attributes.getNamedItem("href")?.value;
 
       if (href) {
         if (e.ctrlKey) return;
@@ -136,9 +139,7 @@ const createRouter = () => {
 
     const search = searchParams.toString();
     navigate(
-      location.pathname +
-        (search ? `?${search}` : "") +
-        location.hash,
+      location.pathname + (search ? `?${search}` : "") + location.hash,
       options,
     );
   };

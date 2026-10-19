@@ -13,6 +13,7 @@ import { accountStore } from "../../../store/accountStore";
 import { userStore } from "../../../store/userStore";
 import { hasBit } from "../../../utils/bitwise";
 import { formatTimestamp } from "../../../utils/date";
+import { closestFromEvent } from "../../../utils/dom";
 import {
   UserBadges,
   UserBadgeValues,
@@ -162,8 +163,7 @@ const OwnedBadges = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLDivElement;
-      const badgeEl = target.closest(`[data-badge-bit]`) as HTMLDivElement;
+      const badgeEl = closestFromEvent(e, `[data-badge-bit]`);
       if (!badgeEl) return;
 
       const bit = parseInt(badgeEl.dataset.badgeBit as string);

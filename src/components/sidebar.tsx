@@ -11,6 +11,7 @@ import {
 import { Server, serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import { FriendStatus, type RawServerFolder } from "../Types";
+import { closestFromEvent } from "../utils/dom";
 import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
@@ -310,10 +311,7 @@ export const createSidebar = () => {
   serverListEl.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-      const folder = target.closest(
-        `.${style.folderPreview}`,
-      ) as HTMLElement | null;
+      const folder = closestFromEvent(event, `.${style.folderPreview}`);
       if (folder) {
         handleFolderClick(folder.parentElement!.dataset.serverId!);
       }
@@ -445,10 +443,7 @@ const MentionList = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const itemEl = target.closest(
-        ".mentionItem[data-user-id]",
-      ) as HTMLDivElement;
+      const itemEl = closestFromEvent(event, ".mentionItem[data-user-id]");
       if (!itemEl) return;
       const userId = itemEl.dataset.userId;
       if (!userId) return;

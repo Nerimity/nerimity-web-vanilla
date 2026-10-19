@@ -1,5 +1,5 @@
 import { Dynamic } from "../../dynamic";
-import { getClosestElementFromEvent } from "../../utils/dom";
+import { closestFromEvent } from "../../utils/dom";
 import { Icon as MaterialIcon } from "../icon";
 import { Link } from "./link";
 
@@ -84,7 +84,7 @@ export const Item = {
     opts.container.addEventListener(
       "click",
       (e) => {
-        const clickedItem = getClosestElementFromEvent(e, `.${style.item}`);
+        const clickedItem = closestFromEvent(e, `.${style.item}`);
         if (!clickedItem) return;
         selectedValue = clickedItem.dataset.value as T;
         opts.onChange(selectedValue);

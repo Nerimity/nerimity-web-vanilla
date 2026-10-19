@@ -5,6 +5,7 @@ import { Button } from "../../../components/ui/button";
 import { createModal, Modal } from "../../../components/ui/modal";
 import { removeFriend } from "../../../services/friendService";
 import { userStore } from "../../../store/userStore";
+import { closestFromEvent } from "../../../utils/dom";
 
 import style from "./removeFriendModal.module.css";
 
@@ -75,8 +76,7 @@ export const createRemoveFriendModal = (props: { userId: string }) => {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action;
       if (action === "request") {
         handleRequest(button!);

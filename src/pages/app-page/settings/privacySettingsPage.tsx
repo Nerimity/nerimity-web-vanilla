@@ -5,6 +5,7 @@ import { Checkbox } from "../../../components/ui/checkbox";
 import { Radiobox } from "../../../components/ui/radiobox";
 import { updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
+import { closestFromEvent } from "../../../utils/dom";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { type SettingsContext } from "./Settings";
 
@@ -99,10 +100,7 @@ const privacySettingsPage = (context: SettingsContext) => {
   context.content.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLDivElement;
-      const profileOption = target.closest(
-        "[data-profile-option]",
-      ) as HTMLDivElement;
+      const profileOption = closestFromEvent(event, "[data-profile-option]");
 
       if (!profileOption) return;
 

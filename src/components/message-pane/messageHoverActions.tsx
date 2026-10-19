@@ -6,6 +6,7 @@ import { channelStore } from "../../store/channelStore";
 import { messageStore } from "../../store/messageStore";
 import { MessageType } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../ui/button";
 import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
@@ -154,8 +155,7 @@ export const createMessageHoverActions = (opts: {
   hoverActionEl.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(`.${style.button}`) as HTMLElement | null;
+      const button = closestFromEvent(e, `.${style.button}`);
       const action = button?.dataset.action;
       if (action === "delete") {
         handleDeleteMessage(e.shiftKey);

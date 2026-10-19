@@ -11,6 +11,7 @@ import {
 import { userPresenceStore } from "../../store/userPresenceStore";
 import { User, userStore } from "../../store/userStore";
 import { FriendStatus, type RawUser } from "../../Types";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -453,8 +454,7 @@ const createInboxDrawer = () => {
   tabsEl.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLElement;
-      const tabItemEl = target.closest(`.${style.tabItem}`);
+      const tabItemEl = closestFromEvent(e, `.${style.tabItem}`);
       const elements = tabsEl.children;
       if (!tabItemEl) return;
 
@@ -486,18 +486,17 @@ const createInboxDrawer = () => {
   containerEl.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLElement;
-      const item = target.closest(`.${style.inboxItem}`) as HTMLElement;
+      const item = closestFromEvent(e, `.${style.inboxItem}`);
       if (item) {
         const channelId = item.dataset.channelId;
-        if (target.closest(`.${style.closeButton}`)) {
+        if (closestFromEvent(e, `.${style.closeButton}`)) {
           e?.preventDefault();
           e?.stopPropagation();
           inboxStore.close(channelId!);
           return;
         }
 
-        const actionEl = target.closest("[data-action]") as HTMLDivElement;
+        const actionEl = closestFromEvent(e, "[data-action]");
         const action = actionEl?.dataset.action as "req-cancel" | "req-accept";
         if (action) {
           const userId = item.dataset.userId;

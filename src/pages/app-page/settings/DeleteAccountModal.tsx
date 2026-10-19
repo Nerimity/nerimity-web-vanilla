@@ -7,6 +7,7 @@ import { Input } from "../../../components/ui/input";
 import { createModal, Modal } from "../../../components/ui/modal";
 import { deleteAccount } from "../../../services/userService";
 import { serverStore } from "../../../store/serverStore";
+import { closestFromEvent } from "../../../utils/dom";
 import { logout } from "../../../utils/logout";
 
 import style from "./DeleteAccountModal.module.css";
@@ -97,8 +98,7 @@ export const createDeleteAccountModal = () => {
   modal.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-action]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-action]`);
       if (!button) return;
       const buttonLabel = button.querySelector(".label") as HTMLDivElement;
 

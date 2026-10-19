@@ -15,6 +15,7 @@ import { postResetPassword, updateUser } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { closestFromEvent } from "../../../utils/dom";
 import { fileToDataUrl } from "../../../utils/file";
 import { createChangePasswordModal } from "./ChangePasswordModal";
 import { createDeleteAccountModal } from "./DeleteAccountModal";
@@ -354,8 +355,7 @@ const accountSettingsPage = (context: SettingsContext) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
       if (action === "browseAvatar") {

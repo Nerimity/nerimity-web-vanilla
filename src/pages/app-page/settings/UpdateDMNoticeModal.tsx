@@ -9,6 +9,7 @@ import {
   getUserChannelNotice,
   updateUserChannelNotice,
 } from "../../../services/userService";
+import { closestFromEvent } from "../../../utils/dom";
 
 import style from "./UpdateDMNoticeModal.module.css";
 
@@ -92,8 +93,7 @@ export const createUpdateDMNoticeModal = () => {
   modal.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-action]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-action]`);
       if (!button) return;
 
       if (button.dataset.action === "update") {

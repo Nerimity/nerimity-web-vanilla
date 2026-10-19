@@ -3,6 +3,7 @@ import { Trans } from "@trans";
 
 import { accountStore } from "../../store/accountStore";
 import { formatTimestamp } from "../../utils/date";
+import { closestFromEvent } from "../../utils/dom";
 import { getLocalItem } from "../../utils/localStorage";
 import { logout } from "../../utils/logout";
 import { Button } from "../ui/button";
@@ -148,8 +149,10 @@ export const createAuthErrorModal = () => {
   modalEl.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(
+        event,
+        "[data-action]",
+      ) as HTMLDivElement;
       const action = actionEl?.dataset?.action;
       if (action === "close") return controller.abort();
       if (action === "login") return (location.href = "/login");

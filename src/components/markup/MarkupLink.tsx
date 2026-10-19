@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../../utils/dom";
 import { addHttps } from "../../utils/url";
 import { createLinkWarnModal } from "../modals/LinkWarnModal";
 
@@ -21,16 +22,15 @@ export const handleDangerLink = (signal: AbortSignal) => {
   document.addEventListener(
     "click",
     (e) => {
-      if (e.target instanceof Element) {
-        const anchorEl = e.target.closest("a[data-warn]") as HTMLAnchorElement;
-        if (anchorEl) {
-          e.preventDefault();
-          e.stopPropagation();
-          const url = anchorEl.href;
-          createLinkWarnModal(url);
-        }
+      const anchorEl = closestFromEvent<HTMLAnchorElement>(e, "a[data-warn]");
+      if (anchorEl) {
+        e.preventDefault();
+        e.stopPropagation();
+        const url = anchorEl.href;
+        createLinkWarnModal(url);
       }
     },
+
     { signal },
   );
 };

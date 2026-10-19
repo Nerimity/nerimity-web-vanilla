@@ -4,6 +4,7 @@ import { Trans } from "@trans";
 import { banServerMember } from "../../services/serverService";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
@@ -103,8 +104,7 @@ export const createBanMemberModal = (props: {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action;
       if (action === "ban") {
         handleBan(button!);

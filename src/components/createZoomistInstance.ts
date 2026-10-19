@@ -1,5 +1,4 @@
 import Zoomist from "zoomist";
-
 import "zoomist/css";
 
 export const createZoomistInstance = (opts: {

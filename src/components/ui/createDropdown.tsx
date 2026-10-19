@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../../utils/dom";
 import { Icon } from "../icon";
 import { createModal, Modal } from "./modal";
 
@@ -47,9 +48,7 @@ const createDropdown = (opts: {
       const target = event.target as HTMLDivElement;
 
       if (popupEl && popupEl.contains(target)) {
-        const clickedPopupEl = target.closest(
-          `.${style.item}`,
-        ) as HTMLDivElement;
+        const clickedPopupEl = closestFromEvent(event, `.${style.item}`);
         if (clickedPopupEl) {
           opts.onChange(clickedPopupEl.dataset.id!);
           rerenderSelected();
@@ -58,7 +57,7 @@ const createDropdown = (opts: {
         return;
       }
 
-      const mainEl = target.closest(`.${style.main}`);
+      const mainEl = closestFromEvent(event, `.${style.main}`);
       if (mainEl?.parentElement !== el) return;
 
       popupEl = buildPopup();

@@ -6,6 +6,7 @@ import Coloris from "@melloware/coloris";
 
 import { parseGradient, type ColorStop } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
+import { closestFromEvent } from "../../utils/dom";
 import { Icon } from "../icon";
 import { Item } from "./item";
 import { createModal, Modal } from "./modal";
@@ -170,15 +171,14 @@ const createGradientSlider = (props: {
   el.addEventListener(
     "pointerdown",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const stopEl = target.closest("[data-index]") as HTMLDivElement;
+      const stopEl = closestFromEvent(event, "[data-index]");
+      if (!stopEl) return addStop(event);
 
-      if (target.closest(`.${style.removeButton}`)) {
+      if (closestFromEvent(event, `.${style.removeButton}`)) {
         removeStop(parseInt(stopEl.dataset.index!));
         return;
       }
 
-      if (!stopEl) return addStop(event);
       event.preventDefault();
       event.stopPropagation();
 

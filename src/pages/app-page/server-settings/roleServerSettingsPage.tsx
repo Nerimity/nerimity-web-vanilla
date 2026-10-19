@@ -15,6 +15,7 @@ import { serverRoleStore } from "../../../store/serverRoleStore";
 import { serverStore } from "../../../store/serverStore";
 import { addBit, hasBit, removeBit } from "../../../utils/bitwise";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { closestFromEvent } from "../../../utils/dom";
 import { RolePermissionFlag } from "../../../utils/RolePermissionFlag";
 import { router } from "../../../utils/router";
 import { DefaultTheme } from "../../../utils/theme";
@@ -273,8 +274,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
 

@@ -10,6 +10,7 @@ import {
 } from "../../services/serverService";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
+import { closestFromEvent } from "../../utils/dom";
 import { customEmojiById } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getRecentServerChannelId } from "../../utils/recentServerChannels";
@@ -166,8 +167,7 @@ export const InviteEmbed = (props: {
 
 let joinClickedServerId = "";
 document.addEventListener("click", async (e) => {
-  const target = e.target as HTMLDivElement;
-  const btn = target.closest(`.${style.button}`) as HTMLDivElement;
+  const btn = closestFromEvent(e, `.${style.button}`);
   if (!btn) return;
   const serverId = btn.dataset.id!;
   const code = btn.dataset.code;

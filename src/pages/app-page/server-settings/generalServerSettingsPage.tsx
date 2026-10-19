@@ -15,6 +15,7 @@ import { deleteServer, updateServer } from "../../../services/serverService";
 import { serverStore } from "../../../store/serverStore";
 import { ChannelType } from "../../../Types";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { closestFromEvent } from "../../../utils/dom";
 import { fileToDataUrl } from "../../../utils/file";
 import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
@@ -298,8 +299,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
       if (action === "browseAvatar") {

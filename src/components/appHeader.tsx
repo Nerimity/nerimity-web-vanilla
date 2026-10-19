@@ -26,9 +26,7 @@ const AppPill = () => {
 
   const authError = accountStore.authError;
   const authenticated = accountStore.authenticated;
-  const profileRoute = router.match<{ userId: string }>(
-    "/app/profile/:userId",
-  );
+  const profileRoute = router.match<{ userId: string }>("/app/profile/:userId");
   const isProfilePage = !!profileRoute;
   const profileUser =
     profileRoute && overrideUser?.id === profileRoute.params.userId

@@ -21,6 +21,7 @@ import {
 import { serverStore } from "../../../store/serverStore";
 import { hasBit } from "../../../utils/bitwise";
 import { resolveGradient } from "../../../utils/color";
+import { closestFromEvent } from "../../../utils/dom";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { HoverAnimator } from "../../../utils/HoverAnimator";
 import { lazySortable } from "../../../utils/lazySortable";
@@ -110,9 +111,7 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
   el.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLDivElement;
-
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
       if (action === "create-role") {
         const [role] = await createServerRole(getServerId()!);

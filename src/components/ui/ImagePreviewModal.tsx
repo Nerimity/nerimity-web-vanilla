@@ -1,4 +1,5 @@
 import { cdnUrl } from "../../config";
+import { closestFromEvent } from "../../utils/dom";
 import { portalElement } from "../../utils/portal";
 import { transitionViewIfSupported } from "../../utils/viewTransition";
 import { createLinkWarnModal } from "../modals/LinkWarnModal";
@@ -15,8 +16,7 @@ export const handleImagePreviewModal = (opts: {
   opts.root.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLElement;
-      const image = target.closest(opts.selector) as HTMLImageElement;
+      const image = closestFromEvent<HTMLImageElement>(e, opts.selector);
       if (!image) return;
       const url = image.src;
       createImagePreviewModal({
@@ -127,7 +127,7 @@ const createImagePreviewModal = (opts: {
         abortController.abort();
       }
 
-      const button = target.closest(`.button`) as HTMLElement;
+      const button = closestFromEvent(e, `.button`);
       if (!button) return;
       const action = button.dataset.action;
       switch (action) {

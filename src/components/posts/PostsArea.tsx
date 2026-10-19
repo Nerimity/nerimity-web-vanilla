@@ -11,7 +11,7 @@ import {
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
-import { getClosestElementFromEvent } from "../../utils/dom";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { createIntersectionObserver } from "../../utils/observer";
 import { Button } from "../ui/button";
@@ -343,7 +343,7 @@ const PostInputArea = (props: {
   el.addEventListener(
     "click",
     (event) => {
-      if (getClosestElementFromEvent(event, `[data-action="send"]`)) {
+      if (closestFromEvent(event, `[data-action="send"]`)) {
         props.onPostCreate({ content: inputContent });
       }
     },

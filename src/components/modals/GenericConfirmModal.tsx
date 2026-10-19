@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { createModal, Modal } from "../ui/modal";
 
@@ -66,10 +67,9 @@ export const createGenericConfirmModal = (opts: GenericConfirmModalOpts) => {
   modal.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-      const action = target
-        .closest("[data-action]")
-        ?.getAttribute("data-action");
+      const action = closestFromEvent(event, "[data-action]")?.getAttribute(
+        "data-action",
+      );
       if (action === "cancel") {
         abortController.abort();
         return;

@@ -17,6 +17,7 @@ import {
 } from "../../../services/userService";
 import { accountStore } from "../../../store/accountStore";
 import { formatTimestamp } from "../../../utils/date";
+import { closestFromEvent } from "../../../utils/dom";
 import type { SettingsContext } from "./Settings";
 
 import style from "./sessionsSettingsPage.module.css";
@@ -188,11 +189,9 @@ const sessionsSettingsPage = (context: SettingsContext) => {
   el.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-
-      const group = target.closest(".settingsBlockGroup") as HTMLDivElement;
+      const group = closestFromEvent(e, ".settingsBlockGroup");
+      const button = closestFromEvent(e, ".button");
       const sessionId = group?.dataset.sid;
-      const button = target.closest(".button") as HTMLDivElement;
 
       if (button) {
         if (button.dataset.action !== "destroy") return;
@@ -208,7 +207,7 @@ const sessionsSettingsPage = (context: SettingsContext) => {
         return;
       }
 
-      const container = target.closest(".settingsBlock") as HTMLDivElement;
+      const container = closestFromEvent(e, ".settingsBlock");
       if (!container) return;
 
       if (!sessionId) return;

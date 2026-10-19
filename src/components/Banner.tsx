@@ -1,3 +1,4 @@
+import { closestFromEvent } from "../utils/dom";
 import { buildImageUrl } from "../utils/image";
 import { createResizeObserver } from "../utils/observer";
 import type { CropPoints } from "./ui/ImageCropModal";
@@ -65,8 +66,7 @@ export const Banner = (props: {
 };
 
 document.addEventListener("contextmenu", (e) => {
-  const target = e.target as HTMLDivElement;
-  if (target.closest(`.${style.banner}`)) {
+  if (closestFromEvent(e, `.${style.banner}`)) {
     e.preventDefault();
   }
 });

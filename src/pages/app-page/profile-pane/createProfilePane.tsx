@@ -37,6 +37,7 @@ import { FriendStatus, type RawUser } from "../../../Types";
 import { hasBit } from "../../../utils/bitwise";
 import { createWidthQuery } from "../../../utils/createWidthQuery";
 import { formatTimestamp, getDaysAgo } from "../../../utils/date";
+import { closestFromEvent } from "../../../utils/dom";
 import { createEventEmitter, storeEmitter } from "../../../utils/EventEmitter";
 import { FocusAnimator } from "../../../utils/FocusAnimator";
 import { getFont } from "../../../utils/font";
@@ -265,8 +266,7 @@ const Actions = ({
   el.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       const action = button?.dataset?.action;
       if (action === "message") {
         inboxStore.openChannel(user?.id!);

@@ -16,6 +16,7 @@ import {
 import { channelStore, type Channel } from "../../../store/channelStore";
 import { serverStore } from "../../../store/serverStore";
 import { ChannelType } from "../../../Types";
+import { closestFromEvent } from "../../../utils/dom";
 import { storeEmitter } from "../../../utils/EventEmitter";
 import { lazySortable } from "../../../utils/lazySortable";
 import { router } from "../../../utils/router";
@@ -134,7 +135,7 @@ const channelsServerSettingsPage = (context: ServerSettingsContext) => {
     async (event) => {
       const target = event.target as HTMLDivElement;
 
-      const actionEl = target.closest("[data-action]") as HTMLDivElement;
+      const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
       if (action === "create-channel") {
         createContextMenu({
@@ -305,8 +306,7 @@ const createContextMenu = ({
   contextEl.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const actionEl = target.closest("[id]") as HTMLDivElement;
+      const actionEl = closestFromEvent(event, "[id]");
       if (!actionEl) return;
       const action = parseInt(actionEl.id!) as ChannelType;
       onClick(action);

@@ -1,6 +1,6 @@
+import auroraX from "@shikijs/themes/aurora-x";
 import { createHighlighterCore } from "shiki/core";
 import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
-import auroraX from "@shikijs/themes/aurora-x";
 
 const highlighter = await createHighlighterCore({
   themes: [auroraX],

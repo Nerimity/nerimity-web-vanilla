@@ -4,6 +4,7 @@ import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { createModal, Modal } from "../../../components/ui/modal";
 import { updateUser } from "../../../services/userService";
+import { closestFromEvent } from "../../../utils/dom";
 import { setLocalItem } from "../../../utils/localStorage";
 
 import style from "./ChangePasswordModal.module.css";
@@ -74,8 +75,7 @@ export const createChangePasswordModal = () => {
   modal.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-action]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-action]`);
       if (!button) return;
 
       if (button.dataset.action === "change") {

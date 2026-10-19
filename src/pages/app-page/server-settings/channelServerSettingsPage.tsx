@@ -27,6 +27,7 @@ import { ChannelType, type RawWebhook } from "../../../Types";
 import { addBit, hasBit, removeBit } from "../../../utils/bitwise";
 import { ChannelPermissionFlag } from "../../../utils/channelPermissionFlag";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
+import { closestFromEvent } from "../../../utils/dom";
 import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
@@ -318,8 +319,7 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
 
@@ -503,8 +503,7 @@ const PermissionsPage = (props: { signal: AbortSignal }) => {
   el.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]") as HTMLDivElement;
       if (!button) return;
       const action = button.dataset.action;
 
@@ -587,8 +586,7 @@ const WebhooksPage = (props: { signal: AbortSignal }) => {
   })();
 
   el.addEventListener("click", async (e) => {
-    const target = e.target as HTMLDivElement;
-    const actionEl = target.closest("[data-action]") as HTMLDivElement;
+    const actionEl = closestFromEvent(e, "[data-action]");
     if (!actionEl) return;
     const action = actionEl.dataset.action!;
     if (action === "create") {
@@ -728,8 +726,7 @@ const WebhookPage = (props: { signal: AbortSignal; webhookId: string }) => {
   el.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLDivElement;
-      const button = target.closest("[data-action]") as HTMLDivElement;
+      const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
 

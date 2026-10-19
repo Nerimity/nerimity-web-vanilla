@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { logout } from "../../utils/logout";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -67,8 +68,7 @@ export const createLogoutModal = () => {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action;
       if (action === "logout") {
         handleLogout();

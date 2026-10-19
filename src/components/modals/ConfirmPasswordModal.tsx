@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { decrypt, encrypt, generateSecret } from "../../utils/encryption";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -95,8 +96,7 @@ export const createConfirmPasswordModal = (opts: {
   modal.addEventListener(
     "click",
     async (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-button]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-button]`);
       if (!button?.dataset?.button) return;
 
       encPassword = undefined;

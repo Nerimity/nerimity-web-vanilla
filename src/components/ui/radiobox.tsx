@@ -1,3 +1,5 @@
+import { closestFromEvent } from "../../utils/dom";
+
 import style from "./radiobox.module.css";
 
 const Group = (props: { children: any; id: string }) => {
@@ -46,12 +48,12 @@ const createHandler = (opts: {
 }) => {
   opts.el.addEventListener(
     "click",
-    (el) => {
-      const target = el.target as HTMLElement;
+    (e) => {
+      const group = closestFromEvent(e, `.${style.group}`);
+      if (!group) return;
 
-      const group = target.closest(`.${style.group}`) as HTMLDivElement;
-
-      const checkEl = target?.closest(
+      const checkEl = closestFromEvent(
+        e,
         `.${style.radioboxContainer}`,
       ) as HTMLDivElement;
       if (checkEl) {

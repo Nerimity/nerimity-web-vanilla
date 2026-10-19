@@ -10,6 +10,7 @@ import {
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
 import { dateMarkerLabel, formatTimestamp, timeSince } from "../../utils/date";
+import { closestFromEvent } from "../../utils/dom";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -358,15 +359,13 @@ export const createPostHandler = (opts: {
     "click",
     async (e) => {
       if (accountStore.currentUser?.id === undefined) return;
-      const target = e.target as HTMLElement;
-      const postEl = target.closest(
-        `.postItemOuter[data-id]`,
-      ) as HTMLDivElement;
+
+      const postEl = closestFromEvent(e, `.postItemOuter[data-id]`);
       if (!postEl) return;
       const post = postElToPost.get(postEl);
       if (!post) return;
 
-      const actionEl = target.closest(`[data-action]`) as HTMLDivElement;
+      const actionEl = closestFromEvent(e, `[data-action]`) as HTMLDivElement;
       const action = actionEl?.dataset?.action;
       if (action === "like") {
         const [res, err] = await likePost(post.id);
@@ -421,8 +420,8 @@ export const createPostHandler = (opts: {
         return;
       }
 
-      if (target.closest("a")) return;
-      if (target.closest("img")) return;
+      if (closestFromEvent(e, "a")) return;
+      if (closestFromEvent(e, "img")) return;
 
       const isClick =
         Math.abs(e.clientX - lastDownPos.x) < 5 &&

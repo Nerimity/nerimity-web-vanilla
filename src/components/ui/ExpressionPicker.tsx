@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { isMobileWidth } from "../../config";
+import { closestFromEvent } from "../../utils/dom";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { portalElement } from "../../utils/portal";
@@ -148,8 +149,7 @@ export const _createExpressionPicker = (props: ExpressionPickerProps) => {
   document.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-      if (!target.closest(`.${style.expressionPicker}`)) {
+      if (!closestFromEvent(e, `.${style.expressionPicker}`)) {
         e.preventDefault();
         e.stopPropagation();
       }
@@ -188,7 +188,7 @@ export const _createExpressionPicker = (props: ExpressionPickerProps) => {
   footer.addEventListener(
     "click",
     (e) => {
-      const button = (e.target as HTMLElement).closest("button");
+      const button = closestFromEvent(e, "button");
       if (!button) return;
       const selectedTab = button.dataset.name as "GIFs" | "emojis";
       if (selectedTab === currentTab) return;

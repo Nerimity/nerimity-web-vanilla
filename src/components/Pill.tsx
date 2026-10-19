@@ -76,10 +76,7 @@ export const createPillUpdater = (
 
     morphdom(pillEl, nextPill);
 
-    if (
-      pillEl.innerHTML === oldHTML ||
-      oldAnimationKey === nextAnimationKey
-    ) {
+    if (pillEl.innerHTML === oldHTML || oldAnimationKey === nextAnimationKey) {
       return;
     }
 

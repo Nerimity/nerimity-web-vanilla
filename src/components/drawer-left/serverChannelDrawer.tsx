@@ -1,6 +1,7 @@
 import { channelStore, type Channel } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { ChannelType } from "../../Types";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
@@ -138,8 +139,7 @@ export const createServerChannelDrawer = () => {
     channelListEl.addEventListener(
       "click",
       (e) => {
-        const target = e.target as HTMLElement;
-        if (target.closest(`.${style.channelItem}`)) {
+        if (closestFromEvent(e, `.${style.channelItem}`)) {
           Drawer().updatePage({ page: 1 });
         }
       },

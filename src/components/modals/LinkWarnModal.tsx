@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { createModal, Modal } from "../ui/modal";
 
@@ -35,8 +36,7 @@ export const createLinkWarnModal = (url: string) => {
   modal.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLElement;
-      const button = target.closest(`[data-button]`) as HTMLElement;
+      const button = closestFromEvent(event, `[data-button]`);
       if (!button?.dataset?.button) return;
       abortController.abort();
     },

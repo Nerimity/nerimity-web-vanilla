@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { deleteMessage } from "../../services/messageService";
 import type { Message } from "../../store/messageStore";
+import { closestFromEvent } from "../../utils/dom";
 import { Button } from "../ui/button";
 import { createModal, Modal } from "../ui/modal";
 import { MessageItem } from "./messageItem";
@@ -79,8 +80,7 @@ export const createDeleteMessageModal = (props: {
   modal.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest(".button") as HTMLElement | null;
+      const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action;
       if (action === "delete") {
         handleDeleteMessage(button!);

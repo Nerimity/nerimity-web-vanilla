@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { leaveServer } from "../../services/serverService";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { Server, serverStore } from "../../store/serverStore";
+import { closestFromEvent } from "../../utils/dom";
 import { router } from "../../utils/router";
 import { Button } from "../ui/button";
 import { ContextMenu } from "../ui/ContextMenu";
@@ -131,8 +132,7 @@ const LeaveServerModal = (serverId: string) => {
   el.addEventListener(
     "click",
     async (e) => {
-      const target = e.target as HTMLDivElement;
-      const btn = target.closest("[data-action]") as HTMLDivElement;
+      const btn = closestFromEvent(e, "[data-action]");
       if (!btn) return;
       const action = btn.dataset.action!;
 

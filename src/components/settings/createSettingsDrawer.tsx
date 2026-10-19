@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
 import { Settings, type Setting } from "../../pages/app-page/settings/Settings";
+import { closestFromEvent } from "../../utils/dom";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
 import { Pill } from "../Pill";
@@ -81,9 +82,7 @@ export const createSettingsDrawer = () => {
   containerEl.addEventListener(
     "click",
     (e) => {
-      const target = e.target as HTMLDivElement;
-
-      if (target.closest(`.${style.item}`)) {
+      if (closestFromEvent(e, `.${style.item}`)) {
         Drawer().updatePage({ page: 1 });
       }
     },

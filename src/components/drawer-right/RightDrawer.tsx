@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { serverStore } from "../../store/serverStore";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Icon } from "../icon";
 import { createFilesDrawer } from "./FilesDrawer";
@@ -72,8 +73,7 @@ export const createRightDrawer = () => {
   tabsEl.addEventListener(
     "click",
     (event) => {
-      const target = event.target as HTMLDivElement;
-      const tabEl = target.closest("[data-id]") as HTMLDivElement;
+      const tabEl = closestFromEvent(event, "[data-id]");
       if (!tabEl) return;
       const id = tabEl.dataset.id as Tab;
       if (currentTab === id) return;

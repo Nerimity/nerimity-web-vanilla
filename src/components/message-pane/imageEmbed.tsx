@@ -130,8 +130,7 @@ export const createImageEmbedResizer = (logElement: HTMLDivElement) => {
       const horizPaddingOverride = parseInt(embedEl.dataset.horizPadding!);
       const maxHeight = customHeight ? customHeight / 2 : defaultMaxHeight;
       const maxWidth = clamp(
-        logElement.clientWidth -
-          (horizPaddingOverride || DefaultHorizPadding),
+        logElement.clientWidth - (horizPaddingOverride || DefaultHorizPadding),
         maxWidthOverride || 600,
       );
 
