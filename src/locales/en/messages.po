@@ -25,12 +25,12 @@ msgstr "Warning"
 #: src/components/Notice.tsx:14
 #: src/utils/date.ts:98
 #: src/utils/date.ts:121
-#: src/utils/date.ts:178
-#: src/utils/date.ts:206
-#: src/utils/date.ts:326
-#: src/utils/date.ts:363
-#: src/utils/date.ts:393
-#: src/utils/date.ts:439
+#: src/utils/date.ts:190
+#: src/utils/date.ts:218
+#: src/utils/date.ts:338
+#: src/utils/date.ts:375
+#: src/utils/date.ts:405
+#: src/utils/date.ts:451
 msgid "Error"
 msgstr "Error"
 
@@ -47,14 +47,14 @@ msgstr "Caution"
 msgid "Success"
 msgstr "Success"
 
-#: src/components/appHeader.tsx:34
+#: src/components/appHeader.tsx:41
 #: src/components/miniProfile.tsx:338
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:175
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/appHeader.tsx:34
+#: src/components/appHeader.tsx:44
 msgid "Home"
 msgstr "Home"
 
@@ -126,13 +126,13 @@ msgstr "View Profile"
 #: src/components/context-menus/UserContextMenu.tsx:147
 #: src/components/miniProfile.tsx:321
 #: src/components/miniProfile.tsx:345
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:256
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/context-menus/UserContextMenu.tsx:147
 #: src/components/miniProfile.tsx:321
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:253
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:256
 msgid "Message"
 msgstr "Message"
 
@@ -202,7 +202,7 @@ msgid "Offline"
 msgstr "Offline"
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:500
-#: src/components/message-pane/messageItem.tsx:156
+#: src/components/message-pane/messageItem.tsx:162
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
 
@@ -254,7 +254,7 @@ msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
 #: src/components/message-pane/JumpToPresent.tsx:22
-#: src/components/message-pane/messageItem.tsx:112
+#: src/components/message-pane/messageItem.tsx:118
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -344,34 +344,34 @@ msgstr "Mentions everyone."
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:176
-#: src/components/posts/PostItem.tsx:128
+#: src/components/message-pane/messageItem.tsx:182
+#: src/components/posts/PostItem.tsx:129
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:191
+#: src/components/message-pane/messageItem.tsx:197
 msgid "Pinned Message"
 msgstr "Pinned Message"
 
-#: src/components/message-pane/messageItem.tsx:200
+#: src/components/message-pane/messageItem.tsx:206
 msgid "Webhook"
 msgstr "Webhook"
 
-#: src/components/message-pane/messageItem.tsx:202
-#: src/components/posts/PostItem.tsx:135
+#: src/components/message-pane/messageItem.tsx:208
+#: src/components/posts/PostItem.tsx:136
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
 
-#: src/components/message-pane/messageItem.tsx:203
+#: src/components/message-pane/messageItem.tsx:209
 msgid "Owner"
 msgstr "Owner"
 
-#: src/components/message-pane/messageItem.tsx:211
+#: src/components/message-pane/messageItem.tsx:217
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:356
+#: src/components/message-pane/messageItem.tsx:362
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -391,18 +391,18 @@ msgid "{0} users are typing..."
 msgstr "{0} users are typing..."
 
 #: src/components/miniProfile.tsx:267
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:158
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:161
 msgid "Follows You"
 msgstr "Follows You"
 
 #. placeholder {0}: followers || 0
 #: src/components/miniProfile.tsx:276
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:380
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:383
 msgid "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{0, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
 #: src/components/miniProfile.tsx:299
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:403
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:406
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
@@ -764,15 +764,15 @@ msgstr "Not Provided"
 msgid "Your account and data will be deleted in 15 days."
 msgstr "Your account and data will be deleted in 15 days."
 
-#: src/components/modals/createPostModal.tsx:48
+#: src/components/modals/createPostModal.tsx:94
 msgid "Replies ~ {replyCount}"
 msgstr "Replies ~ {replyCount}"
 
-#: src/components/modals/createPostModal.tsx:52
+#: src/components/modals/createPostModal.tsx:98
 msgid "Likes ~ {likeCount}"
 msgstr "Likes ~ {likeCount}"
 
-#: src/components/modals/createPostModal.tsx:56
+#: src/components/modals/createPostModal.tsx:102
 msgid "Reposts ~ {repostCount}"
 msgstr "Reposts ~ {repostCount}"
 
@@ -788,31 +788,31 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:206
+#: src/components/posts/PostItem.tsx:207
 msgid "Estimated Views"
 msgstr "Estimated Views"
 
-#: src/components/posts/PostsArea.tsx:146
+#: src/components/posts/PostsArea.tsx:308
 msgid "Create a post..."
 msgstr "Create a post..."
 
-#: src/components/posts/PostsArea.tsx:200
+#: src/components/posts/PostsArea.tsx:376
 msgid "Respectful Posting"
 msgstr "Respectful Posting"
 
-#: src/components/posts/PostsArea.tsx:203
+#: src/components/posts/PostsArea.tsx:379
 msgid "Please be <0>respectful</0> when creating posts."
 msgstr "Please be <0>respectful</0> when creating posts."
 
-#: src/components/posts/PostsArea.tsx:208
+#: src/components/posts/PostsArea.tsx:384
 msgid "<0>Self-harm</0> content is not allowed."
 msgstr "<0>Self-harm</0> content is not allowed."
 
-#: src/components/posts/PostsArea.tsx:214
+#: src/components/posts/PostsArea.tsx:390
 msgid "Violating these rules may result in content removal or account suspension."
 msgstr "Violating these rules may result in content removal or account suspension."
 
-#: src/components/posts/PostsArea.tsx:226
+#: src/components/posts/PostsArea.tsx:402
 msgid "I Will Be Respectful"
 msgstr "I Will Be Respectful"
 
@@ -856,7 +856,7 @@ msgstr "Don't Crop"
 msgid "Crop"
 msgstr "Crop"
 
-#: src/components/ui/modal.tsx:755
+#: src/components/ui/modal.tsx:770
 msgid "Understood"
 msgstr "Understood"
 
@@ -911,55 +911,55 @@ msgstr "Liked in 30 Days"
 msgid "Liked All Time"
 msgstr "Liked All Time"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:182
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:185
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:187
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:190
 msgid "Accept Request"
 msgstr "Accept Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:193
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:196
 msgid "Remove Request"
 msgstr "Remove Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:200
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:203
 msgid "Remove Friend"
 msgstr "Remove Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:203
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:206
 msgid "Add Friend"
 msgstr "Add Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:226
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:229
 msgid "Edit Profile"
 msgstr "Edit Profile"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:234
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:237
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:244
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:247
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:469
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:472
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:492
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:495
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:492
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:495
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:567
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:570
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:611
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:614
 #: src/pages/app-page/settings/Settings.ts:69
 msgid "Badges"
 msgstr "Badges"
@@ -1856,43 +1856,47 @@ msgstr "Enable joining voice channels in the channel. Server admins can still jo
 msgid "Less than a minute ago"
 msgstr "Less than a minute ago"
 
-#: src/utils/date.ts:184
+#: src/utils/date.ts:179
+msgid "Today"
+msgstr "Today"
+
+#: src/utils/date.ts:196
 msgid "Expired"
 msgstr "Expired"
 
-#: src/utils/date.ts:187
+#: src/utils/date.ts:199
 msgid "Expires in {minutes}m"
 msgstr "Expires in {minutes}m"
 
-#: src/utils/date.ts:190
+#: src/utils/date.ts:202
 msgid "Expires in {hours}h"
 msgstr "Expires in {hours}h"
 
-#: src/utils/date.ts:355
+#: src/utils/date.ts:367
 msgid "Yesterday at {time}"
 msgstr "Yesterday at {time}"
 
-#: src/utils/date.ts:359
+#: src/utils/date.ts:371
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
-#: src/utils/date.ts:377
+#: src/utils/date.ts:389
 msgid "Invalid Timezone."
 msgstr "Invalid Timezone."
 
-#: src/utils/date.ts:424
+#: src/utils/date.ts:436
 msgid "now"
 msgstr "now"
 
-#: src/utils/date.ts:431
+#: src/utils/date.ts:443
 msgid "for {duration}"
 msgstr "for {duration}"
 
-#: src/utils/date.ts:433
+#: src/utils/date.ts:445
 msgid "in {duration}"
 msgstr "in {duration}"
 
-#: src/utils/date.ts:435
+#: src/utils/date.ts:447
 msgid "{duration} ago"
 msgstr "{duration} ago"
 
