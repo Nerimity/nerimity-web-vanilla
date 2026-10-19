@@ -271,3 +271,13 @@
     background-color: var(--gray-600);
   }
 }
+
+.tabsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  gap: 4px;
+  :global(.item) {
+    padding: 10px 12px;
+  }
+}

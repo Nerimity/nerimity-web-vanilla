@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { ph, t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
 import { Banner } from "../../../components/Banner";
@@ -10,6 +10,7 @@ import { ServerClanItem } from "../../../components/serverClanItem";
 import { Avatar } from "../../../components/ui/avatar";
 import { Button } from "../../../components/ui/button";
 import { Drawer } from "../../../components/ui/drawer";
+import { Item } from "../../../components/ui/item";
 import { Link } from "../../../components/ui/link";
 import { alert } from "../../../components/ui/modal";
 import { updateActivity, UserActivity } from "../../../components/UserActivity";
@@ -117,8 +118,8 @@ const Content = (opts: {
         />
       )}
       <Bio userDetails={userDetails} />
-      {opts.postsAreaEl}
       {opts.mobile && <Sidebar {...opts} mobile />}
+      {opts.postsAreaEl}
     </div>
   );
 };
@@ -694,19 +695,6 @@ const createProfilePane = ({ content }: RouteContext) => {
     const param = router.match<{ userId: string }>("/app/profile/:userId");
     const userId = param?.params.userId;
 
-    if (userId) {
-      postsAreaEl = (
-        <div class={style.postsAreaContainer}>
-          <PostsArea
-            signal={signal}
-            type="profile"
-            userId={userId}
-            withReplies={false}
-          />
-        </div>
-      ) as HTMLDivElement;
-    }
-
     if (!userId) return rerender();
     localUser = userStore.users.get(userId);
     rerender();
@@ -714,6 +702,11 @@ const createProfilePane = ({ content }: RouteContext) => {
     const [details, error] = await getUserDetails({ userId });
     if (error) return;
     userDetails = details;
+    if (userId) {
+      postsAreaEl = (
+        <PostsSection details={userDetails!} signal={signal} userId={userId} />
+      ) as HTMLDivElement;
+    }
     rerender();
   };
 
@@ -805,3 +798,78 @@ const createProfilePane = ({ content }: RouteContext) => {
   return { destroy };
 };
 export default createProfilePane;
+
+const PostTabs = [
+  "posts",
+  "replies",
+  "liked",
+  "following",
+  "followers",
+] as const;
+
+type PostTab = (typeof PostTabs)[number];
+
+const PostsSection = (props: {
+  details: UserDetails;
+  userId: string;
+  signal: AbortSignal;
+}) => {
+  const postsCount = props.details.user._count.posts.toLocaleString();
+  const likedCount = props.details.user._count.likedPosts.toLocaleString();
+
+  const tabsEl = (
+    <div class={style.tabsContainer}>
+      <Item.Base handlePosition="bottom" data-value="posts">
+        <Item.Icon name="post" />
+        <Item.Label>{t`Posts`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-value="replies">
+        <Item.Icon name="forum" />
+        <Item.Label>{t`Posts & Replies ~ ${ph({ count: postsCount })}`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-value="liked">
+        <Item.Icon name="favorite" />
+        <Item.Label>{t`Liked ~ ${ph({ count: likedCount })}`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-value="following">
+        <Item.Icon name="person_check" />
+        <Item.Label>{t`Following`}</Item.Label>
+      </Item.Base>
+      <Item.Base handlePosition="bottom" data-value="followers">
+        <Item.Icon name="group" />
+        <Item.Label>{t`Followers`}</Item.Label>
+      </Item.Base>
+    </div>
+  ) as HTMLDivElement;
+
+  const getQueryTab = () => {
+    const getQuery = router.query<{ tab: PostTab }>();
+    const tab = getQuery().tab;
+    return PostTabs.includes(tab) ? tab : "posts";
+  };
+
+  Item.handler<PostTab>({
+    container: tabsEl,
+    signal: props.signal,
+    initialTab: getQueryTab(),
+    onChange(value) {
+      if (value === "posts") {
+        router.setQuery("tab", null);
+      } else {
+        router.setQuery("tab", value);
+      }
+    },
+  });
+
+  return (
+    <div class={style.postsAreaContainer}>
+      {tabsEl}
+      <PostsArea
+        signal={props.signal}
+        type="profile"
+        userId={props.userId}
+        withReplies={false}
+      />
+    </div>
+  );
+};

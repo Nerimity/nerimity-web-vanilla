@@ -18,6 +18,9 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "post",
+        "forum",
+        "person_check",
         "repeat",
         "notifications",
         "volume_up",
