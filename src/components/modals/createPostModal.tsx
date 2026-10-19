@@ -3,7 +3,6 @@ import { t } from "@lingui/core/macro";
 import { getPostLikes, getPostReposts } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
-import { getClosestElementFromEvent } from "../../utils/dom";
 import { router } from "../../utils/router";
 import {
   cacheOrFetchPost,
@@ -52,11 +51,6 @@ export const createPostModal = (props: { postId: string }) => {
   let tabAc = new AbortController();
 
   const updateTab = (tab: Tab) => {
-    const tabs = [...tabsEl.querySelectorAll("[data-tab]")] as HTMLDivElement[];
-
-    tabs.forEach((el) => {
-      el.dataset.selected = el.dataset.tab === tab ? "true" : "false";
-    });
     if (tab === currentTab) return;
 
     currentTab = tab;
@@ -82,6 +76,13 @@ export const createPostModal = (props: { postId: string }) => {
     }
   };
 
+  const tabsHandler = Item.handler<Tab>({
+    signal,
+    container: tabsEl,
+    initialTab: "replies",
+    onChange: updateTab,
+  });
+
   const rerenderTabs = (post?: RawPost | null) => {
     const replyCount = post?._count.comments.toLocaleString() || 0;
     const likeCount = post?._count.likedBy.toLocaleString() || 0;
@@ -89,21 +90,21 @@ export const createPostModal = (props: { postId: string }) => {
 
     tabsEl.replaceChildren(
       <>
-        <Item.Base handlePosition="bottom" data-tab="replies">
+        <Item.Base handlePosition="bottom" data-value="replies">
           <Item.Icon name="reply" />
           <Item.Label>{t`Replies ~ ${replyCount}`}</Item.Label>
         </Item.Base>
-        <Item.Base handlePosition="bottom" data-tab="likes">
+        <Item.Base handlePosition="bottom" data-value="likes">
           <Item.Icon name="favorite" />
           <Item.Label>{t`Likes ~ ${likeCount}`}</Item.Label>
         </Item.Base>
-        <Item.Base handlePosition="bottom" data-tab="reposts">
+        <Item.Base handlePosition="bottom" data-value="reposts">
           <Item.Icon name="repeat" />
           <Item.Label>{t`Reposts ~ ${repostCount}`}</Item.Label>
         </Item.Base>
       </>,
     );
-    updateTab(currentTab || "replies");
+    tabsHandler.update();
   };
   rerenderTabs();
 
@@ -144,17 +145,6 @@ export const createPostModal = (props: { postId: string }) => {
   };
 
   fetchAndDisplayPost(props.postId, true);
-
-  tabsEl.addEventListener(
-    "click",
-    (e) => {
-      const tab = getClosestElementFromEvent(e, "[data-tab]")?.dataset
-        .tab as Tab;
-      if (!tab) return;
-      updateTab(tab);
-    },
-    { signal },
-  );
 
   createModal(() => <Modal.Root>{body}</Modal.Root>, ac);
 };

@@ -39,11 +39,11 @@ Coloris.init();
 const Tabs = () => {
   return (
     <div class={style.tabs}>
-      <Item.Base handlePosition="bottom" data-tab="solid">
+      <Item.Base handlePosition="bottom" data-value="solid">
         <Item.Icon name="format_color_fill" />
         <Item.Label>Solid</Item.Label>
       </Item.Base>
-      <Item.Base handlePosition="bottom" data-tab="gradient">
+      <Item.Base handlePosition="bottom" data-value="gradient">
         <Item.Icon name="gradient" />
         <Item.Label>Gradient</Item.Label>
       </Item.Base>
@@ -256,13 +256,8 @@ export const _createColorPickerModal = (opts: ColorPickerModalOpts) => {
     </div>
   ) as HTMLDivElement;
 
-  const updateTab = () => {
-    const tabs = container.querySelectorAll("[data-tab]");
-    tabs.forEach((t) => {
-      const tab = t as HTMLDivElement;
-      tab.dataset.selected = tab.dataset.tab === currentTab ? "true" : "false";
-    });
-
+  const updateTab = (tab: Tab) => {
+    currentTab = tab;
     const gradientSliderEl = container.querySelector(
       ".gradientSliderContainer",
     ) as HTMLDivElement;
@@ -281,20 +276,12 @@ export const _createColorPickerModal = (opts: ColorPickerModalOpts) => {
     });
   };
 
-  updateTab();
-
-  container.addEventListener(
-    "click",
-    (e) => {
-      const target = e.target as HTMLDivElement;
-
-      const tabEl = target.closest("[data-tab]") as HTMLDivElement;
-      if (!tabEl) return;
-      currentTab = tabEl.dataset.tab as Tab;
-      updateTab();
-    },
-    { signal },
-  );
+  Item.handler<Tab>({
+    signal,
+    container,
+    initialTab: currentTab,
+    onChange: updateTab,
+  });
 
   const rect = opts.triggerEl.getBoundingClientRect();
 

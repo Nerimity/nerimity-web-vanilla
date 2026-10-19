@@ -31,15 +31,14 @@ interface TimeModalOts {
 const Tabs = () => (
   <div class={style.tabs}>
     <Item.Base
-      data-tab="relative"
+      data-value="relative"
       class={style.tab}
-      selected
       handlePosition="bottom"
     >
       <Item.Icon name="schedule" />
       <Item.Label>{t`Relative`}</Item.Label>
     </Item.Base>
-    <Item.Base data-tab="offset" class={style.tab} handlePosition="bottom">
+    <Item.Base data-value="offset" class={style.tab} handlePosition="bottom">
       <Item.Icon name="globe" />
       <Item.Label>{t`Offset`}</Item.Label>
     </Item.Base>
@@ -53,14 +52,15 @@ let selectedTz = myTimezone;
 export const createTimeModal = (opts: TimeModalOts) => {
   const abortController = new AbortController();
   const { signal } = abortController;
-  let currentTab: Tab = "relative";
+  let currentTab: Tab | null = null;
 
   const contentEl = (<div></div>) as HTMLDivElement;
+  const tabsEl = <Tabs /> as HTMLDivElement;
   const el = (
     <Modal.Root disableGestures fullHeight>
       <Modal.Header label={t`Time`} icon="schedule" />
       <Modal.Body width="320px" class={style.body}>
-        <Tabs />
+        {tabsEl}
         {contentEl}
       </Modal.Body>
       <Modal.Footer>
@@ -71,11 +71,10 @@ export const createTimeModal = (opts: TimeModalOts) => {
 
   let contentAbortController = new AbortController();
 
-  const updateTab = () => {
+  const updateTab = (tab: Tab) => {
+    if (tab === currentTab) return;
+    currentTab = tab;
     contentAbortController.abort();
-    el.querySelectorAll<HTMLElement>("[data-tab]").forEach((tab) => {
-      tab.dataset.selected = String(tab.dataset.tab === currentTab);
-    });
     contentAbortController = new AbortController();
     contentEl.replaceChildren(
       currentTab === "relative" ? (
@@ -85,21 +84,17 @@ export const createTimeModal = (opts: TimeModalOts) => {
       ),
     );
   };
-  updateTab();
+  Item.handler<Tab>({
+    signal,
+    container: tabsEl,
+    initialTab: "relative",
+    onChange: updateTab,
+  });
 
   el.addEventListener(
     "click",
     (event) => {
       const target = event.target as HTMLDivElement;
-
-      const tabEl = target.closest("[data-tab]") as HTMLDivElement;
-      if (tabEl) {
-        const tab = tabEl.dataset.tab as Tab;
-        if (tab === currentTab) return;
-        currentTab = tab;
-        updateTab();
-        return;
-      }
 
       const actionBtn = target.closest("[data-action]") as HTMLDivElement;
       const action = actionBtn?.dataset.action;

@@ -1,4 +1,5 @@
 import { Dynamic } from "../../dynamic";
+import { getClosestElementFromEvent } from "../../utils/dom";
 import { Icon as MaterialIcon } from "../icon";
 import { Link } from "./link";
 
@@ -57,5 +58,40 @@ export const Item = {
         {props.children}
       </div>
     );
+  },
+  handler<T extends string>(opts: {
+    signal: AbortSignal;
+    container: HTMLDivElement;
+    initialTab: T;
+    onChange: (value: T) => void;
+  }) {
+    const updateSelected = (isSelected: (item: HTMLDivElement) => boolean) => {
+      opts.container
+        .querySelectorAll<HTMLDivElement>(`.${style.item}`)
+        .forEach((item) => {
+          item.dataset.selected = String(isSelected(item));
+        });
+    };
+    let selectedValue = opts.initialTab;
+    const update = (value?: T) => {
+      if (value !== undefined) selectedValue = value;
+      updateSelected((item) => item.dataset.value === selectedValue);
+    };
+
+    update();
+    opts.onChange(opts.initialTab);
+
+    opts.container.addEventListener(
+      "click",
+      (e) => {
+        const clickedItem = getClosestElementFromEvent(e, `.${style.item}`);
+        if (!clickedItem) return;
+        selectedValue = clickedItem.dataset.value as T;
+        opts.onChange(selectedValue);
+        updateSelected((item) => item === clickedItem);
+      },
+      { signal: opts.signal },
+    );
+    return { update };
   },
 };

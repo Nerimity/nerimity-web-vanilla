@@ -70,16 +70,16 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
 
   const isCategory = getChannel()?.type === ChannelType.CATEGORY;
 
-  let currentTab = "general";
+  type Tab = keyof typeof Tabs;
+  let currentTab: Tab = "general";
   let currentWebhookId: string | undefined;
 
   let tabs = (
     <div class={style.tabs}>
       <Item.Base
         href={`${getChannelSettingsPath()}/general`}
-        selected
         handlePosition="bottom"
-        data-tab="general"
+        data-value="general"
       >
         <Item.Icon name="settings" />
         <Item.Label>{strings.general}</Item.Label>
@@ -87,7 +87,7 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
       <Item.Base
         href={`${getChannelSettingsPath()}/permissions`}
         handlePosition="bottom"
-        data-tab="permissions"
+        data-value="permissions"
       >
         <Item.Icon name="security" />
         <Item.Label>{strings.permissions}</Item.Label>
@@ -95,7 +95,7 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
       <Item.Base
         href={`${getChannelSettingsPath()}/webhooks`}
         handlePosition="bottom"
-        data-tab="webhooks"
+        data-value="webhooks"
       >
         <Item.Icon name="webhook" />
         <Item.Label>{strings.webhooks}</Item.Label>
@@ -105,15 +105,19 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
 
   let currentTabEl = (<div></div>) as HTMLDivElement;
   let currentTabAc = new AbortController();
-  const renderCurrentTab = () => {
-    const tabEls = [...tabs.children] as HTMLDivElement[];
-    tabEls.forEach((el) => {
-      el.dataset.selected = currentTab === el.dataset.tab ? "true" : "false";
-    });
+  const tabsHandler = Item.handler<Tab>({
+    signal,
+    container: tabs,
+    initialTab: currentTab,
+    onChange(tab) {
+      currentTab = tab;
+    },
+  });
 
+  const renderCurrentTab = () => {
     currentTabAc.abort();
     currentTabAc = new AbortController();
-    const Tab = Tabs[currentTab as keyof typeof Tabs];
+    const Tab = Tabs[currentTab];
 
     currentTabEl.replaceChildren(
       currentTab === "webhooks" && currentWebhookId ? (
@@ -146,8 +150,9 @@ const channelServerSettingsPage = (context: ServerSettingsContext) => {
         );
         return;
       }
-      currentTab = tab;
+      currentTab = tab as Tab;
       currentWebhookId = tab === "webhooks" ? res.params.webhookId : undefined;
+      tabsHandler.update(currentTab);
       renderCurrentTab();
     },
     { signal },

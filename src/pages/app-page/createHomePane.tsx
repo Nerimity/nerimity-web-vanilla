@@ -182,39 +182,24 @@ const HomeUserActivity = (props: {
 };
 
 const PostSection = (props: { signal: AbortSignal }) => {
-  let currentTab: "feed" | "discover" | "notifications" = "feed";
+  type Tab = "feed" | "discover" | "notifications";
+  let currentTab: Tab = "feed";
   let tabs = (
     <div class={style.postTabs}>
-      <Item.Base handlePosition="bottom" data-tab="discover">
+      <Item.Base handlePosition="bottom" data-value="discover">
         <Item.Icon name="public" />
         <Item.Label>{t`Feed`}</Item.Label>
       </Item.Base>
-      <Item.Base selected handlePosition="bottom" data-tab="feed">
+      <Item.Base handlePosition="bottom" data-value="feed">
         <Item.Icon name="group" />
         <Item.Label>{t`Following`}</Item.Label>
       </Item.Base>
-      <Item.Base handlePosition="bottom" data-tab="notifications">
+      <Item.Base handlePosition="bottom" data-value="notifications">
         <Item.Icon name="notifications" />
         <Item.Label>{t`Notifications`}</Item.Label>
       </Item.Base>
     </div>
   ) as HTMLDivElement;
-
-  tabs.addEventListener(
-    "click",
-    (e) => {
-      const tab = (e.target as HTMLElement)
-        .closest("[data-tab]")
-        ?.getAttribute("data-tab");
-      if (tab && tab !== currentTab) {
-        currentTab = tab as "feed" | "discover" | "notifications";
-        rerender();
-      }
-    },
-    {
-      signal: props.signal,
-    },
-  );
 
   let postsArea = (<div></div>) as HTMLDivElement;
 
@@ -266,12 +251,6 @@ const PostSection = (props: { signal: AbortSignal }) => {
     postsAc = new AbortController();
     signal = postsAc.signal;
 
-    tabs.querySelectorAll("[data-tab]").forEach((e) => {
-      const tabEl = e as HTMLElement;
-      tabEl.dataset.selected =
-        tabEl.getAttribute("data-tab") === currentTab ? "true" : "false";
-    });
-
     el.dataset.currentTab = currentTab;
 
     if (currentTab === "notifications") {
@@ -287,6 +266,17 @@ const PostSection = (props: { signal: AbortSignal }) => {
 
     postsArea.replaceChildren(posts);
   };
+
+  Item.handler<Tab>({
+    signal: props.signal,
+    container: tabs,
+    initialTab: currentTab,
+    onChange(tab) {
+      if (tab === currentTab) return;
+      currentTab = tab;
+      rerender();
+    },
+  });
 
   rerender();
 
