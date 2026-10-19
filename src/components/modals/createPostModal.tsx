@@ -257,7 +257,7 @@ function RepostsTab(props: { signal: AbortSignal; postId: string }) {
 function PostActivitySkeletons() {
   return (
     <div class={style.postActivitySkeletons} aria-hidden="true">
-      {Array.from({ length: 5 }, () => (
+      {Array.from({ length: 20 }, () => (
         <div class={style.postActivitySkeleton}>
           <Skeleton class={style.postActivityAvatarSkeleton} />
           <Skeleton class={style.postActivityUsernameSkeleton} />
