@@ -96,7 +96,7 @@ export const PostItem = (props: {
 
   const el = (
     <div class="postItemOuter" data-id={post.id}>
-      {newDay && <Marker label={dateMarkerLabel(post.createdAt)} />}
+      {newDay && <Marker label={dateMarkerLabel(post.createdAt, true)} />}
 
       <div
         class={[

@@ -483,7 +483,7 @@ const NotificationItemItem = (props: {
     <>
       {newDay && (
         <div class={style.newDay}>
-          {dateMarkerLabel(props.notification.createdAt)}
+          {dateMarkerLabel(props.notification.createdAt, true)}
         </div>
       )}
 

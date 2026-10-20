@@ -112,7 +112,9 @@ export const MessageItem = (props: {
 
   return (
     <div data-message-id={props.message.id} data-grouped={group}>
-      {newDay && <Marker label={dateMarkerLabel(props.message.createdAt)} />}
+      {newDay && (
+        <Marker label={dateMarkerLabel(props.message.createdAt, true)} />
+      )}
       {props.newMarker && <Marker alert label={t`New Messages`} />}
       {isFriendBlocked && (
         <div class={style.blocked} data-blocked>

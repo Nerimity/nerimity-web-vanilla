@@ -158,7 +158,7 @@ export function friendlyTimestamp(timestamp: number): string {
 }
 
 // Tuesday, 26 May 2026
-export function fullDate(timestamp: number, short = false): string {
+export function fullDate(timestamp: number, short = true): string {
   return new Date(timestamp).toLocaleDateString("en-GB", {
     weekday: short ? "short" : "long",
     day: "numeric",
@@ -167,7 +167,7 @@ export function fullDate(timestamp: number, short = false): string {
   });
 }
 
-export function dateMarkerLabel(timestamp: number, short = false): string {
+export function dateMarkerLabel(timestamp: number, short = true): string {
   const date = new Date(timestamp);
   const now = new Date();
 
