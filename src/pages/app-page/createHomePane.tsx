@@ -6,7 +6,11 @@ import { Icon } from "../../components/icon";
 import { buildEmojiUrl } from "../../components/markup/Emoji";
 import { Markup } from "../../components/markup/markup";
 import { NotificationPill } from "../../components/NotificationPill";
-import { isNewDay, PostItem } from "../../components/posts/PostItem";
+import {
+  createPostHandler,
+  isNewDay,
+  PostItem,
+} from "../../components/posts/PostItem";
 import { PostsArea } from "../../components/posts/PostsArea";
 import { SettingsBlock } from "../../components/SettingsBlock";
 import { Avatar } from "../../components/ui/avatar";
@@ -336,6 +340,12 @@ const NotificationsArea = (props: { signal: AbortSignal }) => {
       console.error(err);
       return;
     }
+
+    createPostHandler({
+      container: el,
+      signal: props.signal,
+    });
+
     el.replaceChildren(
       <>
         {notifications.map((notification, i) => (
@@ -358,6 +368,7 @@ const Transform = (notification: RawPostNotification) => {
       return {
         icon: "favorite",
         color: "var(--alert-color)",
+        href: `/p/${notification.post!.id}`,
         title: () => (
           <Trans>
             <Link
@@ -392,6 +403,7 @@ const Transform = (notification: RawPostNotification) => {
       return {
         icon: "person_add",
         color: "var(--primary-color)",
+        href: `/app/profile/${notification.by.id}`,
         title: () => (
           <Trans>
             <Link
@@ -409,6 +421,7 @@ const Transform = (notification: RawPostNotification) => {
       return {
         icon: "repeat",
         color: "var(--success-color)",
+        href: `/p/${notification.post!.id}`,
         title: () => (
           <Trans>
             <Link
@@ -481,16 +494,30 @@ const NotificationItemItem = (props: {
           container={props.container}
         />
       ) : (
-        <SettingsBlock.Root class={style.notificationContainer}>
-          <Avatar
-            class={style.notificationAvatar}
-            user={props.notification.by}
-            size={40}
-          />
-
+        <SettingsBlock.Root
+          class={style.notificationContainer}
+          href={transformed.href}
+          hideArrow
+        >
+          <Link
+            data-user-id={props.notification.by.id}
+            href={`/app/profile/${props.notification.by.id}`}
+          >
+            <Avatar
+              class={style.notificationAvatar}
+              user={props.notification.by}
+              size={40}
+            />
+          </Link>
           <div class={style.notificationDetails}>
             <div class={style.innerDetails}>
-              <div>{transformed.title()}</div>
+              <div
+                class={style.notificationTitle}
+                style={{ "--color": transformed.color }}
+              >
+                <Icon name={transformed.icon} class={style.notificationIcon} />
+                <span>{transformed.title()}</span>
+              </div>
               {postContent && !replyOrMentioned && (
                 <Markup class={style.postContent} inline text={postContent} />
               )}

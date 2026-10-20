@@ -39,6 +39,7 @@ type PostsAreaProps = {
       type: "profile";
       userId: string;
       withReplies?: boolean;
+      pinnedPosts?: RawPost[];
     }
   | {
       type: "user_liked_posts";
@@ -60,13 +61,17 @@ type PostsAreaProps = {
       postId: string;
     }
   | {
-      type: "user_posts" | "user_posts_and_replies" | "user_liked_posts";
+      type: "user_liked_posts";
       userId: string;
     }
 );
 
 export const PostsArea = (props: PostsAreaProps) => {
+  const pinnedPosts = props.type === "profile" ? (props.pinnedPosts ?? []) : [];
+  const pinnedPostIds = new Set(pinnedPosts.map((post) => post.id));
+
   let posts: RawPost[] | null = null;
+  let renderedPosts: RawPost[] = [];
 
   let postsEl = (<div class={style.posts}></div>) as HTMLDivElement;
 
@@ -155,10 +160,9 @@ export const PostsArea = (props: PostsAreaProps) => {
     async () => {
       if (loading) return;
 
-      const previousPostCount = posts?.length || 0;
       offsetId = posts?.[posts.length - 1]?.id;
       await fetchPosts(offsetId);
-      appendPosts(previousPostCount);
+      appendPosts();
     },
     { signal: props.signal },
   );
@@ -238,27 +242,46 @@ export const PostsArea = (props: PostsAreaProps) => {
   const rerender = () => {
     postInputArea.style.display = showInputArea() ? "block" : "none";
 
-    const currentPosts = posts || [];
+    const currentPosts = [
+      ...pinnedPosts,
+      ...(posts || []).filter((post) => !pinnedPostIds.has(post.id)),
+    ];
     const postItems = currentPosts.map((post, index) =>
-      renderPost(post, index, currentPosts),
+      renderPost(post, index, currentPosts, pinnedPostIds.has(post.id)),
     );
+    renderedPosts = currentPosts;
     lastPostEl = postItems.at(-1);
     postsEl.replaceChildren(...postItems, skeletonsContainer);
   };
 
-  const appendPosts = (previousPostCount: number) => {
-    const currentPosts = posts || [];
-    const newPosts = currentPosts.slice(previousPostCount);
+  const appendPosts = () => {
+    const currentPosts = [
+      ...pinnedPosts,
+      ...(posts || []).filter((post) => !pinnedPostIds.has(post.id)),
+    ];
+    const renderedPostIds = new Set(renderedPosts.map((post) => post.id));
+    const newPosts = currentPosts.filter(
+      (post) => !renderedPostIds.has(post.id),
+    );
     if (!newPosts.length) return;
 
     const firstNewPost = newPosts[0];
     if (lastPostEl && firstNewPost) {
-      updatePostItemNextPost(lastPostEl, firstNewPost, hideNewDayMarker);
+      const lastRenderedPost = renderedPosts.at(-1);
+      const lastPostIsPinned =
+        !!lastRenderedPost && pinnedPostIds.has(lastRenderedPost.id);
+      updatePostItemNextPost(
+        lastPostEl,
+        firstNewPost,
+        hideNewDayMarker || lastPostIsPinned,
+      );
     }
 
-    const postItems = newPosts.map((post, index) =>
-      renderPost(post, previousPostCount + index, currentPosts),
-    );
+    const postItems = newPosts.map((post) => {
+      const index = currentPosts.indexOf(post);
+      return renderPost(post, index, currentPosts, pinnedPostIds.has(post.id));
+    });
+    renderedPosts = currentPosts;
     lastPostEl = postItems.at(-1);
     postsEl.insertBefore(<>{postItems}</>, skeletonsContainer);
   };
@@ -267,14 +290,16 @@ export const PostsArea = (props: PostsAreaProps) => {
     post: RawPost,
     index: number,
     currentPosts: RawPost[],
+    pinned = false,
   ): HTMLDivElement =>
     (
       <PostItem
-        hideNewDayMarker={hideNewDayMarker}
+        hideNewDayMarker={hideNewDayMarker || pinned}
         post={post}
         container={postsEl}
         prevPost={currentPosts[index - 1]}
         nextPost={currentPosts[index + 1]}
+        pinned={pinned}
       />
     ) as HTMLDivElement;
 

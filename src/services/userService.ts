@@ -2,6 +2,7 @@ import type {
   Profile,
   RawBotCommand,
   RawInventoryItem,
+  RawPost,
   RawUser,
   RawUserPresence,
 } from "../Types";
@@ -9,6 +10,7 @@ import { request } from "./request";
 
 interface GetUserDetailsOpts {
   userId: string;
+  includePinnedPosts?: boolean;
 }
 
 export type UserDetails = {
@@ -19,6 +21,7 @@ export type UserDetails = {
   profile?: Profile;
   mutualFriendIds: string[];
   mutualServerIds: string[];
+  pinnedPosts: RawPost[];
   user: RawUser & {
     application?: {
       botCommands?: RawBotCommand[];
@@ -48,6 +51,9 @@ export const getUserDetails = async (opts: GetUserDetailsOpts) => {
   return request<UserDetails>(`/users/${opts.userId}`, {
     method: "GET",
     useToken: true,
+    params: {
+      includePinnedPosts: opts.includePinnedPosts,
+    },
   });
 };
 export const userLogout = async () => {

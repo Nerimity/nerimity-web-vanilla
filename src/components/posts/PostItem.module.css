@@ -197,3 +197,17 @@
     }
   }
 }
+
+.postHeader {
+  margin-bottom: 12px;
+
+  .postHeaderDetail {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    :global(.icon) {
+      color: var(--gray-400);
+      font-size: 16px;
+    }
+  }
+}

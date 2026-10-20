@@ -156,6 +156,7 @@
 
   :global(.postItem) {
     padding: 12px;
+    padding-bottom: 6px;
     margin: 0;
     border-radius: var(--radius-16);
     background-color: var(--gray-850);
@@ -173,6 +174,16 @@
   }
   .innerDetails {
     overflow: hidden;
+  }
+  .notificationTitle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .notificationIcon {
+    flex-shrink: 0;
+    color: var(--color);
+    font-size: 16px;
   }
   .notificationAvatar {
     align-self: center;

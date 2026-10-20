@@ -1,4 +1,5 @@
 import { t } from "@lingui/core/macro";
+import { Trans } from "@trans";
 
 import {
   deletePost,
@@ -67,8 +68,14 @@ export const PostItem = (props: {
   hideNewDayMarker?: boolean;
   container: HTMLDivElement;
   showFullDate?: boolean;
+  pinned?: boolean;
+  repost?: RawPost;
 }) => {
   const post = props.post || postCache.get(props.postId!);
+
+  if (post?.repost) {
+    return <PostItem {...props} post={post.repost} repost={post} />;
+  }
 
   if (!post) return <div>Post not found</div>;
 
@@ -101,6 +108,7 @@ export const PostItem = (props: {
         data-disable-hover={props.disableHover}
         data-status={post.local?.status}
       >
+        <PostHeader post={post} pinned={props.pinned} repost={props.repost} />
         <div class={[style.postContainer, "postContainer"]}>
           <Link
             href={`/app/profile/${creator.id}`}
@@ -171,6 +179,79 @@ export const PostItem = (props: {
   }
 
   return el;
+};
+
+const PostHeader = (props: {
+  post: RawPost;
+  pinned?: boolean;
+  repost?: RawPost;
+}) => {
+  const commentTo = props.post.commentTo;
+  let details: { icon: string; action: any }[] = [];
+
+  if (props.pinned) {
+    details.push({
+      icon: "push_pin",
+      action: <Trans>Pinned</Trans>,
+    });
+  }
+
+  if (props.repost) {
+    details.push({
+      icon: "repeat",
+      action: (
+        <Trans>
+          Reposted by
+          <Link
+            href={`/app/profile/${props.repost.createdBy.id}`}
+            data-user-id={props.repost.createdBy.id}
+          >
+            <strong>{props.repost.createdBy.username}</strong>
+          </Link>
+        </Trans>
+      ),
+    });
+  }
+
+  if (commentTo) {
+    details.push({
+      icon: "reply",
+      action: (
+        <Trans>
+          Replying to{" "}
+          <Link
+            href={`/app/profile/${commentTo.createdBy.id}`}
+            data-user-id={commentTo.createdBy.id}
+          >
+            <strong>{commentTo.createdBy.username}</strong>
+          </Link>
+        </Trans>
+      ),
+    });
+  }
+
+  if (
+    props.post.mentions.find(
+      (mention) => mention.id === accountStore.currentUser?.id,
+    )
+  ) {
+    details.push({
+      icon: "alternate_email",
+      action: <Trans>Mentioned you</Trans>,
+    });
+  }
+
+  if (!details.length) return null;
+  return (
+    <div class={style.postHeader}>
+      {details[0] && (
+        <div class={style.postHeaderDetail}>
+          <Icon name={details[0].icon} />
+          {details[0].action}
+        </div>
+      )}
+    </div>
+  );
 };
 
 const PostInfo = (props: { post: RawPost }) => {

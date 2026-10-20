@@ -427,7 +427,10 @@ const Stats = ({
   emitter.on(
     "follow_state_changed",
     async () => {
-      const [newDetails] = await getUserDetails({ userId: details?.user.id! });
+      const [newDetails] = await getUserDetails({
+        userId: details?.user.id!,
+        includePinnedPosts: true,
+      });
       if (newDetails) details = newDetails;
       rerender();
     },
@@ -709,7 +712,10 @@ const createProfilePane = ({ content }: RouteContext) => {
     localUser = userStore.users.get(userId);
     rerender();
 
-    const [details, error] = await getUserDetails({ userId });
+    const [details, error] = await getUserDetails({
+      userId,
+      includePinnedPosts: true,
+    });
     if (error) return;
     userDetails = details;
     if (userId) {
@@ -910,6 +916,7 @@ const PostsSection = (props: {
             type="profile"
             userId={props.userId}
             withReplies={false}
+            pinnedPosts={props.details.pinnedPosts}
           />,
         );
       }
@@ -918,6 +925,7 @@ const PostsSection = (props: {
           <PostsArea
             signal={tabAc.signal}
             type="profile"
+            pinnedPosts={props.details.pinnedPosts}
 
             userId={props.userId}
             withReplies={true}
