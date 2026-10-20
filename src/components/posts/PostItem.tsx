@@ -509,7 +509,9 @@ export const createPostHandler = (opts: {
         Math.abs(e.clientY - lastDownPos.y) < 5;
       if (!isClick) return;
 
-      router.navigate(`/p/${post.id}`);
+      if (closestFromEvent(e, ".postItem")) {
+        router.navigate(`/p/${post.id}`);
+      }
     },
     { signal: opts.signal },
   );
