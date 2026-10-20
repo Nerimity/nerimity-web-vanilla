@@ -192,7 +192,8 @@ export const createTypingIndicator = (abortController: AbortController) => {
 function formatNames(names: string[]) {
   if (names.length === 0) return null;
   if (names.length === 1) return <b>{names[0]}</b>;
-  if (names.length >= 5) return <b>{t`${names.length} users are typing...`}</b>;
+  const count = names.length;
+  if (names.length >= 5) return <b>{t`${count} users are typing...`}</b>;
 
   const init = names.slice(0, -1);
   const last = names[names.length - 1];

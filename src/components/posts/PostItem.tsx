@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
 import {
@@ -206,7 +206,7 @@ const PostHeader = (props: {
             href={`/app/profile/${props.repost.createdBy.id}`}
             data-user-id={props.repost.createdBy.id}
           >
-            <strong>{props.repost.createdBy.username}</strong>
+            <strong>{ph({ username: props.repost.createdBy.username })}</strong>
           </Link>
         </Trans>
       ),
@@ -223,7 +223,7 @@ const PostHeader = (props: {
             href={`/app/profile/${commentTo.createdBy.id}`}
             data-user-id={commentTo.createdBy.id}
           >
-            <strong>{commentTo.createdBy.username}</strong>
+            <strong>{ph({ username: commentTo.createdBy.username })}</strong>
           </Link>
         </Trans>
       ),

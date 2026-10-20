@@ -94,6 +94,8 @@ export const InviteEmbed = (props: {
     }
 
     const isInServer = !!serverStore.servers.get(inviteItem.id);
+
+    const count = inviteItem.memberCount.toLocaleString();
     el.replaceChildren(
       <>
         <div class={style.content}>
@@ -103,7 +105,7 @@ export const InviteEmbed = (props: {
             <div class={style.sub}>
               <span>
                 <Plural
-                  value={inviteItem.memberCount}
+                  value={count}
                   _0={
                     <Trans>
                       <span class={style.full}>No</span> Members
@@ -112,18 +114,12 @@ export const InviteEmbed = (props: {
 
                   one={
                     <Trans>
-                      <span class={style.full}>
-                        {inviteItem.memberCount.toLocaleString()}
-                      </span>{" "}
-                      Member
+                      <span class={style.full}>{count}</span> Member
                     </Trans>
                   }
                   other={
                     <Trans>
-                      <span class={style.full}>
-                        {inviteItem.memberCount.toLocaleString()}
-                      </span>{" "}
-                      Members
+                      <span class={style.full}>{count}</span> Members
                     </Trans>
                   }
                 />

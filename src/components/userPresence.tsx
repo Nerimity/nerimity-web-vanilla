@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { ph, t } from "@lingui/core/macro";
 
 import {
   UserPresenceDetails,
@@ -59,7 +59,7 @@ export const UserPresence = (props: {
     const user = userStore.users.get(props.userId);
     if (user?.lastOnlineAt) {
       lastOnlineShowing = true;
-      label = t`Last online ${formatTimestamp(user.lastOnlineAt)}`;
+      label = t`Last online ${ph({ date: formatTimestamp(user.lastOnlineAt) })}`;
     } else {
       if (!props.showOffline) return null;
     }

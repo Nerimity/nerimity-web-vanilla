@@ -148,7 +148,7 @@ const sessionsSettingsPage = (context: SettingsContext) => {
                     ))}
                   </div>
                 }
-                description={t`${plural(g.sessions.length, {
+                description={t`${plural(ph({ count: g.sessions.length }), {
                   0: "No devices",
                   one: "# device",
                   other: "# devices",

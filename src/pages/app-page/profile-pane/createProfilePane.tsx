@@ -373,7 +373,7 @@ const Stats = ({
 
   const rerender = () => {
     const following = details?.user._count?.following;
-    const followers = details?.user._count?.followers;
+    const followers = details?.user._count?.followers || 0;
 
     const isCurrentUser = accountStore.currentUser?.id === details?.user.id;
 
@@ -399,7 +399,7 @@ const Stats = ({
         {!hideFollowers && (
           <span class={style.stat}>
             <Plural
-              value={followers || 0}
+              value={followers}
               _0={
                 <Trans>
                   <span class={style.full}>No</span> Followers

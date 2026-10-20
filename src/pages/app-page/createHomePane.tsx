@@ -380,6 +380,7 @@ const NotificationsArea = (props: { signal: AbortSignal }) => {
 };
 
 const Transform = (notification: RawPostNotification) => {
+  const username = notification.by.username;
   switch (notification.type) {
     case PostNotificationType.LIKED: {
       return {
@@ -392,7 +393,7 @@ const Transform = (notification: RawPostNotification) => {
               data-user-id={notification.by.id}
               href={`/app/profile/${notification.by.id}`}
             >
-              <strong>{notification.by.username}</strong>
+              <strong>{username}</strong>
             </Link>{" "}
             liked your post
           </Trans>
@@ -409,7 +410,7 @@ const Transform = (notification: RawPostNotification) => {
               data-user-id={notification.by.id}
               href={`/app/profile/${notification.by.id}`}
             >
-              <strong>{notification.by.username}</strong>
+              <strong>{username}</strong>
             </Link>{" "}
             replied to your post
           </Trans>
@@ -427,7 +428,7 @@ const Transform = (notification: RawPostNotification) => {
               data-user-id={notification.by.id}
               href={`/app/profile/${notification.by.id}`}
             >
-              <strong>{notification.by.username}</strong>
+              <strong>{username}</strong>
             </Link>{" "}
             followed you
           </Trans>
@@ -445,7 +446,7 @@ const Transform = (notification: RawPostNotification) => {
               data-user-id={notification.by.id}
               href={`/app/profile/${notification.by.id}`}
             >
-              <strong>{notification.by.username}</strong>
+              <strong>{username}</strong>
             </Link>{" "}
             reposted your post
           </Trans>
@@ -462,7 +463,7 @@ const Transform = (notification: RawPostNotification) => {
               data-user-id={notification.by.id}
               href={`/app/profile/${notification.by.id}`}
             >
-              <strong>{notification.by.username}</strong>
+              <strong>{username}</strong>
             </Link>{" "}
             mentioned you
           </Trans>

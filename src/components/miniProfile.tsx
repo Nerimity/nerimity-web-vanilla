@@ -172,7 +172,7 @@ export const MiniProfile = (props: {
     contentAbort = new AbortController();
     const user = details?.user || localUser;
 
-    const followers = details?.user._count?.followers;
+    const followers = details?.user._count?.followers || 0;
     const following = details?.user._count?.following;
 
     const isCurrentUser = accountStore.currentUser?.id === details?.user.id;
@@ -282,7 +282,7 @@ export const MiniProfile = (props: {
               {!hideFollowers && (
                 <span class={style.stat}>
                   <Plural
-                    value={followers || 0}
+                    value={followers}
                     _0={
                       <Trans>
                         <span class={style.full}>No</span> Followers

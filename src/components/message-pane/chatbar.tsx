@@ -289,12 +289,14 @@ export const createChatbar = () => {
     }
 
     if (channel.serverId) {
-      inputEl.placeholder = t`Message in ${channel.name!}`;
+      const name = channel.name!;
+      inputEl.placeholder = t`Message in ${name}`;
     } else {
       const inbox = inboxStore.inboxes.get(channel.id);
       if (!inbox) return;
       const user = userStore.users.get(inbox.recipientId);
-      inputEl.placeholder = t`Message ${user?.username ?? ""}`;
+      const name = user?.username ?? "";
+      inputEl.placeholder = t`Message ${name}`;
     }
   };
 
