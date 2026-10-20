@@ -264,6 +264,9 @@ export const createModal = (
 
   let inertiaAnimation: Animation | null = null;
   let inertiaFooterAnimation: Animation | null = null;
+  let destroyed = false;
+  let initialPositionRaf: number | null = null;
+  let resizeObserverTimeout: number | null = null;
 
   const cancelInertia = () => {
     if (!inertiaAnimation) {
@@ -519,7 +522,10 @@ export const createModal = (
       anim.cancel();
     };
   };
-  requestAnimationFrame(initialPosition);
+  initialPositionRaf = requestAnimationFrame(() => {
+    initialPositionRaf = null;
+    if (!destroyed) initialPosition();
+  });
 
   let wheelTimeout: number | null = null;
 
@@ -631,8 +637,10 @@ export const createModal = (
 
     lastWindowHeight = windowHeight;
   };
-  setTimeout(
+  resizeObserverTimeout = window.setTimeout(
     () => {
+      resizeObserverTimeout = null;
+      if (destroyed) return;
       createResizeObserver(modal, handleResize, { signal, defer: true });
     },
     isMobileWidth() ? 200 : 0,
@@ -686,11 +694,18 @@ export const createModal = (
   updateFooterPosition();
   portalElement().appendChild(backdrop);
 
-  let destroyed = false;
   const destroy = () => {
     if (destroyed) return;
     destroyed = true;
 
+    if (initialPositionRaf !== null) {
+      cancelAnimationFrame(initialPositionRaf);
+      initialPositionRaf = null;
+    }
+    if (resizeObserverTimeout !== null) {
+      clearTimeout(resizeObserverTimeout);
+      resizeObserverTimeout = null;
+    }
     if (wheelTimeout) {
       clearTimeout(wheelTimeout);
       wheelTimeout = null;
@@ -699,7 +714,7 @@ export const createModal = (
     restoreFooter();
     popModal(stackEntry);
 
-    backdrop.animate(
+    const backdropAnim = backdrop.animate(
       { background: "rgba(0, 0, 0, 0)" },
       {
         duration: 200,
@@ -723,18 +738,28 @@ export const createModal = (
       0,
       startFooterOffset + window.innerHeight - modalY,
     );
+    let footerAnim: Animation | null = null;
     if (mobileExit) {
-      animateFooter(
+      footerAnim = animateFooter(
         startFooterOffset,
         targetFooterOffset,
         mobileModalAnimation,
       );
     }
 
-    modalAnim.onfinish = () => {
+    const finalizeDestroy = () => {
+      if (modalAnim.onfinish === null && modalAnim.oncancel === null) return;
+      modalAnim.onfinish = null;
+      modalAnim.oncancel = null;
+      modalAnim.cancel();
+      backdropAnim.cancel();
+      footerAnim?.cancel();
       abortController.abort();
+      backdrop.replaceChildren();
       backdrop.remove();
     };
+    modalAnim.onfinish = finalizeDestroy;
+    modalAnim.oncancel = finalizeDestroy;
   };
 
   stackEntry.destroy = destroy;

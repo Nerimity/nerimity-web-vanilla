@@ -780,6 +780,8 @@ const createProfilePane = ({ content }: RouteContext) => {
   signal.addEventListener(
     "abort",
     () => {
+      postsAreaEl?.remove();
+      (postsAreaEl as any) = null;
       requestAnimationFrame(() => {
         Drawer().content.classList.remove("showBg");
         Drawer().content.style.removeProperty("--primary-color");
@@ -944,17 +946,35 @@ const PostsSection = (props: {
       }
       if (value === "following") {
         currentTabContent.appendChild(
-          <Following userId={props.userId} type="following" />,
+          <Following
+            userId={props.userId}
+            type="following"
+            signal={tabAc.signal}
+          />,
         );
       }
       if (value === "followers") {
         currentTabContent.appendChild(
-          <Following userId={props.userId} type="followers" />,
+          <Following
+            userId={props.userId}
+            type="followers"
+            signal={tabAc.signal}
+          />,
         );
       }
     },
   });
   rerenderTabs();
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      tabAc.abort();
+      currentTabContent.replaceChildren();
+      tabsEl.replaceChildren();
+    },
+    { once: true },
+  );
 
   return (
     <div class={style.postsAreaContainer}>
@@ -980,6 +1000,7 @@ const UserListSkeleton = () => {
 const Following = (props: {
   userId: string;
   type: "following" | "followers";
+  signal: AbortSignal;
 }) => {
   const el = (
     <div>
@@ -990,7 +1011,7 @@ const Following = (props: {
   const func = props.type === "following" ? getFollowingUsers : getFollowers;
 
   func(props.userId).then(([users]) => {
-    if (!users) return;
+    if (props.signal.aborted || !users) return;
     el.replaceChildren(
       ...users.map((user) => (
         <Link

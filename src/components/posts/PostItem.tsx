@@ -419,22 +419,28 @@ export const createPostHandler = (opts: {
     { trigger: `.postItemOuter`, image: "details .emoji" },
   ]);
 
-  opts.signal.addEventListener(
-    "abort",
-    () => {
-      imageEmbedResizer.destroy();
-      imageEmbedFocusAnimator.destroy();
-      hoverAnimator.destroy();
-    },
-    { signal: opts.signal },
-  );
+  const destroy = () => {
+    imageEmbedResizer.destroy();
+    imageEmbedFocusAnimator.destroy();
+    hoverAnimator.destroy();
+  };
+
+  if (opts.signal.aborted) {
+    destroy();
+  } else {
+    opts.signal.addEventListener("abort", destroy, { once: true });
+  }
 
   const lastDownPos = { x: 0, y: 0 };
 
-  opts.container.addEventListener("pointerdown", (e) => {
-    lastDownPos.x = e.clientX;
-    lastDownPos.y = e.clientY;
-  });
+  opts.container.addEventListener(
+    "pointerdown",
+    (e) => {
+      lastDownPos.x = e.clientX;
+      lastDownPos.y = e.clientY;
+    },
+    { signal: opts.signal },
+  );
 
   opts.container.addEventListener(
     "click",

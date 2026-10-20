@@ -240,6 +240,8 @@ export const PostsArea = (props: PostsAreaProps) => {
   );
 
   const rerender = () => {
+    if (props.signal.aborted) return;
+
     postInputArea.style.display = showInputArea() ? "block" : "none";
 
     const currentPosts = [
@@ -255,6 +257,8 @@ export const PostsArea = (props: PostsAreaProps) => {
   };
 
   const appendPosts = () => {
+    if (props.signal.aborted) return;
+
     const currentPosts = [
       ...pinnedPosts,
       ...(posts || []).filter((post) => !pinnedPostIds.has(post.id)),
@@ -310,8 +314,13 @@ export const PostsArea = (props: PostsAreaProps) => {
   props.signal.addEventListener(
     "abort",
     () => {
+      postsEl.replaceChildren();
+      containerEl.replaceChildren();
       postsEl.remove();
       containerEl.remove();
+      lastPostEl = undefined;
+      posts = null;
+      renderedPosts = [];
       (postsEl as any) = null;
       (containerEl as any) = null;
     },

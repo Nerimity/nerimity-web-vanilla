@@ -61,9 +61,10 @@ const createHomePane = ({ content }: RouteContext) => {
   content.replaceChildren(el);
 
   const destroy = () => {
+    abortController.abort();
+    el.replaceChildren();
     el.remove();
     (el as any) = null;
-    abortController.abort();
     (content as any) = null;
   };
 
@@ -77,6 +78,8 @@ const Sidebar = (props: { signal: AbortSignal }) => {
   let rafId: number | null = null;
 
   const rerender = () => {
+    if (props.signal.aborted) return;
+
     const activities = (
       [...userPresenceStore.presences.values()]
         .filter((p) => {
@@ -91,6 +94,11 @@ const Sidebar = (props: { signal: AbortSignal }) => {
     if (rafId !== null) cancelAnimationFrame(rafId);
 
     rafId = requestAnimationFrame(() => {
+      if (props.signal.aborted) {
+        rafId = null;
+        return;
+      }
+
       morphdom(
         el,
         <div>
@@ -276,8 +284,8 @@ const PostSection = (props: { signal: AbortSignal }) => {
   let signal = postsAc.signal;
 
   const rerender = () => {
-    postsArea.replaceChildren();
     postsAc.abort();
+    postsArea.replaceChildren();
     postsAc = new AbortController();
     signal = postsAc.signal;
 
@@ -314,6 +322,8 @@ const PostSection = (props: { signal: AbortSignal }) => {
   props.signal.addEventListener(
     "abort",
     () => {
+      postsAc.abort();
+      postsArea.replaceChildren();
       tabs.remove();
       postsArea.remove();
       el.remove();
@@ -321,10 +331,8 @@ const PostSection = (props: { signal: AbortSignal }) => {
       (tabs as any) = null;
       (postsArea as any) = null;
       (el as any) = null;
-
-      postsAc.abort();
     },
-    { signal },
+    { once: true },
   );
 
   return el;
@@ -334,6 +342,15 @@ const NotificationsArea = (props: { signal: AbortSignal }) => {
   const el = (
     <div class={style.notificationsContainer}></div>
   ) as HTMLDivElement;
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      el.replaceChildren();
+    },
+    { once: true },
+  );
+
   getPostNotifications().then(([notifications, err]) => {
     if (props.signal.aborted) return;
     if (err) {

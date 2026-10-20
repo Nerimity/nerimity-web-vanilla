@@ -35,6 +35,14 @@ export const createPostModal = (props: { postId: string }) => {
     "abort",
     () => {
       tabAc.abort();
+      previousPostsEl.remove();
+      (previousPostsEl as any) = null;
+
+      tabsEl.remove();
+      (tabsEl as any) = null;
+
+      currentTabEl.remove();
+      (currentTabEl as any) = null;
       if (new URLSearchParams(location.search).get("postId") === props.postId) {
         router.setQuery("postId", null);
       }
@@ -42,11 +50,11 @@ export const createPostModal = (props: { postId: string }) => {
     { once: true },
   );
 
-  const previousPostsEl = (
+  let previousPostsEl = (
     <div class={style.previousPosts}></div>
   ) as HTMLDivElement;
 
-  const tabsEl = (<div class={style.tabs}></div>) as HTMLDivElement;
+  let tabsEl = (<div class={style.tabs}></div>) as HTMLDivElement;
 
   let tabAc = new AbortController();
 
