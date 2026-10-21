@@ -71,6 +71,7 @@ type StoreEvents = {
   "attachment:upload_progress": {
     messageId?: string;
     channelId?: string;
+    postId?: string;
     progress: number;
     speed?: string;
   };

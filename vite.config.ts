@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "insert_chart",
         "push_pin",
         "post",
         "forum",

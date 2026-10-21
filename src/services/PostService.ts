@@ -1,5 +1,6 @@
 import { accountStore } from "../store/accountStore";
 import type { RawPost, RawPostNotification, RawUser } from "../Types";
+import { storeEmitter } from "../utils/EventEmitter";
 import { nerimityCDNUploadRequest } from "./cdnService";
 import { request } from "./request";
 
@@ -182,6 +183,7 @@ export const getPostReplies = async (
 };
 
 export const createPost = async (opts: {
+  id: string;
   content?: string;
   attachment?: File;
   replyToPostId?: string;
@@ -191,11 +193,21 @@ export const createPost = async (opts: {
 
   let fileId: string | undefined;
   if (opts.attachment) {
+    const onUploadProgress = (progress: number, speed?: string) => {
+      storeEmitter.emit("attachment:upload_progress", {
+        postId: opts.id,
+        progress,
+        speed,
+      });
+    };
+
     const [res, err] = await nerimityCDNUploadRequest({
       file: opts.attachment,
       type: "attachments",
       groupId: userId,
+      onUploadProgress,
     });
+    console.log(res, err);
 
     if (err) {
       return [null, err] as const;

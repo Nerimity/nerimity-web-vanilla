@@ -18,6 +18,11 @@ const originalSrc = (embed: LocalEmbed) => {
 
 export const ImageEmbed = (props: {
   attachment?: LocalAttachment;
+  raw?: {
+    width: number;
+    height: number;
+    src: string;
+  };
   embed?: LocalEmbed;
   attachmentProperty?: AttachmentProperty;
   container: HTMLDivElement;
@@ -26,35 +31,46 @@ export const ImageEmbed = (props: {
   class?: string;
   horizPadding?: number;
 }) => {
-  const item = props.embed || props.attachment;
-  const width = props.attachment
-    ? props.attachment.width
-    : props.attachmentProperty
-      ? props.attachmentProperty.image?.width
-      : props.embed?.imageWidth!;
+  const item = props.raw ? undefined : props.embed || props.attachment;
+  const width =
+    props.raw?.width ??
+    (props.attachment
+      ? props.attachment.width
+      : props.attachmentProperty
+        ? props.attachmentProperty.image?.width
+        : props.embed?.imageWidth!);
 
-  const height = props.attachment
-    ? props.attachment.height
-    : props.attachmentProperty
-      ? props.attachmentProperty.image?.height
-      : props.embed?.imageHeight!;
+  const height =
+    props.raw?.height ??
+    (props.attachment
+      ? props.attachment.height
+      : props.attachmentProperty
+        ? props.attachmentProperty.image?.height
+        : props.embed?.imageHeight!);
 
-  let src = props.attachment?.path!;
+  let src = props.raw?.src ?? props.attachment?.path!;
 
-  let origSrc = props.embed?.imageUrl ? originalSrc(props.embed) : undefined;
+  const origSrc =
+    props.raw?.src ??
+    (props.embed?.imageUrl ? originalSrc(props.embed) : undefined);
 
-  if (props.embed?.imageUrl) {
+  if (!props.raw && props.embed?.imageUrl) {
     src = `proxy/${encodeURIComponent(originalSrc(props.embed))}/embed.webp`;
   }
 
   const cached = item?.cached;
-  const [url, animated] = buildImageUrl(src, {
-    animate: document.hasFocus(),
-    forceIsAnimated: props.embed?.animated,
-  });
+  const [url, animated] = props.raw
+    ? [props.raw.src, false]
+    : buildImageUrl(src, {
+        animate: document.hasFocus(),
+        forceIsAnimated: props.embed?.animated,
+      });
   const img = (
     <img
-      src={props.attachmentProperty ? props.attachmentProperty.image?.src : url}
+      src={
+        props.raw?.src ??
+        (props.attachmentProperty ? props.attachmentProperty.image?.src : url)
+      }
       data-orig-src={origSrc}
       {...(animated && { "data-img-anim": "" })}
       loading="lazy"

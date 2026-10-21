@@ -12,6 +12,7 @@ import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
 import { dateMarkerLabel, formatTimestamp, timeSince } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
@@ -309,7 +310,7 @@ const PostEmbeds = (props: { post: RawPost; container: HTMLDivElement }) => {
   const embed = props.post.embed;
 
   const imageAttachment = !!attachment?.width;
-  // const attachmentProperty = props.message.attachmentProperty;
+  const attachmentProperty = props.post.local?.attachmentProperty;
   const imageEmbed = embed?.type === "image" && embed?.imageHeight !== null;
 
   const isVideo = attachment?.mime?.startsWith("video/");
@@ -323,14 +324,14 @@ const PostEmbeds = (props: { post: RawPost; container: HTMLDivElement }) => {
 
   if (
     (attachment && !imageAttachment) ||
-    // (attachmentProperty && !attachmentProperty.image) ||
+    (attachmentProperty && !attachmentProperty.image) ||
     isVideo ||
     isAudio
   )
     return (
       <FileEmbed
         attachment={attachment}
-        // attachmentProperty={attachmentProperty}
+        attachmentProperty={attachmentProperty}
       />
     );
 
@@ -339,18 +340,14 @@ const PostEmbeds = (props: { post: RawPost; container: HTMLDivElement }) => {
       <OGEmbed embed={embed} container={props.container} customHeight={1120} />
     );
   }
-  if (
-    imageAttachment ||
-    imageEmbed
-    //  || attachmentProperty?.image
-  ) {
+  if (imageAttachment || imageEmbed || attachmentProperty?.image) {
     return (
       <ImageEmbed
         attachment={attachment}
         embed={embed}
         horizPadding={66}
 
-        // attachmentProperty={attachmentProperty}
+        attachmentProperty={attachmentProperty}
 
         container={props.container}
         customHeight={1120}
@@ -400,6 +397,7 @@ export const createPostHandler = (opts: {
   signal: AbortSignal;
   container: HTMLDivElement;
 }) => {
+  createAttachmentProgressHandler(opts.signal, opts.container);
   const imageEmbedFocusAnimator = new FocusAnimator(
     opts.container,
     ".imageEmbed .image, .focusAnimate .emoji",
@@ -520,5 +518,48 @@ export const createPostHandler = (opts: {
       }
     },
     { signal: opts.signal },
+  );
+};
+
+const createAttachmentProgressHandler = (
+  signal: AbortSignal,
+  el: HTMLElement,
+) => {
+  storeEmitter.on(
+    "attachment:upload_progress",
+    (event) => {
+      const uploadFileContainer = el.querySelector(
+        `[data-id="${event.postId}"] .progressContainer`,
+      );
+
+      if (uploadFileContainer) {
+        const bar = uploadFileContainer.querySelector(".bar") as HTMLDivElement;
+        if (!bar) return;
+
+        const percent = uploadFileContainer.querySelector(
+          ".percent",
+        ) as HTMLDivElement;
+        if (!percent) return;
+
+        const speed = uploadFileContainer.querySelector(
+          ".speed",
+        ) as HTMLDivElement;
+        if (!speed) return;
+
+        bar.style.width = `${event.progress}%`;
+        percent.textContent = `${event.progress}%`;
+        speed.textContent = `${event.speed}`;
+        return;
+      }
+
+      const uploadImageContainer = el.querySelector(
+        `[data-id="${event.postId}"] .uploadProgressContainer`,
+      );
+      if (!uploadImageContainer) return;
+      uploadImageContainer.replaceChildren(
+        `Uploading ${event.progress}% (${event.speed})`,
+      );
+    },
+    signal,
   );
 };

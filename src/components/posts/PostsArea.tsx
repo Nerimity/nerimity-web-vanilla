@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
+import { MAX_IMAGE_UPLOAD_SIZE } from "../../config";
 import {
   createPost,
   getDiscoverPosts,
@@ -11,10 +12,17 @@ import {
   type DiscoverSort,
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
+import type { AttachmentProperty } from "../../store/channelStore";
 import type { RawPost } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { fileToDimensions } from "../../utils/file";
 import { createIntersectionObserver } from "../../utils/observer";
+import { createFileInput } from "../FileInput";
+import {
+  createImageEmbedResizer,
+  ImageEmbed,
+} from "../message-pane/imageEmbed";
 import { Button } from "../ui/button";
 import {
   createTextareaHeightHandler,
@@ -107,7 +115,7 @@ export const PostsArea = (props: PostsAreaProps) => {
 
   const handlePostCreate = async (event: PostCreateEvent) => {
     const content = event.content.trim();
-    if (!content) return;
+    if (!content && !event.file) return;
     const newPost: RawPost = {
       content,
 
@@ -122,13 +130,16 @@ export const PostsArea = (props: PostsAreaProps) => {
       reposts: [],
       views: 0,
       local: {
-        status: "failed",
+        status: "creating",
+        attachmentProperty: event.file,
       },
     };
     posts = [newPost, ...(posts || [])];
     rerender();
 
     const [createdPost, err] = await createPost({
+      id: newPost.id,
+      attachment: event.file?.file,
       content,
       replyToPostId: props.type === "replies" ? props.postId : undefined,
     });
@@ -330,28 +341,108 @@ export const PostsArea = (props: PostsAreaProps) => {
   return containerEl;
 };
 
-let inputContent = "";
-
 let respectfulPopupShown = false;
 
 interface PostCreateEvent {
   content: string;
+  file?: AttachmentProperty;
 }
+
+let inputContent = "";
+let inputFile: undefined | File;
 
 const PostInputArea = (props: {
   signal: AbortSignal;
   onPostCreate: (e: PostCreateEvent) => void;
 }) => {
+  const attachmentContainer = (<div></div>) as HTMLDivElement;
+
   const footer = (
-    <div class={style.footerContainer}>
-      <Button
-        icon="send"
-        hoverBorder
-        class={style.sendButton}
-        data-action="send"
-      />
+    <div class={style.footerOuterContainer}>
+      {attachmentContainer}
+      <div class={style.footerContainer}>
+        <Button
+          class={style.hidden}
+          icon="close"
+          hoverBorder
+          alert
+          data-action="attach_remove"
+        />
+        <Button icon="attach_file" hoverBorder data-action="attach" />
+        <Button icon="insert_chart" hoverBorder data-action="poll" />
+        <div class={style.spacer}></div>
+        <Button
+          icon="send"
+          hoverBorder
+          class={style.sendButton}
+          data-action="send"
+        />
+      </div>
     </div>
+  ) as HTMLDivElement;
+
+  const handleFileInput = async (file?: File) => {
+    if (!file) return;
+
+    const dimResults = await fileToDimensions(file);
+    attachmentContainer.replaceChildren(
+      <div class={style.uploadImagePreviewContainer}>
+        <ImageEmbed
+          container={el}
+          horizPadding={10}
+          class={style.uploadImagePreview}
+          customHeight={1120}
+          raw={{
+            width: dimResults.width,
+            height: dimResults.height,
+            src: dimResults.image.src,
+          }}
+        />
+      </div>,
+    );
+
+    footer
+      .querySelector(`[data-action="attach_remove"]`)
+      ?.classList.remove(style.hidden!);
+
+    inputFile = file;
+  };
+
+  handleFileInput(inputFile);
+
+  const fileInput = createFileInput({
+    signal: props.signal,
+    onChange: (file) => {
+      if (!file) return;
+      inputFile = file;
+      handleFileInput(file);
+    },
+    imageOnly: true,
+    maxSize: MAX_IMAGE_UPLOAD_SIZE,
+  });
+
+  const removeAttachment = () => {
+    inputFile = undefined;
+
+    attachmentContainer.replaceChildren();
+    footer
+      .querySelector(`[data-action="attach_remove"]`)
+      ?.classList.add(style.hidden!);
+  };
+
+  footer.addEventListener(
+    "click",
+    (event) => {
+      if (closestFromEvent(event, `[data-action="attach"]`)) {
+        fileInput.trigger();
+      }
+      if (closestFromEvent(event, `[data-action="attach_remove"]`)) {
+        removeAttachment();
+      }
+    },
+    { signal: props.signal },
   );
+
   const el = (
     <div class={style.inputAreaContainer} style={{ display: "none" }}>
       <Input
@@ -364,6 +455,8 @@ const PostInputArea = (props: {
       />
     </div>
   ) as HTMLDivElement;
+
+  const imageEmbedResizer = createImageEmbedResizer(el);
 
   const textareaEl = el.querySelector("textarea") as HTMLTextAreaElement;
 
@@ -396,9 +489,30 @@ const PostInputArea = (props: {
 
   el.addEventListener(
     "click",
-    (event) => {
+    async (event) => {
       if (closestFromEvent(event, `[data-action="send"]`)) {
-        props.onPostCreate({ content: inputContent });
+        const dimResults = inputFile
+          ? await fileToDimensions(inputFile)
+          : undefined;
+        props.onPostCreate({
+          content: inputContent,
+          ...(dimResults
+            ? {
+                file: {
+                  file: inputFile!,
+                  image: {
+                    height: dimResults.height,
+                    width: dimResults.width,
+                    src: dimResults.image.src,
+                  },
+                },
+              }
+            : {}),
+        });
+
+        removeAttachment();
+        inputContent = "";
+        textareaEl.value = "";
       }
     },
     { signal: props.signal },
@@ -417,6 +531,14 @@ const PostInputArea = (props: {
     textarea: textareaEl,
     signal: props.signal,
   });
+
+  props.signal.addEventListener(
+    "abort",
+    () => {
+      imageEmbedResizer.destroy();
+    },
+    { once: true },
+  );
 
   return el;
 };
