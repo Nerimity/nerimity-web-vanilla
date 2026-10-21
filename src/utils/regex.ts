@@ -1,5 +1,5 @@
 export const inviteLinkRegex = new RegExp(
-  `(?<!<)${"https://nerimity.com"}/i/([^\\s\\[\\]]*[^\\s\\[\\]()])(?!>)`,
+  `(?<!<)${"https://nerimity.com"}/i/([^\\s\\[\\]()<>]+?)(?=->|[\\s\\[\\]()<>]|$)`,
 );
 
 export const youtubeLinkRegex =
