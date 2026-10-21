@@ -152,6 +152,13 @@ export const getPostNotificationCount = async () => {
     method: "GET",
   });
 };
+export const dismissPostNotifications = async () => {
+  return request(`/posts/notifications/dismiss`, {
+    useToken: true,
+    method: "POST",
+    text: true,
+  });
+};
 
 export const getPostNotifications = async () => {
   return request<RawPostNotification[]>(`/posts/notifications`, {

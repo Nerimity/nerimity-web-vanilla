@@ -21,6 +21,7 @@ import { getActivityType } from "../../components/userPresence";
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
 import {
+  dismissPostNotifications,
   getPostNotificationCount,
   getPostNotifications,
   type DiscoverSort,
@@ -292,6 +293,9 @@ const PostSection = (props: { signal: AbortSignal }) => {
     el.dataset.currentTab = currentTab;
 
     if (currentTab === "notifications") {
+      dismissPostNotifications().then(() => {
+        notificationPill.style.display = "none";
+      });
       postsArea.replaceChildren(<NotificationsArea signal={signal} />);
       return;
     }
