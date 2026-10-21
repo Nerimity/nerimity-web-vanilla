@@ -1,4 +1,4 @@
-import { t } from "@lingui/core/macro";
+import { ph, t } from "@lingui/core/macro";
 import { Trans } from "@trans";
 
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../config";
@@ -122,6 +122,21 @@ export const PostsArea = (props: PostsAreaProps) => {
       id: Math.random().toString(),
       _count: { comments: 0, likedBy: 0, reposts: 0 },
       createdAt: Date.now(),
+      ...(event.pollOptions?.length
+        ? {
+            poll: {
+              _count: { votedUsers: 0 },
+              id: "0",
+              choices:
+                event.pollOptions?.map((option, index) => ({
+                  id: index.toString(),
+                  content: option,
+                  _count: { votedUsers: 0 },
+                })) || [],
+              votedUsers: [],
+            },
+          }
+        : {}),
       createdBy: accountStore.currentUser!,
       deleted: false,
       block: false,
@@ -142,6 +157,9 @@ export const PostsArea = (props: PostsAreaProps) => {
       attachment: event.file?.file,
       content,
       replyToPostId: props.type === "replies" ? props.postId : undefined,
+      ...(event.pollOptions?.length
+        ? { poll: { choices: event.pollOptions } }
+        : {}),
     });
     if (props.signal.aborted) return;
     if (err) {
@@ -346,10 +364,12 @@ let respectfulPopupShown = false;
 interface PostCreateEvent {
   content: string;
   file?: AttachmentProperty;
+  pollOptions?: string[];
 }
 
 let inputContent = "";
 let inputFile: undefined | File;
+let pollOptions: string[] = [];
 
 const PostInputArea = (props: {
   signal: AbortSignal;
@@ -357,9 +377,59 @@ const PostInputArea = (props: {
 }) => {
   const attachmentContainer = (<div></div>) as HTMLDivElement;
 
+  const getPollOptions = () =>
+    pollOptions.filter((option) => option.trim() !== "");
+
+  const pollContainer = (
+    <div class={style.pollContainer}></div>
+  ) as HTMLDivElement;
+  let showPoll = !!getPollOptions().length;
+
+  const PollItem = (props: { index: number; option: string }) => {
+    return (
+      <div class={style.pollOption} key={props.index}>
+        <Input
+          class={style.pollInput}
+          placeholder={t`Option ${ph({ count: props.index + 1 })}`}
+          data-index={props.index}
+          value={props.option}
+        />
+      </div>
+    );
+  };
+
+  const addPollOption = () => {
+    if (pollOptions.length === 6) return;
+    if (pollOptions[pollOptions.length - 1]?.trim() !== "") {
+      pollOptions.push("");
+      pollContainer.appendChild(
+        <PollItem index={pollOptions.length - 1} option="" />,
+      );
+    }
+  };
+
+  const rerenderPoll = () => {
+    if (!showPoll) {
+      pollOptions = [];
+      pollContainer.replaceChildren();
+      return;
+    }
+    if (pollOptions.length === 0) {
+      pollOptions = [""];
+    }
+    pollContainer.replaceChildren(
+      ...pollOptions.map((option, index) => (
+        <PollItem index={index} option={option} />
+      )),
+    );
+    addPollOption();
+  };
+  rerenderPoll();
+
   const footer = (
     <div class={style.footerOuterContainer}>
       {attachmentContainer}
+      {pollContainer}
       <div class={style.footerContainer}>
         <Button
           class={style.hidden}
@@ -369,7 +439,7 @@ const PostInputArea = (props: {
           data-action="attach_remove"
         />
         <Button icon="attach_file" hoverBorder data-action="attach" />
-        <Button icon="insert_chart" hoverBorder data-action="poll" />
+        <Button icon="insert_chart" hoverBorder data-action="toggle_poll" />
         <div class={style.spacer}></div>
         <Button
           icon="send"
@@ -381,6 +451,15 @@ const PostInputArea = (props: {
     </div>
   ) as HTMLDivElement;
 
+  footer.addEventListener("input", (event) => {
+    const target = event.target as HTMLInputElement;
+    const parent = target.parentElement?.parentElement?.parentElement;
+    const index = parseInt(parent?.dataset.index!);
+    pollOptions[index] = target.value;
+    if (index >= 0) {
+      addPollOption();
+    }
+  });
   const handleFileInput = async (file?: File) => {
     if (!file) return;
 
@@ -435,6 +514,10 @@ const PostInputArea = (props: {
     (event) => {
       if (closestFromEvent(event, `[data-action="attach"]`)) {
         fileInput.trigger();
+      }
+      if (closestFromEvent(event, `[data-action="toggle_poll"]`)) {
+        showPoll = !showPoll;
+        rerenderPoll();
       }
       if (closestFromEvent(event, `[data-action="attach_remove"]`)) {
         removeAttachment();
@@ -494,8 +577,10 @@ const PostInputArea = (props: {
         const dimResults = inputFile
           ? await fileToDimensions(inputFile)
           : undefined;
+        const pollOptions = getPollOptions();
         props.onPostCreate({
           content: inputContent,
+          ...(pollOptions.length ? { pollOptions } : {}),
           ...(dimResults
             ? {
                 file: {

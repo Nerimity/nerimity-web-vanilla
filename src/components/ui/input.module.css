@@ -3,9 +3,10 @@
   flex-direction: column;
   gap: 6px;
 
-  &:has(.formatBar) {
+  &:has(> .formatBar) {
     gap: 0;
-    .inputInnerContainer {
+
+    > .inputInnerContainer {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
     }

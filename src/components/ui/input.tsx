@@ -24,36 +24,53 @@ interface InputProps {
   showFormatBarHtml?: boolean;
   showFormatBarEmoji?: boolean;
   footer?: any;
+  [key: string]: any;
 }
 export const Input = (props: InputProps) => {
+  const {
+    prefix,
+    suffix,
+    label,
+    type,
+    autocomplete,
+    placeholder,
+    id,
+    value,
+    maxLength,
+    showFormatBar,
+    showFormatBarHtml,
+    showFormatBarEmoji,
+    footer,
+    ...rest
+  } = props;
   return (
-    <div class={[style.inputContainer, props.class]}>
-      {props.label && <div class="label">{props.label}</div>}
-      {props.showFormatBar && (
+    <div {...rest} class={[style.inputContainer, rest.class]}>
+      {label && <div class="label">{label}</div>}
+      {showFormatBar && (
         <FormatBar
-          showFormatBarEmoji={props.showFormatBarEmoji}
-          showFormatBarHtml={props.showFormatBarHtml}
+          showFormatBarEmoji={showFormatBarEmoji}
+          showFormatBarHtml={showFormatBarHtml}
         />
       )}
 
       <div class={[style.inputInnerContainer, "inputContainer"]}>
         <div class={style.inputInnerInnerContainer}>
-          {props.prefix}
+          {prefix}
           <Dynamic
-            id={props.id}
-            placeholder={props.placeholder}
-            maxlength={props.maxLength}
+            id={id}
+            placeholder={placeholder}
+            maxlength={maxLength}
             class={["input", style.input]}
-            component={props.type === "textarea" ? "textarea" : "input"}
-            type={props.type || "text"}
-            value={props.type != "textarea" ? props.value : undefined}
-            autocomplete={props.autocomplete}
+            component={type === "textarea" ? "textarea" : "input"}
+            type={type || "text"}
+            value={type != "textarea" ? value : undefined}
+            autocomplete={autocomplete}
           >
-            {props.type === "textarea" ? props.value || "" : ""}
+            {type === "textarea" ? value || "" : ""}
           </Dynamic>
-          {props.suffix}
+          {suffix}
         </div>
-        {props.footer}
+        {footer}
       </div>
     </div>
   );

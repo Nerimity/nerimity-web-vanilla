@@ -20,7 +20,18 @@
 .inputAreaContainer {
   margin-top: 10px;
 
-  textarea {
+  .pollContainer {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    padding-right: 4px;
+    padding-left: 4px;
+    gap: 4px;
+    .pollInput {
+      > div {
+        border-radius: var(--radius-max);
+      }
+    }
   }
 
   .footerContainer {
