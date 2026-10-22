@@ -165,6 +165,7 @@ export const PostItem = (props: {
                   animateInitialOnFocus
                   text={post.content || ""}
                   container={props.container}
+                  post={post}
                   class={["focusAnimate", style.postContent]}
                 />
               )}

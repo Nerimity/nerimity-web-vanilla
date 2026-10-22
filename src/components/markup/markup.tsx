@@ -12,6 +12,7 @@ import type { Message } from "../../store/messageStore";
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import type { RawPost } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
 import { shortcodeToUnicode, unicodeToShortcode } from "../../utils/emojis";
 import { Timezones } from "../../utils/Timezones";
@@ -37,6 +38,7 @@ export interface Props {
   text: string;
   inline?: boolean;
   message?: Message;
+  post?: RawPost;
   animateInitialOnFocus?: boolean;
   animateEmoji?: boolean;
   class?: string | (string | boolean | undefined)[];
@@ -115,9 +117,11 @@ function transformCustomEntity(entity: CustomEntity, ctx: RenderContext) {
     }
     case "@": {
       const message = ctx.props().message;
+      const post = ctx.props().post;
+      const mentions = message?.mentions || post?.mentions;
+
       const user =
-        userStore.users.get(expr) ||
-        message?.mentions?.find((u) => u.id === expr);
+        userStore.users.get(expr) || mentions?.find((u) => u.id === expr);
       const everyoneOrSomeone = ["e", "s"].includes(expr);
       if (user) {
         ctx.textCount += expr.length;
@@ -439,10 +443,12 @@ export function Markup(props: Props) {
   const largeEmoji =
     !ctx.props().inline && ctx.emojiCount <= 5 && ctx.textCount === 0;
 
+  const edited = props.message?.editedAt || props.post?.editedAt;
+
   return (
     <span class={[style.markup, props.class, largeEmoji && style.largeEmoji]}>
       {output}
-      {props.message?.editedAt ? <Icon class={style.edit} name="edit" /> : null}
+      {edited ? <Icon class={style.edit} name="edit" /> : null}
     </span>
   );
 }
