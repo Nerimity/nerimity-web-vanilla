@@ -16,17 +16,11 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { FocusAnimator } from "../../utils/FocusAnimator";
 import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
-import { inviteLinkRegex } from "../../utils/regex";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
-import { FileEmbed } from "../message-pane/FileEmbed";
-import {
-  createImageEmbedResizer,
-  ImageEmbed,
-} from "../message-pane/imageEmbed";
-import { InviteEmbed } from "../message-pane/InviteEmbed";
-import { OGEmbed } from "../message-pane/OGEmbed";
+import { createImageEmbedResizer } from "../message-pane/imageEmbed";
+import { PostMessageEmbeds } from "../message-pane/PostMessageEmbeds";
 import { isNewUser } from "../message-pane/utils";
 import { ServerClanItem } from "../serverClanItem";
 import { Avatar } from "../ui/avatar";
@@ -165,7 +159,15 @@ export const PostItem = (props: {
                   class={["focusAnimate", style.postContent]}
                 />
               )}
-              <PostEmbeds post={post} container={props.container} />
+              <PostMessageEmbeds
+                attachments={post.attachments}
+                attachmentProperty={post.local?.attachmentProperty}
+                embed={post.embed}
+                content={post.content}
+                container={props.container}
+                imageHorizPadding={68}
+                customHeight={1120}
+              />
             </div>
             <PostInfo post={post} />
           </div>
@@ -302,59 +304,6 @@ const Marker = (props: { label?: string }) => {
       <div class={style.line} />
     </div>
   );
-};
-
-const PostEmbeds = (props: { post: RawPost; container: HTMLDivElement }) => {
-  const attachment = props.post.attachments?.[0];
-
-  const embed = props.post.embed;
-
-  const imageAttachment = !!attachment?.width;
-  const attachmentProperty = props.post.local?.attachmentProperty;
-  const imageEmbed = embed?.type === "image" && embed?.imageHeight !== null;
-
-  const isVideo = attachment?.mime?.startsWith("video/");
-  const isAudio = attachment?.mime?.startsWith("audio/");
-
-  const inviteCode = props.post.content?.match(inviteLinkRegex)?.[1];
-
-  if (inviteCode) {
-    return <InviteEmbed code={inviteCode} />;
-  }
-
-  if (
-    (attachment && !imageAttachment) ||
-    (attachmentProperty && !attachmentProperty.image) ||
-    isVideo ||
-    isAudio
-  )
-    return (
-      <FileEmbed
-        attachment={attachment}
-        attachmentProperty={attachmentProperty}
-      />
-    );
-
-  if (embed && embed?.type !== "image") {
-    return (
-      <OGEmbed embed={embed} container={props.container} customHeight={1120} />
-    );
-  }
-  if (imageAttachment || imageEmbed || attachmentProperty?.image) {
-    return (
-      <ImageEmbed
-        attachment={attachment}
-        embed={embed}
-        horizPadding={66}
-
-        attachmentProperty={attachmentProperty}
-
-        container={props.container}
-        customHeight={1120}
-      />
-    );
-  }
-  return null;
 };
 
 const MS_PER_DAY = 86400000;

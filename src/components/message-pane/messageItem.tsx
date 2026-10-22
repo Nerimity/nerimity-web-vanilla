@@ -16,7 +16,6 @@ import {
   friendlyTimestamp,
 } from "../../utils/date";
 import { getFont } from "../../utils/font";
-import { inviteLinkRegex } from "../../utils/regex";
 import { CdnIcon } from "../cdnIcon";
 import { Icon } from "../icon";
 import { Markup } from "../markup/markup";
@@ -24,12 +23,9 @@ import { ServerClanItem } from "../serverClanItem";
 import { Avatar } from "../ui/avatar";
 import { GradientText } from "../ui/gradientText";
 import { Link } from "../ui/link";
-import { FileEmbed } from "./FileEmbed";
 import { HtmlEmbed } from "./HtmlEmbed";
-import { ImageEmbed } from "./imageEmbed";
-import { InviteEmbed } from "./InviteEmbed";
 import { MessageReactions } from "./MessageReactions";
-import { OGEmbed } from "./OGEmbed";
+import { PostMessageEmbeds } from "./PostMessageEmbeds";
 import { SystemMessage } from "./SystemMessage";
 import { isMentioned, isNewDay, isNewUser, shouldGroup } from "./utils";
 
@@ -234,8 +230,11 @@ export const MessageItem = (props: {
                       />
                     )}
                     {htmlEmbed && <HtmlEmbed htmlEmbed={htmlEmbed} />}
-                    <MessageEmbeds
-                      message={props.message}
+                    <PostMessageEmbeds
+                      attachments={props.message.attachments}
+                      attachmentProperty={props.message.attachmentProperty}
+                      embed={props.message.embed}
+                      content={props.message.content}
                       container={props.container}
                     />
                   </div>
@@ -248,56 +247,6 @@ export const MessageItem = (props: {
       )}
     </div>
   );
-};
-
-const MessageEmbeds = (props: {
-  message: Message;
-  container: HTMLDivElement;
-}) => {
-  const attachment = props.message.attachments[0];
-
-  const embed = props.message.embed;
-
-  const imageAttachment = !!attachment?.width;
-  const attachmentProperty = props.message.attachmentProperty;
-  const imageEmbed = embed?.type === "image" && embed?.imageHeight !== null;
-
-  const isVideo = attachment?.mime?.startsWith("video/");
-  const isAudio = attachment?.mime?.startsWith("audio/");
-
-  const inviteCode = props.message.content?.match(inviteLinkRegex)?.[1];
-
-  if (inviteCode) {
-    return <InviteEmbed code={inviteCode} />;
-  }
-
-  if (
-    (attachment && !imageAttachment) ||
-    (attachmentProperty && !attachmentProperty.image) ||
-    isVideo ||
-    isAudio
-  )
-    return (
-      <FileEmbed
-        attachment={attachment}
-        attachmentProperty={attachmentProperty}
-      />
-    );
-
-  if (embed && embed?.type !== "image") {
-    return <OGEmbed embed={embed} container={props.container} />;
-  }
-  if (imageAttachment || imageEmbed || attachmentProperty?.image) {
-    return (
-      <ImageEmbed
-        attachment={attachment}
-        embed={embed}
-        attachmentProperty={attachmentProperty}
-        container={props.container}
-      />
-    );
-  }
-  return null;
 };
 
 const MessageReplies = (props: { message: Message }) => {
