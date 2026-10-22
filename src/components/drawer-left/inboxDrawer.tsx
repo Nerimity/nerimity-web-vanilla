@@ -253,6 +253,16 @@ const createFriendsList = () => {
   const offlineListEl = (<div></div>) as HTMLElement;
   const friendListEl = (
     <div class={style.inboxList}>
+      <div class={style.friendsFilter}>
+        <Item.Base handlePosition="bottom" selected>
+          <Item.Label>{t`All`}</Item.Label>
+        </Item.Base>
+        <Item.Base handlePosition="bottom">
+          <Item.Label>{t`Blocked`}</Item.Label>
+        </Item.Base>
+        <Button class={style.addFriendButton} icon="person_add" />
+      </div>
+
       {requestsTitle}
       {requestsListEl}
       {onlineTitle}

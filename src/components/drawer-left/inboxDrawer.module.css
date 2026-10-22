@@ -133,3 +133,16 @@
     font-size: 10px;
   }
 }
+
+.friendsFilter {
+  display: flex;
+  margin-top: -2px;
+  margin-bottom: 8px;
+  gap: 4px;
+  :global(.item) {
+    padding: 8px 12px;
+  }
+  .addFriendButton {
+    margin-left: auto;
+  }
+}
