@@ -1,0 +1,26 @@
+.items {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
+  gap: 2px;
+}
+.userItem {
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: var(--radius-max);
+  gap: 8px;
+  &:hover {
+    background-color: var(--gray-900);
+  }
+  :global(.button) {
+    border-radius: var(--radius-max);
+  }
+  .userInfo {
+    flex: 1;
+  }
+}
+.blockedAt {
+  color: var(--gray-500);
+  font-size: 12px;
+}

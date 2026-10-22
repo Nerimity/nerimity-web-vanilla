@@ -15,6 +15,9 @@ export class Friend {
     this.recipientId = data.recipientId;
     this.status = data.status;
   }
+  get user() {
+    return userStore.users.get(this.recipientId);
+  }
 }
 
 function createFriendStore() {

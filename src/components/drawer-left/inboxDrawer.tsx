@@ -19,6 +19,7 @@ import { reconcile } from "../../utils/html";
 import { ManualMemo } from "../../utils/memo";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
+import { createBlockedUsersModal } from "../modals/BlockedUsersModal";
 import { NotificationPill } from "../NotificationPill";
 import { ServerClanItem } from "../serverClanItem";
 import { Avatar } from "../ui/avatar";
@@ -128,7 +129,9 @@ const InboxItem = (item: InboxItem) => {
 const updateSelectedItem = (container?: HTMLElement) => {
   if (!container) return;
   const channelId = channelStore.currentChannelId;
-  const oldSelected = container.querySelector(`[data-selected="true"]`);
+  const oldSelected = container.querySelector(
+    `.${style.inboxItem}[data-selected="true"]`,
+  );
   oldSelected?.removeAttribute("data-selected");
   if (!channelId) return;
   const newSelected = container.querySelector(
@@ -254,13 +257,8 @@ const createFriendsList = () => {
   const friendListEl = (
     <div class={style.inboxList}>
       <div class={style.friendsFilter}>
-        <Item.Base handlePosition="bottom" selected>
-          <Item.Label>{t`All`}</Item.Label>
-        </Item.Base>
-        <Item.Base handlePosition="bottom">
-          <Item.Label>{t`Blocked`}</Item.Label>
-        </Item.Base>
-        <Button class={style.addFriendButton} icon="person_add" />
+        <Button icon="person_off" label={t`Blocked`} data-action="blocked" />
+        <Button icon="person_add" data-action="add_friend" />
       </div>
 
       {requestsTitle}
@@ -496,6 +494,11 @@ const createInboxDrawer = () => {
   containerEl.addEventListener(
     "click",
     (e) => {
+      if (closestFromEvent(e, "[data-action='blocked']")) {
+        createBlockedUsersModal();
+        return;
+      }
+
       const item = closestFromEvent(e, `.${style.inboxItem}`);
       if (item) {
         const channelId = item.dataset.channelId;
