@@ -98,7 +98,9 @@ const createRouter = () => {
 
   const match = <P = {}>(pattern: string, pathname?: string) => {
     const pat = new URLPattern({ pathname: pattern });
-    const result = pat.exec({ pathname: pathname || location.pathname });
+    const result = pat.exec({
+      pathname: stripTrailingSlash(pathname || location.pathname),
+    });
     return result ? matchResult<P>(result) : null;
   };
   const namedGroups = (groups: Record<string, string | undefined>) =>
@@ -188,7 +190,9 @@ const createRouter = () => {
 
       for (let i = 0; i < pats.length; i++) {
         const pat = pats[i]!;
-        const res = pat.exec({ pathname: location.pathname });
+        const res = pat.exec({
+          pathname: stripTrailingSlash(location.pathname),
+        });
         if (res) {
           result = res;
           break;
