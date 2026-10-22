@@ -1,6 +1,7 @@
-import type { Attachment, RawMessageEmbed } from "../../Types";
 import type { AttachmentProperty } from "../../store/channelStore";
+import type { Attachment, RawMessageEmbed, RawPostPoll } from "../../Types";
 import { inviteLinkRegex } from "../../utils/regex";
+import { PostPollEmbed } from "../posts/PostPollEmbed";
 import { FileEmbed } from "./FileEmbed";
 import { ImageEmbed } from "./imageEmbed";
 import { InviteEmbed } from "./InviteEmbed";
@@ -14,6 +15,8 @@ export const PostMessageEmbeds = (props: {
   container: HTMLDivElement;
   imageHorizPadding?: number;
   customHeight?: number;
+  poll?: RawPostPoll;
+  pollCreatorId?: string;
 }) => {
   const attachment = props.attachments?.[0];
   const embed = props.embed;
@@ -52,6 +55,11 @@ export const PostMessageEmbeds = (props: {
         />
       ) : null}
       {inviteCode && <InviteEmbed code={inviteCode} />}
+
+      {props.poll && (
+        <PostPollEmbed poll={props.poll} pollCreatorId={props.pollCreatorId} />
+      )}
+
       {ogEmbed && (
         <OGEmbed
           embed={embed}

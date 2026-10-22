@@ -1,0 +1,64 @@
+.pollEmbed {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+  border: 1px solid var(--gray-800);
+  border-radius: 22px;
+  background-color: var(--gray-1000);
+
+  &[data-self-voted] {
+    pointer-events: none;
+  }
+}
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--radius-max);
+  cursor: pointer;
+  gap: 8px;
+  &:hover {
+    background-color: var(--gray-800);
+  }
+  .radiobox {
+    pointer-events: none;
+  }
+  .percent {
+    margin-left: auto;
+    color: var(--gray-400);
+    font-size: 12px;
+  }
+}
+
+.bgFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-max);
+  opacity: 0.15;
+  background-color: var(--primary-color);
+}
+
+.totalVotes {
+  padding: 8px;
+  color: var(--gray-400);
+  font-size: 14px;
+  place-self: flex-end;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  :global(.button) {
+    display: none;
+    border-radius: var(--radius-max);
+  }
+}

@@ -27,6 +27,7 @@ export const DefaultTheme = {
   "gray-800": "hsl(220, 0%, 10%)",
   "gray-850": "hsl(220, 0%, 7.5%)",
   "gray-900": "hsl(0, 0%, 5%)",
+  "gray-1000": "hsl(0, 0%, 0%)",
 
   "radius-max": "9999px",
   "radius-2": "2px",

@@ -43,13 +43,7 @@ export interface RawPostPoll {
   id: string;
   _count: { votedUsers: number };
   choices: RawPostChoice[];
-  votedUsers:
-    | [
-        {
-          pollChoiceId: string;
-        },
-      ]
-    | [];
+  votedUsers: { pollChoiceId: string }[];
 }
 export interface RawPost {
   id: string;

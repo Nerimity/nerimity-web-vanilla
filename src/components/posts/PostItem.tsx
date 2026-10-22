@@ -28,11 +28,20 @@ import { Button } from "../ui/button";
 import { handleImagePreviewModal } from "../ui/ImagePreviewModal";
 import { Link } from "../ui/link";
 import { alert } from "../ui/modal";
+import { handlePostPollEmbed } from "./PostPollEmbed";
 
 import style from "./PostItem.module.css";
 
 const postCache = new Map<string, RawPost>();
 const POST_CACHE_LIMIT = 100;
+
+const viewsEnabledAt = new Date();
+viewsEnabledAt.setUTCFullYear(2024);
+viewsEnabledAt.setUTCDate(5);
+viewsEnabledAt.setUTCMonth(7);
+viewsEnabledAt.setUTCHours(9);
+viewsEnabledAt.setUTCMinutes(54);
+const timestampViewsEnabledAt = viewsEnabledAt.getTime();
 
 const setPostCache = (post: RawPost) => {
   if (postCache.size >= POST_CACHE_LIMIT) {
@@ -166,6 +175,8 @@ export const PostItem = (props: {
                 content={post.content}
                 container={props.container}
                 imageHorizPadding={68}
+                poll={post.poll}
+                pollCreatorId={post.createdBy.id}
                 customHeight={1120}
               />
             </div>
@@ -268,6 +279,8 @@ const PostInfo = (props: { post: RawPost }) => {
     (r) => r.createdBy.id === accountStore.currentUser?.id,
   );
 
+  const showViews = props.post.createdAt > timestampViewsEnabledAt;
+
   return (
     <div class={style.postInfo}>
       <Button
@@ -289,10 +302,12 @@ const PostInfo = (props: { post: RawPost }) => {
         primary={!!reposted}
         success
       />
-      <div class={style.views} title={t`Estimated Views`}>
-        <Icon class={style.viewsIcon} name="visibility" />
-        {views}
-      </div>
+      {showViews && (
+        <div class={style.views} title={t`Estimated Views`}>
+          <Icon class={style.viewsIcon} name="visibility" />
+          {views}
+        </div>
+      )}
     </div>
   );
 };
@@ -359,6 +374,8 @@ export const createPostHandler = (opts: {
     signal: opts.signal,
     selector: ".imageEmbed .image",
   });
+
+  handlePostPollEmbed(opts);
 
   const hoverAnimator = new HoverAnimator(opts.container, [
     { trigger: `.postItemOuter`, image: ".clanIcon img" },
@@ -456,6 +473,7 @@ export const createPostHandler = (opts: {
 
       if (closestFromEvent(e, "a")) return;
       if (closestFromEvent(e, "img")) return;
+      if (closestFromEvent(e, ".pollEmbed")) return;
 
       const isClick =
         Math.abs(e.clientX - lastDownPos.x) < 5 &&

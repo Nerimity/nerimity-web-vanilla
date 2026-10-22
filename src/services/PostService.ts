@@ -159,6 +159,19 @@ export const dismissPostNotifications = async () => {
     text: true,
   });
 };
+export const votePostPoll = async (opts: {
+  postId: string;
+  pollId: string;
+  choiceId: string;
+}) => {
+  return request(
+    `/posts/${opts.postId}/polls/${opts.pollId}/choices/${opts.choiceId}`,
+    {
+      useToken: true,
+      method: "POST",
+    },
+  );
+};
 
 export const getPostNotifications = async () => {
   return request<RawPostNotification[]>(`/posts/notifications`, {

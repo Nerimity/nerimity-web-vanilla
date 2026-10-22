@@ -3,6 +3,7 @@ import { t } from "@lingui/core/macro";
 import { getPostLikes, getPostReposts } from "../../services/PostService";
 import type { RawPost } from "../../Types";
 import { friendlyTimestamp } from "../../utils/date";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { router } from "../../utils/router";
 import {
   cacheOrFetchPost,
@@ -129,6 +130,8 @@ export const createPostModal = (props: { postId: string }) => {
     signal: signal,
   });
 
+  const previousPosts = [] as RawPost[];
+
   const fetchAndDisplayPost = async (postId: string, isRoot = false) => {
     const post = await cacheOrFetchPost(postId);
     if (signal.aborted) return;
@@ -137,22 +140,43 @@ export const createPostModal = (props: { postId: string }) => {
       rerenderTabs(post);
     }
 
-    previousPostsEl.prepend(
-      <PostItem
-        disableHover={isRoot}
-        forceBottomBorder
-        hideNewDayMarker
-        showFullDate
-        container={previousPostsEl}
-        post={post}
-      />,
-    );
+    if (post) {
+      previousPosts.unshift(post);
+      rerenderPreviousPosts();
+    }
+
     if (post?.commentToId) {
       fetchAndDisplayPost(post.commentToId);
     }
   };
 
   fetchAndDisplayPost(props.postId, true);
+
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    (s) => {
+      if (!s) return;
+      rerenderPreviousPosts();
+    },
+    signal,
+  );
+
+  const rerenderPreviousPosts = () => {
+    previousPostsEl.replaceChildren(
+      <>
+        {previousPosts.map((post) => (
+          <PostItem
+            disableHover={post.id === props.postId}
+            forceBottomBorder
+            hideNewDayMarker
+            showFullDate
+            container={previousPostsEl}
+            post={post}
+          />
+        ))}
+      </>,
+    );
+  };
 
   createModal(() => <Modal.Root>{body}</Modal.Root>, ac);
 };
