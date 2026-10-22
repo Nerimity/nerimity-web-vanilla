@@ -340,7 +340,7 @@ msgid "Role"
 msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:182
-#: src/components/posts/PostItem.tsx:138
+#: src/components/posts/PostItem.tsx:139
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -353,7 +353,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:208
-#: src/components/posts/PostItem.tsx:145
+#: src/components/posts/PostItem.tsx:146
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -781,47 +781,51 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:195
+#: src/components/posts/PostItem.tsx:196
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:203
+#: src/components/posts/PostItem.tsx:204
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:220
+#: src/components/posts/PostItem.tsx:221
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:240
+#: src/components/posts/PostItem.tsx:241
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:289
+#: src/components/posts/PostItem.tsx:290
 msgid "Estimated Views"
 msgstr "Estimated Views"
 
-#: src/components/posts/PostsArea.tsx:362
+#: src/components/posts/PostsArea.tsx:393
+msgid "Option {count}"
+msgstr "Option {count}"
+
+#: src/components/posts/PostsArea.tsx:536
 msgid "Create a post..."
 msgstr "Create a post..."
 
-#: src/components/posts/PostsArea.tsx:430
+#: src/components/posts/PostsArea.tsx:637
 msgid "Respectful Posting"
 msgstr "Respectful Posting"
 
-#: src/components/posts/PostsArea.tsx:433
+#: src/components/posts/PostsArea.tsx:640
 msgid "Please be <0>respectful</0> when creating posts."
 msgstr "Please be <0>respectful</0> when creating posts."
 
-#: src/components/posts/PostsArea.tsx:438
+#: src/components/posts/PostsArea.tsx:645
 msgid "<0>Self-harm</0> content is not allowed."
 msgstr "<0>Self-harm</0> content is not allowed."
 
-#: src/components/posts/PostsArea.tsx:444
+#: src/components/posts/PostsArea.tsx:651
 msgid "Violating these rules may result in content removal or account suspension."
 msgstr "Violating these rules may result in content removal or account suspension."
 
-#: src/components/posts/PostsArea.tsx:456
+#: src/components/posts/PostsArea.tsx:663
 msgid "I Will Be Respectful"
 msgstr "I Will Be Respectful"
 
@@ -890,57 +894,57 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/createHomePane.tsx:222
+#: src/pages/app-page/createHomePane.tsx:223
 msgid "Feed"
 msgstr "Feed"
 
-#: src/pages/app-page/createHomePane.tsx:226
+#: src/pages/app-page/createHomePane.tsx:227
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:868
 msgid "Following"
 msgstr "Following"
 
-#: src/pages/app-page/createHomePane.tsx:230
+#: src/pages/app-page/createHomePane.tsx:231
 #: src/pages/app-page/settings/Settings.ts:76
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/pages/app-page/createHomePane.tsx:250
+#: src/pages/app-page/createHomePane.tsx:251
 msgid "Latest"
 msgstr "Latest"
 
-#: src/pages/app-page/createHomePane.tsx:251
+#: src/pages/app-page/createHomePane.tsx:252
 msgid "Liked in 7 Days"
 msgstr "Liked in 7 Days"
 
-#: src/pages/app-page/createHomePane.tsx:252
+#: src/pages/app-page/createHomePane.tsx:253
 msgid "Liked in 30 Days"
 msgstr "Liked in 30 Days"
 
-#: src/pages/app-page/createHomePane.tsx:253
+#: src/pages/app-page/createHomePane.tsx:254
 msgid "Liked All Time"
 msgstr "Liked All Time"
 
-#: src/pages/app-page/createHomePane.tsx:391
+#: src/pages/app-page/createHomePane.tsx:395
 msgid "<0><1>{username}</1></0> liked your post"
 msgstr "<0><1>{username}</1></0> liked your post"
 
-#: src/pages/app-page/createHomePane.tsx:408
+#: src/pages/app-page/createHomePane.tsx:412
 msgid "<0><1>{username}</1></0> replied to your post"
 msgstr "<0><1>{username}</1></0> replied to your post"
 
-#: src/pages/app-page/createHomePane.tsx:426
+#: src/pages/app-page/createHomePane.tsx:430
 msgid "<0><1>{username}</1></0> followed you"
 msgstr "<0><1>{username}</1></0> followed you"
 
-#: src/pages/app-page/createHomePane.tsx:444
+#: src/pages/app-page/createHomePane.tsx:448
 msgid "<0><1>{username}</1></0> reposted your post"
 msgstr "<0><1>{username}</1></0> reposted your post"
 
-#: src/pages/app-page/createHomePane.tsx:461
+#: src/pages/app-page/createHomePane.tsx:465
 msgid "<0><1>{username}</1></0> mentioned you"
 msgstr "<0><1>{username}</1></0> mentioned you"
 
-#: src/pages/app-page/createHomePane.tsx:478
+#: src/pages/app-page/createHomePane.tsx:482
 msgid "Unknown notification"
 msgstr "Unknown notification"
 

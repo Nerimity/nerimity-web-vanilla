@@ -47,9 +47,9 @@
     "@lingui/react": "^6.10.0",
     "@lingui/vite-plugin": "^6.10.0",
     "@types/sortablejs": "^1.15.9",
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.88.0",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
     "typescript": "~7.0.2",
-    "vite": "^8.3.4"
+    "vite": "^8.3.5"
   }
 }
