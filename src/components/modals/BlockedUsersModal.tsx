@@ -96,4 +96,3 @@ export const createBlockedUsersModal = () => {
     return modal;
   }, abortController);
 };
-createBlockedUsersModal();
