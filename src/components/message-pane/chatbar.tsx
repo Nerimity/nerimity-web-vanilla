@@ -267,6 +267,7 @@ export const createChatbar = () => {
 
   cancelButton.addEventListener("click", handleCancelClick, { signal });
   sendButton.addEventListener("click", sendMessage, { signal });
+  editButton.addEventListener("click", sendMessage, { signal });
   attachButton.addEventListener("click", handleAttachClick, { signal });
   emojiPickerButton.addEventListener("click", handleEmojiClick, { signal });
   const textHeight = createTextareaHeightHandler({ textarea: inputEl, signal });
