@@ -40,15 +40,18 @@ type Categorized =
   | { type: 0; role: ServerRole; count: number }
   | { type: 1; member: ServerMember; role: ServerRole };
 
-const offlineRole: ServerRole = new ServerRole({
-  name: t`Offline`,
-  id: "offline",
-  permissions: 0,
-  hideRole: true,
-  order: 0,
-  serverId: "",
-  createdById: "",
-});
+const createOfflineRole = () =>
+  new ServerRole({
+    name: t`Offline`,
+    id: "offline",
+    permissions: 0,
+    hideRole: true,
+    order: 0,
+    serverId: "",
+    createdById: "",
+  });
+
+const offlineRole: ServerRole = createOfflineRole();
 
 const currentServerDefaultRole = () => {
   const server = serverStore.servers.get(serverStore.currentServerId!);

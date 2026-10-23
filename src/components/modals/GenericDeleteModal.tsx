@@ -24,11 +24,11 @@ export const createGenericDeleteModal = (opts: GenericDeleteModalOpts) => {
       <Modal.Body class={style.body}>
         <span class={style.text}>
           <Trans>
-            {"Type "}
+            Type{" "}
             <span class={style.confirm}>
               {ph({ confirmLabel: opts.confirmLabel })}
-            </span>
-            {" to confirm"}
+            </span>{" "}
+            to confirm
           </Trans>
         </span>
         <Input placeholder={opts.confirmLabel} />

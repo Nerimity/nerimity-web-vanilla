@@ -1,0 +1,10 @@
+.container {
+  font-size: 14px;
+}
+.error {
+  color: var(--alert-color);
+}
+
+.success {
+  color: var(--success-color);
+}

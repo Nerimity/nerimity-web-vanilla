@@ -15,23 +15,33 @@ export const UserPresenceType = {
 export const UserPresenceDetails = {
   [UserPresenceType.ONLINE]: {
     id: "ONLINE",
-    text: t`Online`,
+    get text() {
+      return t`Online`;
+    },
   },
   [UserPresenceType.LOOKING_TO_PLAY]: {
     id: "LOOKING_TO_PLAY",
-    text: t`Looking to Play`,
+    get text() {
+      return t`Looking to Play`;
+    },
   },
   [UserPresenceType.AWAY_FROM_KEYBOARD]: {
     id: "AWAY_FROM_KEYBOARD",
-    text: t`Away From Keyboard`,
+    get text() {
+      return t`Away From Keyboard`;
+    },
   },
   [UserPresenceType.DO_NOT_DISTURB]: {
     id: "DO_NOT_DISTURB",
-    text: t`Do Not Disturb`,
+    get text() {
+      return t`Do Not Disturb`;
+    },
   },
   [UserPresenceType.OFFLINE]: {
     id: "OFFLINE",
-    text: t`Offline`,
+    get text() {
+      return t`Offline`;
+    },
   },
 } as const;
 

@@ -19,6 +19,7 @@ import { reconcile } from "../../utils/html";
 import { ManualMemo } from "../../utils/memo";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
+import { createAddFriendModal } from "../modals/AddFriendModal";
 import { createBlockedUsersModal } from "../modals/BlockedUsersModal";
 import { NotificationPill } from "../NotificationPill";
 import { ServerClanItem } from "../serverClanItem";
@@ -496,6 +497,10 @@ const createInboxDrawer = () => {
     (e) => {
       if (closestFromEvent(e, "[data-action='blocked']")) {
         createBlockedUsersModal();
+        return;
+      }
+      if (closestFromEvent(e, "[data-action='add_friend']")) {
+        createAddFriendModal();
         return;
       }
 
