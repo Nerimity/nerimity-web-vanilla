@@ -86,7 +86,6 @@
 
 .tabs {
   display: flex;
-  align-self: center;
   margin: 8px 4px;
   margin-left: 8px;
   border-radius: var(--radius-max);
@@ -96,6 +95,7 @@
 .tab {
   display: flex;
   align-items: center;
+  flex: 1;
   justify-content: center;
   padding: 10px 8px;
   border: none;
