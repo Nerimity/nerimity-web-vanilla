@@ -1,14 +1,18 @@
 import { t } from "@lingui/core/macro";
 
+import { unblockUser } from "../../services/userService";
 import { accountStore } from "../../store/accountStore";
+import { friendStore } from "../../store/friendStore";
 import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
+import { FriendStatus } from "../../Types";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { router } from "../../utils/router";
 import { createBanMemberModal } from "../modals/BanMemberModal";
+import { createBlockUserModal } from "../modals/BlockUserModal";
 import { createEditServerRolesModal } from "../modals/EditServerRolesModal";
 import { createKickMemberModal } from "../modals/KickMemberModal";
 import {
@@ -17,6 +21,7 @@ import {
 } from "../modals/MuteMemberModal";
 import { Avatar } from "../ui/avatar";
 import { ContextMenu } from "../ui/ContextMenu";
+import { alert } from "../ui/modal";
 
 export const createUserContextMenuHandler = (opts: {
   el?: HTMLElement;
@@ -40,7 +45,7 @@ export const createUserContextMenuHandler = (opts: {
       ...opts.data,
     }),
     renderMenu: ({ id, x, y }) => <UserContextMenu x={x} y={y} userId={id} />,
-    onAction: (actionId, { id: userId, data }) => {
+    onAction: async (actionId, { id: userId, data }) => {
       const username =
         messageStore.findUserInCurrentMessages(userId)?.username ?? "";
       switch (actionId) {
@@ -53,6 +58,11 @@ export const createUserContextMenuHandler = (opts: {
         case "copy_object":
           console.log("Copied Object to clipboard", data);
           navigator.clipboard.writeText(JSON.stringify(data));
+          break;
+        case "copy_profile_url":
+          const profileUrl = `${location.origin}/app/profile/${data.user?.id}`;
+          console.log("Copied to clipboard", profileUrl);
+          navigator.clipboard.writeText(profileUrl);
           break;
         case "kick":
           createKickMemberModal({ userId });
@@ -68,6 +78,18 @@ export const createUserContextMenuHandler = (opts: {
           break;
         case "edit_roles":
           createEditServerRolesModal({ userId, username });
+          break;
+        case "block":
+          const blocked =
+            friendStore.friends.get(userId)?.status === FriendStatus.BLOCKED;
+          if (blocked) {
+            const [, error] = await unblockUser(userId);
+            if (error) {
+              alert({ message: error.message });
+            }
+            return;
+          }
+          createBlockUserModal({ userId, username });
           break;
         case "message": {
           inboxStore.openChannel(userId);
@@ -130,6 +152,9 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const muted =
     targetMember?.muteExpireAt && targetMember.muteExpireAt! > Date.now();
 
+  const blocked =
+    friendStore.friends.get(props.userId)?.status === FriendStatus.BLOCKED;
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
       <ContextMenu.Item id="view_profile">
@@ -146,6 +171,15 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
         <ContextMenu.Icon name={isSelf ? "book" : "mail"} />
         <ContextMenu.Label>{isSelf ? t`Notes` : t`Message`}</ContextMenu.Label>
       </ContextMenu.Item>
+      {!isSelf && (
+        <ContextMenu.Item id="block" alert={!blocked}>
+          <ContextMenu.Icon name="block" />
+          <ContextMenu.Label>
+            {blocked ? t`Unblock` : t`Block`}
+          </ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
+      <ContextMenu.Separator />
       {canEditRoles && (
         <ContextMenu.Item id="edit_roles">
           <ContextMenu.Icon name="bar_chart" />
@@ -188,6 +222,10 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
       <ContextMenu.Item id="copy_object">
         <ContextMenu.Icon name="content_copy" />
         <ContextMenu.Label>{t`Copy Object`}</ContextMenu.Label>
+      </ContextMenu.Item>
+      <ContextMenu.Item id="copy_profile_url">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy Profile URL`}</ContextMenu.Label>
       </ContextMenu.Item>
     </ContextMenu.Root>
   );

@@ -16,9 +16,15 @@
   :global(.button) {
     border-radius: var(--radius-max);
   }
-  .userInfo {
-    flex: 1;
-  }
+}
+.profileLink {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+}
+.userInfo {
+  flex: 1;
 }
 .blockedAt {
   color: var(--gray-500);

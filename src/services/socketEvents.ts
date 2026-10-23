@@ -82,6 +82,8 @@ const handlers: Record<string, (payload: any) => void> = {
   "friend:request_pending": onFriendRequest,
   "friend:request_accepted": onFriendRequestAccept,
   "friend:removed": onFriendRemove,
+  "user:blocked": onUserBlocked,
+  "user:unblocked": onUserUnblocked,
 };
 
 export const socketEventHandler = async (event: string, payload: any) => {
@@ -518,6 +520,17 @@ function onFriendRequestAccept(payload: { friendId: string }) {
 
 function onFriendRemove(payload: { friendId: string }) {
   friendStore.remove(payload.friendId);
+}
+function onUserBlocked(payload: { user: RawUser }) {
+  friendStore.setFriend({
+    createdAt: Date.now(),
+    status: FriendStatus.BLOCKED,
+    userId: payload.user.id,
+    recipient: payload.user,
+  });
+}
+function onUserUnblocked(payload: { userId: string }) {
+  friendStore.remove(payload.userId);
 }
 
 function onNoticeCreated(payload: RawNotice) {

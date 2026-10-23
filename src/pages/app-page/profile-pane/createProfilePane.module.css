@@ -181,6 +181,9 @@
     margin-right: 4px;
     color: var(--primary-color);
     font-size: 14px;
+    &.alert {
+      color: var(--alert-color);
+    }
   }
   .info {
     padding: 12px;
@@ -193,6 +196,11 @@
   &:hover {
     background-color: var(--gray-800);
   }
+  .title {
+    padding-bottom: 6px;
+  }
+}
+.blockedItem {
   .title {
     padding-bottom: 6px;
   }

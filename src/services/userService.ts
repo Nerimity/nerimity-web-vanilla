@@ -14,7 +14,8 @@ interface GetUserDetailsOpts {
 }
 
 export type UserDetails = {
-  blocked: boolean;
+  block: boolean;
+  suspensionExpiresAt?: number | null;
   followsYou: boolean;
   hideFollowers: boolean;
   hideFollowing: boolean;
@@ -211,5 +212,19 @@ export const getFollowers = async (userId: string) => {
   return request<RawUser[]>(`/users/${userId}/followers`, {
     useToken: true,
     method: "GET",
+  });
+};
+
+export const blockUser = (userId: string) => {
+  return request(`/users/${userId}/block`, {
+    method: "POST",
+    useToken: true,
+  });
+};
+
+export const unblockUser = (userId: string) => {
+  return request(`/users/${userId}/block`, {
+    method: "DELETE",
+    useToken: true,
   });
 };

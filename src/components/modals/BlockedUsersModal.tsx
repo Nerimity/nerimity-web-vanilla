@@ -1,5 +1,6 @@
 import { ph, t } from "@lingui/core/macro";
 
+import { unblockUser } from "../../services/userService";
 import { friendStore } from "../../store/friendStore";
 import { FriendStatus } from "../../Types";
 import { formatTimestamp } from "../../utils/date";
@@ -25,20 +26,26 @@ export const createBlockedUsersModal = () => {
     body.replaceChildren(
       <div class={style.items}>
         {blockedFriend.map((friend) => (
-          <Link
-            href={`/app/profile/${friend.user?.id}`}
-            data-user-id={friend.user?.id}
-            class={style.userItem}
-          >
-            <Avatar user={friend.user} size={32} />
-            <div class={style.userInfo}>
-              <div>{friend.user?.username}</div>
-              <div class={style.blockedAt}>{t`Blocked at ${ph({
-                date: formatTimestamp(friend.createdAt),
-              })}`}</div>
-            </div>
-            <Button alert data-action="unblock" icon="close" />
-          </Link>
+          <div data-user-id={friend.user?.id} class={style.userItem}>
+            <Link
+              href={`/app/profile/${friend.user?.id}`}
+              class={style.profileLink}
+            >
+              <Avatar user={friend.user} size={32} />
+              <div class={style.userInfo}>
+                <div>{friend.user?.username}</div>
+                <div class={style.blockedAt}>{t`Blocked at ${ph({
+                  date: formatTimestamp(friend.createdAt),
+                })}`}</div>
+              </div>
+            </Link>
+            <Button
+              alert
+              data-action="unblock"
+              data-user-id={friend.user?.id}
+              icon="close"
+            />
+          </div>
         ))}
       </div>,
     );
@@ -52,6 +59,7 @@ export const createBlockedUsersModal = () => {
     },
     signal,
   );
+  storeEmitter.on("friend:request", rerender, signal);
 
   const modal = (
     <Modal.Root>
@@ -65,7 +73,16 @@ export const createBlockedUsersModal = () => {
     async (e) => {
       const button = closestFromEvent(e, ".button");
       const action = button?.dataset.action;
-      if (action === "ban") {
+      if (action === "unblock") {
+        const userId = button?.dataset.userId;
+        if (!userId) return;
+        const [, error] = await unblockUser(userId);
+        if (error) {
+          alert({ message: error.message });
+          return;
+        }
+        friendStore.remove(userId);
+        rerender();
         return;
       }
       if (action === "close") {
@@ -79,3 +96,4 @@ export const createBlockedUsersModal = () => {
     return modal;
   }, abortController);
 };
+createBlockedUsersModal();

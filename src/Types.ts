@@ -1,9 +1,7 @@
 export interface RawFriend {
-  id: string;
   status: FriendStatus;
-  userId: string;
-  recipientId: string;
   createdAt: number;
+  userId: string;
   recipient: RawUser;
 }
 

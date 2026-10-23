@@ -28,6 +28,7 @@ import {
   getFollowers,
   getFollowingUsers,
   getUserDetails,
+  unblockUser,
   unfollowUser,
   type UserDetails,
 } from "../../../services/userService";
@@ -218,6 +219,7 @@ const Actions = ({
   const rerender = () => {
     const isFollowing = !!details?.user.followers.length;
     const friend = friendStore.friends.get(user?.id!);
+    const isBlocked = friend?.status === FriendStatus.BLOCKED;
 
     const isCurrent = accountStore.currentUser?.id === user?.id;
     const bot = user?.bot;
@@ -244,6 +246,7 @@ const Actions = ({
           )}
           {accountStore.authenticated &&
             !isFollowing &&
+            !isBlocked &&
             !isCurrent &&
             details && (
               <ActionButton
@@ -317,6 +320,14 @@ const Actions = ({
       if (action === "accept_friend") {
         acceptFriend({ userId: user?.id! });
       }
+      if (action === "unblock") {
+        const [, error] = await unblockUser(user?.id!);
+        if (error) {
+          alert({ message: error.message });
+          return;
+        }
+        return;
+      }
     },
     { signal },
   );
@@ -331,6 +342,12 @@ const Actions = ({
     "friend:request",
     (event) => {
       if (event.friend.recipientId === user?.id) {
+        if (event.friend.status === FriendStatus.BLOCKED) {
+          if (details) {
+            details.user.followers = [];
+          }
+          emitter.emit("follow_state_changed");
+        }
         rerender();
       }
     },
@@ -453,8 +470,14 @@ const Sidebar = (opts: {
 
   const bot = opts.userDetails?.user.bot;
 
+  const blockedYou = opts.userDetails?.block;
+  const suspendExpires = opts.userDetails?.suspensionExpiresAt;
+  const suspended = suspendExpires !== undefined;
+
   return (
     <div class={style.sidebar}>
+      {suspended && <SidebarSuspended expires={suspendExpires} />}
+      {blockedYou && <SidebarBlockedYou />}
       <SidebarJoined user={opts.user} signal={signal} />
       {bot && <SidebarBotCreator details={opts.userDetails!} />}
       <SidebarBadges user={opts.user} signal={signal} />
@@ -477,6 +500,32 @@ const Sidebar = (opts: {
   );
 };
 
+const SidebarSuspended = (props: { expires: number | null }) => {
+  return (
+    <div class={[style.sidebarItem, style.blockedItem]}>
+      <div class={style.title}>
+        <Icon name="block" class={[style.icon, style.alert]} />
+        {t`This user is suspended`}
+      </div>
+      <div class={style.info}>
+        {!props.expires
+          ? t`No expiration`
+          : t`Expires ${ph({ time: getDaysAgo(props.expires) })}`}
+      </div>
+    </div>
+  );
+};
+const SidebarBlockedYou = () => {
+  return (
+    <div class={[style.sidebarItem, style.blockedItem]}>
+      <div class={style.title}>
+        <Icon name="block" class={[style.icon, style.alert]} />
+        {t`You've been blocked`}
+      </div>
+      <div class={style.info}>{t`This user has blocked you.`}</div>
+    </div>
+  );
+};
 const SidebarBotCreator = (opts: { details: UserDetails }) => {
   const user = opts.details.user.application?.creatorAccount.user as User;
   return (
