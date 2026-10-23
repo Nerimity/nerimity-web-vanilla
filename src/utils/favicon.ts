@@ -9,7 +9,7 @@ function updateFaviconUrl(url: string) {
 }
 
 export function updateFavicon(alert?: boolean) {
-  // const dev = import.meta.env.DEV;
+  // const dev = isDev;
   const dev = true;
 
   updateFaviconUrl(`/favicon${alert ? "-alert" : ""}${dev ? "-dev" : ""}.ico`);

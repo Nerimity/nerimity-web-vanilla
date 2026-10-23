@@ -1,4 +1,5 @@
 import { Button } from "../components/ui/button";
+import { isDev } from "../config";
 
 import style from "./HomePage.module.css";
 const createHomePage = () => {
@@ -7,6 +8,7 @@ const createHomePage = () => {
     <div class={style.homeContainer}>
       <Button label="App" component="a" primary href="/app" />
       <Button component="a" href="/login" label="Login" />
+      {isDev && <Button component="a" href="/testing" label="Testing" />}
     </div>
   ) as HTMLFormElement;
 

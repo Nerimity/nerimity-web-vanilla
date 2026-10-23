@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+}
+.group {
+  width: 100%;
+  max-width: 400px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.fontContainer {
+  padding: 10px;
+  font-size: 16px;
+  .text {
+    background-color: rgb(44, 44, 44);
+  }
+}

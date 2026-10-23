@@ -10,3 +10,5 @@ export const MAX_FILE_UPLOAD_SIZE = 50 * 1024 * 1024; // 50MB
 export const isMobileWidth = () => {
   return window.innerWidth < mobileWidth;
 };
+
+export const isDev = import.meta.env.DEV;
