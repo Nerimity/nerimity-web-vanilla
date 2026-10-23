@@ -2,7 +2,6 @@ import { updateTheme } from "./utils/theme";
 updateTheme();
 import "./i18n";
 import "./style.css";
-import { isDev } from "./config";
 import type createAppPage from "./pages/app-page/AppPage";
 import { createTokenSource } from "./utils/createTokenSource";
 import { updateFavicon } from "./utils/favicon";
