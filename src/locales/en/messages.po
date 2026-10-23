@@ -77,13 +77,13 @@ msgstr "Copy Content"
 
 #: src/components/context-menus/MessageContextMenu.tsx:42
 #: src/components/context-menus/ServerContextMenu.tsx:82
-#: src/components/context-menus/UserContextMenu.tsx:186
+#: src/components/context-menus/UserContextMenu.tsx:220
 msgid "Copy ID"
 msgstr "Copy ID"
 
 #: src/components/context-menus/MessageContextMenu.tsx:46
 #: src/components/context-menus/ServerContextMenu.tsx:86
-#: src/components/context-menus/UserContextMenu.tsx:190
+#: src/components/context-menus/UserContextMenu.tsx:224
 msgid "Copy Object"
 msgstr "Copy Object"
 
@@ -119,67 +119,86 @@ msgstr "Leave Server"
 msgid "Leaving..."
 msgstr "Leaving..."
 
-#: src/components/context-menus/UserContextMenu.tsx:143
+#: src/components/context-menus/UserContextMenu.tsx:168
 msgid "View Profile"
 msgstr "View Profile"
 
-#: src/components/context-menus/UserContextMenu.tsx:147
+#: src/components/context-menus/UserContextMenu.tsx:172
 #: src/components/miniProfile.tsx:329
 #: src/components/miniProfile.tsx:353
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:261
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/context-menus/UserContextMenu.tsx:147
+#: src/components/context-menus/UserContextMenu.tsx:172
 #: src/components/miniProfile.tsx:329
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:261
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Message"
 msgstr "Message"
 
-#: src/components/context-menus/UserContextMenu.tsx:152
+#: src/components/context-menus/UserContextMenu.tsx:178
+#: src/components/modals/BlockUserModal.tsx:52
+#: src/components/modals/BlockUserModal.tsx:70
+msgid "Block"
+msgstr "Block"
+
+#: src/components/context-menus/UserContextMenu.tsx:178
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:191
+msgid "Unblock"
+msgstr "Unblock"
+
+#: src/components/context-menus/UserContextMenu.tsx:186
 msgid "Edit Roles"
 msgstr "Edit Roles"
 
-#: src/components/context-menus/UserContextMenu.tsx:159
+#: src/components/context-menus/UserContextMenu.tsx:193
 #: src/components/modals/BanMemberModal.tsx:72
 #: src/components/modals/BanMemberModal.tsx:98
 msgid "Ban"
 msgstr "Ban"
 
-#: src/components/context-menus/UserContextMenu.tsx:165
+#: src/components/context-menus/UserContextMenu.tsx:199
 #: src/components/modals/KickMemberModal.tsx:54
 #: src/components/modals/KickMemberModal.tsx:75
 msgid "Kick"
 msgstr "Kick"
 
-#: src/components/context-menus/UserContextMenu.tsx:173
+#: src/components/context-menus/UserContextMenu.tsx:207
 #: src/components/modals/MuteMemberModal.tsx:181
 msgid "Unmute"
 msgstr "Unmute"
 
-#: src/components/context-menus/UserContextMenu.tsx:178
+#: src/components/context-menus/UserContextMenu.tsx:212
 #: src/components/modals/MuteMemberModal.tsx:94
 #: src/components/modals/MuteMemberModal.tsx:131
 msgid "Mute"
 msgstr "Mute"
 
-#: src/components/drawer-left/inboxDrawer.tsx:331
+#: src/components/context-menus/UserContextMenu.tsx:228
+msgid "Copy Profile URL"
+msgstr "Copy Profile URL"
+
+#: src/components/drawer-left/inboxDrawer.tsx:260
+msgid "Blocked"
+msgstr "Blocked"
+
+#: src/components/drawer-left/inboxDrawer.tsx:339
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:334
+#: src/components/drawer-left/inboxDrawer.tsx:342
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:337
+#: src/components/drawer-left/inboxDrawer.tsx:345
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:404
+#: src/components/drawer-left/inboxDrawer.tsx:412
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/drawer-left/inboxDrawer.tsx:410
+#: src/components/drawer-left/inboxDrawer.tsx:418
 msgid "Friends"
 msgstr "Friends"
 
@@ -202,7 +221,7 @@ msgid "Offline"
 msgstr "Offline"
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:500
-#: src/components/message-pane/messageItem.tsx:162
+#: src/components/message-pane/messageItem.tsx:158
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
 
@@ -251,7 +270,7 @@ msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
 #: src/components/message-pane/JumpToPresent.tsx:22
-#: src/components/message-pane/messageItem.tsx:118
+#: src/components/message-pane/messageItem.tsx:114
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -339,34 +358,34 @@ msgstr "Mentions everyone."
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:182
-#: src/components/posts/PostItem.tsx:139
+#: src/components/message-pane/messageItem.tsx:178
+#: src/components/posts/PostItem.tsx:142
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:197
+#: src/components/message-pane/messageItem.tsx:193
 msgid "Pinned Message"
 msgstr "Pinned Message"
 
-#: src/components/message-pane/messageItem.tsx:206
+#: src/components/message-pane/messageItem.tsx:202
 msgid "Webhook"
 msgstr "Webhook"
 
-#: src/components/message-pane/messageItem.tsx:208
-#: src/components/posts/PostItem.tsx:146
+#: src/components/message-pane/messageItem.tsx:204
+#: src/components/posts/PostItem.tsx:149
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
 
-#: src/components/message-pane/messageItem.tsx:209
+#: src/components/message-pane/messageItem.tsx:205
 msgid "Owner"
 msgstr "Owner"
 
-#: src/components/message-pane/messageItem.tsx:217
+#: src/components/message-pane/messageItem.tsx:213
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:362
+#: src/components/message-pane/messageItem.tsx:311
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -385,17 +404,17 @@ msgid "{count} users are typing..."
 msgstr "{count} users are typing..."
 
 #: src/components/miniProfile.tsx:275
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:166
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:167
 msgid "Follows You"
 msgstr "Follows You"
 
 #: src/components/miniProfile.tsx:284
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:401
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:418
 msgid "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
 #: src/components/miniProfile.tsx:307
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:394
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:411
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
@@ -470,6 +489,30 @@ msgstr "Don't Ban"
 #: src/components/modals/BanMemberModal.tsx:86
 msgid "Banning..."
 msgstr "Banning..."
+
+#: src/components/modals/BlockUserModal.tsx:28
+msgid "Are you sure you want to block <0>{username}</0>"
+msgstr "Are you sure you want to block <0>{username}</0>"
+
+#: src/components/modals/BlockUserModal.tsx:39
+msgid "Block {username}"
+msgstr "Block {username}"
+
+#: src/components/modals/BlockUserModal.tsx:45
+msgid "Don't Block"
+msgstr "Don't Block"
+
+#: src/components/modals/BlockUserModal.tsx:66
+msgid "Blocking..."
+msgstr "Blocking..."
+
+#: src/components/modals/BlockedUsersModal.tsx:37
+msgid "Blocked at {date}"
+msgstr "Blocked at {date}"
+
+#: src/components/modals/BlockedUsersModal.tsx:66
+msgid "Blocked Users"
+msgstr "Blocked Users"
 
 #: src/components/modals/ConfirmPasswordModal.tsx:42
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:63
@@ -757,15 +800,15 @@ msgstr "Not Provided"
 msgid "Your account and data will be deleted in 15 days."
 msgstr "Your account and data will be deleted in 15 days."
 
-#: src/components/modals/createPostModal.tsx:103
+#: src/components/modals/createPostModal.tsx:104
 msgid "Replies ~ {replyCount}"
 msgstr "Replies ~ {replyCount}"
 
-#: src/components/modals/createPostModal.tsx:107
+#: src/components/modals/createPostModal.tsx:108
 msgid "Likes ~ {likeCount}"
 msgstr "Likes ~ {likeCount}"
 
-#: src/components/modals/createPostModal.tsx:111
+#: src/components/modals/createPostModal.tsx:112
 msgid "Reposts ~ {repostCount}"
 msgstr "Reposts ~ {repostCount}"
 
@@ -781,25 +824,33 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:196
+#: src/components/posts/PostItem.tsx:210
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:204
+#: src/components/posts/PostItem.tsx:218
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:221
+#: src/components/posts/PostItem.tsx:235
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:241
+#: src/components/posts/PostItem.tsx:255
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:290
+#: src/components/posts/PostItem.tsx:307
 msgid "Estimated Views"
 msgstr "Estimated Views"
+
+#: src/components/posts/PostPollEmbed.tsx:16
+msgid "{totalLocale, plural, =0 {<0>No</0> Votes} one {<1>#</1> vote} other {<2>#</2> Votes}}"
+msgstr "{totalLocale, plural, =0 {<0>No</0> Votes} one {<1>#</1> vote} other {<2>#</2> Votes}}"
+
+#: src/components/posts/PostPollEmbed.tsx:97
+msgid "Vote"
+msgstr "Vote"
 
 #: src/components/posts/PostsArea.tsx:393
 msgid "Option {count}"
@@ -899,7 +950,7 @@ msgid "Feed"
 msgstr "Feed"
 
 #: src/pages/app-page/createHomePane.tsx:227
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:868
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:917
 msgid "Following"
 msgstr "Following"
 
@@ -948,72 +999,88 @@ msgstr "<0><1>{username}</1></0> mentioned you"
 msgid "Unknown notification"
 msgstr "Unknown notification"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:190
-msgid "Unblock"
-msgstr "Unblock"
-
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:195
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:196
 msgid "Accept Request"
 msgstr "Accept Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:201
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:202
 msgid "Remove Request"
 msgstr "Remove Request"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:208
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:209
 msgid "Remove Friend"
 msgstr "Remove Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:211
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:212
 msgid "Add Friend"
 msgstr "Add Friend"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:234
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:236
 msgid "Edit Profile"
 msgstr "Edit Profile"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:242
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:244
 msgid "Unfollow"
 msgstr "Unfollow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:252
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:255
 msgid "Follow"
 msgstr "Follow"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:486
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:508
+msgid "This user is suspended"
+msgstr "This user is suspended"
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:512
+msgid "No expiration"
+msgstr "No expiration"
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:513
+msgid "Expires {time}"
+msgstr "Expires {time}"
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:523
+msgid "You've been blocked"
+msgstr "You've been blocked"
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:525
+msgid "This user has blocked you."
+msgstr "This user has blocked you."
+
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:535
 msgid "Bot Creator"
 msgstr "Bot Creator"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:509
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:558
 msgid "Mutual Friends"
 msgstr "Mutual Friends"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:509
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:558
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:584
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:633
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:628
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:677
 #: src/pages/app-page/settings/Settings.ts:69
 msgid "Badges"
 msgstr "Badges"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:855
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:904
 msgid "Posts"
 msgstr "Posts"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:859
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:908
 msgid "Replies ~ {count}"
 msgstr "Replies ~ {count}"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:863
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:912
 msgid "Liked ~ {count}"
 msgstr "Liked ~ {count}"
 
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:874
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:923
 msgid "Followers"
 msgstr "Followers"
 
