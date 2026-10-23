@@ -32,6 +32,7 @@ updateFavicon();
   const AppPage = () => import("./pages/app-page/AppPage");
   const LoginPage = () => import("./pages/LoginPage");
   const HomePage = () => import("./pages/HomePage");
+  const TestingPage = () => import("./pages/TestingPage");
 
   const App = () => {
     const ac = new AbortController();
@@ -89,13 +90,11 @@ updateFavicon();
       { signal },
     );
 
-    if (isDev) {
-      router.createMatchListener(
-        "/testing",
-        handleEnter(() => navigate(() => import("./pages/TestingPage"))),
-        { signal },
-      );
-    }
+    router.createMatchListener(
+      "/testing",
+      handleEnter(() => navigate(TestingPage)),
+      { signal },
+    );
 
     router.createMatchListener<{ postId: string }>(
       "/p/:postId",
