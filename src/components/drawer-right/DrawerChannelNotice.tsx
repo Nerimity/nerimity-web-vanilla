@@ -19,9 +19,11 @@ export const DrawerChannelNotice = (props: { signal: AbortSignal }) => {
   ) as HTMLDivElement;
 
   const fetch = () => {
-    if (!accountStore.authenticated) return;
     el.style.display = "none";
-    getOrCacheChannelNotice(channelStore.currentChannelId!).then((notice) => {
+    if (!accountStore.authenticated) return;
+    const channelId = channelStore.currentChannelId;
+    if (!channelId) return;
+    getOrCacheChannelNotice(channelId).then((notice) => {
       if (!notice) return;
       noticeContentEl.replaceChildren(<Markup inline text={notice} />);
       el.style.display = "flex";
