@@ -137,15 +137,15 @@ msgid "Message"
 msgstr "Message"
 
 #: src/components/context-menus/UserContextMenu.tsx:178
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:191
+msgid "Unblock"
+msgstr "Unblock"
+
+#: src/components/context-menus/UserContextMenu.tsx:178
 #: src/components/modals/BlockUserModal.tsx:52
 #: src/components/modals/BlockUserModal.tsx:70
 msgid "Block"
 msgstr "Block"
-
-#: src/components/context-menus/UserContextMenu.tsx:178
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:191
-msgid "Unblock"
-msgstr "Unblock"
 
 #: src/components/context-menus/UserContextMenu.tsx:186
 msgid "Edit Roles"
@@ -178,27 +178,27 @@ msgstr "Mute"
 msgid "Copy Profile URL"
 msgstr "Copy Profile URL"
 
-#: src/components/drawer-left/inboxDrawer.tsx:260
+#: src/components/drawer-left/inboxDrawer.tsx:261
 msgid "Blocked"
 msgstr "Blocked"
 
-#: src/components/drawer-left/inboxDrawer.tsx:339
+#: src/components/drawer-left/inboxDrawer.tsx:340
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:342
+#: src/components/drawer-left/inboxDrawer.tsx:343
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:345
+#: src/components/drawer-left/inboxDrawer.tsx:346
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:412
+#: src/components/drawer-left/inboxDrawer.tsx:413
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/drawer-left/inboxDrawer.tsx:418
+#: src/components/drawer-left/inboxDrawer.tsx:419
 msgid "Friends"
 msgstr "Friends"
 
@@ -215,12 +215,12 @@ msgstr "Files"
 msgid "Search"
 msgstr "Search"
 
-#: src/components/drawer-right/ServerInfoDrawer.tsx:44
-#: src/store/userPresenceStore.ts:34
+#: src/components/drawer-right/ServerInfoDrawer.tsx:45
+#: src/store/userPresenceStore.ts:43
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/drawer-right/ServerInfoDrawer.tsx:500
+#: src/components/drawer-right/ServerInfoDrawer.tsx:503
 #: src/components/message-pane/messageItem.tsx:158
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
@@ -306,11 +306,11 @@ msgstr "{username} bumped the server."
 msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
-#: src/components/message-pane/chatbar.tsx:293
+#: src/components/message-pane/chatbar.tsx:294
 msgid "Message in {name}"
 msgstr "Message in {name}"
 
-#: src/components/message-pane/chatbar.tsx:299
+#: src/components/message-pane/chatbar.tsx:300
 msgid "Message {name}"
 msgstr "Message {name}"
 
@@ -464,6 +464,38 @@ msgstr "Don't save"
 #: src/components/settings-actions/SettingsActions.tsx:43
 msgid "Save"
 msgstr "Save"
+
+#: src/components/modals/AddFriendModal.tsx:25
+msgid "Enter your friend's <0>username</0> and <1>tag</1> to add them."
+msgstr "Enter your friend's <0>username</0> and <1>tag</1> to add them."
+
+#: src/components/modals/AddFriendModal.tsx:30
+msgid "Username:Tag"
+msgstr "Username:Tag"
+
+#: src/components/modals/AddFriendModal.tsx:38
+#: src/components/modals/AddFriendModal.tsx:51
+#: src/components/modals/AddFriendModal.tsx:72
+#: src/components/modals/AddFriendModal.tsx:79
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:212
+msgid "Add Friend"
+msgstr "Add Friend"
+
+#: src/components/modals/AddFriendModal.tsx:44
+msgid "Close"
+msgstr "Close"
+
+#: src/components/modals/AddFriendModal.tsx:65
+msgid "Adding..."
+msgstr "Adding..."
+
+#: src/components/modals/AddFriendModal.tsx:73
+msgid "Invalid format. Use Username:Tag"
+msgstr "Invalid format. Use Username:Tag"
+
+#: src/components/modals/AddFriendModal.tsx:84
+msgid "Friend Request Sent!"
+msgstr "Friend Request Sent!"
 
 #: src/components/modals/BanMemberModal.tsx:32
 msgid "Delete messages sent in the past 7 hours."
@@ -1010,10 +1042,6 @@ msgstr "Remove Request"
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:209
 msgid "Remove Friend"
 msgstr "Remove Friend"
-
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:212
-msgid "Add Friend"
-msgstr "Add Friend"
 
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:236
 msgid "Edit Profile"
@@ -1708,19 +1736,19 @@ msgstr "Connected!"
 msgid "Failed to send message"
 msgstr "Failed to send message"
 
-#: src/store/userPresenceStore.ts:18
+#: src/store/userPresenceStore.ts:19
 msgid "Online"
 msgstr "Online"
 
-#: src/store/userPresenceStore.ts:22
+#: src/store/userPresenceStore.ts:25
 msgid "Looking to Play"
 msgstr "Looking to Play"
 
-#: src/store/userPresenceStore.ts:26
+#: src/store/userPresenceStore.ts:31
 msgid "Away From Keyboard"
 msgstr "Away From Keyboard"
 
-#: src/store/userPresenceStore.ts:30
+#: src/store/userPresenceStore.ts:37
 msgid "Do Not Disturb"
 msgstr "Do Not Disturb"
 
