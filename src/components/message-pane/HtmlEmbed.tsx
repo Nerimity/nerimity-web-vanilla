@@ -1,5 +1,3 @@
-import { t } from "@lingui/core/macro";
-
 import { cdnUrl } from "../../config";
 import { Dynamic } from "../../dynamic";
 import { type HtmlNode } from "../../Types";
@@ -14,19 +12,80 @@ const htmlEmbedContainerStyles = {
   contain: "layout",
 };
 
-const supportsScopeRule = (() => {
-  try {
-    const sheet = new CSSStyleSheet();
-    sheet.insertRule("@scope { }");
-    return true;
-  } catch {
-    return false;
+let nextEmbedId = 0;
+
+const splitSelectors = (selectorText: string) => {
+  const selectors: string[] = [];
+  let start = 0;
+  let depth = 0;
+  let quote = "";
+
+  for (let i = 0; i < selectorText.length; i++) {
+    const char = selectorText[i];
+    if (quote) {
+      if (char === quote && selectorText[i - 1] !== "\\") quote = "";
+      continue;
+    }
+    if (char === '"' || char === "'") {
+      quote = char;
+    } else if (char === "(" || char === "[") {
+      depth++;
+    } else if (char === ")" || char === "]") {
+      depth--;
+    } else if (char === "," && depth === 0) {
+      selectors.push(selectorText.slice(start, i).trim());
+      start = i + 1;
+    }
   }
-})();
+
+  selectors.push(selectorText.slice(start).trim());
+  return selectors.filter(Boolean);
+};
+
+const scopeSelector = (selector: string, scope: string) => {
+  if (selector === "*") return `${scope}, ${scope} *`;
+  const rootSelector = /^(?:html|body|:root)/i;
+  const rootMatch = rootSelector.exec(selector);
+  const nextCharacter = rootMatch && selector[rootMatch[0].length];
+  if (
+    rootMatch &&
+    (!nextCharacter || /[\s>+~.#:\x5b\x5d]/.test(nextCharacter))
+  ) {
+    return selector.replace(rootSelector, scope);
+  }
+  return `${scope} ${selector}`;
+};
+
+const scopeEmbedStyles = (cssText: string, scope: string) => {
+  const sheet = new CSSStyleSheet();
+  sheet.replaceSync(cssText);
+
+  const processRules = (rules: CSSRuleList): string[] =>
+    Array.from(rules).flatMap((rule) => {
+      if (rule instanceof CSSStyleRule) {
+        const selector = splitSelectors(rule.selectorText)
+          .map((item) => scopeSelector(item, scope))
+          .join(", ");
+        return [`${selector} { ${rule.style.cssText} }`];
+      }
+
+      if (
+        rule.type === CSSRule.MEDIA_RULE ||
+        rule.type === CSSRule.SUPPORTS_RULE
+      ) {
+        const nestedRules = processRules((rule as CSSGroupingRule).cssRules);
+        if (!nestedRules.length) return [];
+        const header = rule.cssText.slice(0, rule.cssText.indexOf("{")).trim();
+        return [`${header} { ${nestedRules.join("\n")} }`];
+      }
+
+      return [];
+    });
+
+  return processRules(sheet.cssRules).join("\n");
+};
 
 export const HtmlEmbed = (props: { htmlEmbed: HtmlNode[] | HtmlNode }) => {
-  if (!supportsScopeRule)
-    return <div>{t`Embed not supported by your browser.`}</div>;
   const embed = Array.isArray(props.htmlEmbed)
     ? (props.htmlEmbed as HtmlNode[])
     : [props.htmlEmbed as HtmlNode];
@@ -34,15 +93,35 @@ export const HtmlEmbed = (props: { htmlEmbed: HtmlNode[] | HtmlNode }) => {
   const styleItem = embed.find?.((item) => item?.tag === "style")
     ?.content[0] as string | undefined;
 
-  return (
-    <div style={htmlEmbedContainerStyles}>
-      <HTMLEmbedItem items={embed} />
-      {styleItem && (
-        <style>{`@scope { 
-          ${replaceImageUrl(styleItem, false)}}`}</style>
-      )}
-    </div>
-  );
+  const container = document.createElement("div");
+  Object.assign(container.style, {
+    position: htmlEmbedContainerStyles.position,
+    display: htmlEmbedContainerStyles.display,
+    overflow: htmlEmbedContainerStyles.overflow,
+    alignSelf: htmlEmbedContainerStyles["align-self"],
+    maxHeight: htmlEmbedContainerStyles["max-height"],
+    contain: htmlEmbedContainerStyles.contain,
+  });
+
+  const scope = `html-embed-${++nextEmbedId}`;
+  container.classList.add(scope);
+
+  if (styleItem) {
+    try {
+      const embedStyle = document.createElement("style");
+      embedStyle.textContent = scopeEmbedStyles(
+        replaceImageUrl(styleItem, false),
+        `.${scope}`,
+      );
+      container.append(embedStyle);
+    } catch (error) {
+      console.warn("Unable to parse HTML embed styles", error);
+    }
+  }
+
+  container.append(<HTMLEmbedItem items={embed} />);
+
+  return container;
 };
 
 const replaceImageUrl = (val: string, shouldAnimate: boolean) => {
