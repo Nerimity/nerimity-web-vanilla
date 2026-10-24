@@ -122,7 +122,7 @@ export const createSearchDrawer = () => {
           const channel = channelStore.channels.get(message.channelId);
           return (
             <div class={style.messageContainer}>
-              {channel && (
+              {channel && prev?.channelId !== message.channelId && (
                 <div class={style.channelHeader}>
                   <CdnIcon size={16} channel={channel} />
                   {channel?.name}
@@ -133,7 +133,6 @@ export const createSearchDrawer = () => {
                 grouped={false}
                 hideNewDayMarker
                 message={new Message(message)}
-                prevMessage={prev && new Message(prev)}
               />
             </div>
           );
