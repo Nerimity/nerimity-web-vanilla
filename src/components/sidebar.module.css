@@ -6,6 +6,9 @@
   flex-shrink: 0;
   width: 76px;
   height: 100%;
+  padding: 6px;
+  padding-top: 0;
+  padding-bottom: 0;
   background-color: var(--sidebar-bg);
 
   .scrollable {
@@ -13,6 +16,7 @@
     overflow: auto;
     flex: 1;
     flex-direction: column;
+    width: 100%;
     &::-webkit-scrollbar {
       display: none;
     }
@@ -43,8 +47,9 @@
   align-items: center;
   flex-shrink: 0;
   justify-content: center;
-  width: 64px;
-  height: 50px;
+  width: 100%;
+  padding: 0;
+  aspect-ratio: 1 / 0.768;
   &:before {
     z-index: 11111;
     width: 3px;

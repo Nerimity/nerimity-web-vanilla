@@ -20,6 +20,7 @@ import { router } from "../utils/router";
 import { Icon } from "./icon";
 import { LogoMono } from "./LogoMono";
 import { NotificationPill } from "./NotificationPill";
+import { createResizeHandler } from "./ResizeHandle";
 import { Avatar } from "./ui/avatar";
 import { Drawer } from "./ui/drawer";
 import { Item } from "./ui/item";
@@ -280,9 +281,19 @@ export const createSidebar = () => {
     signal,
   );
 
+  const resizeHandler = createResizeHandler({
+    signal: signal,
+    position: "right",
+    store: "sidebarWidth",
+    initial: 76,
+    max: 100,
+    min: 54,
+  });
+
   const render = () => {
     containerEl = (
       <div class={style.sidebar}>
+        {resizeHandler.element}
         <div class={style.scrollable}>
           <HomeItem signal={signal} />
           <MentionList signal={signal} />

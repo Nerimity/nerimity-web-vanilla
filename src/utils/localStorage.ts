@@ -20,7 +20,12 @@ interface LocalStorageData {
   soundNotificationVolume: number;
   soundNotificationTypes: Partial<Record<SoundType, Sound>>;
   discoverSort: DiscoverSort;
+  rightDrawerWidth: number;
+  leftDrawerWidth: number;
+  sidebarWidth: number;
 }
+
+export type LocalStorageKeys = keyof LocalStorageData;
 
 const defaultValues: Partial<LocalStorageData> = {
   soundNotification: true,

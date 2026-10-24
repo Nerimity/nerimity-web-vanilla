@@ -1,0 +1,21 @@
+.resizeHandle {
+  position: absolute;
+  z-index: 11111;
+  top: 0;
+  bottom: 0;
+  width: var(--width);
+  cursor: e-resize;
+  user-select: none;
+  &.visible,
+  &:hover {
+    background-color: var(--primary-color);
+  }
+}
+
+.resizing {
+  transition: none !important;
+}
+
+.mobileHidden {
+  display: none;
+}

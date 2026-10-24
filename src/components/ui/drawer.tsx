@@ -3,6 +3,7 @@ import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { portalElement } from "../../utils/portal";
 import { userAgent } from "../../utils/userAgent";
+import { createResizeHandler } from "../ResizeHandle";
 
 let drawer: ReturnType<typeof createDrawer> | null = null;
 
@@ -14,6 +15,8 @@ const MOBILE_WIDTH = mobileWidth;
 const PEEK_WIDTH = 50;
 
 function createDrawer() {
+  const abortController = new AbortController();
+
   let currentPage = 1;
   let visiblePage = 1;
 
@@ -25,18 +28,41 @@ function createDrawer() {
   let currentMode: "mobile" | "desktop" =
     window.innerWidth < MOBILE_WIDTH ? "mobile" : "desktop";
 
+  const rightDrawerResizeHandle = createResizeHandler({
+    signal: abortController.signal,
+    position: "left",
+    store: "rightDrawerWidth",
+    initial: 260,
+    max: 330,
+    min: 231,
+  });
+  const leftDrawerResizeHandle = createResizeHandler({
+    signal: abortController.signal,
+    position: "right",
+    store: "leftDrawerWidth",
+    initial: 300,
+    max: 330,
+    min: 248,
+  });
+
   const leftDrawerInner = (
     <div class={`${style.leftDrawerInner} ${style.innerDrawer}`}></div>
   ) as HTMLElement;
   const leftDrawer = (
-    <div class={style.leftDrawer}>{leftDrawerInner}</div>
+    <div class={style.leftDrawer}>
+      {leftDrawerResizeHandle.element}
+      {leftDrawerInner}
+    </div>
   ) as HTMLElement;
 
   const rightDrawerInner = (
     <div class={`${style.rightDrawerInner} ${style.innerDrawer}`}></div>
   ) as HTMLElement;
   const rightDrawer = (
-    <div class={style.rightDrawer}>{rightDrawerInner}</div>
+    <div class={style.rightDrawer}>
+      {rightDrawerResizeHandle.element}
+      {rightDrawerInner}
+    </div>
   ) as unknown as HTMLElement;
 
   const contentInner = (
@@ -72,7 +98,6 @@ function createDrawer() {
       {rightDrawer}
     </div>
   ) as unknown as HTMLElement;
-  const abortController = new AbortController();
 
   window.addEventListener(
     "resize",
