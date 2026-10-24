@@ -112,7 +112,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
         return setLoadingFalse();
       }
       if (query().messageId) {
-        return scrollToMessage(true);
+        return scrollToMessage(logs, true);
       }
 
       const newMessages = await messageStore.loadMessages(channelId, { force });
@@ -178,13 +178,13 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     "focus",
     () => {
       setTimeout(() => {
-        scrollToMessage();
+        scrollToMessage(logs);
       }, 100);
     },
     { signal },
   );
 
-  const scrollToMessage = async (force = false) => {
+  const scrollToMessage = async (container: HTMLDivElement, force = false) => {
     const messageId = query().messageId;
     const channelId = channelStore.currentChannelId!;
     if (!messageId) return;
@@ -194,7 +194,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
       router.navigate(location.pathname, { replace: true });
     }
 
-    let messageItemEl = document.querySelector(
+    let messageItemEl = container.querySelector(
       `[data-message-id="${messageId}"] .messageItem`,
     ) as HTMLDivElement;
 
@@ -226,7 +226,7 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
     }
 
     setTimeout(() => {
-      messageItemEl = document.querySelector(
+      messageItemEl = container.querySelector(
         `[data-message-id="${messageId}"] .messageItem`,
       ) as HTMLDivElement;
 
@@ -247,7 +247,10 @@ export const createInfiniteScroll = (params: InfiniteScrollParams) => {
       }
     }, 100);
   };
-  router.createQueryListener(() => scrollToMessage(), { signal, defer: true });
+  router.createQueryListener(() => scrollToMessage(logs), {
+    signal,
+    defer: true,
+  });
 
   signal.addEventListener(
     "abort",

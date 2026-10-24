@@ -20,9 +20,16 @@
 .messageContainer {
   display: flex;
   flex-direction: column;
+  .messageLink {
+    border-radius: var(--radius-8);
+    &:hover {
+      background-color: var(--gray-800);
+    }
+  }
   :global(.messageItem) {
     margin: 0;
-    margin-top: 10px;
+    margin-top: 16px;
+    pointer-events: none;
   }
 }
 .channelHeader {
@@ -44,7 +51,7 @@
 .filtersContainer {
   display: flex;
   align-items: start;
-  flex-direction: column;
+  flex-wrap: wrap;
   margin: 0 4px;
   margin-bottom: 8px;
   gap: 4px;

@@ -1,6 +1,9 @@
 import { t } from "@lingui/core/macro";
 
-import { searchChannelMessages } from "../../services/channelService";
+import {
+  searchChannelMessages,
+  type SearchOpts,
+} from "../../services/channelService";
 import { searchServerMessages } from "../../services/serverService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
@@ -15,6 +18,7 @@ import { Icon } from "../icon";
 import { MessageItem } from "../message-pane/messageItem";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { Link } from "../ui/link";
 import { MessageSkeleton } from "../ui/skeleton";
 
 import style from "./SearchDrawer.module.css";
@@ -28,6 +32,7 @@ export const createSearchDrawer = () => {
   ) as HTMLDivElement;
 
   let searchInCurrentChannel = true;
+  let newestFirst = true;
 
   const Filters = () => {
     const currentChannel = channelStore.currentChannel();
@@ -42,6 +47,9 @@ export const createSearchDrawer = () => {
             primary={searchInCurrentChannel}
           />
         )}
+
+        <Button data-action="newest" label={t`Newest`} primary={newestFirst} />
+        <Button data-action="oldest" label={t`Oldest`} primary={!newestFirst} />
       </div>
     );
   };
@@ -89,6 +97,16 @@ export const createSearchDrawer = () => {
         rerenderFilters();
         loadMessages();
       }
+      if (closestFromEvent(event, `[data-action="newest"]`)) {
+        newestFirst = true;
+        rerenderFilters();
+        loadMessages();
+      }
+      if (closestFromEvent(event, `[data-action="oldest"]`)) {
+        newestFirst = false;
+        rerenderFilters();
+        loadMessages();
+      }
     },
     { signal },
   );
@@ -104,17 +122,19 @@ export const createSearchDrawer = () => {
 
     let messages: RawMessage[] | null = null;
 
+    const opts: SearchOpts = { query, order: newestFirst ? "desc" : "asc" };
+
     if (!serverId || searchInCurrentChannel) {
       const channelId = channelStore.currentChannel()?.id!;
-      [messages] = await searchChannelMessages(channelId, { query });
+      [messages] = await searchChannelMessages(channelId, opts);
     } else {
-      [messages] = await searchServerMessages(serverId, { query });
+      [messages] = await searchServerMessages(serverId, opts);
     }
     messages = messages || [];
 
     if (signal.aborted) return;
 
-    messages?.reverse();
+    if (newestFirst) messages.reverse();
     isShowingSkeleton = false;
 
     messageListEl.replaceChildren(
@@ -122,20 +142,33 @@ export const createSearchDrawer = () => {
         {messages.map((message, i) => {
           const prev = messages[i - 1];
           const channel = channelStore.channels.get(message.channelId);
+
+          let link = "";
+
+          if (channel?.serverId) {
+            link = `/app/servers/${channel?.serverId}/${message.channelId}?messageId=${message.id}`;
+          } else {
+            link = `/app/inbox/${message.channelId}?messageId=${message.id}`;
+          }
+
           return (
             <div class={style.messageContainer}>
-              {channel && prev?.channelId !== message.channelId && (
-                <div class={style.channelHeader}>
-                  <CdnIcon size={16} channel={channel} />
-                  {channel?.name}
-                </div>
-              )}
-              <MessageItem
-                container={messageListEl}
-                grouped={false}
-                hideNewDayMarker
-                message={new Message(message)}
-              />
+              {!searchInCurrentChannel &&
+                channel &&
+                prev?.channelId !== message.channelId && (
+                  <div class={style.channelHeader}>
+                    <CdnIcon size={16} channel={channel} />
+                    {channel?.name}
+                  </div>
+                )}
+              <Link href={link} class={style.messageLink}>
+                <MessageItem
+                  container={messageListEl}
+                  grouped={false}
+                  hideNewDayMarker
+                  message={new Message(message)}
+                />
+              </Link>
             </div>
           );
         })}
