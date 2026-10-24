@@ -6,6 +6,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { Icon } from "../icon";
 import { createFilesDrawer } from "./FilesDrawer";
 import { createInboxInfoDrawer } from "./InboxInfoDrawer";
+import { createSearchDrawer } from "./SearchDrawer";
 import { createServerInfoDrawer } from "./ServerInfoDrawer";
 
 import style from "./RightDrawer.module.css";
@@ -60,6 +61,10 @@ export const createRightDrawer = () => {
     }
     if (currentTab === "files") {
       currentTabContent = createFilesDrawer();
+      innerContainerEl.replaceChildren(currentTabContent.render());
+    }
+    if (currentTab === "search") {
+      currentTabContent = createSearchDrawer();
       innerContainerEl.replaceChildren(currentTabContent.render());
     }
     const tabs = tabsEl.querySelectorAll(`[data-id]`);

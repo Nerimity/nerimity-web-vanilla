@@ -3,6 +3,7 @@ import type {
   RawBotCommand,
   RawChannel,
   RawExploreItem,
+  RawMessage,
   RawServer,
   RawServerRole,
   RawUser,
@@ -359,4 +360,10 @@ export async function deleteWebhook(opts: {
       useToken: true,
     },
   );
+}
+export async function searchServerMessages(opts: { serverId: string }) {
+  return request<RawMessage[]>(`/servers/${opts.serverId}/messages/search`, {
+    method: "GET",
+    useToken: true,
+  });
 }

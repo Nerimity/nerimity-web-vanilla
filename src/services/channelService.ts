@@ -1,4 +1,4 @@
-import type { FullAttachment } from "../Types";
+import type { FullAttachment, RawMessage } from "../Types";
 import { newQueue } from "../utils/queue";
 import { request } from "./request";
 
@@ -59,3 +59,10 @@ export const getOrCacheChannelNotice = (channelId: string) => {
     return content;
   });
 };
+
+export async function searchChannelMessages(opts: { channelId: string }) {
+  return request<RawMessage[]>(`/channels/${opts.channelId}/messages/search`, {
+    method: "GET",
+    useToken: true,
+  });
+}

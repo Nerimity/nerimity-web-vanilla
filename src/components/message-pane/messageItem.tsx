@@ -46,6 +46,10 @@ export const MessageItem = (props: {
   newMarker?: boolean;
   container: HTMLDivElement;
   hideNewDayMarker?: boolean;
+  /**
+   * @default true
+   */
+  grouped?: boolean;
 }) => {
   const creator = props.message.createdBy;
   const cachedCreator = userStore.users.get(creator.id);
@@ -54,11 +58,12 @@ export const MessageItem = (props: {
   const newDay =
     !props.hideNewDayMarker && isNewDay(props.message, props.prevMessage);
 
-  const group =
+  let group =
     !newDay &&
     !props.newMarker &&
     props.prevMessage &&
     shouldGroup(props.message, props.prevMessage);
+  if (props.grouped === false) group = false;
 
   const server = serverStore.servers.get(serverStore.currentServerId!);
 

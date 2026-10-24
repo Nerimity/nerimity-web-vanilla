@@ -14,7 +14,10 @@ import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { randomKaomoji } from "../../utils/kaomoji";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 
-export const shouldGroup = (message: Message, prev?: Message): boolean => {
+export const shouldGroup = (
+  message: Message | RawMessage,
+  prev?: Message | RawMessage,
+): boolean => {
   if (!prev) return false;
   if (message.createdBy.id !== prev.createdBy.id) return false;
   if (message.replyMessages?.length) return false;
