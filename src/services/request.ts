@@ -7,6 +7,7 @@ interface RequestOpts {
   body?: any;
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   params?: Record<string, any>;
+  paramsArrayMode?: "keys" | "spaces";
   text?: boolean;
 }
 
@@ -21,6 +22,10 @@ export async function request<T, E extends object = {}>(
   if (opts?.params) {
     Object.entries(opts.params).forEach(([key, value]) => {
       if (value === undefined) return;
+      if (opts.paramsArrayMode === "keys" && Array.isArray(value)) {
+        value.forEach((item) => url.searchParams.append(key, item));
+        return;
+      }
       url.searchParams.set(key, value);
     });
   }

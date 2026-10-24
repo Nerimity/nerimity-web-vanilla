@@ -9,6 +9,7 @@ import type {
   RawUser,
   RawWebhook,
 } from "../Types";
+import type { SearchOpts } from "./channelService";
 import { request } from "./request";
 
 export interface UpdateServerOptions {
@@ -361,9 +362,22 @@ export async function deleteWebhook(opts: {
     },
   );
 }
-export async function searchServerMessages(opts: { serverId: string }) {
-  return request<RawMessage[]>(`/servers/${opts.serverId}/messages/search`, {
+
+export async function searchServerMessages(
+  serverId: string,
+  opts?: SearchOpts,
+) {
+  return request<RawMessage[]>(`/servers/${serverId}/messages/search`, {
     method: "GET",
     useToken: true,
+    paramsArrayMode: "keys",
+    params: {
+      ...(opts?.afterMessageId ? { after: opts.afterMessageId } : undefined),
+      ...(opts?.beforeMessageId ? { before: opts.beforeMessageId } : undefined),
+      ...(opts?.order ? { order: opts.order } : undefined),
+      ...(opts?.query?.trim() ? { query: opts.query } : undefined),
+      ...(opts?.userIds?.length ? { user_id: opts.userIds } : undefined),
+      ...(opts?.order ? { order: opts.order } : undefined),
+    },
   });
 }

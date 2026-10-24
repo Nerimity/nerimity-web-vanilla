@@ -60,9 +60,29 @@ export const getOrCacheChannelNotice = (channelId: string) => {
   });
 };
 
-export async function searchChannelMessages(opts: { channelId: string }) {
-  return request<RawMessage[]>(`/channels/${opts.channelId}/messages/search`, {
+export interface SearchOpts {
+  limit?: number;
+  order?: "asc" | "desc";
+  beforeMessageId?: string;
+  afterMessageId?: string;
+  userIds?: string[];
+  query?: string;
+}
+export async function searchChannelMessages(
+  channelId: string,
+  opts?: SearchOpts,
+) {
+  return request<RawMessage[]>(`/channels/${channelId}/messages/search`, {
     method: "GET",
     useToken: true,
+    paramsArrayMode: "keys",
+    params: {
+      ...(opts?.afterMessageId ? { after: opts.afterMessageId } : undefined),
+      ...(opts?.beforeMessageId ? { before: opts.beforeMessageId } : undefined),
+      ...(opts?.order ? { order: opts.order } : undefined),
+      ...(opts?.query?.trim() ? { query: opts.query } : undefined),
+      ...(opts?.userIds?.length ? { user_id: opts.userIds } : undefined),
+      ...(opts?.order ? { order: opts.order } : undefined),
+    },
   });
 }

@@ -2,15 +2,20 @@ import { t } from "@lingui/core/macro";
 
 import { searchChannelMessages } from "../../services/channelService";
 import { searchServerMessages } from "../../services/serverService";
+import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
 import type { RawMessage } from "../../Types";
 import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { CdnIcon } from "../cdnIcon";
+import { Icon } from "../icon";
 import { MessageItem } from "../message-pane/messageItem";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { MessageSkeleton } from "../ui/skeleton";
 
 import style from "./SearchDrawer.module.css";
 
@@ -22,7 +27,7 @@ export const createSearchDrawer = () => {
     <div class={style.messageContainer}></div>
   ) as HTMLDivElement;
 
-  let searchInCurrentChannel = false;
+  let searchInCurrentChannel = true;
 
   const Filters = () => {
     const currentChannel = channelStore.currentChannel();
@@ -38,12 +43,31 @@ export const createSearchDrawer = () => {
     );
   };
 
+  let query = "";
+  let isShowingSkeleton = false;
+
   let el = (
     <div class={style.container}>
+      <Input
+        prefix={<Icon class={style.searchIcon} name="search" />}
+        class={style.searchInput}
+        placeholder={t`Search messages...`}
+      />
       <Filters />
       {messageListEl}
     </div>
   ) as HTMLDivElement;
+
+  el.addEventListener(
+    "input",
+    (event) => {
+      const input = event.target as HTMLInputElement;
+      query = input.value;
+
+      loadMessages();
+    },
+    { signal },
+  );
 
   const rerenderFilters = () => {
     const filtersEl = el.querySelector(`.${style.filtersContainer}`);
@@ -80,16 +104,16 @@ export const createSearchDrawer = () => {
 
     if (searchInCurrentChannel) {
       const channelId = channelStore.currentChannel()?.id!;
-      [messages] = await searchChannelMessages({ channelId });
+      [messages] = await searchChannelMessages(channelId, { query });
     } else {
-      [messages] = await searchServerMessages({ serverId });
+      [messages] = await searchServerMessages(serverId, { query });
     }
+    messages = messages || [];
 
     if (signal.aborted) return;
 
     messages?.reverse();
-
-    if (!messages?.length) return;
+    isShowingSkeleton = false;
 
     messageListEl.replaceChildren(
       <>
@@ -119,11 +143,24 @@ export const createSearchDrawer = () => {
   }, 800);
 
   const loadMessages = () => {
-    messageListEl.replaceChildren();
+    rerenderFilters();
+    if (!accountStore.authenticated) return;
+    if (!isShowingSkeleton) {
+      isShowingSkeleton = true;
+      messageListEl.replaceChildren(
+        <>
+          {Array.from({ length: 26 }, () => (
+            <MessageSkeleton />
+          ))}
+        </>,
+      );
+    }
     debouncedLoadMessages();
   };
 
   loadMessages();
+
+  storeEmitter.on("ws:authStateUpdate", loadMessages, signal);
 
   const destroy = () => {
     ac.abort();

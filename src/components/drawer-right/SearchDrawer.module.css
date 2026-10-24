@@ -3,6 +3,19 @@
   flex-direction: column;
 }
 
+.searchInput {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  > div {
+    border-radius: var(--radius-max);
+  }
+  .searchIcon {
+    margin-left: 8px;
+    color: var(--gray-400);
+    font-size: 16px;
+  }
+}
+
 .messageContainer {
   display: flex;
   flex-direction: column;
@@ -26,6 +39,7 @@
   margin: 0 4px;
   gap: 4px;
   :global(.button) {
+    padding: 4px 8px;
     border-radius: var(--radius-max);
   }
 }
