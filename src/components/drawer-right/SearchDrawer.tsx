@@ -31,14 +31,17 @@ export const createSearchDrawer = () => {
 
   const Filters = () => {
     const currentChannel = channelStore.currentChannel();
+    const server = serverStore.currentServer();
     const name = currentChannel?.name || "";
     return (
       <div class={style.filtersContainer}>
-        <Button
-          data-action="search-in-current-channel"
-          label={t`Search In #${name}`}
-          primary={searchInCurrentChannel}
-        />
+        {server && (
+          <Button
+            data-action="search-in-current-channel"
+            label={t`Search In #${name}`}
+            primary={searchInCurrentChannel}
+          />
+        )}
       </div>
     );
   };
@@ -98,11 +101,10 @@ export const createSearchDrawer = () => {
     if (signal.aborted) return;
 
     const serverId = serverStore.currentServerId;
-    if (!serverId) return;
 
     let messages: RawMessage[] | null = null;
 
-    if (searchInCurrentChannel) {
+    if (!serverId || searchInCurrentChannel) {
       const channelId = channelStore.currentChannel()?.id!;
       [messages] = await searchChannelMessages(channelId, { query });
     } else {

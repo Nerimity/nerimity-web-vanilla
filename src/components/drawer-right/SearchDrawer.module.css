@@ -4,6 +4,7 @@
 }
 
 .searchInput {
+  margin: 0 4px;
   margin-top: 8px;
   margin-bottom: 8px;
   > div {
