@@ -6,12 +6,16 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
+import { serverMemberStore } from "../../store/serverMemberStore";
+import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { MessageType } from "../../Types";
+import { formatTimestampRelative } from "../../utils/date";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { userAgent } from "../../utils/userAgent";
 import { createFileInput } from "../FileInput";
+import { Icon } from "../icon";
 import { Button } from "../ui/button";
 import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
 import {
@@ -151,6 +155,17 @@ export const createChatbar = () => {
     });
   };
 
+  const messageSendRestrictionEl = (
+    <div
+      class={style.messageSendRestrictionContainer}
+      style={{ display: "none" }}
+    ></div>
+  ) as HTMLDivElement;
+
+  const chatInputContainerEl = (
+    <div class={style.chatInputContainer}>{inputContainerEl}</div>
+  ) as HTMLDivElement;
+
   let chatbar = (
     <div class={style.chatbarContainer}>
       {jumpToPresent}
@@ -161,7 +176,8 @@ export const createChatbar = () => {
       {repliesIndicator}
       {inputSuggestions}
       {selectedCommandIndicator}
-      <div class={style.chatInputContainer}>{inputContainerEl}</div>
+      {messageSendRestrictionEl}
+      {chatInputContainerEl}
     </div>
   ) as unknown as HTMLElement;
 
@@ -311,12 +327,62 @@ export const createChatbar = () => {
     editButton.classList.toggle(style.hide!, !isEditing);
   };
 
-  const updateChatbarVisibility = () => {
+  let visibilityTimeout: any;
+
+  const updateChatbarVisibility = (fromTimeout = false) => {
+    if (!fromTimeout && visibilityTimeout) {
+      clearTimeout(visibilityTimeout);
+      visibilityTimeout = null;
+    }
+    if (signal.aborted) return;
     const authenticated = accountStore.authenticated;
     if (!authenticated) return;
     const channel = channelStore.currentChannel();
     const canMessage = channel?.canSendMessages();
-    chatbar.style.display = canMessage ? "flex" : "none";
+    chatInputContainerEl.style.display = canMessage ? "flex" : "none";
+    messageSendRestrictionEl.style.display = canMessage ? "none" : "flex";
+
+    if (!canMessage) {
+      let icon = "lock";
+      let reason = t`You don't have permission to send messages in this channel.`;
+      let action: any = null;
+
+      const user = accountStore.currentUser;
+      const member = serverMemberStore.currentMember(
+        serverStore.currentServerId!,
+      );
+
+      if (!user?.emailConfirmed) {
+        icon = "error";
+        reason = t`Confirm your email to send messages.`;
+        action = (
+          <Button href="/app/settings" label={t`Confirm Email`} primary />
+        );
+      } else {
+        const muted = member?.isMuted();
+        if (muted) {
+          const timestamp = formatTimestampRelative(
+            member?.muteExpireAt!,
+            "none",
+          );
+          icon = "volume_off";
+          reason = t`You're muted until ${timestamp}`;
+          visibilityTimeout = setTimeout(() => {
+            updateChatbarVisibility();
+          }, 1000);
+        }
+      }
+
+      messageSendRestrictionEl.replaceChildren(
+        <>
+          <div class={style.info}>
+            <Icon name={icon} class={[style.icon, style.alert]} />
+            <div class={style.reason}>{reason}</div>
+          </div>
+          {action}
+        </>,
+      );
+    }
   };
 
   storeEmitter.on(

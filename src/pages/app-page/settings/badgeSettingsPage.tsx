@@ -237,7 +237,7 @@ const BadgePreview = (props: { price: number; badges: UserBadge[] }) => {
       <SettingsBlock.Group>
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="favorite" />
-          <SettingsBlock.Details title={`$${props.price}`} />
+          <SettingsBlock.Details title={`$${props.price} USD`} />
         </SettingsBlock.Root>
         <SettingsBlock.Root class={style.previewGridContainer}>
           {props.badges.map((b) => (

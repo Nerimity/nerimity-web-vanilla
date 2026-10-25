@@ -47,6 +47,9 @@ export class ServerMember {
       checkCreator,
     });
   }
+  isMuted() {
+    return this?.muteExpireAt && new Date(this?.muteExpireAt) > new Date();
+  }
 }
 
 function createServerMemberStore() {

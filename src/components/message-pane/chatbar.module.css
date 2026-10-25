@@ -53,3 +53,30 @@
   display: flex;
   flex-direction: column;
 }
+
+.messageSendRestrictionContainer {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding-right: 4px;
+  padding-left: 8px;
+  border: 1px solid var(--gray-700);
+  border-radius: var(--radius-max);
+  background-color: var(--gray-1000);
+  .icon {
+    font-size: 20px;
+    &.alert {
+      color: var(--alert-color);
+    }
+  }
+  .info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 4px;
+  }
+  :global(.button) {
+    padding: 6px 12px;
+    border-radius: var(--radius-max);
+  }
+}

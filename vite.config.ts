@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "lock",
         "person_off",
         "insert_chart",
         "push_pin",
