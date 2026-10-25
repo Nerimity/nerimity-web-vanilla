@@ -97,7 +97,13 @@ const FolderItem = ({ folder }: { folder: RawServerFolder }) => {
       selected={!opened && selectedServer}
       data-opened={opened}
     >
-      <div class={style.folderPreview}>
+      <div
+        class={style.folderPreview}
+        style={{
+          "--override-size":
+            "calc(var(--container-width) - var(--container-width)* 0.66)",
+        }}
+      >
         {!opened ? (
           arr.map((_, i) => {
             const id = folder.serverIds[i];
@@ -281,6 +287,15 @@ export const createSidebar = () => {
     signal,
   );
 
+  const updateAvatarSize = () => {
+    const containerWidth = resizeHandler.currentWidth;
+    containerEl?.style.setProperty("--container-width", containerWidth + "px");
+
+    containerEl?.style.setProperty(
+      "--override-size",
+      "calc(var(--container-width) - var(--container-width)* 0.4)",
+    );
+  };
   const resizeHandler = createResizeHandler({
     signal: signal,
     position: "right",
@@ -288,6 +303,7 @@ export const createSidebar = () => {
     initial: 76,
     max: 100,
     min: 54,
+    onResize: updateAvatarSize,
   });
 
   const render = () => {
@@ -309,6 +325,8 @@ export const createSidebar = () => {
       { trigger: `.${style.sidebarItem}`, image: "img.avatar" },
     ]);
     renderList();
+    updateAvatarSize();
+
     return containerEl;
   };
 

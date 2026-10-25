@@ -123,7 +123,7 @@ export const Avatar = (props: AvatarProps) => {
   return (
     <div
       class={["avatar", style.avatar, props.class]}
-      style={{ "--size": props.size + "px" }}
+      style={{ "--size": `var(--override-size, ${props.size}px)` }}
       data-hover-selector={props.hoverSelector}
     >
       <Dynamic

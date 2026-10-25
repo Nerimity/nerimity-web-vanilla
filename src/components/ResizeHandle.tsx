@@ -12,6 +12,7 @@ export const createResizeHandler = (opts: {
   initial: number;
   min?: number;
   max?: number;
+  onResize?: (width: number) => void;
 }) => {
   const min = opts.min ?? 0;
   const max = Math.max(opts.max ?? Infinity, min);
@@ -41,6 +42,7 @@ export const createResizeHandler = (opts: {
     } else {
       element.style.left = `${right - WIDTH / 2}px`;
     }
+    opts.onResize?.(container?.offsetWidth ?? 0);
   };
 
   const setDesktopWidth = () => {
@@ -130,5 +132,8 @@ export const createResizeHandler = (opts: {
 
   return {
     element,
+    get currentWidth() {
+      return container?.offsetWidth ?? 0;
+    },
   };
 };

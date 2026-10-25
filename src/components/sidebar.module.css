@@ -6,7 +6,7 @@
   flex-shrink: 0;
   width: 76px;
   height: 100%;
-  padding: 6px;
+  padding: calc(var(--container-width) - var(--container-width)* 0.96);
   padding-top: 0;
   padding-bottom: 0;
   background-color: var(--sidebar-bg);
@@ -35,6 +35,7 @@
   .footer {
     display: flex;
     flex-direction: column;
+    width: 100%;
     padding-top: 2px;
     padding-bottom: 4px;
     border-top: solid 1px var(--gray-700);
@@ -64,12 +65,14 @@
 
 .folderItem {
   overflow: hidden;
+  flex-direction: column;
+  flex-shrink: 0;
   height: initial;
-  min-height: 64px;
   padding: 0;
-  border-radius: var(--radius-16);
+  border-radius: calc(var(--container-width) - var(--container-width)* 0.7);
   user-select: none;
-
+  aspect-ratio: initial;
+  gap: 4px;
   &:after {
     position: absolute;
     opacity: 0.2;
@@ -87,32 +90,34 @@
   &[data-opened="true"] .folderPreview {
     border-radius: var(--radius-8);
   }
+
   &[data-opened="true"]:before {
     display: none;
   }
 
   .folderPreview {
-    position: absolute;
     z-index: 111;
     display: flex;
     align-content: center;
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-    height: 64px;
-    border-radius: var(--radius-16);
+    width: 100%;
+    border-radius: calc(var(--container-width) - var(--container-width)* 0.7);
     inset: 0;
-    gap: 4px;
+    gap: calc(var(--container-width) - var(--container-width) * 0.94);
+    aspect-ratio: 1 / 1;
     &:hover {
       background-color: rgba(255, 255, 255, 0.1);
     }
 
     .folderIcon {
       color: var(--color);
+      font-size: calc(var(--container-width) - var(--container-width)* 0.6);
     }
     .placeholder {
-      width: 24px;
-      height: 24px;
+      width: var(--override-size);
+      height: var(--override-size);
     }
   }
   .folderServerList {
@@ -120,7 +125,7 @@
     z-index: 1111;
     display: flex;
     flex-direction: column;
-    margin-top: 68px;
+    width: 100%;
     gap: 2px;
   }
 }
@@ -140,11 +145,11 @@
   .logoContainer {
     overflow: hidden;
     flex-shrink: 0;
-    width: 42px;
-    height: 42px;
+    width: calc(var(--container-width) - var(--container-width)* 0.4);
     border-radius: var(--radius-max);
     background-color: var(--gray-800);
     transition: background-color 0.2s;
+    aspect-ratio: 1/1;
     corner-shape: squircle;
   }
 }
