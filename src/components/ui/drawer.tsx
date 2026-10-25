@@ -35,6 +35,9 @@ function createDrawer() {
     initial: 260,
     max: 330,
     min: 231,
+    onResize: (newWidth) => {
+      rightDrawerInner.style.width = `${newWidth}px`;
+    },
   });
   const leftDrawerResizeHandle = createResizeHandler({
     signal: abortController.signal,
@@ -43,6 +46,9 @@ function createDrawer() {
     initial: 300,
     max: 330,
     min: 248,
+    onResize: (newWidth) => {
+      leftDrawerInner.style.width = `${newWidth}px`;
+    },
   });
 
   const leftDrawerInner = (
@@ -197,10 +203,14 @@ function createDrawer() {
 
       leftDrawer.classList.toggle(style.hide!, desktopHideLeftDrawer);
       rightDrawer.classList.toggle(style.hide!, desktopHideRightDrawer);
+      leftDrawerResizeHandle.setVisible(!desktopHideLeftDrawer);
+      rightDrawerResizeHandle.setVisible(!desktopHideRightDrawer);
     }
     if (currentMode === "mobile") {
       leftDrawer.classList.remove(style.hide!);
       rightDrawer.classList.remove(style.hide!);
+      leftDrawerResizeHandle.setVisible(true);
+      rightDrawerResizeHandle.setVisible(true);
     }
     const contentWidth = content.clientWidth;
 

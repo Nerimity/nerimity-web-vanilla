@@ -1,4 +1,5 @@
 import { isMobileWidth } from "../config";
+import { storeEmitter } from "../utils/EventEmitter";
 import type { LocalStorageKeys } from "../utils/localStorage";
 import { createResizeObserver } from "../utils/observer";
 
@@ -42,7 +43,6 @@ export const createResizeHandler = (opts: {
     } else {
       element.style.left = `${right - WIDTH / 2}px`;
     }
-    opts.onResize?.(container?.offsetWidth ?? 0);
   };
 
   const setDesktopWidth = () => {
@@ -66,6 +66,7 @@ export const createResizeHandler = (opts: {
     } else if (wasMobile !== false) {
       container.classList.add(style.resizing!);
       setDesktopWidth();
+      void container.offsetWidth;
       container.classList.remove(style.resizing!);
     }
     if (mobile && wasMobile === false && isDragging) {
@@ -81,6 +82,7 @@ export const createResizeHandler = (opts: {
     container = element.parentElement as HTMLDivElement;
 
     updateViewport();
+    opts.onResize?.(container?.offsetWidth ?? 0);
 
     createResizeObserver(container, () => handleResize(), {
       signal: opts.signal,
@@ -90,6 +92,15 @@ export const createResizeHandler = (opts: {
       signal: opts.signal,
     });
   });
+
+  storeEmitter.on(
+    "drawer:modeChange",
+    () => {
+      updateViewport();
+      opts.onResize?.(container?.offsetWidth ?? 0);
+    },
+    opts.signal,
+  );
 
   element.addEventListener(
     "mousedown",
@@ -114,6 +125,7 @@ export const createResizeHandler = (opts: {
       const width = startWidth + (opts.position === "left" ? -deltaX : deltaX);
       container.style.width = `${Math.min(Math.max(width, min), max)}px`;
       handleResize();
+      opts.onResize?.(container?.offsetWidth ?? 0);
     },
     { signal: opts.signal, passive: true },
   );
@@ -132,6 +144,9 @@ export const createResizeHandler = (opts: {
 
   return {
     element,
+    setVisible(visible: boolean) {
+      element.classList.toggle(style.hidden!, !visible);
+    },
     get currentWidth() {
       return container?.offsetWidth ?? 0;
     },
