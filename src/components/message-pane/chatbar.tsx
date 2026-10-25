@@ -311,6 +311,33 @@ export const createChatbar = () => {
     editButton.classList.toggle(style.hide!, !isEditing);
   };
 
+  const updateChatbarVisibility = () => {
+    const authenticated = accountStore.authenticated;
+    if (!authenticated) return;
+    const channel = channelStore.currentChannel();
+    const canMessage = channel?.canSendMessages();
+    chatbar.style.display = canMessage ? "flex" : "none";
+  };
+
+  storeEmitter.on(
+    "server:update_role",
+    (e) => {
+      if (e.hasRole && e.serverId === channelStore.currentChannel()?.serverId) {
+        updateChatbarVisibility();
+      }
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:member_update",
+    (e) => {
+      if (e.isMe && e.serverId === channelStore.currentChannel()?.serverId) {
+        updateChatbarVisibility();
+      }
+    },
+    signal,
+  );
+
   storeEmitter.on(
     "navigate:channelId",
     () => {
@@ -320,6 +347,7 @@ export const createChatbar = () => {
       updatePlaceholder();
       textHeight.adjust();
       updateCancelButton();
+      updateChatbarVisibility();
     },
     signal,
   );
@@ -349,7 +377,14 @@ export const createChatbar = () => {
     signal,
   );
 
-  storeEmitter.on("ws:authStateUpdate", updatePlaceholder, signal);
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    () => {
+      updatePlaceholder();
+      updateChatbarVisibility();
+    },
+    signal,
+  );
   storeEmitter.on("ws:connectStateUpdate", updatePlaceholder, signal);
   createFileClipboardHandler({ signal });
 

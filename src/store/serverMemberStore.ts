@@ -31,6 +31,13 @@ export class ServerMember {
   get user() {
     return userStore.users.get(this.userId);
   }
+  /**
+   *
+   * @param perm
+   * @param checkAdmin  true
+   * @param checkCreator true
+   * @returns
+   */
   hasPerm(perm: number, checkAdmin = true, checkCreator = true) {
     return serverMemberStore.hasPermission({
       permission: perm,

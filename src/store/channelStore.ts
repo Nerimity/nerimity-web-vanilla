@@ -7,11 +7,14 @@ import {
   type RawChannel,
 } from "../Types";
 import { applyIfPresent } from "../utils/applyIfPresent";
+import { addBit, hasBit } from "../utils/bitwise";
+import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
 import { createTokenSource } from "../utils/createTokenSource";
 import { storeEmitter } from "../utils/EventEmitter";
 import { updateFavicon } from "../utils/favicon";
 import { fileToDimensions, isImage, isMoreThan12MB } from "../utils/file";
 import { ManualMemo } from "../utils/memo";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { accountStore } from "./accountStore";
 import { messageMentionStore } from "./messageMentionStore";
 import type { Message } from "./messageStore";
@@ -54,8 +57,78 @@ export class Channel {
 
     storeEmitter.emit("channel:updated", this);
   }
+
+  get server() {
+    return serverStore.servers.get(this.serverId!);
+  }
+
+  hasPermission(opts: {
+    permission: number;
+    defaultRoleOnly?: boolean;
+    userId: string;
+  }) {
+    if (!this.serverId) return false;
+    const member = serverMemberStore.getMember(this.serverId!, opts.userId!);
+    const defaultRoleId = this.server?.defaultRoleId;
+
+    if (opts.defaultRoleOnly) {
+      const permissions = this.permissions?.find(
+        (p) => p.roleId === defaultRoleId!,
+      )?.permissions;
+      return permissions || 0;
+    }
+
+    const roleIds = [...(member?.roleIds || []), defaultRoleId];
+
+    let permissions = 0;
+    for (let i = 0; i < this.permissions!.length; i++) {
+      const perm = this.permissions![i]!;
+      if (roleIds.includes(perm.roleId)) {
+        permissions = addBit(permissions, perm?.permissions);
+      }
+    }
+    return hasBit(permissions, opts.permission);
+  }
+
+  canSendMessages() {
+    const user = accountStore.currentUser;
+    const userId = accountStore.currentUser?.id;
+    if (!userId) return false;
+
+    const getMember = serverMemberStore.getMember;
+
+    const member = getMember(this.serverId!, userId!);
+
+    const muted =
+      member?.muteExpireAt && new Date(member?.muteExpireAt) > new Date();
+    const emailConfirmed = user?.emailConfirmed;
+
+    if (!emailConfirmed) {
+      return false;
+    }
+    if (!this.serverId) return true;
+    if (!member) return false;
+    if (member.hasPerm(RolePermissionFlag.admin.bit)) return true;
+
+    if (muted) return false;
+
+    if (
+      !this.hasPermission({
+        permission: ChannelPermissionFlag.sendMessage.bit,
+        defaultRoleOnly: false,
+        userId: userId,
+      })
+    ) {
+      return false;
+    }
+
+    return member.hasPerm(RolePermissionFlag.sendMessage.bit);
+  }
 }
 
+// setTimeout(() => {
+//   console.log(accountStore.currentUser);
+// }, 5000);
 export interface AttachmentProperty {
   file: File;
 

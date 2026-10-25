@@ -46,6 +46,7 @@ export type CurrentUser = User & {
   serverFolders: RawServerFolder[];
   notices: RawNotice[];
   email?: string;
+  emailConfirmed: boolean;
   dmStatus: DmStatus;
   friendRequestStatus: FriendRequestStatus;
   lastOnlineStatus?: number;
