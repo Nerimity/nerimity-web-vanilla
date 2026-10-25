@@ -12,16 +12,19 @@ import { Icon } from "../icon";
 import style from "./slowdownModeIndicator.module.css";
 
 export const createSlowdownModeIndicator = (opts: { signal: AbortSignal }) => {
-  let el = (
-    <div class={[style.slowdownModeIndicator, style.hide]}></div>
-  ) as HTMLElement;
-
   let slowdownMode: number | undefined = 0;
 
   let iconEl = (<Icon name="schedule" />) as HTMLDivElement;
   let textEl = (<span>{t`Slow Mode`}</span>) as HTMLSpanElement;
   let intervalId: number | undefined;
   let intervalChannelId: string | null = null;
+
+  let el = (
+    <div class={[style.slowdownModeIndicator, style.hide]}>
+      {iconEl}
+      {textEl}
+    </div>
+  ) as HTMLElement;
 
   const clearCountdown = () => {
     if (intervalId !== undefined) {
