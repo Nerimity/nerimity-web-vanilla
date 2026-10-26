@@ -261,11 +261,14 @@ export const createModal = (
   let velocityY = 0;
   let startedAtInitialPosition = false;
   let lastMobileWidth = isMobileWidth();
+  let hasUserAdjustedPosition = false;
+  let lastObservedModalHeight = 0;
 
   let inertiaAnimation: Animation | null = null;
   let inertiaFooterAnimation: Animation | null = null;
   let destroyed = false;
   let initialPositionRaf: number | null = null;
+  let modalPositionCorrectionRaf: number | null = null;
   let resizeObserverTimeout: number | null = null;
 
   const cancelInertia = () => {
@@ -320,7 +323,6 @@ export const createModal = (
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
       const touch = event.touches[0];
       if (!touch) return;
-
       const currentTime = performance.now();
       const deltaY = touch.clientY - startY;
       let targetY = baseY + deltaY;
@@ -331,6 +333,8 @@ export const createModal = (
 
       if (targetY < minY) targetY = minY;
       if (targetY > windowHeight) targetY = windowHeight;
+
+      if (targetY !== modalY) hasUserAdjustedPosition = true;
 
       const timeDelta = currentTime - lastTouchTime;
       if (timeDelta > 0) {
@@ -476,7 +480,18 @@ export const createModal = (
       updateFooterTransform();
 
       animateModalToY(modalY, mobileModalAnimation, () => {
-        updateFooterTransform();
+        if (modalPositionCorrectionRaf !== null) {
+          cancelAnimationFrame(modalPositionCorrectionRaf);
+        }
+        modalPositionCorrectionRaf = requestAnimationFrame(() => {
+          modalPositionCorrectionRaf = null;
+          if (destroyed) return;
+          if (!hasUserAdjustedPosition) {
+            modalY = initialY();
+            setModalY(modalY);
+          }
+          updateFooterTransform();
+        });
       });
       animateFooter(
         startFooterOffset,
@@ -534,6 +549,7 @@ export const createModal = (
     if (!isMobileWidth() || !isTopModal(stackEntry)) return;
     cancelInertia();
 
+    const previousY = modalY;
     modalY = modalY - event.deltaY;
 
     const modalHeight = modal.offsetHeight;
@@ -542,6 +558,8 @@ export const createModal = (
 
     if (modalY < minY) modalY = minY;
     if (modalY > windowHeight) modalY = windowHeight;
+
+    if (modalY !== previousY) hasUserAdjustedPosition = true;
 
     setModalY(modalY);
 
@@ -601,7 +619,11 @@ export const createModal = (
     );
     modal.style.setProperty("--y", `${adjustedY}px`);
   };
-  const handleResize = () => {
+  const handleResize = (size?: { height: number; width: number }) => {
+    const modalHeightChanged =
+      size !== undefined && size.height !== lastObservedModalHeight;
+    if (size) lastObservedModalHeight = size.height;
+
     clampPosition();
 
     const currentMobile = isMobileWidth();
@@ -619,6 +641,13 @@ export const createModal = (
 
     if (alwaysOpenFully) {
       modalY = getMinY();
+      setModalY(modalY);
+      lastWindowHeight = windowHeight;
+      return;
+    }
+
+    if (modalHeightChanged && !hasUserAdjustedPosition) {
+      modalY = initialY();
       setModalY(modalY);
       lastWindowHeight = windowHeight;
       return;
@@ -646,7 +675,7 @@ export const createModal = (
     isMobileWidth() ? 200 : 0,
   );
 
-  window.addEventListener("resize", handleResize, {
+  window.addEventListener("resize", () => handleResize(), {
     signal: abortController.signal,
     passive: true,
     capture: false,
@@ -701,6 +730,10 @@ export const createModal = (
     if (initialPositionRaf !== null) {
       cancelAnimationFrame(initialPositionRaf);
       initialPositionRaf = null;
+    }
+    if (modalPositionCorrectionRaf !== null) {
+      cancelAnimationFrame(modalPositionCorrectionRaf);
+      modalPositionCorrectionRaf = null;
     }
     if (resizeObserverTimeout !== null) {
       clearTimeout(resizeObserverTimeout);
