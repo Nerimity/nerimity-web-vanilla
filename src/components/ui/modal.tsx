@@ -240,6 +240,29 @@ export const createModal = (
     );
   };
 
+  const animateModalPositionToY = (targetY: number) => {
+    if (modalPositionAnimation) {
+      const transform = getComputedStyle(modal).transform;
+      const currentY =
+        transform === "none" ? modalY : new DOMMatrixReadOnly(transform).m42;
+      modalPositionAnimation.cancel();
+      modalPositionAnimation = null;
+      setModalY(currentY);
+    }
+
+    const animation = animateModalToY(
+      targetY,
+      mobileModalAnimation,
+      () => {
+        if (modalPositionAnimation === animation) {
+          modalPositionAnimation = null;
+        }
+        updateFooterTransform();
+      },
+    );
+    modalPositionAnimation = animation;
+  };
+
   const mobileModalAnimation: KeyframeAnimationOptions = {
     duration: 200,
     fill: "forwards",
@@ -266,10 +289,9 @@ export const createModal = (
 
   let inertiaAnimation: Animation | null = null;
   let inertiaFooterAnimation: Animation | null = null;
+  let modalPositionAnimation: Animation | null = null;
   let destroyed = false;
   let initialPositionRaf: number | null = null;
-  let modalPositionCorrectionRaf: number | null = null;
-  let resizeObserverTimeout: number | null = null;
 
   const cancelInertia = () => {
     if (!inertiaAnimation) {
@@ -479,20 +501,14 @@ export const createModal = (
       const targetFooterOffset = getFooterTranslateY(modalY);
       updateFooterTransform();
 
-      animateModalToY(modalY, mobileModalAnimation, () => {
-        if (modalPositionCorrectionRaf !== null) {
-          cancelAnimationFrame(modalPositionCorrectionRaf);
-        }
-        modalPositionCorrectionRaf = requestAnimationFrame(() => {
-          modalPositionCorrectionRaf = null;
-          if (destroyed) return;
-          if (!hasUserAdjustedPosition) {
-            modalY = initialY();
-            setModalY(modalY);
-          }
+      modalPositionAnimation = animateModalToY(
+        modalY,
+        mobileModalAnimation,
+        () => {
+          modalPositionAnimation = null;
           updateFooterTransform();
-        });
-      });
+        },
+      );
       animateFooter(
         startFooterOffset,
         targetFooterOffset,
@@ -647,8 +663,7 @@ export const createModal = (
     }
 
     if (modalHeightChanged && !hasUserAdjustedPosition) {
-      modalY = initialY();
-      setModalY(modalY);
+      animateModalPositionToY(initialY());
       lastWindowHeight = windowHeight;
       return;
     }
@@ -666,14 +681,7 @@ export const createModal = (
 
     lastWindowHeight = windowHeight;
   };
-  resizeObserverTimeout = window.setTimeout(
-    () => {
-      resizeObserverTimeout = null;
-      if (destroyed) return;
-      createResizeObserver(modal, handleResize, { signal, defer: true });
-    },
-    isMobileWidth() ? 200 : 0,
-  );
+  createResizeObserver(modal, handleResize, { signal, defer: true });
 
   window.addEventListener("resize", () => handleResize(), {
     signal: abortController.signal,
@@ -730,14 +738,6 @@ export const createModal = (
     if (initialPositionRaf !== null) {
       cancelAnimationFrame(initialPositionRaf);
       initialPositionRaf = null;
-    }
-    if (modalPositionCorrectionRaf !== null) {
-      cancelAnimationFrame(modalPositionCorrectionRaf);
-      modalPositionCorrectionRaf = null;
-    }
-    if (resizeObserverTimeout !== null) {
-      clearTimeout(resizeObserverTimeout);
-      resizeObserverTimeout = null;
     }
     if (wheelTimeout) {
       clearTimeout(wheelTimeout);
