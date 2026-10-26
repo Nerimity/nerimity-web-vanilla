@@ -21,6 +21,9 @@ interface EmojiPickerOpts {
   abortController: AbortController;
   onPick?: (gif: KlipyItem) => void;
 }
+
+const platform = "Klipy";
+
 export const createGifPicker = (opts: EmojiPickerOpts) => {
   const abortController = new AbortController();
   const { signal } = abortController;
@@ -45,7 +48,7 @@ export const createGifPicker = (opts: EmojiPickerOpts) => {
           <Input
             id="gif-search"
             class={style.search}
-            placeholder={t`Search Klipy...`}
+            placeholder={t`Search ${platform}...`}
           />
         </div>
         {gifContainer}

@@ -35,7 +35,7 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/Notice.tsx:19
-#: src/components/drawer-right/RightDrawer.tsx:25
+#: src/components/drawer-right/RightDrawer.tsx:26
 msgid "Info"
 msgstr "Info"
 
@@ -207,13 +207,29 @@ msgstr "Friends"
 msgid "Notice"
 msgstr "Notice"
 
-#: src/components/drawer-right/RightDrawer.tsx:26
+#: src/components/drawer-right/RightDrawer.tsx:27
 msgid "Files"
 msgstr "Files"
 
-#: src/components/drawer-right/RightDrawer.tsx:27
+#: src/components/drawer-right/RightDrawer.tsx:28
 msgid "Search"
 msgstr "Search"
+
+#: src/components/drawer-right/SearchDrawer.tsx:46
+msgid "Search In #{name}"
+msgstr "Search In #{name}"
+
+#: src/components/drawer-right/SearchDrawer.tsx:51
+msgid "Newest"
+msgstr "Newest"
+
+#: src/components/drawer-right/SearchDrawer.tsx:52
+msgid "Oldest"
+msgstr "Oldest"
+
+#: src/components/drawer-right/SearchDrawer.tsx:65
+msgid "Search messages..."
+msgstr "Search messages..."
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:45
 #: src/store/userPresenceStore.ts:43
@@ -221,7 +237,7 @@ msgid "Offline"
 msgstr "Offline"
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:503
-#: src/components/message-pane/messageItem.tsx:158
+#: src/components/message-pane/messageItem.tsx:163
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
 
@@ -240,10 +256,6 @@ msgstr "Invalid Quote"
 #: src/components/markup/QuoteMessage.tsx:64
 msgid "Hidden Quote"
 msgstr "Hidden Quote"
-
-#: src/components/message-pane/HtmlEmbed.tsx:29
-msgid "Embed not supported by your browser."
-msgstr "Embed not supported by your browser."
 
 #: src/components/message-pane/InviteEmbed.tsx:107
 msgid "{count, plural, =0 {<0>No</0> Members} one {<1>{count}</1> Member} other {<2>{count}</2> Members}}"
@@ -270,7 +282,7 @@ msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
 #: src/components/message-pane/JumpToPresent.tsx:22
-#: src/components/message-pane/messageItem.tsx:114
+#: src/components/message-pane/messageItem.tsx:119
 msgid "New Messages"
 msgstr "New Messages"
 
@@ -306,13 +318,29 @@ msgstr "{username} bumped the server."
 msgid "{username} pinned a message."
 msgstr "{username} pinned a message."
 
-#: src/components/message-pane/chatbar.tsx:294
+#: src/components/message-pane/chatbar.tsx:322
 msgid "Message in {name}"
 msgstr "Message in {name}"
 
-#: src/components/message-pane/chatbar.tsx:300
+#: src/components/message-pane/chatbar.tsx:328
 msgid "Message {name}"
 msgstr "Message {name}"
+
+#: src/components/message-pane/chatbar.tsx:359
+msgid "You don't have permission to send messages in this channel."
+msgstr "You don't have permission to send messages in this channel."
+
+#: src/components/message-pane/chatbar.tsx:369
+msgid "Confirm your email to send messages."
+msgstr "Confirm your email to send messages."
+
+#: src/components/message-pane/chatbar.tsx:371
+msgid "Confirm Email"
+msgstr "Confirm Email"
+
+#: src/components/message-pane/chatbar.tsx:381
+msgid "You're muted until {timestamp}"
+msgstr "You're muted until {timestamp}"
 
 #: src/components/message-pane/deleteMessageModal.tsx:28
 msgid "Are you sure you want to delete this message?"
@@ -358,34 +386,34 @@ msgstr "Mentions everyone."
 msgid "Role"
 msgstr "Role"
 
-#: src/components/message-pane/messageItem.tsx:178
+#: src/components/message-pane/messageItem.tsx:183
 #: src/components/posts/PostItem.tsx:142
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
-#: src/components/message-pane/messageItem.tsx:193
+#: src/components/message-pane/messageItem.tsx:198
 msgid "Pinned Message"
 msgstr "Pinned Message"
 
-#: src/components/message-pane/messageItem.tsx:202
+#: src/components/message-pane/messageItem.tsx:207
 msgid "Webhook"
 msgstr "Webhook"
 
-#: src/components/message-pane/messageItem.tsx:204
+#: src/components/message-pane/messageItem.tsx:209
 #: src/components/posts/PostItem.tsx:149
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
 
-#: src/components/message-pane/messageItem.tsx:205
+#: src/components/message-pane/messageItem.tsx:210
 msgid "Owner"
 msgstr "Owner"
 
-#: src/components/message-pane/messageItem.tsx:213
+#: src/components/message-pane/messageItem.tsx:218
 msgid "Silent"
 msgstr "Silent"
 
-#: src/components/message-pane/messageItem.tsx:311
+#: src/components/message-pane/messageItem.tsx:316
 msgid "Message was deleted."
 msgstr "Message was deleted."
 
@@ -393,8 +421,8 @@ msgstr "Message was deleted."
 msgid "Mention"
 msgstr "Mention"
 
-#: src/components/message-pane/slowdownModeIndicator.tsx:22
-#: src/components/message-pane/slowdownModeIndicator.tsx:52
+#: src/components/message-pane/slowdownModeIndicator.tsx:18
+#: src/components/message-pane/slowdownModeIndicator.tsx:55
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:43
 msgid "Slow Mode"
 msgstr "Slow Mode"
@@ -888,27 +916,27 @@ msgstr "Vote"
 msgid "Option {count}"
 msgstr "Option {count}"
 
-#: src/components/posts/PostsArea.tsx:536
+#: src/components/posts/PostsArea.tsx:537
 msgid "Create a post..."
 msgstr "Create a post..."
 
-#: src/components/posts/PostsArea.tsx:637
+#: src/components/posts/PostsArea.tsx:638
 msgid "Respectful Posting"
 msgstr "Respectful Posting"
 
-#: src/components/posts/PostsArea.tsx:640
+#: src/components/posts/PostsArea.tsx:641
 msgid "Please be <0>respectful</0> when creating posts."
 msgstr "Please be <0>respectful</0> when creating posts."
 
-#: src/components/posts/PostsArea.tsx:645
+#: src/components/posts/PostsArea.tsx:646
 msgid "<0>Self-harm</0> content is not allowed."
 msgstr "<0>Self-harm</0> content is not allowed."
 
-#: src/components/posts/PostsArea.tsx:651
+#: src/components/posts/PostsArea.tsx:652
 msgid "Violating these rules may result in content removal or account suspension."
 msgstr "Violating these rules may result in content removal or account suspension."
 
-#: src/components/posts/PostsArea.tsx:663
+#: src/components/posts/PostsArea.tsx:664
 msgid "I Will Be Respectful"
 msgstr "I Will Be Respectful"
 
@@ -924,22 +952,6 @@ msgstr "Undo"
 msgid "Saving..."
 msgstr "Saving..."
 
-#: src/components/ui/EmojiPicker.tsx:171
-msgid "Search Emojis..."
-msgstr "Search Emojis..."
-
-#: src/components/ui/EmojiPicker.tsx:464
-msgid "Recent Emojis"
-msgstr "Recent Emojis"
-
-#: src/components/ui/ExpressionPicker.tsx:70
-msgid "GIFs"
-msgstr "GIFs"
-
-#: src/components/ui/ExpressionPicker.tsx:79
-msgid "Emojis"
-msgstr "Emojis"
-
 #: src/components/ui/ImageCropModal.tsx:69
 msgid "Crop Image"
 msgstr "Crop Image"
@@ -952,7 +964,31 @@ msgstr "Don't Crop"
 msgid "Crop"
 msgstr "Crop"
 
-#: src/components/ui/modal.tsx:795
+#: src/components/ui/expression-picker/EmojiPicker.tsx:171
+msgid "Search Emojis..."
+msgstr "Search Emojis..."
+
+#: src/components/ui/expression-picker/EmojiPicker.tsx:464
+msgid "Recent Emojis"
+msgstr "Recent Emojis"
+
+#: src/components/ui/expression-picker/ExpressionPicker.tsx:82
+msgid "GIFs"
+msgstr "GIFs"
+
+#: src/components/ui/expression-picker/ExpressionPicker.tsx:91
+msgid "Emojis"
+msgstr "Emojis"
+
+#: src/components/ui/expression-picker/GifPicker.tsx:51
+msgid "Search {platform}..."
+msgstr "Search {platform}..."
+
+#: src/components/ui/expression-picker/GifPicker.tsx:117
+msgid "Favorites"
+msgstr "Favorites"
+
+#: src/components/ui/modal.tsx:828
 msgid "Understood"
 msgstr "Understood"
 
@@ -1712,23 +1748,23 @@ msgstr "Destroy"
 msgid "Last seen {date}"
 msgstr "Last seen {date}"
 
-#: src/store/accountStore.ts:158
+#: src/store/accountStore.ts:159
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:162
+#: src/store/accountStore.ts:163
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:166
+#: src/store/accountStore.ts:167
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:169
+#: src/store/accountStore.ts:170
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:171
+#: src/store/accountStore.ts:172
 msgid "Connected!"
 msgstr "Connected!"
 
