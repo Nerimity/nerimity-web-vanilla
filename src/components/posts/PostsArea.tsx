@@ -530,6 +530,7 @@ const PostInputArea = (props: {
     <div class={style.inputAreaContainer} style={{ display: "none" }}>
       <Input
         showFormatBar
+        showFormatBarGif
         value={inputContent}
         showFormatBarEmoji
         type="textarea"

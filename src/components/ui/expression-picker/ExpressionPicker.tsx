@@ -1,12 +1,14 @@
 import { t } from "@lingui/core/macro";
 
-import { isMobileWidth } from "../../config";
-import { closestFromEvent } from "../../utils/dom";
-import type { CustomEmoji, EmojiData } from "../../utils/emojis";
-import { storeEmitter } from "../../utils/EventEmitter";
-import { portalElement } from "../../utils/portal";
-import { Button } from "./button";
+import { isMobileWidth } from "../../../config";
+import type { KlipyItem } from "../../../services/klipyService";
+import { closestFromEvent } from "../../../utils/dom";
+import type { CustomEmoji, EmojiData } from "../../../utils/emojis";
+import { storeEmitter } from "../../../utils/EventEmitter";
+import { portalElement } from "../../../utils/portal";
+import { Button } from "../button";
 import { createEmojiPicker } from "./EmojiPicker";
+import { createGifPicker } from "./GifPicker";
 
 import style from "./ExpressionPicker.module.css";
 
@@ -21,6 +23,7 @@ export interface ExpressionPickerProps {
     top?: number;
   };
   onEmojiPick: (emoji?: EmojiData, custom?: CustomEmoji) => void;
+  onGifPick?: (gif: KlipyItem) => void;
 }
 
 let currentInstance: {
@@ -57,33 +60,43 @@ export const _createExpressionPicker = (props: ExpressionPickerProps) => {
       });
       contentEl.replaceChildren(currentPage.el);
     }
+    if (currentTab === "GIFs") {
+      currentPage = createGifPicker({
+        abortController,
+        onPick: props.onGifPick,
+      });
+      contentEl.replaceChildren(currentPage.el);
+    }
   };
   updatePage();
 
-  const footer = (
-    <div class={style.footer}>
-      {tabs?.map((tab) =>
-        tab === "GIFs" ? (
-          <Button
-            class={style.button}
-            data-name="GIFs"
-            label={t`GIFs`}
-            icon="gif"
-            hoverBorder
-          />
-        ) : (
-          <Button
-            class={style.button}
-            data-selected
-            data-name="emojis"
-            label={t`Emojis`}
-            hoverBorder
-            icon="face"
-          />
-        ),
-      )}
-    </div>
-  ) as HTMLElement;
+  const footer =
+    tabs && tabs.length > 1
+      ? ((
+          <div class={style.footer}>
+            {tabs?.map((tab) =>
+              tab === "GIFs" ? (
+                <Button
+                  class={style.button}
+                  data-name="GIFs"
+                  label={t`GIFs`}
+                  icon="gif"
+                  hoverBorder
+                />
+              ) : (
+                <Button
+                  class={style.button}
+                  data-selected
+                  data-name="emojis"
+                  label={t`Emojis`}
+                  hoverBorder
+                  icon="face"
+                />
+              ),
+            )}
+          </div>
+        ) as HTMLElement)
+      : null;
 
   const el = (
     <div class={style.expressionPicker}>
@@ -185,7 +198,7 @@ export const _createExpressionPicker = (props: ExpressionPickerProps) => {
     abortController.signal,
   );
 
-  footer.addEventListener(
+  footer?.addEventListener(
     "click",
     (e) => {
       const button = closestFromEvent(e, "button");

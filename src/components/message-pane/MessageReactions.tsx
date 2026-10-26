@@ -19,7 +19,7 @@ import { portalElement } from "../../utils/portal";
 import { CdnIcon } from "../cdnIcon";
 import { Icon } from "../icon";
 import { Avatar } from "../ui/avatar";
-import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
+import { ExpressionPickerLazy } from "../ui/expression-picker/ExpressionPickerLazy";
 
 import style from "./MessageReactions.module.css";
 

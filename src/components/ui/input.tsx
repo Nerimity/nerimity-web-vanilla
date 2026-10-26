@@ -1,11 +1,12 @@
 import { Dynamic } from "../../dynamic";
+import type { KlipyItem } from "../../services/klipyService";
 import { closestFromEvent } from "../../utils/dom";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { createResizeObserver } from "../../utils/observer";
 import { createTimeModal } from "../modals/TimeModal";
 import { Button } from "./button";
 import { createColorPickerModalLazy } from "./createColorPickerLazy";
-import { ExpressionPickerLazy } from "./ExpressionPickerLazy";
+import { ExpressionPickerLazy } from "./expression-picker/ExpressionPickerLazy";
 
 import style from "./input.module.css";
 
@@ -23,6 +24,7 @@ interface InputProps {
   showFormatBar?: boolean;
   showFormatBarHtml?: boolean;
   showFormatBarEmoji?: boolean;
+  showFormatBarGif?: boolean;
   footer?: any;
   [key: string]: any;
 }
@@ -40,6 +42,7 @@ export const Input = (props: InputProps) => {
     showFormatBar,
     showFormatBarHtml,
     showFormatBarEmoji,
+    showFormatBarGif,
     footer,
     ...rest
   } = props;
@@ -50,6 +53,7 @@ export const Input = (props: InputProps) => {
         <FormatBar
           showFormatBarEmoji={showFormatBarEmoji}
           showFormatBarHtml={showFormatBarHtml}
+          showFormatBarGif={showFormatBarGif}
         />
       )}
 
@@ -158,6 +162,7 @@ const Formats = {
 const FormatBar = (opts: {
   showFormatBarHtml?: boolean;
   showFormatBarEmoji?: boolean;
+  showFormatBarGif?: boolean;
 }) => {
   return (
     <div class={style.formatBar}>
@@ -174,7 +179,12 @@ const FormatBar = (opts: {
         <Button data-action="html" icon="code_xml" hoverBorder />
       )}
       {opts.showFormatBarEmoji && (
-        <Button data-action="emoji" icon="face" hoverBorder />
+        <Button
+          data-show-gif={opts.showFormatBarGif}
+          data-action="emoji"
+          icon="face"
+          hoverBorder
+        />
       )}
     </div>
   );
@@ -237,6 +247,14 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
     opts.onTextUpdate(inputEl.value);
   };
 
+  const onGifPick = (gif: KlipyItem) => {
+    inputEl.focus();
+    const selStart = inputEl.selectionStart!;
+    const selEnd = inputEl.selectionEnd!;
+    inputEl.setRangeText(`${gif.url} `, selStart, selEnd, "end");
+    opts.onTextUpdate(inputEl.value);
+  };
+
   opts.inputContainer.addEventListener(
     "click",
     (event) => {
@@ -246,10 +264,12 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
       const action = actionEl.dataset.action as keyof typeof Formats | "emoji";
 
       if (action === "emoji") {
+        const showFormatBarGif = actionEl.dataset.showGif === "true";
         ExpressionPickerLazy({
           targetEl: actionEl,
-
+          tabs: showFormatBarGif ? ["GIFs", "emojis"] : ["emojis"],
           onEmojiPick,
+          onGifPick,
         });
         return;
       }

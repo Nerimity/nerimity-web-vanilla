@@ -1,3 +1,4 @@
+import type { KlipyItem } from "../services/klipyService";
 import type { DiscoverSort } from "../services/PostService";
 import type { Sound, SoundType } from "./sounds";
 
@@ -15,6 +16,7 @@ interface LocalStorageData {
     createdAt: number;
   }[];
   recentEmojis: RecentEmoji[];
+  favoriteGifs: KlipyItem[];
   desktopNotification: boolean;
   soundNotification: boolean;
   soundNotificationVolume: number;

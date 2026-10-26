@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { MAX_FILE_UPLOAD_SIZE } from "../../config";
 import { postTyping } from "../../services/channelService";
+import type { KlipyItem } from "../../services/klipyService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { inboxStore } from "../../store/inboxStore";
@@ -17,7 +18,7 @@ import { userAgent } from "../../utils/userAgent";
 import { createFileInput } from "../FileInput";
 import { Icon } from "../icon";
 import { Button } from "../ui/button";
-import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
+import { ExpressionPickerLazy } from "../ui/expression-picker/ExpressionPickerLazy";
 import {
   createTextareaHeightHandler,
   handleFormatBar,
@@ -146,12 +147,23 @@ export const createChatbar = () => {
     property.content = inputEl.value;
   };
 
+  const onGifPick = (gif: KlipyItem) => {
+    inputEl.focus();
+    inputEl.focus();
+    const selStart = inputEl.selectionStart;
+    const selEnd = inputEl.selectionEnd;
+    inputEl.setRangeText(`${gif.url} `, selStart, selEnd, "end");
+    const property = channelStore.currentChannelProperty()!;
+    property.content = inputEl.value;
+  };
+
   const handleEmojiClick = () => {
     ExpressionPickerLazy({
       targetEl: emojiPickerButton,
       anchorEl: inputContainerEl,
       offset: { top: -34 },
       onEmojiPick,
+      onGifPick,
     });
   };
 

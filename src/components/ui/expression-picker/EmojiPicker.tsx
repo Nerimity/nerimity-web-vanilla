@@ -2,9 +2,9 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 import morphdom from "morphdom";
 
-import { serverStore } from "../../store/serverStore";
-import { debounce } from "../../utils/debounce";
-import { closestFromEvent } from "../../utils/dom";
+import { serverStore } from "../../../store/serverStore";
+import { debounce } from "../../../utils/debounce";
+import { closestFromEvent } from "../../../utils/dom";
 import {
   addRecentEmoji,
   allCustomEmojis,
@@ -14,15 +14,15 @@ import {
   unicodeToTwemojiUrl,
   type CustomEmoji,
   type EmojiData,
-} from "../../utils/emojis";
-import { buildImageUrl } from "../../utils/image";
-import { getLocalItem } from "../../utils/localStorage";
-import { throttle } from "../../utils/throttle";
-import { userAgent } from "../../utils/userAgent";
-import { Icon } from "../icon";
-import { Avatar } from "./avatar";
-import { Input } from "./input";
-import { createVirtualList } from "./virtualList";
+} from "../../../utils/emojis";
+import { buildImageUrl } from "../../../utils/image";
+import { getLocalItem } from "../../../utils/localStorage";
+import { throttle } from "../../../utils/throttle";
+import { userAgent } from "../../../utils/userAgent";
+import { Icon } from "../../icon";
+import { Avatar } from "../avatar";
+import { Input } from "../input";
+import { createVirtualList } from "../virtualList";
 
 import style from "./EmojiPicker.module.css";
 

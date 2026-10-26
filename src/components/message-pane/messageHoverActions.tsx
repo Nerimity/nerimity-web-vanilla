@@ -9,7 +9,7 @@ import { friendlyTimestamp } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { Button } from "../ui/button";
-import { ExpressionPickerLazy } from "../ui/ExpressionPickerLazy";
+import { ExpressionPickerLazy } from "../ui/expression-picker/ExpressionPickerLazy";
 import { createDeleteMessageModal } from "./deleteMessageModal";
 import { canDeleteMessage } from "./utils";
 

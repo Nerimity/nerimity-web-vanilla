@@ -1,5 +1,7 @@
 import { SettingsBlock } from "../components/SettingsBlock";
+import { ExpressionPickerLazy } from "../components/ui/expression-picker/ExpressionPickerLazy";
 import { createModal, Modal } from "../components/ui/modal";
+import { isMobileWidth } from "../config";
 import { closestFromEvent } from "../utils/dom";
 import { Fonts } from "../utils/font";
 
@@ -8,7 +10,7 @@ import style from "./TestingPage.module.css";
 interface Test {
   name: string;
   description: string;
-  action: () => void;
+  action: (target: HTMLElement) => void;
 }
 
 const Tests: Test[] = [
@@ -17,12 +19,24 @@ const Tests: Test[] = [
     description: "Test each user font",
     action: () => FontTests(),
   },
+  {
+    name: "Expression picker",
+    description: "Test the emoji and GIF picker",
+    action: (target) => ExpressionPickerTests(target),
+  },
 ];
 
 const createTestingPage = () => {
   const ac = new AbortController();
   const { signal } = ac;
   const app = document.getElementById("app")!;
+  const updateResponsiveClasses = () => {
+    document.body.classList.toggle("mobileWidth", isMobileWidth());
+    document.body.classList.toggle("desktopWidth", !isMobileWidth());
+  };
+  updateResponsiveClasses();
+  window.addEventListener("resize", updateResponsiveClasses, { signal });
+
   const content = (
     <div class={style.container}>
       <SettingsBlock.Group class={style.group}>
@@ -44,7 +58,7 @@ const createTestingPage = () => {
       const blockClicked = closestFromEvent(e, "[data-index]");
       if (!blockClicked) return;
       const index = Number(blockClicked.dataset.index);
-      Tests[index]?.action();
+      Tests[index]?.action(blockClicked);
     },
     { signal },
   );
@@ -80,6 +94,13 @@ function FontTests() {
     ),
     ac,
   );
+}
+
+function ExpressionPickerTests(target: HTMLElement) {
+  ExpressionPickerLazy({
+    targetEl: target,
+    onEmojiPick: () => {},
+  });
 }
 
 export default createTestingPage;

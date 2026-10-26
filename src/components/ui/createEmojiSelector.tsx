@@ -1,6 +1,6 @@
 import { CdnIcon } from "../cdnIcon";
 import { Icon } from "../icon";
-import { ExpressionPickerLazy } from "./ExpressionPickerLazy";
+import { ExpressionPickerLazy } from "./expression-picker/ExpressionPickerLazy";
 
 import style from "./createEmojiSelector.module.css";
 

@@ -139,6 +139,7 @@ export default defineConfig({
         "keyboard_arrow_down",
         "check",
         "chevron_forward",
+        "chevron_backward",
         "reply",
         "wrap_text",
         "content_copy",
