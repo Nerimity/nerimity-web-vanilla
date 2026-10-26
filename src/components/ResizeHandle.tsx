@@ -146,6 +146,7 @@ export const createResizeHandler = (opts: {
     element,
     setVisible(visible: boolean) {
       element.classList.toggle(style.hidden!, !visible);
+      opts.onResize?.(Number(localStorage.getItem(opts.store)) || opts.initial);
     },
     get currentWidth() {
       return container?.offsetWidth ?? 0;
