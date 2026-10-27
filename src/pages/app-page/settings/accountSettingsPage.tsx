@@ -78,6 +78,7 @@ const accountSettingsPage = (context: SettingsContext) => {
           class={style.confirmEmailBlock}
           clickable
           data-action="confirm-email"
+          alert
         >
           <SettingsBlock.Icon name="warning" alert />
           <SettingsBlock.Details
@@ -207,7 +208,7 @@ const accountSettingsPage = (context: SettingsContext) => {
 
       <div class={style.separator}></div>
 
-      <SettingsBlock.Root data-action="delete-account" clickable>
+      <SettingsBlock.Root alert data-action="delete-account" clickable>
         <SettingsBlock.Icon name="delete" alert />
         <SettingsBlock.Details
           title={strings.deleteAccount}

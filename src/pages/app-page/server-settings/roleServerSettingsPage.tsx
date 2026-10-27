@@ -170,7 +170,7 @@ const roleServerSettingsPage = (context: ServerSettingsContext) => {
 
       <div class={style.separator}></div>
 
-      <SettingsBlock.Root data-action="delete-role" clickable>
+      <SettingsBlock.Root alert data-action="delete-role" clickable>
         <SettingsBlock.Icon name="delete" alert />
         <SettingsBlock.Details
           title={strings.deleteRole}

@@ -261,7 +261,7 @@ const GeneralPage = (props: { signal: AbortSignal }) => {
 
       <div class={style.separator}></div>
 
-      <SettingsBlock.Root data-action="delete-channel" clickable>
+      <SettingsBlock.Root alert data-action="delete-channel" clickable>
         <SettingsBlock.Icon name="delete" alert />
         <SettingsBlock.Details
           title={strings.deleteChannel}
@@ -663,7 +663,7 @@ const WebhookPage = (props: { signal: AbortSignal; webhookId: string }) => {
 
         <div class={style.separator}></div>
 
-        <SettingsBlock.Root data-action="delete-webhook" clickable>
+        <SettingsBlock.Root alert data-action="delete-webhook" clickable>
           <SettingsBlock.Icon name="delete" alert />
           <SettingsBlock.Details
             title={strings.deleteWebhook}

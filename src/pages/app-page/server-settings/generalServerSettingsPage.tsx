@@ -167,7 +167,7 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
 
       <div class={style.separator}></div>
 
-      <SettingsBlock.Root data-action="delete-server" clickable>
+      <SettingsBlock.Root alert data-action="delete-server" clickable>
         <SettingsBlock.Icon name="delete" alert />
         <SettingsBlock.Details
           title={strings.deleteServer}

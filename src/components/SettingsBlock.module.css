@@ -18,7 +18,9 @@
 }
 
 .settingsBlock {
+  position: relative;
   display: flex;
+  overflow: hidden;
   align-items: center;
   min-height: 62px;
   padding: 12px;
@@ -28,8 +30,35 @@
   background-color: var(--gray-850);
   text-decoration: none;
   gap: 12px;
+
   &:hover {
     text-decoration: none;
+  }
+
+  &[data-alert] {
+    &:before {
+      position: absolute;
+
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--alert-color) 8%, var(--gray-850)),
+        var(--gray-850)
+      );
+      content: "";
+    }
+    &:hover {
+      &:before {
+        background: linear-gradient(
+          100deg,
+          color-mix(in srgb, var(--alert-color) 8%, var(--gray-800)),
+          var(--gray-800)
+        );
+      }
+    }
   }
 
   &.expandable {
@@ -48,6 +77,21 @@
     &:hover {
       background-color: var(--gray-800);
     }
+
+    &[data-alert] {
+      &:hover {
+        &:before {
+          background: linear-gradient(
+            100deg,
+            color-mix(in srgb, var(--alert-color) 8%, var(--gray-800)),
+            var(--gray-800)
+          );
+        }
+      }
+    }
+  }
+  > * {
+    z-index: 1111;
   }
 
   .external {
