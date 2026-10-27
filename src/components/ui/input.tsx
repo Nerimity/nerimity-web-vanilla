@@ -16,7 +16,12 @@ interface InputProps {
   suffix?: any;
   label?: any;
   type?: "text" | "number" | "password" | "textarea";
-  autocomplete?: "current-password" | "new-password" | "email";
+  autocomplete?:
+    | "current-password"
+    | "one-time-code"
+    | "new-password"
+    | "email"
+    | "off";
   placeholder?: string;
   id?: string;
   value?: string;

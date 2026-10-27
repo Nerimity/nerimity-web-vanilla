@@ -42,7 +42,7 @@ export class User {
     this.lastOnlineStatus = data.lastOnlineStatus;
   }
 
-  update(updated: Partial<RawUser>) {
+  update<T extends RawUser>(updated: Partial<RawUser | T>) {
     if (this.id === accountStore.currentUser?.id) {
       accountStore.setCurrentUser({
         ...accountStore.currentUser!,

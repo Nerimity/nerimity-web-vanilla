@@ -1,5 +1,5 @@
 export function closestFromEvent<T extends Element = HTMLDivElement>(
-  event: MouseEvent | TouchEvent,
+  event: MouseEvent | TouchEvent | FocusEvent,
   selector: string,
 ): T | null {
   const target = event.target;

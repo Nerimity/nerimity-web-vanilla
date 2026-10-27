@@ -415,6 +415,7 @@ export const createChatbar = () => {
     },
     signal,
   );
+  updateChatbarVisibility();
 
   storeEmitter.on(
     "navigate:channelId",

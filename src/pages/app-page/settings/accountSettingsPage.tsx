@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { createFileInput } from "../../../components/FileInput";
+import { createConfirmEmailModal } from "../../../components/modals/ConfirmEmailModal";
 import { createConfirmPasswordModal } from "../../../components/modals/ConfirmPasswordModal";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
@@ -12,7 +13,7 @@ import { alert } from "../../../components/ui/modal";
 import { MAX_IMAGE_UPLOAD_SIZE } from "../../../config";
 import { nerimityCDNUploadRequest } from "../../../services/cdnService";
 import { postResetPassword, updateUser } from "../../../services/userService";
-import { accountStore } from "../../../store/accountStore";
+import { accountStore, type CurrentUser } from "../../../store/accountStore";
 import { userStore } from "../../../store/userStore";
 import { createUpdatedHandler } from "../../../utils/createUpdatedHandler";
 import { closestFromEvent } from "../../../utils/dom";
@@ -66,29 +67,55 @@ const accountSettingsPage = (context: SettingsContext) => {
     if (!user?.email) return "";
     const emailSplit = user.email.split("@");
 
-    const asterisks = emailSplit?.[0]
-      ?.split("")
-      .map(() => "*")
-      .join("");
-    return `${asterisks}@${emailSplit?.[1]}`;
+    return `***@${emailSplit?.[1]}`;
   };
-
   let emailRevealed = false;
-  let el = (
-    <div class={style.page}>
-      <SettingsBlock.Group>
-        {/* Email */}
-        <SettingsBlock.Root>
-          <SettingsBlock.Icon name="email" />
-          <SettingsBlock.Details title={strings.email} />
-          <Input
-            id="emailInput"
-            class="emailInput"
-            value={hiddenEmail()}
-            suffix={<Button class={style.editEmailButton} icon="edit" />}
+
+  const EmailGroup = () => (
+    <SettingsBlock.Group>
+      {!accountStore.currentUser?.emailConfirmed && (
+        <SettingsBlock.Root
+          class={style.confirmEmailBlock}
+          clickable
+          data-action="confirm-email"
+        >
+          <SettingsBlock.Icon name="warning" alert />
+          <SettingsBlock.Details
+            title={t`Confirm your email`}
+            description={t`We'll send you a link to verify your address.`}
           />
         </SettingsBlock.Root>
+      )}
+      {/* Email */}
+      <SettingsBlock.Root>
+        <SettingsBlock.Icon name="email" />
+        <SettingsBlock.Details title={strings.email} />
+        <Input
+          id="emailInput"
+          class="emailInput"
+          value={
+            emailRevealed
+              ? (accountStore.currentUser?.email ?? "")
+              : hiddenEmail()
+          }
+          suffix={<Button class={style.editEmailButton} icon="edit" />}
+        />
+      </SettingsBlock.Root>
+    </SettingsBlock.Group>
+  );
 
+  const emailContainer = (<div></div>) as HTMLDivElement;
+
+  const rerenderEmailContainer = () => {
+    emailContainer.replaceChildren(<EmailGroup />);
+  };
+
+  rerenderEmailContainer();
+
+  let el = (
+    <div class={style.page}>
+      {emailContainer}
+      <SettingsBlock.Group>
         {/* Username */}
         <SettingsBlock.Root>
           <SettingsBlock.Icon name="face" />
@@ -191,22 +218,53 @@ const accountSettingsPage = (context: SettingsContext) => {
     </div>
   ) as HTMLDivElement;
 
-  let emailInput = el.querySelector(".emailInput") as HTMLDivElement;
+  let getEmailInput = () => el.querySelector(".emailInput") as HTMLDivElement;
 
   const revealEmail = () => {
     if (emailRevealed) return;
     emailRevealed = true;
-    emailInput.querySelector("button")?.remove();
-    emailInput.querySelector("input")!.value =
+    getEmailInput().querySelector("button")?.remove();
+    getEmailInput().querySelector("input")!.value =
       accountStore.currentUser?.email || "";
   };
 
-  emailInput?.addEventListener("click", revealEmail, { signal });
-  emailInput
-    .querySelector("input")
-    ?.addEventListener("focus", revealEmail, { signal });
+  emailContainer.addEventListener(
+    "click",
+    (event) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest(".emailInput")
+      ) {
+        revealEmail();
+      }
+    },
+    { signal },
+  );
+  emailContainer.addEventListener(
+    "focusin",
+    (event) => {
+      if (
+        event.target instanceof HTMLInputElement &&
+        event.target.closest(".emailInput")
+      ) {
+        revealEmail();
+      }
+    },
+    { signal },
+  );
 
-  updateHandler.handleInput(emailInput, "email");
+  emailContainer.addEventListener(
+    "input",
+    (event) => {
+      if (
+        event.target instanceof HTMLInputElement &&
+        event.target.closest(".emailInput")
+      ) {
+        updateHandler.changeValue("email", event.target.value);
+      }
+    },
+    { signal },
+  );
   updateHandler.handleInput(el.querySelector(".usernameInput")!, "username");
   updateHandler.handleInput(el.querySelector(`.${style.tagInput}`)!, "tag");
 
@@ -235,7 +293,12 @@ const accountSettingsPage = (context: SettingsContext) => {
     actions.setVisibility(hasChanges);
   });
 
-  actions.handleUndoClick(updateHandler.undo);
+  actions.handleUndoClick(() => {
+    updateHandler.undo();
+    getEmailInput().querySelector("input")!.value = emailRevealed
+      ? (accountStore.currentUser?.email ?? "")
+      : hiddenEmail();
+  });
 
   const handleSave = async (
     done: (msg?: string) => void,
@@ -286,9 +349,13 @@ const accountSettingsPage = (context: SettingsContext) => {
       return done(error.message);
     }
 
-    userStore.users.get(userId)?.update(res.user);
+    userStore.users.get(userId)?.update({
+      ...res.user,
+      ...(updates.email ? { email: updates.email, emailConfirmed: false } : {}),
+    });
     done();
     updateHandler.undo();
+    rerenderEmailContainer();
   };
 
   actions.handleSaveClick(async (done) => {
@@ -358,6 +425,20 @@ const accountSettingsPage = (context: SettingsContext) => {
       const button = closestFromEvent(event, "[data-action]");
       if (!button) return;
       const action = button.dataset.action;
+
+      if (action === "confirm-email") {
+        createConfirmEmailModal({
+          onConfirm() {
+            userStore.users
+              .get(accountStore.currentUser!.id)
+              ?.update<CurrentUser>({
+                emailConfirmed: true,
+              });
+            rerenderEmailContainer();
+          },
+        });
+      }
+
       if (action === "browseAvatar") {
         fileInputType = "avatar";
         fileInput.trigger();
@@ -389,8 +470,6 @@ const accountSettingsPage = (context: SettingsContext) => {
   const destroy = () => {
     ac.abort();
     el.remove();
-    emailInput.remove();
-    (emailInput as any) = null;
     (el as any) = null;
   };
 

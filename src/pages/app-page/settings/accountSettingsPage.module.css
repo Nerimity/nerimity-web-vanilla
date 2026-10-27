@@ -28,3 +28,34 @@
   margin-bottom: 16px;
   background-color: var(--gray-700);
 }
+
+.confirmEmailBlock {
+  position: relative;
+  overflow: hidden;
+  &:before {
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--alert-color) 8%, var(--gray-850)),
+      var(--gray-850)
+    );
+    content: "";
+  }
+  &:hover {
+    &:before {
+      background: linear-gradient(
+        100deg,
+        color-mix(in srgb, var(--alert-color) 8%, var(--gray-800)),
+        var(--gray-800)
+      );
+    }
+  }
+  > * {
+    z-index: 1111;
+  }
+}

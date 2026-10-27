@@ -1,0 +1,23 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.message {
+  color: var(--gray-300);
+}
+
+.codeContainer {
+  display: flex;
+  gap: 4px;
+  .codeInput {
+    flex: 1;
+
+    width: initial;
+    input {
+      text-align: center;
+      font-size: 30px;
+    }
+  }
+}

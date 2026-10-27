@@ -228,3 +228,18 @@ export const unblockUser = (userId: string) => {
     useToken: true,
   });
 };
+
+export const sendEmailConfirmCode = () => {
+  return request("/users/emails/verify/send-code", {
+    method: "POST",
+    useToken: true,
+  });
+};
+
+export const verifyEmailConfirmCode = (code: string) => {
+  return request<{ status: boolean }>("/users/emails/verify", {
+    params: { code },
+    method: "POST",
+    useToken: true,
+  });
+};
