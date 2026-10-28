@@ -62,6 +62,7 @@ export interface RawPost {
   _count: { likedBy: number; comments: number; reposts: number };
   views: number;
   announcement?: any;
+  pinned?: boolean;
 
   poll?: RawPostPoll;
 

@@ -32,7 +32,7 @@ import { handlePostPollEmbed } from "./PostPollEmbed";
 
 import style from "./PostItem.module.css";
 
-const postCache = new Map<string, RawPost>();
+export const postCache = new Map<string, RawPost>();
 const POST_CACHE_LIMIT = 100;
 
 const viewsEnabledAt = new Date();
@@ -60,7 +60,7 @@ export const cacheOrFetchPost = async (postId: string) => {
   return post;
 };
 
-const postElToPost = new WeakMap<HTMLDivElement, RawPost>();
+export const postElToPost = new WeakMap<HTMLDivElement, RawPost>();
 
 export const PostItem = (props: {
   postId?: string;
@@ -72,8 +72,8 @@ export const PostItem = (props: {
   hideNewDayMarker?: boolean;
   container: HTMLDivElement;
   showFullDate?: boolean;
-  pinned?: boolean;
   repost?: RawPost;
+  pinned?: boolean;
 }) => {
   const post = props.post || postCache.get(props.postId!);
 
@@ -99,7 +99,7 @@ export const PostItem = (props: {
   const font = getFont(creator.profile?.font);
 
   const el = (
-    <div class="postItemOuter" data-id={post.id}>
+    <div class="postItemOuter" data-post-id={post.id}>
       {newDay && <Marker label={dateMarkerLabel(post.createdAt, true)} />}
 
       <div
@@ -309,6 +309,12 @@ const PostInfo = (props: { post: RawPost }) => {
           {views}
         </div>
       )}
+      <Button
+        class={style.contextButton}
+        data-action="context"
+        icon="more_horiz"
+        hoverBorder
+      />
     </div>
   );
 };
@@ -412,7 +418,7 @@ export const createPostHandler = (opts: {
     async (e) => {
       if (accountStore.currentUser?.id === undefined) return;
 
-      const postEl = closestFromEvent(e, `.postItemOuter[data-id]`);
+      const postEl = closestFromEvent(e, `.postItemOuter[data-post-id]`);
       if (!postEl) return;
       const post = postElToPost.get(postEl);
       if (!post) return;
@@ -471,6 +477,9 @@ export const createPostHandler = (opts: {
         rerenderPostInfo(postEl);
         return;
       }
+      if (action === "context") {
+        return;
+      }
 
       if (closestFromEvent(e, "a")) return;
       if (closestFromEvent(e, "img")) return;
@@ -497,7 +506,7 @@ const createAttachmentProgressHandler = (
     "attachment:upload_progress",
     (event) => {
       const uploadFileContainer = el.querySelector(
-        `[data-id="${event.postId}"] .progressContainer`,
+        `[data-post-id="${event.postId}"] .progressContainer`,
       );
 
       if (uploadFileContainer) {
@@ -521,7 +530,7 @@ const createAttachmentProgressHandler = (
       }
 
       const uploadImageContainer = el.querySelector(
-        `[data-id="${event.postId}"] .uploadProgressContainer`,
+        `[data-post-id="${event.postId}"] .uploadProgressContainer`,
       );
       if (!uploadImageContainer) return;
       uploadImageContainer.replaceChildren(

@@ -1,4 +1,5 @@
 import { createAppHeader } from "../../components/appHeader";
+import { createPostContextMenuHandler } from "../../components/context-menus/PostContextMenu";
 import { createServerContextMenuHandler } from "../../components/context-menus/ServerContextMenu";
 import { createUserContextMenuHandler } from "../../components/context-menus/UserContextMenu";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
@@ -93,6 +94,15 @@ const createAppPage = () => {
 
   createUserContextMenuHandler({ signal });
   createServerContextMenuHandler({ signal });
+  createPostContextMenuHandler({ signal });
+
+  createPostContextMenuHandler({
+    mode: "click",
+    idSelector: `.postItemOuter`,
+    signal: new AbortController().signal,
+    selector: `.postItem [data-action="context"]`,
+  });
+
   const app = document.getElementById("app")!;
   const drawer = Drawer();
   appHeader = createAppHeader();

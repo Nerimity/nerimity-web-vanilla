@@ -52,9 +52,13 @@ type ContextMenuHandlerConfig<TData> = {
   el?: HTMLElement;
   signal: AbortSignal;
   selector: string;
+  idSelector?: string;
   attr: string;
   shouldSkip?: (target: HTMLElement) => boolean;
-  resolveData: (id: string) => TData | null | undefined;
+  resolveData: (
+    id: string,
+    element: HTMLDivElement,
+  ) => TData | null | undefined;
   renderMenu: (props: {
     id: string;
     data: TData;
@@ -63,7 +67,12 @@ type ContextMenuHandlerConfig<TData> = {
   }) => JSX.Element;
   onAction: (
     actionId: string,
-    ctx: { id: string; data: TData; event: MouseEvent },
+    ctx: {
+      id: string;
+      data: TData;
+      event: MouseEvent;
+      element: HTMLDivElement;
+    },
   ) => void;
   mode?: "contextmenu" | "click";
 };
@@ -93,13 +102,21 @@ const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
       const matchEl = target.closest(config.selector) as HTMLElement | null;
       if (!matchEl) return;
 
-      const id = matchEl.dataset?.[config.attr];
+      let id = matchEl.dataset?.[config.attr];
+
+      if (config.idSelector) {
+        const idEl = target.closest(config.idSelector) as HTMLElement | null;
+        if (idEl) {
+          id = idEl.dataset?.[config.attr] ?? id;
+        }
+      }
+
       if (!id) return;
 
       event.preventDefault();
       event.stopPropagation();
 
-      const data = config.resolveData(id);
+      const data = config.resolveData(id, matchEl as HTMLDivElement);
       if (data == null) return;
 
       abortController?.abort();
@@ -118,7 +135,12 @@ const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
           }
 
           if (!actionId) return;
-          config.onAction(actionId, { id, data, event: e });
+          config.onAction(actionId, {
+            id,
+            data,
+            event: e,
+            element: matchEl as HTMLDivElement,
+          });
         },
         { signal: currentSignal, once: true },
       );

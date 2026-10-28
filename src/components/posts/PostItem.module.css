@@ -41,6 +41,12 @@
     background-color: var(--gray-850);
   }
 
+  &:hover {
+    .contextButton {
+      display: flex;
+    }
+  }
+
   &:global(.sending) {
     opacity: 0.6;
   }
@@ -51,6 +57,12 @@
   }
   &:global(.editing) {
     background-color: var(--gray-850);
+  }
+
+  &[data-disable-hover="true"] {
+    .contextButton {
+      display: flex;
+    }
   }
 
   &[data-status="creating"] {
@@ -195,6 +207,13 @@
       color: var(--gray-400);
       font-size: 16px;
     }
+  }
+
+  .contextButton {
+    display: none;
+    padding: 4px;
+    margin-left: auto;
+    border-radius: var(--radius-max);
   }
 }
 
