@@ -264,3 +264,14 @@ export const unpinPost = async (postId: string) => {
   });
   return data;
 };
+
+export const editPost = async (postId: string, content: string) => {
+  const data = await request<RawPost>(`/posts/${postId}`, {
+    method: "PATCH",
+    useToken: true,
+    body: {
+      content,
+    },
+  });
+  return data;
+};

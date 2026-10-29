@@ -75,7 +75,7 @@ type PostsAreaProps = {
 );
 
 export const PostsArea = (props: PostsAreaProps) => {
-  const pinnedPosts = props.type === "profile" ? (props.pinnedPosts ?? []) : [];
+  let pinnedPosts = props.type === "profile" ? (props.pinnedPosts ?? []) : [];
   const pinnedPostIds = new Set(pinnedPosts.map((post) => post.id));
 
   let posts: RawPost[] | null = null;
@@ -264,6 +264,18 @@ export const PostsArea = (props: PostsAreaProps) => {
       if (e) {
         rerender();
       }
+    },
+    props.signal,
+  );
+
+  storeEmitter.on(
+    "post:updated",
+    (post) => {
+      pinnedPosts = pinnedPosts.map((p) => (p.id === post.id ? post : p));
+      if (posts) {
+        posts = posts.map((p) => (p.id === post.id ? post : p));
+      }
+      rerender();
     },
     props.signal,
   );

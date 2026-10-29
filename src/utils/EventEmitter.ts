@@ -15,6 +15,7 @@ import type { User } from "../store/userStore";
 import type {
   RawBotCommand,
   RawMessage,
+  RawPost,
   RawServer,
   RawServerMember,
 } from "../Types";
@@ -78,6 +79,7 @@ type StoreEvents = {
   recent_server_update: { serverId: string; channelId: string };
   "message_property:select_bot_command": RawBotCommand;
   "friend:request": { friend: Friend };
+  "post:updated": RawPost;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

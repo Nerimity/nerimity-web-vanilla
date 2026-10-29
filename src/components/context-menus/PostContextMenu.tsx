@@ -6,6 +6,7 @@ import type { RawPost } from "../../Types";
 import { createDeletePostModal } from "../posts/deletePostModal";
 import { postCache } from "../posts/PostItem";
 import { ContextMenu } from "../ui/ContextMenu";
+import { createEditPostModal } from "../ui/EditPostModal";
 import { alert } from "../ui/modal";
 
 export const createPostContextMenuHandler = (opts: {
@@ -30,6 +31,10 @@ export const createPostContextMenuHandler = (opts: {
       const post = data.post;
       if (!post) return;
       switch (actionId) {
+        case "edit": {
+          createEditPostModal({ post });
+          break;
+        }
         case "delete": {
           createDeletePostModal({ post });
           break;

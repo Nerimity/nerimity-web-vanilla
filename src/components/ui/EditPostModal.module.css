@@ -1,0 +1,14 @@
+.body {
+  display: flex;
+  flex-direction: column;
+
+  textarea {
+    height: 150px;
+  }
+}
+
+.error {
+  margin-top: 4px;
+  color: var(--alert-color);
+  font-size: 12px;
+}

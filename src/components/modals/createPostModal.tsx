@@ -130,7 +130,7 @@ export const createPostModal = (props: { postId: string }) => {
     signal: signal,
   });
 
-  const previousPosts = [] as RawPost[];
+  let previousPosts = [] as RawPost[];
 
   const fetchAndDisplayPost = async (postId: string, isRoot = false) => {
     const post = await cacheOrFetchPost(postId);
@@ -156,6 +156,14 @@ export const createPostModal = (props: { postId: string }) => {
     "ws:authStateUpdate",
     (s) => {
       if (!s) return;
+      rerenderPreviousPosts();
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "post:updated",
+    (post) => {
+      previousPosts = previousPosts.map((p) => (p.id === post.id ? post : p));
       rerenderPreviousPosts();
     },
     signal,
