@@ -1,9 +1,12 @@
 import { t } from "@lingui/core/macro";
 
+import { pinPost, unpinPost } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
+import { createDeletePostModal } from "../posts/deletePostModal";
 import { postCache } from "../posts/PostItem";
 import { ContextMenu } from "../ui/ContextMenu";
+import { alert } from "../ui/modal";
 
 export const createPostContextMenuHandler = (opts: {
   selector?: string;
@@ -25,8 +28,28 @@ export const createPostContextMenuHandler = (opts: {
     ),
     onAction: async (actionId, { id: postId, data }) => {
       const post = data.post;
-
+      if (!post) return;
       switch (actionId) {
+        case "delete": {
+          createDeletePostModal({ post });
+          break;
+        }
+        case "unpin": {
+          const [, err] = await unpinPost(postId);
+          if (err) {
+            return alert({ message: err.message });
+          }
+          post.pinned = false;
+          break;
+        }
+        case "pin": {
+          const [, err] = await pinPost(postId);
+          if (err) {
+            return alert({ message: err.message });
+          }
+          post.pinned = true;
+          break;
+        }
         case "copy_object":
           console.log("Copied Object to clipboard", post);
           navigator.clipboard.writeText(JSON.stringify(post));
@@ -75,9 +98,9 @@ const PostContextMenu = (props: { x: string; y: string; post: RawPost }) => {
             <ContextMenu.Icon name="delete" />
             <ContextMenu.Label>{t`Delete Post`}</ContextMenu.Label>
           </ContextMenu.Item>
+          <ContextMenu.Separator />
         </>
       )}
-      <ContextMenu.Separator />
       <ContextMenu.Item id="copy_content">
         <ContextMenu.Icon name="content_copy" />
         <ContextMenu.Label>{t`Copy Content`}</ContextMenu.Label>

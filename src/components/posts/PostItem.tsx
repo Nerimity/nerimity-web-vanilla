@@ -62,6 +62,12 @@ export const cacheOrFetchPost = async (postId: string) => {
 
 export const postElToPost = new WeakMap<HTMLDivElement, RawPost>();
 
+export const PostNotFound = () => (
+  <div class={style.invalidPostContainer}>
+    <div>{t`Deleted or invalid post.`}</div>
+  </div>
+);
+
 export const PostItem = (props: {
   postId?: string;
   post?: RawPost | null;
@@ -81,7 +87,7 @@ export const PostItem = (props: {
     return <PostItem {...props} post={post.repost} repost={post} />;
   }
 
-  if (!post) return <div>Post not found</div>;
+  if (!post || post.deleted) return <PostNotFound />;
 
   const link = `/p/${post.id}`;
 

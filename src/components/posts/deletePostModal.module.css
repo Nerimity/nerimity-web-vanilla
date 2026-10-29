@@ -1,0 +1,10 @@
+.deleteBody {
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  gap: 8px;
+  :global .postItem {
+    margin: 0;
+    background: var(--gray-900);
+  }
+}

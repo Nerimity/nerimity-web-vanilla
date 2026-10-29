@@ -249,3 +249,18 @@ export const createPost = async (opts: {
     body,
   });
 };
+
+export const pinPost = async (postId: string) => {
+  const data = await request<RawPost>(`/posts/${postId}/pin`, {
+    method: "POST",
+    useToken: true,
+  });
+  return data;
+};
+export const unpinPost = async (postId: string) => {
+  const data = await request<RawPost>(`/posts/${postId}/pin`, {
+    method: "DELETE",
+    useToken: true,
+  });
+  return data;
+};
