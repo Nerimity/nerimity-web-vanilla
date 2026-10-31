@@ -9,6 +9,7 @@ import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { Message } from "../../store/messageStore";
 import { serverStore } from "../../store/serverStore";
+import type { User } from "../../store/userStore";
 import type { RawMessage } from "../../Types";
 import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
@@ -16,8 +17,9 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { CdnIcon } from "../cdnIcon";
 import { Icon } from "../icon";
 import { MessageItem } from "../message-pane/messageItem";
+import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { handleInputUserSuggestions, Input } from "../ui/input";
 import { Link } from "../ui/link";
 import { MessageSkeleton } from "../ui/skeleton";
 
@@ -33,6 +35,7 @@ export const createSearchDrawer = () => {
 
   let searchInCurrentChannel = true;
   let newestFirst = true;
+  let filterUsers = [] as User[];
 
   const Filters = () => {
     const currentChannel = channelStore.currentChannel();
@@ -50,6 +53,18 @@ export const createSearchDrawer = () => {
 
         <Button data-action="newest" label={t`Newest`} primary={newestFirst} />
         <Button data-action="oldest" label={t`Oldest`} primary={!newestFirst} />
+        <>
+          {filterUsers.map((user) => (
+            <Button
+              data-filter-user-id={user.id}
+              primary
+              class={style.filterUserButton}
+            >
+              <Avatar size={14} user={user} />
+              {user.username}
+            </Button>
+          ))}
+        </>
       </div>
     );
   };
@@ -90,6 +105,13 @@ export const createSearchDrawer = () => {
   el.addEventListener(
     "click",
     (event) => {
+      const filterUserButton = closestFromEvent(event, `[data-filter-user-id]`);
+      if (filterUserButton) {
+        const userId = filterUserButton.dataset.filterUserId;
+        filterUsers = filterUsers.filter((u) => u.id !== userId);
+        rerenderFilters();
+        loadMessages();
+      }
       if (
         closestFromEvent(event, `[data-action="search-in-current-channel"]`)
       ) {
@@ -122,7 +144,11 @@ export const createSearchDrawer = () => {
 
     let messages: RawMessage[] | null = null;
 
-    const opts: SearchOpts = { query, order: newestFirst ? "desc" : "asc" };
+    const opts: SearchOpts = {
+      query,
+      order: newestFirst ? "desc" : "asc",
+      userIds: filterUsers.length ? filterUsers.map((u) => u.id) : undefined,
+    };
 
     if (!serverId || searchInCurrentChannel) {
       const channelId = channelStore.currentChannel()?.id!;
@@ -195,6 +221,18 @@ export const createSearchDrawer = () => {
   loadMessages();
 
   storeEmitter.on("ws:authStateUpdate", loadMessages, signal);
+
+  handleInputUserSuggestions({
+    signal,
+    inputContainer: el,
+    mode: "remove",
+    onSelect(user) {
+      if (filterUsers.find((u) => u.id === user.id)) return;
+      filterUsers.push(user as User);
+      rerenderFilters();
+      loadMessages();
+    },
+  });
 
   const destroy = () => {
     ac.abort();

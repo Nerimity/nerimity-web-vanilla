@@ -8,7 +8,7 @@ import {
 } from "../../store/serverMemberStore";
 import { serverRoleStore } from "../../store/serverRoleStore";
 import { Server, serverStore } from "../../store/serverStore";
-import { userStore } from "../../store/userStore";
+import { User, userStore } from "../../store/userStore";
 import { MessageType, type RawMessage } from "../../Types";
 import { customShortcodeToIds, shortcodeToUnicode } from "../../utils/emojis";
 import { randomKaomoji } from "../../utils/kaomoji";
@@ -126,6 +126,7 @@ const roleMentionRegex = /@([^@]+)@/gu;
 export const formatMessage = (opts: {
   content: string;
   isEditing?: boolean;
+  postMentions?: User[];
 }) => {
   const { content, isEditing } = opts;
 
@@ -136,6 +137,10 @@ export const formatMessage = (opts: {
   const someoneMentioned = !isEditing && content.includes("@someone");
 
   let result = replaceEmojis(content);
+
+  if (opts.postMentions) {
+    result = formatPostMentions(result, opts.postMentions, someoneMentioned);
+  }
 
   if (isDmChannel) {
     result = formatDmMentions(result, channelId!, someoneMentioned);
@@ -185,6 +190,23 @@ const formatDmMentions = (
       () =>
         `[@:s] **${randomKaomoji()} (${users[randomIndex(users.length)]?.username})**`,
     );
+  }
+
+  return result;
+};
+const formatPostMentions = (
+  text: string,
+  postMentions: User[],
+  someoneMentioned: boolean,
+) => {
+  let result = text.replace(userMentionRegex, (match, name, tag) => {
+    const user = postMentions.find((u) => u.username === name && u.tag === tag);
+    return user ? `[@:${user.id}]` : match;
+  });
+
+  console.log(someoneMentioned);
+  if (someoneMentioned) {
+    result = result.replaceAll("@someone", () => `[@:s] **${randomKaomoji()}`);
   }
 
   return result;

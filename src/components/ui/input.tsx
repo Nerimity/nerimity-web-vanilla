@@ -1,12 +1,24 @@
+import { matchSorter } from "match-sorter";
+
 import { Dynamic } from "../../dynamic";
 import type { KlipyItem } from "../../services/klipyService";
+import { searchUser, type SearchUserResult } from "../../services/userService";
+import { accountStore } from "../../store/accountStore";
+import { channelStore } from "../../store/channelStore";
+import { inboxStore } from "../../store/inboxStore";
+import { serverMemberStore } from "../../store/serverMemberStore";
+import { User, userStore } from "../../store/userStore";
+import { createTokenSource } from "../../utils/createTokenSource";
+import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { createResizeObserver } from "../../utils/observer";
 import { createTimeModal } from "../modals/TimeModal";
+import { Avatar } from "./avatar";
 import { Button } from "./button";
 import { createColorPickerModalLazy } from "./createColorPickerLazy";
 import { ExpressionPickerLazy } from "./expression-picker/ExpressionPickerLazy";
+import { Skeleton } from "./skeleton";
 
 import style from "./input.module.css";
 
@@ -320,3 +332,297 @@ export const handleFormatBar = (opts: HandleFormatBarOpts) => {
     { signal: opts.signal },
   );
 };
+
+export const handleInputUserSuggestions = (opts: {
+  signal: AbortSignal;
+  inputContainer: HTMLElement;
+  mode: "insert" | "remove";
+  onSelect: (user: SearchUserResult | User) => void;
+}) => {
+  const MaxSuggestions = 10;
+  const input = opts.inputContainer.querySelector(
+    "input, textarea",
+  ) as HTMLInputElement;
+
+  const getMentionQuery = () => {
+    const wordAtCursor = getWordAtCursor(input);
+    const searchTerm = wordAtCursor.substring(1);
+
+    const isMentionTrigger = wordAtCursor.startsWith("@");
+    return isMentionTrigger ? searchTerm : null;
+  };
+
+  const channel = () => channelStore.currentChannel();
+
+  const getSearchedDMUsers = () => {
+    const query = getMentionQuery();
+    if (query === null) return [];
+    const users: User[] = [accountStore.currentUser!];
+    const recipientId = inboxStore.inboxes.get(channel()?.id!)?.recipientId;
+    const recipient = recipientId
+      ? userStore.users.get(recipientId)
+      : undefined;
+    if (recipient && recipient.id !== users[0]?.id) users.push(recipient);
+
+    const matched = matchSorter(users, query, {
+      keys: ["username"],
+    }).slice(0, MaxSuggestions);
+    return matched.map((u) => {
+      return {
+        type: "dm",
+        user: u,
+      } as const;
+    });
+  };
+
+  const getSearchedMembers = () => {
+    const query = getMentionQuery();
+    if (query === null) return [];
+
+    const members = [
+      ...(serverMemberStore.serverMembers.get(channel()?.serverId!)?.values() ||
+        []),
+    ];
+
+    const matched = !query
+      ? members.sort((a, b) => b.joinedAt - a.joinedAt).slice(0, 10)
+      : matchSorter(members, query, {
+          keys: ["nickname", (item) => item.user?.username!],
+        }).slice(0, MaxSuggestions);
+
+    return matched.map((m) => {
+      return {
+        type: "member",
+        user: m.user!,
+        nickname: m.nickname,
+      } as const;
+    });
+  };
+
+  const fetchSuggestions = async () => {
+    const query = getMentionQuery();
+    if (query === null) return [];
+    const [res] = await searchUser(query);
+    const users = res || [];
+
+    const matched = matchSorter(users, query, {
+      keys: ["nickname", (item) => item.username!],
+    }).slice(0, MaxSuggestions);
+
+    return matched.map((u) => {
+      return {
+        type: "user",
+        user: u,
+      } as const;
+    });
+  };
+
+  const fetchSource = createTokenSource();
+
+  let res: Suggestion[] = [];
+  const getSuggestions = async () => {
+    res = [];
+    res.push(...getSearchedMembers());
+    if (!res.length) {
+      res.push(...getSearchedDMUsers());
+    }
+
+    const remaining = MaxSuggestions - res.length;
+    if (remaining > 0) {
+      const suggestions = await fetchSuggestions();
+      const filtered = suggestions.filter(
+        (r) => !res.some((s) => s.user.id === r.user.id),
+      );
+
+      res.push(...filtered.slice(0, remaining));
+    }
+    return res;
+  };
+
+  type Suggestion =
+    | {
+        readonly type: "user";
+        readonly user: SearchUserResult;
+      }
+    | {
+        readonly type: "member";
+        readonly user: User;
+        readonly nickname: string | undefined;
+      }
+    | {
+        readonly type: "dm";
+        readonly user: User;
+      };
+
+  const getContainer = () =>
+    opts.inputContainer.querySelector<HTMLDivElement>(`.${style.suggestions}`);
+
+  const removeSuggestions = () => getContainer()?.remove();
+
+  const renderSuggestions = (suggestions?: Suggestion[]) => {
+    const isSkeleton = suggestions === undefined;
+    const existing = getContainer();
+
+    if (isSkeleton && existing?.dataset.skeleton === "true") return;
+
+    if (!isSkeleton && !suggestions.length) {
+      existing?.remove();
+      return;
+    }
+
+    const container =
+      existing ?? ((<div class={style.suggestions}></div>) as HTMLDivElement);
+    container.dataset.skeleton = String(isSkeleton);
+
+    container.replaceChildren(
+      isSkeleton ? (
+        <div class={style.skeletons}>
+          {Array.from({ length: MaxSuggestions }).map(() => (
+            <div class={style.suggestionItemSkeleton}>
+              <Skeleton style={{ width: "100%", height: "32px" }} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>
+          {suggestions.map((suggestion) => (
+            <div class={style.suggestionItem} data-sug-id={suggestion.user.id}>
+              <Avatar size={24} user={suggestion.user} />
+              {suggestion.type === "member"
+                ? suggestion.nickname || suggestion.user.username
+                : suggestion.user.username}
+            </div>
+          ))}
+        </>
+      ),
+    );
+
+    if (!existing) input.parentElement?.appendChild(container);
+  };
+  const updateSuggestionsDebounced = debounce(async () => {
+    const isStale = fetchSource.capture();
+
+    const suggestions = await getSuggestions();
+    if (isStale()) return;
+    renderSuggestions(suggestions);
+  }, 800);
+
+  const updateSuggestions = () => {
+    if (getMentionQuery() === null) {
+      removeSuggestions();
+    } else {
+      renderSuggestions();
+    }
+    updateSuggestionsDebounced();
+  };
+  input.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key === "Enter" || event.key === "Tab") {
+      }
+
+      if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+        updateSuggestions();
+      }
+    },
+    { signal: opts.signal },
+  );
+
+  input.addEventListener(
+    "blur",
+    () => {
+      setTimeout(() => {
+        fetchSource.invalidate();
+        opts.inputContainer.querySelector(`.${style.suggestions}`)?.remove();
+      }, 100);
+    },
+    { signal: opts.signal },
+  );
+  input.addEventListener(
+    "focus",
+    () => {
+      updateSuggestionsDebounced();
+    },
+    { signal: opts.signal },
+  );
+  input.addEventListener(
+    "input",
+    () => {
+      updateSuggestions();
+    },
+    { signal: opts.signal },
+  );
+
+  opts.inputContainer.addEventListener(
+    "mousedown",
+    (event) => {
+      if (closestFromEvent(event, `.${style.suggestionItem}`)) {
+        event.preventDefault();
+      }
+    },
+    { signal: opts.signal },
+  );
+
+  opts.inputContainer.addEventListener(
+    "click",
+    (event) => {
+      const suggestionItem = closestFromEvent(
+        event,
+        `.${style.suggestionItem}`,
+      ) as HTMLDivElement;
+      if (!suggestionItem) return;
+      const userId = suggestionItem.dataset.sugId;
+      if (!userId) return;
+      const user = res.find((s) => s.user.id === userId)?.user;
+      if (!user) return;
+      opts.onSelect(user);
+      if (opts.mode === "remove") {
+        const wordAtCursor = getWordAtCursor(input);
+        const cursorPosition = input.selectionStart!;
+        const targetIndex = cursorPosition - wordAtCursor.length;
+
+        input.value = stringSplice(
+          input.value,
+          targetIndex,
+          wordAtCursor.length,
+        );
+
+        input.focus();
+        input.selectionStart = targetIndex;
+        input.selectionEnd = targetIndex;
+
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+      if (opts.mode === "insert") {
+        const wordAtCursor = getWordAtCursor(input);
+        const cursorPosition = input.selectionStart!;
+        const targetIndex = cursorPosition - wordAtCursor.length;
+        const replacementText = `@${user.username}:${user.tag} `;
+
+        input.value =
+          input.value.slice(0, targetIndex) +
+          replacementText +
+          input.value.slice(cursorPosition);
+
+        const newCursor = targetIndex + replacementText.length;
+        input.focus();
+        input.setSelectionRange(newCursor, newCursor);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+    },
+    { signal: opts.signal },
+  );
+};
+
+const getWordAtCursor = (element: HTMLInputElement) => {
+  const cursorPosition = element.selectionStart || 0;
+  const textBeforeCursor = element.value.substring(0, cursorPosition);
+  const lastWord = textBeforeCursor.split(/\s+/).reverse()[0];
+  return lastWord || "";
+};
+
+function stringSplice(text: string, startIndex: number, deleteCount: number) {
+  return (
+    text.substring(0, startIndex) + text.substring(startIndex + deleteCount)
+  );
+}

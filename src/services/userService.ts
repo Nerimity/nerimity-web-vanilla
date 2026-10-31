@@ -243,3 +243,19 @@ export const verifyEmailConfirmCode = (code: string) => {
     useToken: true,
   });
 };
+
+export interface SearchUserResult {
+  avatar: string;
+  badges: number;
+  hexColor: string;
+  id: string;
+  tag: string;
+  username: string;
+}
+export const searchUser = (query: string) => {
+  return request<SearchUserResult[]>("/users/search", {
+    params: { q: query },
+    method: "GET",
+    useToken: true,
+  });
+};

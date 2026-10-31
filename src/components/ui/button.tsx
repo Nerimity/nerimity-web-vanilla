@@ -16,6 +16,7 @@ interface ButtonProps {
   success?: boolean;
   component?: any;
   iconOutlined?: boolean;
+  children?: any;
   [key: string]: any;
 }
 
@@ -24,6 +25,7 @@ export const Button = (props: ButtonProps) => {
     hoverBorder,
     component,
     alert,
+    children,
     warn,
     success,
     primary,
@@ -55,6 +57,7 @@ export const Button = (props: ButtonProps) => {
         />
       )}
       {label && <div class={[style.label, "label"]}>{label}</div>}
+      {children}
     </Dynamic>
   );
 };

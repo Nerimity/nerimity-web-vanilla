@@ -13,6 +13,7 @@ import {
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { AttachmentProperty } from "../../store/channelStore";
+import type { User } from "../../store/userStore";
 import type { RawPost } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -23,10 +24,12 @@ import {
   createImageEmbedResizer,
   ImageEmbed,
 } from "../message-pane/imageEmbed";
+import { formatMessage } from "../message-pane/utils";
 import { Button } from "../ui/button";
 import {
   createTextareaHeightHandler,
   handleFormatBar,
+  handleInputUserSuggestions,
   Input,
 } from "../ui/input";
 import { alert, createModal, Modal } from "../ui/modal";
@@ -382,6 +385,15 @@ interface PostCreateEvent {
 let inputContent = "";
 let inputFile: undefined | File;
 let pollOptions: string[] = [];
+export const mentionCache = new Map<string, User>();
+const MENTION_CACHE_LIMIT = 30;
+const setMentionCache = (user: User) => {
+  if (mentionCache.size >= MENTION_CACHE_LIMIT) {
+    const firstKey = mentionCache.keys().next().value;
+    if (firstKey) mentionCache.delete(firstKey);
+  }
+  mentionCache.set(user.id, user);
+};
 
 const PostInputArea = (props: {
   signal: AbortSignal;
@@ -554,6 +566,15 @@ const PostInputArea = (props: {
 
   const imageEmbedResizer = createImageEmbedResizer(el);
 
+  handleInputUserSuggestions({
+    signal: props.signal,
+    inputContainer: el,
+    mode: "insert",
+    onSelect(user) {
+      setMentionCache(user as User);
+    },
+  });
+
   const textareaEl = el.querySelector("textarea") as HTMLTextAreaElement;
 
   textareaEl.addEventListener(
@@ -591,8 +612,12 @@ const PostInputArea = (props: {
           ? await fileToDimensions(inputFile)
           : undefined;
         const pollOptions = getPollOptions();
-        props.onPostCreate({
+        const formattedContent = formatMessage({
           content: inputContent,
+          postMentions: [...mentionCache.values()],
+        });
+        props.onPostCreate({
+          content: formattedContent,
           ...(pollOptions.length ? { pollOptions } : {}),
           ...(dimResults
             ? {

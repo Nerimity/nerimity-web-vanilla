@@ -59,4 +59,9 @@
     padding: 4px 8px;
     border-radius: var(--radius-max);
   }
+  .filterUserButton {
+    padding-left: 6px;
+    color: var(--text-color);
+    gap: 4px;
+  }
 }
