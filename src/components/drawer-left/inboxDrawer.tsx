@@ -395,7 +395,13 @@ const createInboxDrawer = () => {
   let inboxList: ReturnType<typeof createInboxList> | null = createInboxList();
   let friendList: ReturnType<typeof createFriendsList> | null = null;
 
-  let tabsEl = (<div class={style.tabs}></div>) as HTMLElement;
+  let tabsEl = (<div class={style.tabs}></div>) as HTMLDivElement;
+  let tabsContainer = (
+    <div class={style.tabsOuterContainer}>
+      {tabsEl}
+      <Button icon="explore" class={style.exploreButton} href="/app/explore" />
+    </div>
+  ) as HTMLElement;
 
   const rerenderTabs = () => {
     const requestLength = [...friendStore.friends.values()].filter(
@@ -428,7 +434,7 @@ const createInboxDrawer = () => {
 
   let containerEl = (
     <div class={["scrollbarHover"]}>
-      {tabsEl}
+      {tabsContainer}
 
       {inboxList?.inboxListEl}
     </div>
@@ -460,7 +466,7 @@ const createInboxDrawer = () => {
     },
   ]);
 
-  tabsEl.addEventListener(
+  tabsContainer.addEventListener(
     "click",
     (e) => {
       const tabItemEl = closestFromEvent(e, `.${style.tabItem}`);
@@ -613,8 +619,10 @@ const createInboxDrawer = () => {
     inboxList?.inboxListEl.remove();
     friendList?.inboxListEl.remove();
     tabsEl?.remove();
-    (containerEl as any) = null;
     (tabsEl as any) = null;
+    tabsContainer?.remove();
+    (tabsContainer as any) = null;
+    (containerEl as any) = null;
     inboxList = null;
     friendList = null;
   };

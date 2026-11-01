@@ -14,8 +14,30 @@
   }
 }
 
+.tabsOuterContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 4px;
+
+  .exploreButton {
+    border: none;
+    border-radius: var(--radius-max);
+    color: var(--text-color);
+    background: var(--gray-800);
+    &:hover {
+      background: var(--gray-700);
+      :global(.icon) {
+        color: var(--text-color);
+      }
+    }
+    :global(.icon) {
+      color: var(--gray-300);
+    }
+  }
+}
 .tabs {
   display: flex;
+  flex: 1;
   margin: 8px 4px;
   margin-bottom: 12px;
   margin-left: 8px;
@@ -109,7 +131,6 @@
   color: var(--gray-300);
   background: transparent;
   cursor: pointer;
-  transition: 0.1s;
   text-align: center;
   font-size: 12px;
   font-weight: bold;

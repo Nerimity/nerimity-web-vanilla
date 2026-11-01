@@ -159,7 +159,7 @@ const createAppPage = () => {
     }),
 
     registerPaneRoute({
-      paths: ["/app", "/app/inbox/*", "/app/profile/*"],
+      paths: ["/app", "/app/inbox/*", "/app/profile/*", "/app/explore{/*}?"],
       signal,
       tokenSource: appRouteSource,
       load: () => import("./createInboxChannelRoute"),
