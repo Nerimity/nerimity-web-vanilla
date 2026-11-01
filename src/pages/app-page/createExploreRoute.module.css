@@ -4,11 +4,13 @@
   flex-direction: column;
   width: 100%;
   max-width: 1600px;
-  padding: 12px;
   gap: 12px;
 }
 .tabs {
   display: flex;
+  padding-top: 12px;
+  padding-right: 12px;
+  padding-left: 12px;
   gap: 4px;
   :global(.item) {
     padding: 8px;
@@ -26,6 +28,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-right: 12px;
+    padding-left: 12px;
   }
   .showAll {
     display: flex;
@@ -40,12 +44,34 @@
   .items {
     display: flex;
     overflow-x: auto;
+    padding-right: 12px;
+    padding-bottom: 18px;
+    padding-left: 12px;
     scrollbar-width: none;
+    gap: 8px;
     &::-webkit-scrollbar {
       display: none;
     }
-    padding-bottom: 18px;
-    gap: 8px;
+  }
+}
+:global(body.mobileWidth) .serverItem {
+  flex-basis: min(300px, 75%);
+  .details {
+    padding: 8px;
+    margin-top: -32px;
+    gap: 4px;
+  }
+  .description {
+    font-size: 13px;
+  }
+  .name {
+    font-size: 14px;
+  }
+  .createdBy {
+    font-size: 12px;
+  }
+  .stat {
+    font-size: 11px;
   }
 }
 .serverItem {
@@ -85,10 +111,10 @@
   .name {
     display: flex;
     align-items: center;
-    gap: 6px;
     line-height: 1.2;
     font-size: 16px;
     font-weight: bold;
+    gap: 6px;
   }
 
   .createdBy {
@@ -98,11 +124,24 @@
       color: var(--text-color);
     }
   }
-  .bumped {
+  .statsRow {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: auto;
+    gap: 4px 6px;
+    .stat {
+      margin-top: 0;
+    }
+    .stat + .stat::before {
+      content: "~";
+      margin-right: 6px;
+    }
+  }
+  .stat {
     margin-top: auto;
     color: var(--gray-400);
     font-size: 12px;
-    .bumpedDate {
+    .statValue {
       color: var(--text-color);
     }
   }

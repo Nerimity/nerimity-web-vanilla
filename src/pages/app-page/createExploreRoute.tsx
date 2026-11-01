@@ -1,5 +1,5 @@
 import { ph, t } from "@lingui/core/macro";
-import { Trans } from "@trans";
+import { Plural, Trans } from "@trans";
 
 import { Banner } from "../../components/Banner";
 import { Icon } from "../../components/icon";
@@ -43,6 +43,7 @@ const ServerItem = (props: { item: RawExploreItem }) => {
   const server = props.item.server!;
 
   const bumpCount = props.item.bumpCount;
+  const memberCount = server._count.serverMembers.toLocaleString();
   const creator = server.createdBy;
 
   return (
@@ -67,13 +68,36 @@ const ServerItem = (props: { item: RawExploreItem }) => {
           </Trans>
         </div>
         <div class={style.description}>{props.item.description}</div>
-        <div class={style.bumped}>
-          <Trans>
-            Bumped{" "}
-            <span class={style.bumpedDate}>
-              {ph({ date: timeSince(props.item.bumpedAt, false) })}
-            </span>
-          </Trans>
+
+        <div class={style.statsRow}>
+          <div class={style.stat}>
+            <Plural
+              value={memberCount}
+              _0={
+                <Trans>
+                  <span class={style.statValue}>No</span> Members
+                </Trans>
+              }
+              one={
+                <Trans>
+                  <span class={style.statValue}>#</span> Member
+                </Trans>
+              }
+              other={
+                <Trans>
+                  <span class={style.statValue}>#</span> Members
+                </Trans>
+              }
+            />
+          </div>
+          <div class={style.stat}>
+            <Trans>
+              Bumped{" "}
+              <span class={style.statValue}>
+                {ph({ date: timeSince(props.item.bumpedAt, false) })}
+              </span>
+            </Trans>
+          </div>
         </div>
         <div class={style.actions}>
           <Button icon="login" label={t`Join server`} primary />
@@ -89,6 +113,8 @@ const BotItem = (props: { item: RawExploreItem }) => {
 
   const bumpCount = props.item.bumpCount;
   const creator = bot.creatorAccount.user;
+
+  const inServerCount = bot.botUser._count.servers;
 
   return (
     <div class={style.serverItem}>
@@ -109,13 +135,36 @@ const BotItem = (props: { item: RawExploreItem }) => {
           </Trans>
         </div>
         <div class={style.description}>{props.item.description}</div>
-        <div class={style.bumped}>
-          <Trans>
-            Bumped{" "}
-            <span class={style.bumpedDate}>
-              {ph({ date: timeSince(props.item.bumpedAt, false) })}
-            </span>
-          </Trans>
+
+        <div class={style.statsRow}>
+          <div class={style.stat}>
+            <Plural
+              value={inServerCount}
+              _0={
+                <Trans>
+                  <span class={style.statValue}>No</span> Servers
+                </Trans>
+              }
+              one={
+                <Trans>
+                  <span class={style.statValue}>#</span> Server
+                </Trans>
+              }
+              other={
+                <Trans>
+                  <span class={style.statValue}>#</span> Servers
+                </Trans>
+              }
+            />
+          </div>
+          <div class={style.stat}>
+            <Trans>
+              Bumped{" "}
+              <span class={style.statValue}>
+                {ph({ date: timeSince(props.item.bumpedAt, false) })}
+              </span>
+            </Trans>
+          </div>
         </div>
         <div class={style.actions}>
           <Button icon="robot_2" label={t`Invite Bot`} primary />
@@ -169,7 +218,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
     if (!servers) return;
 
     tabContent.appendChild(
-      <HorizList name={t`Recently Bumped Servers`} items={servers} />,
+      <HorizList name={t`Bumped Servers`} items={servers} />,
     );
     const [bots] = await getExploreItems({
       type: "bot",
@@ -178,9 +227,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
       limit: 10,
     });
     if (!bots) return;
-    tabContent.appendChild(
-      <HorizList name={t`Recently Bumped Bots`} items={bots} />,
-    );
+    tabContent.appendChild(<HorizList name={t`Bumped Bots`} items={bots} />);
     tabContent.appendChild(<HorizList name={t`Recent Themes`} items={[]} />);
   })();
 
