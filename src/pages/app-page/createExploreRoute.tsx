@@ -46,6 +46,7 @@ const ServerItem = (props: { item: RawExploreItem }) => {
   const bumpCount = props.item.bumpCount;
   const memberCount = server._count.serverMembers.toLocaleString();
   const creator = server.createdBy;
+  const lifetimeBumps = props.item.lifetimeBumpCount.toLocaleString();
 
   return (
     <div class={style.serverItem}>
@@ -91,7 +92,10 @@ const ServerItem = (props: { item: RawExploreItem }) => {
               }
             />
           </div>
-          <div class={style.stat}>
+          <div
+            class={style.stat}
+            data-tooltip={t`${ph({ count: lifetimeBumps })} Lifetime Bumps`}
+          >
             <Trans>
               Bumped{" "}
               <span class={style.statValue}>
@@ -118,6 +122,7 @@ const BotItem = (props: { item: RawExploreItem }) => {
   const inServerCount = bot.botUser._count.servers;
 
   const isOnline = props.item.botApplication?.botUser.online;
+  const lifetimeBumps = props.item.lifetimeBumpCount.toLocaleString();
 
   return (
     <div class={style.serverItem}>
@@ -168,7 +173,10 @@ const BotItem = (props: { item: RawExploreItem }) => {
               }
             />
           </div>
-          <div class={style.stat}>
+          <div
+            class={style.stat}
+            data-tooltip={t`${ph({ count: lifetimeBumps })} Lifetime Bumps`}
+          >
             <Trans>
               Bumped{" "}
               <span class={style.statValue}>
@@ -235,7 +243,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
     const [servers] = await getExploreItems({
       type: "server",
       filter: "all",
-      sort: "recently_bumped",
+      sort: "most_active",
       limit: 6,
     });
     if (!servers) return;

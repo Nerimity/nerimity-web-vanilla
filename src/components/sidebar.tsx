@@ -1,3 +1,4 @@
+import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 
 import { accountStore } from "../store/accountStore";
@@ -62,7 +63,7 @@ const ServerItem = ({ server }: { server: Server }) => {
       data-server-id={server.id}
       alert={notifications}
       selected={serverStore.currentServerId === server.id}
-      title={server.name}
+      data-tooltip={server.name}
       href={`/app/servers/${server.id}/${getRecentServerChannelId(server.id)}`}
     >
       <Avatar
@@ -92,7 +93,7 @@ const FolderItem = ({ folder }: { folder: RawServerFolder }) => {
       class={style.folderItem}
       data-server-id={folder.id}
       alert={hasNotifications}
-      title={folder.name}
+      data-tooltip={folder.name}
       style={{ "--color": folder.color }}
       selected={!opened && selectedServer}
       data-opened={opened}
@@ -369,7 +370,7 @@ export const createSidebar = () => {
 const ProfileItem = (props: { signal: AbortSignal }) => {
   const { signal } = props;
   let el = (
-    <SidebarItem href="#" data-options></SidebarItem>
+    <SidebarItem data-tooltip={t`Profile`} href="#" data-options></SidebarItem>
   ) as HTMLDivElement;
 
   const rerender = () => {
@@ -399,7 +400,7 @@ const SettingsItem = (props: { signal: AbortSignal }) => {
       <SidebarItem
         selected={!!match}
         class={style.homeItem}
-        title="Settings"
+        data-tooltip={t`Settings`}
         href="/app/settings"
       >
         <Icon name="settings" />
@@ -434,7 +435,7 @@ const MentionItem = ({ mention }: { mention: MessageMention }) => {
       data-channel-id={mention.channelId}
       alert={notifications}
       selected={channelStore.currentChannelId === mention.channelId}
-      title={user.username}
+      data-tooltip={user.username}
       href={inbox ? `/app/inbox/${mention.channelId}` : undefined}
     >
       <Avatar
@@ -514,7 +515,7 @@ const HomeItem = (props: { signal: AbortSignal }) => {
         selected={!!match}
         alert={count}
         class={style.homeItem}
-        title="Home"
+        data-tooltip={t`Home`}
         href="/app"
       >
         <div class={style.logoContainer}>

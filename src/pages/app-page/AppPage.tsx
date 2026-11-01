@@ -2,6 +2,7 @@ import { createAppHeader } from "../../components/appHeader";
 import { createPostContextMenuHandler } from "../../components/context-menus/PostContextMenu";
 import { createServerContextMenuHandler } from "../../components/context-menus/ServerContextMenu";
 import { createUserContextMenuHandler } from "../../components/context-menus/UserContextMenu";
+import { handleCustomTooltip } from "../../components/CustomTooltip";
 import { handleDangerLink } from "../../components/markup/MarkupLink";
 import { createMiniProfileHandler } from "../../components/miniProfile";
 import {
@@ -219,6 +220,8 @@ const createAppPage = () => {
     document.body.classList.toggle("mobileWidth", isMobileWidth());
     document.body.classList.toggle("desktopWidth", !isMobileWidth());
   };
+
+  handleCustomTooltip({ signal: abortController.signal });
   handleResize();
   window.addEventListener("resize", handleResize, { signal });
   handleDangerLink(signal);
