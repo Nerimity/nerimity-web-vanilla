@@ -27,7 +27,7 @@ export const Banner = (props: {
   });
 
   return (
-    <div class={style.banner}>
+    <div class={[style.banner, "banner"]}>
       {props.image ? (
         <div class={style.bannerWrap}>
           <img

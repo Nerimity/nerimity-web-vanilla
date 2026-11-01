@@ -165,6 +165,13 @@ const createAppPage = () => {
       load: () => import("./createInboxChannelRoute"),
       context,
     }),
+    registerPaneRoute({
+      paths: "/app/explore{/*}?",
+      signal,
+      tokenSource: contentSource,
+      load: () => import("./createExploreRoute"),
+      context,
+    }),
 
     registerPaneRoute<Page, { serverId: string }>({
       paths: "/app/servers/:serverId/settings{/*}?",

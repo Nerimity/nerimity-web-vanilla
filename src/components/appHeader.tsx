@@ -33,10 +33,13 @@ const AppPill = () => {
       ? overrideUser
       : null;
 
+  const isExplorePage = !!router.match("/app/explore{/*}?");
+
   const getLabel = () => {
     if (!authenticated) return accountStore.connectionState();
     if (overrideLabel) return overrideLabel;
     if (isProfilePage) return profileUser?.username || t`Profile`;
+    if (isExplorePage) return t`Explore`;
     if (channel?.name) return channel.name;
     if (inboxUser?.username) return inboxUser.username;
     return t`Home`;
@@ -47,6 +50,7 @@ const AppPill = () => {
     if (!authenticated) return "cached";
     if (overrideIcon) return overrideIcon;
     if (isProfilePage) return profileUser ? null : "article_person";
+    if (isExplorePage) return "explore";
     if (server || channel) return null;
     return "home";
   };
