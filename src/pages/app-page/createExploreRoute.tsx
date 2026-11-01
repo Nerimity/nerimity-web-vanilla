@@ -3,6 +3,7 @@ import { Plural, Trans } from "@trans";
 
 import { Banner } from "../../components/Banner";
 import { Icon } from "../../components/icon";
+import { Notice } from "../../components/Notice";
 import { ServerClanItem } from "../../components/serverClanItem";
 import { Avatar } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
@@ -116,12 +117,22 @@ const BotItem = (props: { item: RawExploreItem }) => {
 
   const inServerCount = bot.botUser._count.servers;
 
+  const isOnline = props.item.botApplication?.botUser.online;
+
   return (
     <div class={style.serverItem}>
       <Banner user={botUser} />
       <div class={style.details}>
         <Avatar imgClass="avatar" user={botUser} size={64} />
-        <div class={style.name}>{botUser.username}</div>
+        <Link
+          href={`/app/profile/${botUser.id}`}
+          data-user-id={botUser.id}
+          class={style.name}
+        >
+          <span class={[style.status, isOnline && style.online]}></span>
+
+          {botUser.username}
+        </Link>
         <div class={style.createdBy}>
           <Trans>
             by{" "}
@@ -202,6 +213,18 @@ const createExploreRoute = ({ content }: RouteContext) => {
   const el = (
     <div class={style.exploreRoute}>
       <Tabs />
+      <div class={style.notices}>
+        <Notice
+          type="info"
+          title=""
+          description={t`A bot can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC.`}
+        />
+        <Notice
+          type="warn"
+          title=""
+          description={t`Please report bots that are malicious, broken themes or servers that break the TOS.`}
+        />
+      </div>
       {tabContent}
     </div>
   ) as HTMLDivElement;
@@ -213,7 +236,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
       type: "server",
       filter: "all",
       sort: "recently_bumped",
-      limit: 10,
+      limit: 6,
     });
     if (!servers) return;
 
@@ -224,7 +247,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
       type: "bot",
       filter: "all",
       sort: "recently_bumped",
-      limit: 10,
+      limit: 6,
     });
     if (!bots) return;
     tabContent.appendChild(<HorizList name={t`Bumped Bots`} items={bots} />);

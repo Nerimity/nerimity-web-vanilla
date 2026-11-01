@@ -17,6 +17,13 @@
     gap: 4px;
   }
 }
+.notices {
+  display: flex;
+  flex-direction: column;
+  padding-right: 12px;
+  padding-left: 12px;
+  gap: 8px;
+}
 
 .horizList {
   display: flex;
@@ -84,6 +91,17 @@
   background-color: var(--gray-900);
   gap: 0;
 
+  .status {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--status-offline);
+    &.online {
+      background-color: var(--status-online);
+    }
+  }
+
   .details {
     z-index: 11111;
     display: flex;
@@ -133,8 +151,8 @@
       margin-top: 0;
     }
     .stat + .stat::before {
-      content: "~";
       margin-right: 6px;
+      content: "~";
     }
   }
   .stat {

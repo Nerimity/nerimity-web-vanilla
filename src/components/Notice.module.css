@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: 8px;
   border-radius: var(--radius-12);
-  background-color: var(--gray-850);
+  background-color: var(--gray-900);
   gap: 4px;
   .icon {
     font-size: 18px;
@@ -19,4 +19,5 @@
 }
 
 .description {
+  color: var(--gray-200);
 }
