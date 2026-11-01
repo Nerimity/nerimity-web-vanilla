@@ -163,7 +163,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
     const [servers] = await getExploreItems({
       type: "server",
       filter: "all",
-      sort: "most_active",
+      sort: "recently_bumped",
       limit: 10,
     });
     if (!servers) return;
