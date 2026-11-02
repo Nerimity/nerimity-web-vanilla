@@ -69,6 +69,8 @@ function createServerMemberStore() {
         }
       }
       serverMembers.set(serverId, members);
+      const server = serverStore.servers.get(serverId);
+      if (server) server.lazy = false;
       storeEmitter.emit("server:members_fetched", { serverId });
       return;
     }

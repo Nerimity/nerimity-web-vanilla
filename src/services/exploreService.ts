@@ -8,7 +8,13 @@ export type PublicServerSort =
   | "recently_added"
   | "recently_bumped"
   | "most_active";
-export type PublicServerFilter = "pinned" | "all" | "verified";
+export type PublicServerFilter =
+  | "pinned"
+  | "all"
+  | "verified"
+  | "clans"
+  | "online_bots"
+  | "offline_bots";
 
 interface getExploreItemsOpts {
   sort: PublicServerSort;

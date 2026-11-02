@@ -8,6 +8,7 @@ import {
   joinServerByInviteCode,
   type ServerWithMemberCount,
 } from "../../services/serverService";
+import { socket } from "../../services/socket";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { closestFromEvent } from "../../utils/dom";
@@ -28,12 +29,43 @@ const inviteCache = new Map<string, ServerWithMemberCount | false>();
 const localServer = (serverId: string) => {
   const server = serverStore.servers.get(serverId);
   if (server) {
+    const lazy = server.lazy;
+    if (lazy) {
+      socket.requestServerMembers(serverId);
+    }
     return {
-      memberCount: serverMemberStore.serverMembers.get(serverId)?.size,
+      memberCount: lazy
+        ? "..."
+        : serverMemberStore.serverMembers.get(serverId)?.size,
       ...server,
     };
   }
 };
+
+const pendingEmbeds = new Map<string, Set<WeakRef<HTMLElement>>>();
+const memberRefreshers = new WeakMap<HTMLElement, () => void>();
+
+storeEmitter.on(
+  "server:members_fetched",
+  ({ serverId }) => {
+    const server = localServer(serverId);
+    if (server) {
+      inviteCache.set(
+        `invite/${serverId}`,
+        server as unknown as ServerWithMemberCount,
+      );
+    }
+
+    const pending = pendingEmbeds.get(serverId);
+    if (!pending) return;
+    pendingEmbeds.delete(serverId);
+    for (const ref of pending) {
+      const embed = ref.deref();
+      if (embed?.isConnected) memberRefreshers.get(embed)?.();
+    }
+  },
+  new AbortController().signal,
+);
 
 const serverDetailsByEmoji = async (emojiId: string) => {
   const cachedEmoji = await customEmojiById(emojiId);
@@ -140,7 +172,22 @@ export const InviteEmbed = (props: {
     );
   };
 
+  const watchMembers = () => {
+    if (!inviteItem || (inviteItem.memberCount as unknown) !== "...") return;
+    const serverId = inviteItem.id;
+
+    memberRefreshers.set(el, () => {
+      inviteItem = localServer(serverId) as unknown as ServerWithMemberCount;
+      inviteCache.set(cacheId, inviteItem);
+      render();
+    });
+    const pending = pendingEmbeds.get(serverId) ?? new Set();
+    pending.add(new WeakRef(el));
+    pendingEmbeds.set(serverId, pending);
+  };
+
   render();
+  watchMembers();
 
   if (!inviteItem) {
     if (props.emojiId) {
@@ -148,12 +195,14 @@ export const InviteEmbed = (props: {
         inviteItem = (details as ServerWithMemberCount) || null;
         inviteCache.set(cacheId, inviteItem);
         render();
+        watchMembers();
       });
     } else if (props.code) {
       serverDetailsByCode(props.code).then((server) => {
         inviteItem = (server as ServerWithMemberCount) || null;
         inviteCache.set(cacheId, inviteItem);
         render();
+        watchMembers();
       });
     }
   }

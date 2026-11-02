@@ -8,6 +8,7 @@
 }
 .tabs {
   display: flex;
+  flex-wrap: wrap;
   padding-top: 12px;
   padding-right: 12px;
   padding-left: 12px;
@@ -44,8 +45,8 @@
     gap: 4px;
   }
   .title {
-    margin-bottom: 8px;
-    font-size: 18px;
+    color: var(--gray-100);
+    font-size: 16px;
     font-weight: bold;
   }
   .items {
@@ -59,6 +60,76 @@
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+}
+.gridListContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  margin-bottom: 40px;
+  gap: 8px;
+  .title {
+    padding-right: 12px;
+    padding-left: 12px;
+    color: var(--gray-100);
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+.gridList {
+  display: grid;
+  padding-right: 12px;
+  padding-bottom: 12px;
+  padding-left: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 12px;
+
+  .serverItem {
+    width: 100%;
+    min-width: 0;
+  }
+}
+.skeletonTitle {
+  height: 20px;
+  border-radius: 4px;
+}
+.gridListContainer > .skeletonTitle {
+  margin-left: 12px;
+}
+.skeletonCard {
+  .skeletonBanner {
+    flex-shrink: 0;
+    height: 110px;
+    border-radius: 0;
+  }
+  .skeletonDetails {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 12px;
+    margin-top: -32px;
+    gap: 10px;
+  }
+  .skeletonAvatar {
+    width: 64px;
+    height: 64px;
+    box-sizing: content-box;
+    border: 4px solid var(--gray-900);
+    border-radius: 50%;
+  }
+  .skeletonLine {
+    height: 12px;
+    border-radius: 4px;
+  }
+  .skeletonActions {
+    display: flex;
+    margin-top: 6px;
+    gap: 8px;
+  }
+  .skeletonButton {
+    flex: 1;
+    height: 38px;
+    border-radius: var(--radius-6);
   }
 }
 :global(body.mobileWidth) .serverItem {
@@ -162,5 +233,20 @@
     .statValue {
       color: var(--text-color);
     }
+  }
+}
+
+.filterArea {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-right: 12px;
+  padding-left: 12px;
+  gap: 8px;
+
+  .searchIcon {
+    margin-left: 8px;
+    color: var(--gray-400);
+    font-size: 16px;
   }
 }
