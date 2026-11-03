@@ -14,6 +14,8 @@ import { Link } from "../../components/ui/link";
 import { Skeleton } from "../../components/ui/skeleton";
 import {
   getExploreItems,
+  getExploreThemes,
+  type ExploreTheme,
   type PublicServerFilter,
   type PublicServerSort,
 } from "../../services/exploreService";
@@ -28,6 +30,7 @@ import { HoverAnimator } from "../../utils/HoverAnimator";
 import { createIntersectionObserver } from "../../utils/observer";
 import { getRecentServerChannelId } from "../../utils/recentServerChannels";
 import { router } from "../../utils/router";
+import { DefaultTheme, mapLegacyThemeKey } from "../../utils/theme";
 import type { RouteContext } from "./AppPage";
 
 import style from "./createExploreRoute.module.css";
@@ -233,9 +236,74 @@ const BotItem = (props: { item: RawExploreItem }) => {
     </div>
   );
 };
+const ThemeItem = (props: { item: ExploreTheme }) => {
+  const name = props.item.name;
+  const maintainers = props.item.maintainers?.map((maintainer) => (
+    <>
+      <span class={style.creatorUsername}>{maintainer}</span>
+      {maintainer !==
+        props.item.maintainers?.[props.item.maintainers.length - 1] && ", "}
+    </>
+  ));
+
+  props.item.colors = {
+    ...DefaultTheme,
+    ...props.item.colors,
+  };
+
+  Object.entries(props.item.colors).forEach(([key]) => {
+    if (!(key in DefaultTheme)) {
+      const modernKey = mapLegacyThemeKey(key);
+      if (modernKey) {
+        props.item.colors![modernKey] = props.item.colors[key]!;
+        delete props.item.colors[key];
+        return;
+      }
+
+      console.warn(`Unknown theme color key: ${key}`);
+    }
+  });
+
+  return (
+    <div
+      class={[style.serverItem, style.botItem]}
+      style={Object.entries(props.item.colors).reduce(
+        (acc, [key, value]) => {
+          if (key in DefaultTheme) {
+            acc[`--${key}`] = value;
+          }
+          return acc;
+        },
+        {} as Record<string, string>,
+      )}
+    >
+      <div class={style.details}>
+        <div class={style.name}>{name}</div>
+
+        <span class={style.createdBy}>
+          <Trans>Contributors: {maintainers}</Trans>
+        </span>
+
+        <div class={style.colorPreview}>
+          {Object.keys(DefaultTheme).map((key) => (
+            <span
+              class={style.colorPreviewItem}
+              style={{ "--color": props.item.colors[key] }}
+            ></span>
+          ))}
+        </div>
+
+        <div class={style.actions}>
+          <Button icon="palette" label={t`Apply Theme`} primary />
+        </div>
+      </div>
+    </div>
+  );
+};
 const HorizList = (props: {
   name: string;
-  items: RawExploreItem[];
+  items?: RawExploreItem[];
+  themes?: ExploreTheme[];
   hideShowAll?: boolean;
   href?: string;
 }) => {
@@ -250,7 +318,10 @@ const HorizList = (props: {
         )}
       </div>
       <div class={style.items}>
-        {props.items.map((item) =>
+        {props.themes?.map((theme) => (
+          <ThemeItem item={theme} />
+        ))}
+        {props.items?.map((item) =>
           item.server ? (
             <ServerItem item={item} />
           ) : item.botApplication ? (
@@ -308,6 +379,19 @@ const ListSkeleton = (props: {
 };
 
 type Tab = "all" | "servers" | "bots" | "themes";
+
+const getExploreThemesArray = async () => {
+  const [themes] = await getExploreThemes();
+  if (!themes) return;
+
+  const themesArray = Object.values(themes);
+  themesArray.unshift({
+    name: "Default",
+    maintainers: ["Superkitten"],
+    colors: DefaultTheme,
+  });
+  return themesArray;
+};
 
 const createExploreRoute = ({ content }: RouteContext) => {
   const ac = new AbortController();
@@ -393,6 +477,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
     if (tab === "all") AllTab({ tabContent, signal });
     if (tab === "servers") ServersTab({ tabContent, signal });
     if (tab === "bots") BotsTab({ tabContent, signal });
+    if (tab === "themes") ThemesTab({ tabContent, signal });
   };
 
   const render = () => {
@@ -437,12 +522,10 @@ const AllTab = ({
       (<ListSkeleton />) as HTMLElement,
       (<ListSkeleton />) as HTMLElement,
       (<ListSkeleton />) as HTMLElement,
+      (<ListSkeleton />) as HTMLElement,
     ];
-    const [pinnedSkeleton, serversSkeleton, botsSkeleton] = skeletons as [
-      HTMLElement,
-      HTMLElement,
-      HTMLElement,
-    ];
+    const [pinnedSkeleton, serversSkeleton, botsSkeleton, themesSkeleton] =
+      skeletons as [HTMLElement, HTMLElement, HTMLElement, HTMLElement];
     tabContent.append(...skeletons);
     const clearSkeletons = () => skeletons.forEach((s) => s.remove());
 
@@ -479,8 +562,40 @@ const AllTab = ({
     botsSkeleton.replaceWith(
       <HorizList name={t`Bumped Bots`} items={bots} href="./bots" />,
     );
-    tabContent.appendChild(
-      <HorizList name={t`Recent Themes`} items={[]} href="./themes" />,
+
+    const themes = await getExploreThemesArray();
+    if (signal.aborted) return;
+    if (!themes) return clearSkeletons();
+    themesSkeleton.replaceWith(
+      <HorizList name={t`Recent Themes`} themes={themes} href="./themes" />,
+    );
+  })();
+};
+
+const ThemesTab = ({
+  tabContent,
+  signal,
+}: {
+  tabContent: HTMLDivElement;
+  signal: AbortSignal;
+}) => {
+  (async () => {
+    tabContent.replaceChildren();
+    const skeleton = (<ListSkeleton grid name count={10} />) as HTMLElement;
+    tabContent.append(skeleton);
+
+    const themes = await getExploreThemesArray();
+    if (signal.aborted) return;
+    if (!themes) return skeleton.remove();
+
+    skeleton.replaceWith(
+      <div class={style.gridListContainer}>
+        <div class={style.gridList}>
+          {themes.map((theme) => (
+            <ThemeItem item={theme} />
+          ))}
+        </div>
+      </div>,
     );
   })();
 };

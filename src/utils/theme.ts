@@ -66,3 +66,13 @@ export const updateTheme = () => {
 };
 
 updateTheme();
+
+export function mapLegacyThemeKey(key: string) {
+  const legacyMapping: Record<string, string> = {
+    "background-color": "background",
+  };
+
+  const isModernKey = key in DefaultTheme;
+
+  return legacyMapping[key] || (isModernKey ? key : undefined);
+}
