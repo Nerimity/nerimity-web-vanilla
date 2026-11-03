@@ -17,11 +17,16 @@ import {
   type PublicServerFilter,
   type PublicServerSort,
 } from "../../services/exploreService";
+import { accountStore } from "../../store/accountStore";
+import { serverStore } from "../../store/serverStore";
 import type { RawExploreItem } from "../../Types";
 import { timeSince } from "../../utils/date";
 import { debounce } from "../../utils/debounce";
+import { closestFromEvent } from "../../utils/dom";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { createIntersectionObserver } from "../../utils/observer";
+import { getRecentServerChannelId } from "../../utils/recentServerChannels";
 import { router } from "../../utils/router";
 import type { RouteContext } from "./AppPage";
 
@@ -70,8 +75,10 @@ const ServerItem = (props: { item: RawExploreItem }) => {
   const creator = server.createdBy;
   const lifetimeBumps = props.item.lifetimeBumpCount.toLocaleString();
 
+  const alreadyJoined = !!serverStore.servers.get(server.id);
+
   return (
-    <div class={style.serverItem}>
+    <div class={style.serverItem} data-server-id={server.id}>
       <Banner server={server} />
       <div class={style.details}>
         <Avatar imgClass="avatar" server={server} size={64} />
@@ -127,7 +134,18 @@ const ServerItem = (props: { item: RawExploreItem }) => {
           </div>
         </div>
         <div class={style.actions}>
-          <Button icon="login" label={t`Join server`} primary />
+          <Button
+            icon="login"
+            href={
+              alreadyJoined
+                ? `/app/servers/${server?.id}/${getRecentServerChannelId(server?.id!)}`
+                : undefined
+            }
+            data-action={alreadyJoined ? undefined : "join"}
+            label={alreadyJoined ? t`Visit Server` : t`Join Server`}
+            success={alreadyJoined}
+            primary
+          />
           <Button icon="arrow_upward" label={t`Bump ~ ${bumpCount}`} />
         </div>
       </div>
@@ -314,7 +332,35 @@ const createExploreRoute = ({ content }: RouteContext) => {
       {tabContent}
     </div>
   ) as HTMLDivElement;
-  content.replaceChildren(el);
+
+  const joinServerClick = async (e: MouseEvent) => {
+    const serverEl = closestFromEvent(e, "[data-server-id]");
+    if (serverEl) {
+      const serverId = serverEl.dataset.serverId!;
+      const label = serverEl.querySelector(".label");
+      if (!label) return;
+      label.textContent = `Joining...`;
+      const [, error] = await serverStore.joinServer(serverId);
+      if (error?.message) {
+        label.textContent = `Join Server`;
+        alert({ message: error.message });
+      }
+    }
+  };
+
+  el.addEventListener(
+    "click",
+    async (e) => {
+      const actionEl = closestFromEvent(e, "[data-action]");
+      if (actionEl) {
+        const action = actionEl.dataset.action;
+        if (action === "join") {
+          joinServerClick(e);
+        }
+      }
+    },
+    { signal },
+  );
 
   const hoverAnimator = new HoverAnimator(el, [
     { trigger: `.${style.serverItem}`, image: ".clanIcon img" },
@@ -349,15 +395,25 @@ const createExploreRoute = ({ content }: RouteContext) => {
     if (tab === "bots") BotsTab({ tabContent, signal });
   };
 
-  router.createMatchListener<{ tab: string }>(
-    "/app/explore{/:tab}?",
-    (res) => {
-      if (!res) return;
-      const tab = res?.params?.tab as Tab;
-      updateTab(tab || "all");
-    },
-    { signal },
-  );
+  const render = () => {
+    if (signal.aborted) return;
+    if (currentTab) return;
+    if (!accountStore.authenticated) return;
+    content.replaceChildren(el);
+
+    router.createMatchListener<{ tab: string }>(
+      "/app/explore{/:tab}?",
+      (res) => {
+        if (!res) return;
+        const tab = res?.params?.tab as Tab;
+        updateTab(tab || "all");
+      },
+      { signal },
+    );
+  };
+
+  render();
+  storeEmitter.on("ws:authStateUpdate", render, signal);
 
   const destroy = () => {
     ac.abort();

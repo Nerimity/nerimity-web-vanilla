@@ -264,6 +264,7 @@ msgid "Search messages..."
 msgstr "Search messages..."
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:45
+#: src/pages/app-page/createExploreRoute.tsx:766
 #: src/store/userPresenceStore.ts:43
 msgid "Offline"
 msgstr "Offline"
@@ -289,27 +290,27 @@ msgstr "Invalid Quote"
 msgid "Hidden Quote"
 msgstr "Hidden Quote"
 
-#: src/components/message-pane/InviteEmbed.tsx:107
+#: src/components/message-pane/InviteEmbed.tsx:137
 msgid "{count, plural, =0 {<0>No</0> Members} one {<1>{count}</1> Member} other {<2>{count}</2> Members}}"
 msgstr "{count, plural, =0 {<0>No</0> Members} one {<1>{count}</1> Member} other {<2>{count}</2> Members}}"
 
-#: src/components/message-pane/InviteEmbed.tsx:136
+#: src/components/message-pane/InviteEmbed.tsx:166
 msgid "Visit"
 msgstr "Visit"
 
-#: src/components/message-pane/InviteEmbed.tsx:136
+#: src/components/message-pane/InviteEmbed.tsx:166
 msgid "Join"
 msgstr "Join"
 
-#: src/components/message-pane/InviteEmbed.tsx:213
+#: src/components/message-pane/InviteEmbed.tsx:238
 msgid "Emoji from a private server."
 msgstr "Emoji from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:215
+#: src/components/message-pane/InviteEmbed.tsx:240
 msgid "Clan from a private server."
 msgstr "Clan from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:216
+#: src/components/message-pane/InviteEmbed.tsx:241
 msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
@@ -1090,61 +1091,120 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/createExploreRoute.tsx:61
-#: src/pages/app-page/createExploreRoute.tsx:142
+#: src/pages/app-page/createExploreRoute.tsx:90
+#: src/pages/app-page/createExploreRoute.tsx:182
 msgid "by <0>{username}</0>"
 msgstr "by <0>{username}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:76
+#: src/pages/app-page/createExploreRoute.tsx:105
 msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
-#: src/pages/app-page/createExploreRoute.tsx:97
-#: src/pages/app-page/createExploreRoute.tsx:178
+#: src/pages/app-page/createExploreRoute.tsx:126
+#: src/pages/app-page/createExploreRoute.tsx:218
 msgid "{count} Lifetime Bumps"
 msgstr "{count} Lifetime Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:99
-#: src/pages/app-page/createExploreRoute.tsx:180
+#: src/pages/app-page/createExploreRoute.tsx:128
+#: src/pages/app-page/createExploreRoute.tsx:220
 msgid "Bumped <0>{date}</0>"
 msgstr "Bumped <0>{date}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:108
-msgid "Join server"
-msgstr "Join server"
+#: src/pages/app-page/createExploreRoute.tsx:145
+msgid "Visit Server"
+msgstr "Visit Server"
 
-#: src/pages/app-page/createExploreRoute.tsx:109
-#: src/pages/app-page/createExploreRoute.tsx:190
+#: src/pages/app-page/createExploreRoute.tsx:145
+msgid "Join Server"
+msgstr "Join Server"
+
+#: src/pages/app-page/createExploreRoute.tsx:149
+#: src/pages/app-page/createExploreRoute.tsx:230
 msgid "Bump ~ {bumpCount}"
 msgstr "Bump ~ {bumpCount}"
 
-#: src/pages/app-page/createExploreRoute.tsx:157
+#: src/pages/app-page/createExploreRoute.tsx:197
 msgid "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 msgstr "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 
-#: src/pages/app-page/createExploreRoute.tsx:189
+#: src/pages/app-page/createExploreRoute.tsx:229
 msgid "Invite Bot"
 msgstr "Invite Bot"
 
-#: src/pages/app-page/createExploreRoute.tsx:228
-msgid "A bot can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
-msgstr "A bot can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
+#: src/pages/app-page/createExploreRoute.tsx:324
+msgid "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
+msgstr "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
 
-#: src/pages/app-page/createExploreRoute.tsx:233
+#: src/pages/app-page/createExploreRoute.tsx:328
 msgid "Please report bots that are malicious, broken themes or servers that break the TOS."
 msgstr "Please report bots that are malicious, broken themes or servers that break the TOS."
 
-#: src/pages/app-page/createExploreRoute.tsx:252
+#: src/pages/app-page/createExploreRoute.tsx:457
+#: src/pages/app-page/createExploreRoute.tsx:647
+msgid "Pinned Servers"
+msgstr "Pinned Servers"
+
+#: src/pages/app-page/createExploreRoute.tsx:469
 msgid "Bumped Servers"
 msgstr "Bumped Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:261
+#: src/pages/app-page/createExploreRoute.tsx:480
 msgid "Bumped Bots"
 msgstr "Bumped Bots"
 
-#: src/pages/app-page/createExploreRoute.tsx:262
+#: src/pages/app-page/createExploreRoute.tsx:483
 msgid "Recent Themes"
 msgstr "Recent Themes"
+
+#: src/pages/app-page/createExploreRoute.tsx:510
+#: src/pages/app-page/createExploreRoute.tsx:758
+msgid "All"
+msgstr "All"
+
+#: src/pages/app-page/createExploreRoute.tsx:514
+msgid "Verified"
+msgstr "Verified"
+
+#: src/pages/app-page/createExploreRoute.tsx:518
+msgid "Clans"
+msgstr "Clans"
+
+#: src/pages/app-page/createExploreRoute.tsx:525
+#: src/pages/app-page/createExploreRoute.tsx:773
+msgid "Most Bumps"
+msgstr "Most Bumps"
+
+#: src/pages/app-page/createExploreRoute.tsx:529
+#: src/pages/app-page/createExploreRoute.tsx:777
+msgid "Most Members"
+msgstr "Most Members"
+
+#: src/pages/app-page/createExploreRoute.tsx:533
+#: src/pages/app-page/createExploreRoute.tsx:781
+msgid "Recently Added"
+msgstr "Recently Added"
+
+#: src/pages/app-page/createExploreRoute.tsx:537
+#: src/pages/app-page/createExploreRoute.tsx:785
+msgid "Recently Bumped"
+msgstr "Recently Bumped"
+
+#: src/pages/app-page/createExploreRoute.tsx:541
+msgid "Most Active"
+msgstr "Most Active"
+
+#: src/pages/app-page/createExploreRoute.tsx:762
+#: src/store/userPresenceStore.ts:19
+msgid "Online"
+msgstr "Online"
+
+#: src/pages/app-page/createExploreRoute.tsx:800
+msgid "Search servers..."
+msgstr "Search servers..."
+
+#: src/pages/app-page/createExploreRoute.tsx:812
+msgid "Search bots..."
+msgstr "Search bots..."
 
 #: src/pages/app-page/createHomePane.tsx:223
 msgid "Feed"
@@ -1912,10 +1972,6 @@ msgstr "Connected!"
 #: src/store/messageStore.ts:353
 msgid "Failed to send message"
 msgstr "Failed to send message"
-
-#: src/store/userPresenceStore.ts:19
-msgid "Online"
-msgstr "Online"
 
 #: src/store/userPresenceStore.ts:25
 msgid "Looking to Play"

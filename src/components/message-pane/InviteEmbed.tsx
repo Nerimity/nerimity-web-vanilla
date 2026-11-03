@@ -4,8 +4,6 @@ import { Plural, Trans } from "@trans";
 import {
   getServerDetailsByCode,
   getServerDetailsByEmojiId,
-  joinPublicServer,
-  joinServerByInviteCode,
   type ServerWithMemberCount,
 } from "../../services/serverService";
 import { socket } from "../../services/socket";
@@ -210,7 +208,6 @@ export const InviteEmbed = (props: {
   return el;
 };
 
-let joinClickedServerId = "";
 document.addEventListener("click", async (e) => {
   const btn = closestFromEvent(e, `.${style.button}`);
   if (!btn) return;
@@ -225,32 +222,11 @@ document.addEventListener("click", async (e) => {
     );
     return;
   }
-  const [, error] = await (async () => {
-    joinClickedServerId = serverId;
-    if (code) {
-      return joinServerByInviteCode(code);
-    } else {
-      return joinPublicServer(serverId);
-    }
-  })();
+  const [, error] = await serverStore.joinServer(serverId, code);
   if (error?.message) {
-    joinClickedServerId = "";
     alert({ message: error.message });
   }
 });
-
-storeEmitter.on(
-  "server:add",
-  (payload) => {
-    if (payload.server.id !== joinClickedServerId) return;
-    joinClickedServerId = "";
-
-    router.navigate(
-      `/app/servers/${payload.server.id}/${getRecentServerChannelId(payload.server.id)}`,
-    );
-  },
-  new AbortController().signal,
-);
 
 function InvalidInvite(props: { emojiId?: string; clan?: boolean }) {
   return (

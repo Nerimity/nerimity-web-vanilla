@@ -1,4 +1,8 @@
-import { getServerCommands } from "../services/serverService";
+import {
+  getServerCommands,
+  joinPublicServer,
+  joinServerByInviteCode,
+} from "../services/serverService";
 import { socket } from "../services/socket";
 import {
   ChannelType,
@@ -15,7 +19,9 @@ import { debounce } from "../utils/debounce";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
 import { newQueue } from "../utils/queue";
+import { getRecentServerChannelId } from "../utils/recentServerChannels";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
+import { router } from "../utils/router";
 import { accountStore } from "./accountStore";
 import { Channel, channelStore } from "./channelStore";
 import { serverMemberStore, type ServerMember } from "./serverMemberStore";
@@ -397,10 +403,52 @@ function createServerStore() {
     };
   };
 
+  let joiningServerId = "";
+
+  let joining = false;
+
+  const joinServer = async (serverId: string, code?: string) => {
+    if (!accountStore.authenticated) {
+      return [null, { message: "Not authenticated" }] as const;
+    }
+    if (joining)
+      return [null, { message: "Already joining a server" }] as const;
+    joining = true;
+    const [res, error] = await (async () => {
+      joiningServerId = serverId;
+      if (code) {
+        return joinServerByInviteCode(code);
+      } else {
+        return joinPublicServer(serverId);
+      }
+    })();
+    joining = false;
+
+    if (error) {
+      joiningServerId = "";
+    }
+
+    return [res, error] as const;
+  };
+
+  storeEmitter.on(
+    "server:add",
+    (payload) => {
+      if (payload.server.id !== joiningServerId) return;
+      joiningServerId = "";
+
+      router.navigate(
+        `/app/servers/${payload.server.id}/${getRecentServerChannelId(payload.server.id)}`,
+      );
+    },
+    new AbortController().signal,
+  );
+
   return {
     servers,
     orderedServers,
     setServers,
+    joinServer,
     setServer,
     sortedChannels,
     get currentServerId() {
