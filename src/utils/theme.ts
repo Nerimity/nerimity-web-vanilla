@@ -113,12 +113,21 @@ export const DefaultTheme = {
 
 export type Theme = typeof DefaultTheme;
 
-let currentTheme: Partial<Theme> = getLocalItem("theme", DefaultTheme)!;
+let currentTheme: Partial<Theme> = {
+  ...getLocalItem("theme", DefaultTheme),
+  ...DefaultTheme,
+}!;
 
 export const updateTheme = (theme?: Partial<Theme>) => {
   if (theme) {
     currentTheme = normalizeThemeColors(theme);
-    setLocalItem("theme", currentTheme);
+
+    const customColors = Object.fromEntries(
+      Object.entries(currentTheme).filter(
+        ([key, value]) => value !== DefaultTheme[key as keyof Theme],
+      ),
+    ) as Partial<Theme>;
+    setLocalItem("theme", customColors);
   }
 
   for (const [key, value] of Object.entries(DefaultTheme)) {
