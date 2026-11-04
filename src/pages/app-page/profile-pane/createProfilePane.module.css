@@ -61,13 +61,13 @@
     display: flex;
     padding: 4px;
     border-radius: 22px;
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
     gap: 6px;
     .actionButton {
       z-index: 1111;
       border-radius: var(--radius-max);
       :global(.label) {
-        color: var(--gray-200);
+        color: var(--text-content-color);
       }
     }
   }
@@ -76,7 +76,7 @@
 .section {
   padding: 12px;
   border-radius: var(--radius-16);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
 }
 
 .bioSection {
@@ -101,8 +101,8 @@
       padding-top: 2px;
       padding-bottom: 0;
       border-radius: var(--radius-6);
-      color: var(--gray-100);
-      background-color: var(--gray-800);
+      color: var(--text-emphasis-color);
+      background-color: var(--surface-overlay-bg);
       font-size: 12px;
     }
   }
@@ -111,11 +111,11 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: 6px;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 14px;
     gap: 8px;
     .full {
-      color: var(--gray-100);
+      color: var(--text-emphasis-color);
     }
   }
   .bio {
@@ -170,7 +170,7 @@
   overflow: hidden;
   flex-direction: column;
   border-radius: var(--radius-16);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
   .title {
     display: flex;
     align-items: center;
@@ -194,7 +194,7 @@
 .joinedAtItem {
   cursor: pointer;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .title {
     padding-bottom: 6px;
@@ -216,7 +216,7 @@
     cursor: pointer;
     user-select: none;
     &:hover {
-      background-color: var(--gray-800);
+      background-color: var(--surface-overlay-bg);
     }
   }
 }
@@ -235,7 +235,7 @@
   cursor: pointer;
   gap: 8px;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
 }
 
@@ -259,7 +259,7 @@
     width: 4px;
     height: 4px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-600);
+    background-color: var(--surface-muted-bg);
   }
 }
 .postsAreaContainer {
@@ -270,14 +270,14 @@
   padding-left: 6px;
   margin-top: 6px;
   border-radius: var(--radius-16);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
   :global(.postArea) {
     margin-top: -4px;
   }
   :global(.postItem) {
     &:global(.force-hover),
     &:not([data-disable-hover="true"]):hover {
-      background-color: var(--gray-900);
+      background-color: var(--surface-bg);
     }
   }
   .tabsContainer {
@@ -321,7 +321,7 @@
     text-decoration: none;
     gap: 8px;
     &:hover {
-      background-color: var(--gray-900);
+      background-color: var(--surface-bg);
     }
   }
 }

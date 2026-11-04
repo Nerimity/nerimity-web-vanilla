@@ -32,9 +32,9 @@
     padding: 2px;
     padding-right: 8px;
     padding-left: 8px;
-    border: solid 1px var(--gray-500);
+    border: solid 1px var(--control-outline-color);
     border-radius: var(--radius-max);
-    background: var(--gray-800);
+    background: var(--surface-overlay-bg);
     font-size: 12px;
   }
 }

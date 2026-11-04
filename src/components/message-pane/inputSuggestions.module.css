@@ -4,10 +4,10 @@
   flex-direction: column;
   padding: 6px;
   margin-top: 4px;
-  border: solid 1px var(--gray-600);
+  border: solid 1px var(--border-subtle-color);
   border-radius: var(--radius-12);
   color: var(--text-color);
-  background: var(--gray-900);
+  background: var(--surface-bg);
   font-size: 14px;
   &.hide {
     display: none;
@@ -26,7 +26,7 @@
     background-color: initial;
   }
   &[data-selected="true"] {
-    background: var(--gray-600);
+    background: var(--surface-muted-bg);
     .returnIcon {
       display: block;
     }
@@ -60,7 +60,7 @@
     gap: 4px;
   }
   .specialIcon {
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 16px;
   }
   .returnIcon {

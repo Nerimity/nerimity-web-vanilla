@@ -160,6 +160,7 @@ const ServerItem = (props: { item: RawExploreItem }) => {
     </div>
   );
 };
+
 const BotItem = (props: { item: RawExploreItem }) => {
   const bot = props.item.botApplication!;
   const botUser = bot.botUser;
@@ -246,6 +247,8 @@ const BotItem = (props: { item: RawExploreItem }) => {
     </div>
   );
 };
+let alreadyWarned: string[] = [];
+
 const ThemeItem = (props: { item: ExploreTheme }) => {
   const name = props.item.name;
   const maintainers = props.item.maintainers?.map((maintainer) => (
@@ -269,6 +272,10 @@ const ThemeItem = (props: { item: ExploreTheme }) => {
         delete props.item.colors[key];
         return;
       }
+      if (alreadyWarned.includes(key)) {
+        return;
+      }
+      alreadyWarned.push(key);
 
       console.warn(`Unknown theme color key: ${key}`);
     }

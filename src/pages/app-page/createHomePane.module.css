@@ -21,7 +21,7 @@
   width: 240px;
   padding: 6px;
   border-radius: var(--radius-16);
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   .activityHeader {
     display: flex;
     align-items: center;
@@ -34,7 +34,7 @@
   .title {
     display: -webkit-box;
     overflow: hidden;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     text-overflow: ellipsis;
     word-break: break-word;
     font-size: 12px;
@@ -45,7 +45,7 @@
   .activityName {
     display: flex;
     align-items: center;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
     gap: 4px;
 
@@ -159,9 +159,9 @@
     padding-bottom: 6px;
     margin: 0;
     border-radius: var(--radius-16);
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
     &:hover {
-      background-color: var(--gray-900);
+      background-color: var(--surface-bg);
     }
   }
   .notificationContainer {
@@ -169,7 +169,7 @@
     cursor: pointer;
     user-select: none;
     &:hover {
-      background-color: var(--gray-900);
+      background-color: var(--surface-bg);
     }
   }
   .innerDetails {

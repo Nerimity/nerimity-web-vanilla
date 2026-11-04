@@ -9,7 +9,7 @@ body {
 }
 body {
   color: var(--text-color);
-  background-color: var(--background, black);
+  background-color: var(--app-bg, black);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 textarea {

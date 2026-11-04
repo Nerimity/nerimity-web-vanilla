@@ -9,9 +9,9 @@
   box-sizing: border-box;
   padding: 0 6px;
   padding-right: 12px;
-  border: solid 1px var(--gray-700);
+  border: solid 1px var(--border-color);
   border-radius: var(--radius-max);
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   white-space: nowrap;
   font-size: 12px;
   gap: 6px;
@@ -23,7 +23,7 @@
     width: 24px;
     height: 24px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .channelIcon {
     background-color: transparent;
@@ -32,7 +32,7 @@
     padding: 4px;
     margin-right: 4px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     font-size: 16px;
     &.warn {
       background-color: var(--warn-color);

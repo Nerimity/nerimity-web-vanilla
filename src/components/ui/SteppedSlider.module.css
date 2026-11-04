@@ -8,7 +8,7 @@
   height: 16px;
   margin: 0 4px 0 8px;
   border-radius: 999px;
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   user-select: none;
 }
 
@@ -68,7 +68,7 @@
   height: 8px;
   border-radius: 50%;
   opacity: 0.6;
-  background-color: var(--gray-300);
+  background-color: var(--control-hover-bg);
   transform: translateX(-50%);
   pointer-events: none;
 }

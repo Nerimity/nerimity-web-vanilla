@@ -16,7 +16,7 @@
   align-items: center;
   gap: 4px;
   .icon {
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
     font-size: 14px;
   }
 }

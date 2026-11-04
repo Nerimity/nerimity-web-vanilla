@@ -11,13 +11,13 @@
     min-width: 0;
     column-gap: 4px;
     &:nth-child(1) {
-      color: var(--gray-200);
+      color: var(--text-content-color);
     }
   }
 
   .timestamp {
     flex-shrink: 0;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     white-space: nowrap;
     font-size: 12px;
   }

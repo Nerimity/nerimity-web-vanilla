@@ -60,9 +60,9 @@
   height: 40px;
   padding-right: 4px;
   padding-left: 8px;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-max);
-  background-color: var(--gray-1000);
+  background-color: var(--surface-inset-bg);
   .icon {
     font-size: 20px;
     &.alert {

@@ -48,12 +48,12 @@
       padding-top: 2px;
       padding-bottom: 3px;
       border-radius: var(--radius-6);
-      color: var(--gray-100);
-      background-color: var(--gray-800);
+      color: var(--text-emphasis-color);
+      background-color: var(--surface-overlay-bg);
       font-size: 12px;
     }
     .tag {
-      color: var(--gray-400);
+      color: var(--text-muted-color);
     }
     .buttons {
       display: flex;
@@ -71,10 +71,10 @@
   .section .stats {
     display: flex;
     flex-wrap: wrap;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     gap: 8px;
     .full {
-      color: var(--gray-100);
+      color: var(--text-emphasis-color);
     }
   }
 
@@ -85,11 +85,11 @@
     margin-right: 4px;
     margin-left: 4px;
     border-radius: var(--radius-14);
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
     gap: 12px;
     .title {
       margin-bottom: 8px;
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       font-size: 12px;
       font-weight: bold;
     }
@@ -139,17 +139,17 @@
     padding: 4px 4px;
     padding-right: 6px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     gap: 4px;
     &.addRole {
       width: 27px;
       height: 27px;
       padding: 0;
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       cursor: pointer;
       &:hover {
         color: var(--text-color);
-        background-color: var(--gray-700);
+        background-color: var(--surface-interactive-bg);
       }
     }
     .icon {
@@ -170,7 +170,7 @@
   gap: 6px;
 
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     .setCustomStatus,
     .icon {
       opacity: 1;
@@ -195,7 +195,7 @@
   cursor: pointer;
   user-select: none;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .userPresence {
     flex: 1;
@@ -217,7 +217,7 @@
   padding: 6px;
   margin-left: 4px;
   border-radius: var(--radius-6);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
   &.hide {
     display: none;
   }

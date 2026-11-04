@@ -6,7 +6,7 @@
   padding: 6px;
   padding-left: 16px;
   border-radius: var(--radius-8);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   place-self: start;
   gap: 6px;
 
@@ -17,7 +17,7 @@
     left: 6px;
     width: 4px;
     border-radius: var(--radius-max);
-    background-color: var(--theme-color, var(--gray-700));
+    background-color: var(--theme-color, var(--surface-interactive-bg));
     content: "";
   }
 }
@@ -70,6 +70,6 @@
   flex: 1;
   min-height: 0;
   line-height: 1.2;
-  color: var(--gray-200);
+  color: var(--text-content-color);
   font-size: 12px;
 }

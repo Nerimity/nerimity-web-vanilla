@@ -16,7 +16,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--gray-800);
+    color: var(--avatar-letter-color);
     background-color: var(--color);
     font-size: calc(var(--size) / 1.9);
     font-weight: bold;

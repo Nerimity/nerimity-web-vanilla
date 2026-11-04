@@ -7,11 +7,11 @@
   gap: 4px;
 }
 .dim {
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   font-weight: bold;
 }
 
 .notice {
   margin-top: 12px;
-  color: var(--gray-300);
+  color: var(--text-secondary-color);
 }

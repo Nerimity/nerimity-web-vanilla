@@ -9,7 +9,7 @@ export const UserBadgeItem = (props: { badge: UserBadge }) => {
       data-bit={props.badge.bit}
       style={{
         background: props.badge.color,
-        "--text-color": props.badge.textColor || "var(--gray-800)",
+        "--text-color": props.badge.textColor || "var(--badge-text-color)",
       }}
       class={style.badgeItem}
     >

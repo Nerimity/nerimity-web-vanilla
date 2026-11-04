@@ -19,7 +19,7 @@
   border-radius: var(--radius-max);
   gap: 8px;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
 
   .memberInfo {
@@ -61,7 +61,7 @@
     margin-right: 2px;
     margin-left: 2px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
     gap: 4px;
     &[data-has-icon="true"] {
       padding-left: 4px;
@@ -89,7 +89,7 @@
   margin: 8px 4px;
   margin-left: 8px;
   border-radius: var(--radius-max);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   gap: 4px;
 }
 .tab {
@@ -100,7 +100,7 @@
   padding: 10px 8px;
   border: none;
   border-radius: var(--radius-max);
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   background-color: transparent;
   cursor: pointer;
   font-size: 12px;
@@ -108,7 +108,7 @@
   gap: 4px;
   &:hover {
     color: var(--text-color);
-    background-color: var(--gray-700);
+    background-color: var(--surface-interactive-bg);
   }
   &[data-active="true"] {
     color: var(--text-color);

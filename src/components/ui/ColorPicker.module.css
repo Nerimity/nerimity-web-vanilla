@@ -3,13 +3,13 @@
   align-items: center;
   justify-content: center;
   padding: 4px;
-  border: solid 1px var(--gray-600);
+  border: solid 1px var(--border-subtle-color);
   border-radius: var(--radius-8);
   cursor: pointer;
   user-select: none;
 
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .container {
     display: flex;
@@ -26,7 +26,7 @@
       width: 100%;
       height: 6px;
       border-radius: var(--radius-max);
-      outline: solid 1px var(--gray-700);
+      outline: solid 1px var(--border-color);
     }
     .icon {
       font-size: 18px;

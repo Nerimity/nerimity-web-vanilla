@@ -13,11 +13,11 @@
   cursor: pointer;
   gap: 8px;
   &:hover {
-    background: var(--gray-900);
+    background: var(--surface-bg);
   }
   &[data-default="true"],
   &[data-selected="true"] {
-    background: var(--gray-800);
+    background: var(--surface-overlay-bg);
   }
   &[data-default="true"] {
     opacity: 0.6;
@@ -38,7 +38,7 @@
     background: white;
   }
   .memberCount {
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
   }
   .details {

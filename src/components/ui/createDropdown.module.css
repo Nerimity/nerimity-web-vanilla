@@ -1,5 +1,5 @@
 .main .item {
-  border: solid 1px var(--gray-600);
+  border: solid 1px var(--border-subtle-color);
   .expandIcon {
     display: block;
   }
@@ -14,7 +14,7 @@
   user-select: none;
   gap: 6px;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
 
   &[data-selected] {

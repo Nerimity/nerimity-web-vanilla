@@ -2,9 +2,9 @@
   display: flex;
   flex-direction: column;
   padding: 4px;
-  border: 1px solid var(--gray-800);
+  border: 1px solid var(--control-border-color);
   border-radius: 22px;
-  background-color: var(--gray-1000);
+  background-color: var(--surface-inset-bg);
 
   &[data-self-voted] {
     pointer-events: none;
@@ -24,14 +24,14 @@
   cursor: pointer;
   gap: 8px;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .radiobox {
     pointer-events: none;
   }
   .percent {
     margin-left: auto;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
   }
 }
@@ -48,7 +48,7 @@
 
 .totalVotes {
   padding: 8px;
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   font-size: 14px;
   place-self: flex-end;
 }

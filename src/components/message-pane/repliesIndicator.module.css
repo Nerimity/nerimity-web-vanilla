@@ -8,10 +8,10 @@
   padding-top: 4px;
   padding-bottom: 4px;
   margin-top: 4px;
-  border: solid 1px var(--gray-600);
+  border: solid 1px var(--border-subtle-color);
   border-radius: var(--radius-10);
   color: var(--text-color);
-  background: var(--gray-900);
+  background: var(--surface-bg);
   font-size: 14px;
   gap: 6px;
 
@@ -33,8 +33,8 @@
       padding: 2px 4px;
       margin-right: auto;
       border-radius: var(--radius-max);
-      color: var(--gray-400);
-      background: var(--gray-800);
+      color: var(--text-muted-color);
+      background: var(--surface-overlay-bg);
       font-size: 10px;
       font-weight: 500;
     }

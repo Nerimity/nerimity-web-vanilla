@@ -12,7 +12,7 @@
 
   &:global(.force-hover),
   &:hover {
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
   }
 
   &:global(.sending) {
@@ -24,7 +24,7 @@
     }
   }
   &:global(.editing) {
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
   }
 
   &.mentioned {
@@ -95,12 +95,12 @@
       font-size: 14px;
     }
     .silent {
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       font-size: 12px;
     }
     .timestamp {
       flex-shrink: 0;
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       white-space: nowrap;
       font-size: 12px;
     }
@@ -137,7 +137,7 @@
 }
 
 .messageContent {
-  color: var(--gray-200);
+  color: var(--text-content-color);
 }
 
 .marker {
@@ -161,7 +161,7 @@
   span {
     flex-shrink: 0;
     border-radius: 99px;
-    color: var(--gray-500);
+    color: var(--text-subtle-color);
     white-space: nowrap;
     font-weight: bold;
   }
@@ -170,7 +170,7 @@
     flex: 1;
     height: 1px;
 
-    background: linear-gradient(to left, transparent, var(--gray-700));
+    background: linear-gradient(to left, transparent, var(--surface-interactive-bg));
   }
 }
 
@@ -187,8 +187,8 @@
       left: 20px;
       width: 20px;
       height: calc(100% - 8px);
-      border-top: 2.5px solid var(--gray-600);
-      border-left: 2.5px solid var(--gray-600);
+      border-top: 2.5px solid var(--border-subtle-color);
+      border-left: 2.5px solid var(--border-subtle-color);
       border-top-left-radius: 6px;
       content: "";
     }
@@ -228,7 +228,7 @@
 }
 
 .newUserIcon {
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   user-select: none;
   transition: 0.2s;
   font-size: 14px;
@@ -239,7 +239,7 @@
 
 .blocked {
   margin-left: 60px;
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   cursor: pointer;
   user-select: none;
   font-size: 14px;

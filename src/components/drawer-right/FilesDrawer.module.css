@@ -22,11 +22,11 @@
   justify-content: center;
   border: solid 1px transparent;
   border-radius: var(--radius-8);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   cursor: pointer;
   aspect-ratio: 1;
   &:hover {
-    border: solid 1px var(--gray-700);
+    border: solid 1px var(--border-color);
     .overlay {
       opacity: 1;
     }
@@ -64,7 +64,7 @@
   span {
     flex-shrink: 0;
     border-radius: 99px;
-    color: var(--gray-500);
+    color: var(--text-subtle-color);
     white-space: nowrap;
     font-weight: bold;
   }
@@ -73,6 +73,6 @@
     flex: 1;
     height: 1px;
 
-    background: linear-gradient(to left, transparent, var(--gray-700));
+    background: linear-gradient(to left, transparent, var(--surface-interactive-bg));
   }
 }

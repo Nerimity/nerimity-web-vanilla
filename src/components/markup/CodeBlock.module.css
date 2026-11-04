@@ -1,9 +1,9 @@
 .codeblock {
   overflow: hidden;
   margin-right: 2px;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   &.nowrap {
     :global .highlighter {
       overflow: auto;
@@ -17,7 +17,7 @@
     align-items: center;
     padding: 4px;
     .lang {
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       font-size: 12px;
     }
     .buttons {

@@ -8,7 +8,7 @@
 
   &:hover {
     .checkbox {
-      background: var(--gray-600);
+      background: var(--surface-muted-bg);
       .icon {
         opacity: 0.2;
       }
@@ -32,7 +32,7 @@
     padding: 4px;
     border-radius: 2px;
     border-radius: var(--radius-4);
-    background: var(--gray-700);
+    background: var(--surface-interactive-bg);
 
     .icon {
       opacity: 0;

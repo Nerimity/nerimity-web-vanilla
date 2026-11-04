@@ -11,7 +11,7 @@
   border-radius: var(--radius-max);
   gap: 8px;
   &:hover {
-    background-color: var(--gray-900);
+    background-color: var(--surface-bg);
   }
   :global(.button) {
     border-radius: var(--radius-max);
@@ -27,6 +27,6 @@
   flex: 1;
 }
 .blockedAt {
-  color: var(--gray-500);
+  color: var(--text-subtle-color);
   font-size: 12px;
 }

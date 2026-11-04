@@ -39,7 +39,7 @@
 .separator {
   height: 1px;
   margin: 4px 0;
-  background-color: var(--gray-700);
+  background-color: var(--surface-interactive-bg);
 }
 .item {
   position: relative;
@@ -66,7 +66,7 @@
   }
 
   &:hover {
-    background-color: var(--gray-850);
+    background-color: var(--surface-raised-bg);
   }
 
   &[data-selected="true"] {
@@ -93,7 +93,7 @@
 
   .icon {
     padding: 4px;
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
     font-size: 18px;
   }
 }

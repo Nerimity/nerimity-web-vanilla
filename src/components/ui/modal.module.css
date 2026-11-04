@@ -31,7 +31,7 @@
     left: 0;
     width: 100%;
     padding: 10px;
-    background: var(--background);
+    background: var(--modal-bg);
     :global .button {
       flex: 1;
     }
@@ -61,9 +61,9 @@
   overflow: hidden;
   flex-direction: column;
   max-height: 80vh;
-  border: solid 1px var(--gray-700);
+  border: solid 1px var(--border-color);
   border-radius: var(--radius-18);
-  background: var(--background);
+  background: var(--modal-bg);
 
   &.hasPos {
     position: absolute;

@@ -23,15 +23,15 @@
     border: none;
     border-radius: var(--radius-max);
     color: var(--text-color);
-    background: var(--gray-800);
+    background: var(--surface-overlay-bg);
     &:hover {
-      background: var(--gray-700);
+      background: var(--surface-interactive-bg);
       :global(.icon) {
         color: var(--text-color);
       }
     }
     :global(.icon) {
-      color: var(--gray-300);
+      color: var(--text-secondary-color);
     }
   }
 }
@@ -42,7 +42,7 @@
   margin-bottom: 12px;
   margin-left: 8px;
   border-radius: var(--radius-max);
-  background: var(--gray-800);
+  background: var(--surface-overlay-bg);
   gap: 4px;
 }
 
@@ -75,7 +75,7 @@
   }
 
   .presence {
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
   }
   .username {
     overflow: hidden;
@@ -128,7 +128,7 @@
   padding: 10px 8px;
   border: none;
   border-radius: var(--radius-max);
-  color: var(--gray-300);
+  color: var(--text-secondary-color);
   background: transparent;
   cursor: pointer;
   text-align: center;
@@ -137,7 +137,7 @@
   gap: 6px;
   &:hover {
     color: white;
-    background: var(--gray-700);
+    background: var(--surface-interactive-bg);
   }
   &[data-selected="true"] {
     color: white;

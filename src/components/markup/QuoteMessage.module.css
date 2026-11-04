@@ -4,11 +4,11 @@
   flex-direction: column;
   width: fit-content;
   padding: 6px;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   .markup {
-    color: var(--gray-200);
+    color: var(--text-content-color);
   }
 }
 
@@ -31,10 +31,10 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 6px;
-  border: 1px solid var(--gray-700);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-max);
-  color: var(--gray-400);
-  background-color: var(--gray-900);
+  color: var(--text-muted-color);
+  background-color: var(--surface-bg);
 
   vertical-align: middle;
 }

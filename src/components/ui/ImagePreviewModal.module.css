@@ -69,9 +69,9 @@
     bottom: 10px;
     display: flex;
     padding: 4px;
-    border: solid 1px var(--gray-700);
+    border: solid 1px var(--border-color);
     border-radius: var(--radius-12);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     pointer-events: all;
   }
   .header {
@@ -80,9 +80,9 @@
     right: 10px;
     display: flex;
     padding: 4px;
-    border: solid 1px var(--gray-700);
+    border: solid 1px var(--border-color);
     border-radius: var(--radius-12);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     pointer-events: all;
   }
 }

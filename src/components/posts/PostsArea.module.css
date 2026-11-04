@@ -61,6 +61,6 @@
 .respectfulModal {
   .warningText {
     margin-top: 10px;
-    color: var(--gray-200);
+    color: var(--text-content-color);
   }
 }

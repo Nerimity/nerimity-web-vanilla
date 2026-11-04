@@ -26,7 +26,7 @@
   height: 1px;
   margin-top: 16px;
   margin-bottom: 16px;
-  background-color: var(--gray-700);
+  background-color: var(--surface-interactive-bg);
 }
 
 .confirmEmailBlock {

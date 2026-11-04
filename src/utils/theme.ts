@@ -11,10 +11,41 @@ export const DefaultTheme = {
 
   "input-background-color": "black",
 
+  "app-bg": "var(--background)",
+  "explore-page-bg": "var(--background)",
+  "drawer-content-bg": "var(--background)",
+  "drawer-overlay-bg": "var(--background)",
+  "modal-bg": "var(--background)",
+
   "markup-mention-background-color": "var(--gray-800)",
   "markup-mention-background-color-hover": "var(--gray-700)",
   "drawer-bg": "var(--gray-900)",
   "sidebar-bg": "var(--background)",
+
+  "text-emphasis-color": "var(--gray-100)",
+  "text-content-color": "var(--gray-200)",
+  "text-secondary-color": "var(--gray-300)",
+  "text-muted-color": "var(--gray-400)",
+  "text-subtle-color": "var(--gray-500)",
+  "badge-text-color": "var(--gray-800)",
+  "avatar-letter-color": "var(--gray-800)",
+
+  "surface-inset-bg": "var(--gray-1000)",
+  "surface-bg": "var(--gray-900)",
+  "surface-raised-bg": "var(--gray-850)",
+  "surface-overlay-bg": "var(--gray-800)",
+  "surface-interactive-bg": "var(--gray-700)",
+  "surface-muted-bg": "var(--gray-600)",
+  "control-hover-bg": "var(--gray-300)",
+  "item-hover-indicator-color": "var(--gray-500)",
+
+  "border-inset-color": "var(--gray-900)",
+  "border-color": "var(--gray-700)",
+  "border-subtle-color": "var(--gray-600)",
+  "control-border-color": "var(--gray-800)",
+  "control-outline-color": "var(--gray-500)",
+  "control-selected-outline-color": "var(--gray-400)",
+  "control-strong-outline-color": "var(--gray-600)",
 
   "gray-50": "hsl(220, 0%, 95%)",
   "gray-100": "hsl(220, 0%, 90%)",

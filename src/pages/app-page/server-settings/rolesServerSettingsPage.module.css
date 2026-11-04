@@ -22,7 +22,7 @@
 }
 
 .memberCount {
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   font-size: 12px;
 }
 .adminIndicator {

@@ -8,13 +8,13 @@
     padding-right: 4px;
     padding-left: 6px;
     margin-top: 6px;
-    color: var(--gray-200);
+    color: var(--text-content-color);
     font-size: 24px;
   }
   .sub {
     display: flex;
     flex-wrap: wrap;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
     column-gap: 4px;
   }
@@ -45,7 +45,7 @@
     text-decoration: none;
 
     &:hover {
-      background-color: var(--gray-700);
+      background-color: var(--surface-interactive-bg);
     }
   }
 }
@@ -53,7 +53,7 @@
 .fileEmbed {
   padding: 6px;
   border-radius: var(--radius-max);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   place-self: start;
   &.uploading {
     border-radius: var(--radius-16);
@@ -72,7 +72,7 @@
   }
   .progressBar {
     border-radius: var(--radius-max);
-    background-color: var(--gray-700);
+    background-color: var(--surface-interactive-bg);
     .bar {
       width: 0%;
       height: 4px;

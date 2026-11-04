@@ -5,7 +5,7 @@
   padding: 6px;
   border-radius: var(--radius-8);
   border-radius: var(--radius-max);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   place-self: start;
 
   .icon {
@@ -34,7 +34,7 @@
   .sub {
     display: flex;
     flex-wrap: wrap;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
     column-gap: 4px;
   }
@@ -54,7 +54,7 @@
 
     text-decoration: none;
     &:hover {
-      background-color: var(--gray-700);
+      background-color: var(--surface-interactive-bg);
     }
   }
 }

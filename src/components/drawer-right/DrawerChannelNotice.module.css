@@ -5,7 +5,7 @@
   padding: 8px;
   margin-top: 8px;
   border-radius: var(--radius-12);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
   gap: 4px;
 }
 

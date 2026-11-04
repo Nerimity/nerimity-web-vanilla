@@ -27,7 +27,7 @@
   display: flex;
   overflow: hidden;
   flex-direction: column;
-  border: solid 1px var(--gray-700);
+  border: solid 1px var(--border-color);
   border-radius: var(--radius-10);
 
   background-color: var(--input-background-color);
@@ -47,7 +47,7 @@
   display: flex;
   flex-shrink: 0;
   padding: 4px;
-  border: solid 1px var(--gray-700);
+  border: solid 1px var(--border-color);
   border-bottom: none;
   border-top-left-radius: var(--radius-10);
   border-top-right-radius: var(--radius-10);
@@ -69,9 +69,9 @@
   right: 0;
   left: 0;
   padding: 4px;
-  border: solid 1px var(--gray-700);
+  border: solid 1px var(--border-color);
   border-radius: var(--radius-18);
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   .skeletons {
     display: flex;
     flex-direction: column;
@@ -89,7 +89,7 @@
     cursor: pointer;
     gap: 8px;
     &:hover {
-      background-color: var(--gray-800);
+      background-color: var(--surface-overlay-bg);
     }
   }
 }

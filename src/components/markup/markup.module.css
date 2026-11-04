@@ -10,7 +10,7 @@
 
   .edit {
     margin-left: 4px;
-    color: var(--gray-500);
+    color: var(--text-subtle-color);
     font-size: 12px;
   }
 
@@ -51,9 +51,9 @@
     padding-bottom: 0.3rem;
     padding-left: 0.8rem;
     margin: 0;
-    border: 1px solid var(--gray-700);
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-4);
-    background-color: var(--gray-900);
+    background-color: var(--surface-bg);
 
     &:before {
       position: absolute;
@@ -78,10 +78,10 @@
   .code {
     padding-right: 1px;
     padding-left: 1px;
-    border: 1px solid var(--gray-700);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     color: var(--color-200);
-    background-color: var(--gray-900);
+    background-color: var(--surface-bg);
   }
   .vertical {
     overflow: auto;
@@ -92,10 +92,10 @@
 
   .spoiler {
     border-radius: 4px;
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     cursor: pointer;
     &:hover {
-      background-color: var(--gray-700);
+      background-color: var(--surface-interactive-bg);
     }
 
     &.spoil .innerSpoiler {

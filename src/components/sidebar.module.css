@@ -29,7 +29,7 @@
     padding-top: 4px;
     margin-top: 4px;
     margin-bottom: 4px;
-    border-top: solid 1px var(--gray-700);
+    border-top: solid 1px var(--border-color);
     gap: 2px;
   }
   .footer {
@@ -38,7 +38,7 @@
     width: 100%;
     padding-top: 2px;
     padding-bottom: 4px;
-    border-top: solid 1px var(--gray-700);
+    border-top: solid 1px var(--border-color);
     gap: 2px;
   }
 }
@@ -134,7 +134,7 @@
   margin-top: 4px;
   &:hover {
     .logoContainer {
-      background-color: var(--gray-700);
+      background-color: var(--surface-interactive-bg);
     }
   }
   &[data-selected="true"] {
@@ -147,7 +147,7 @@
     flex-shrink: 0;
     width: calc(var(--container-width) - var(--container-width)* 0.4);
     border-radius: var(--radius-max);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     transition: background-color 0.2s;
     aspect-ratio: 1/1;
     corner-shape: squircle;

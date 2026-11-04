@@ -23,7 +23,7 @@
 }
 
 .playingFor {
-  color: var(--gray-300);
+  color: var(--text-secondary-color);
   font-size: 14px;
   font-variant: tabular-nums;
 }
@@ -33,7 +33,7 @@
   align-items: center;
   padding: 6px;
   border-radius: var(--radius-10);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   gap: 6px;
 
   .activityImage {
@@ -48,7 +48,7 @@
     flex: 1;
     flex-direction: column;
     .subtitle {
-      color: var(--gray-400);
+      color: var(--text-muted-color);
       font-size: 12px;
     }
   }
@@ -61,7 +61,7 @@
   .info {
     display: flex;
     justify-content: space-between;
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
     font-variant: tabular-nums;
   }
@@ -70,7 +70,7 @@
     height: 4px;
     margin-top: 2px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-600);
+    background-color: var(--surface-muted-bg);
   }
   .progress {
     height: 100%;

@@ -48,7 +48,7 @@
   &[data-mode="mobile"] .content {
     position: relative;
     z-index: 111111111;
-    background: var(--background);
+    background: var(--drawer-content-bg);
   }
   .content {
     position: relative;
@@ -99,7 +99,7 @@
     bottom: 0;
     left: 0;
     opacity: 0;
-    background-color: var(--background);
+    background-color: var(--drawer-overlay-bg);
     transition: 0.2s;
     pointer-events: none;
     &.visible {

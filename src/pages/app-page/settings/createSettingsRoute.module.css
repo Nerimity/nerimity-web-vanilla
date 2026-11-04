@@ -47,17 +47,17 @@
 .section {
   padding: 12px;
   border-radius: var(--radius-16);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
 }
 
 .stats {
   display: flex;
   flex-wrap: wrap;
   margin-top: 6px;
-  color: var(--gray-400);
+  color: var(--text-muted-color);
   font-size: 14px;
   gap: 8px;
   .full {
-    color: var(--gray-100);
+    color: var(--text-emphasis-color);
   }
 }
