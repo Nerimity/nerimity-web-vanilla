@@ -84,7 +84,12 @@ const ServerItem = (props: { item: RawExploreItem }) => {
     <div class={style.serverItem} data-server-id={server.id}>
       <Banner server={server} />
       <div class={style.details}>
-        <Avatar imgClass="avatar" server={server} size={64} />
+        <Avatar
+          hoverSelector={`.${style.serverItem}`}
+          imgClass="avatar"
+          server={server}
+          size={64}
+        />
         <div class={style.name}>
           {server.name}
           {server.clan && <ServerClanItem clan={server.clan} />}
@@ -171,7 +176,12 @@ const BotItem = (props: { item: RawExploreItem }) => {
     <div class={style.serverItem}>
       <Banner user={botUser} />
       <div class={style.details}>
-        <Avatar imgClass="avatar" user={botUser} size={64} />
+        <Avatar
+          hoverSelector={`.${style.serverItem}`}
+          imgClass="avatar"
+          user={botUser}
+          size={64}
+        />
         <Link
           href={`/app/profile/${botUser.id}`}
           data-user-id={botUser.id}
