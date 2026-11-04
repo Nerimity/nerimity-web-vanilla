@@ -175,7 +175,7 @@
   }
 
   .details {
-    z-index: 11111;
+    z-index: 111;
     display: flex;
     flex: 1;
     flex-direction: column;
