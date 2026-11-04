@@ -104,9 +104,6 @@ export const DefaultTheme = {
 
   "status-offline": "#adadad",
   "status-online": "#78e380",
-  "status-looking_to_play": "var(--status-looking-to-play)",
-  "status-away_from_keyboard": "var(--status-away-from-keyboard)",
-  "status-do_not_disturb": "var(--status-do-not-disturb)",
 
   "font-mono": `"SF Mono", "Cascadia Code", "Consolas", "Roboto Mono", "Menlo", "Monaco", "Courier New", monospace`,
 };
