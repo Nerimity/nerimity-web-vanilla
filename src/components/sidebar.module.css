@@ -9,7 +9,8 @@
   padding: calc(var(--container-width) - var(--container-width)* 0.96);
   padding-top: 0;
   padding-bottom: 0;
-  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text-color);
+  background-color: var(--drawer-bg);
 
   .scrollable {
     display: flex;

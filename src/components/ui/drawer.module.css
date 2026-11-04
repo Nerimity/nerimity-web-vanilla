@@ -91,6 +91,9 @@
     overflow: hidden;
     flex-shrink: 0;
   }
+  .rightDrawerInner {
+    background-color: var(--side-pane-bg);
+  }
   .overlay {
     position: absolute;
     z-index: 1111111111;

@@ -1,10 +1,12 @@
+import { getLocalItem, setLocalItem } from "./localStorage";
+
 export const DefaultTheme = {
   background: "black",
   "text-color": "#ffffff",
   "text-muted": "hsl(220, 6%, 50%)",
   "primary-color": "#3e88ff",
   "success-color": "#4bba5b",
-  "primary-dark": "#0b1a33",
+  "primary-dark": "var(--primary-color-dark)",
   "alert-color": "#eb5c5c",
   "warn-color": "#f1750f",
   "item-bg": "rgba(255, 255, 255, 0.1)",
@@ -19,11 +21,9 @@ export const DefaultTheme = {
 
   "markup-mention-background-color": "var(--gray-800)",
   "markup-mention-background-color-hover": "var(--gray-700)",
-  "drawer-bg": "var(--gray-900)",
-  "sidebar-bg": "var(--background)",
+  "drawer-bg": "var(--background)",
 
   "text-emphasis-color": "var(--gray-100)",
-  "text-content-color": "var(--gray-200)",
   "text-secondary-color": "var(--gray-300)",
   "text-muted-color": "var(--gray-400)",
   "text-subtle-color": "var(--gray-500)",
@@ -31,11 +31,40 @@ export const DefaultTheme = {
   "avatar-letter-color": "var(--gray-800)",
 
   "surface-inset-bg": "var(--gray-1000)",
-  "surface-bg": "var(--gray-900)",
+  "pane-bg": "var(--gray-900)",
+  "surface-bg": "var(--pane-bg)",
   "surface-raised-bg": "var(--gray-850)",
   "surface-overlay-bg": "var(--gray-800)",
   "surface-interactive-bg": "var(--gray-700)",
   "surface-muted-bg": "var(--gray-600)",
+  "side-pane-bg": "var(--gray-900)",
+  "header-bg": "transparent",
+  "header-bg-blur-disabled": "var(--surface-bg)",
+  "tooltip-bg": "var(--surface-bg)",
+  "chat-input-bg": "var(--input-background-color)",
+  "chat-input-bg-blur-disabled": "var(--input-background-color)",
+  "format-bar-bg": "var(--input-background-color)",
+  "format-bar-bg-blur-disabled": "var(--input-background-color)",
+  "message-hover-bg": "var(--surface-raised-bg)",
+  "message-floating-options-bg": "var(--drawer-bg)",
+  "primary-color-dark": "#0b1a33",
+  "alert-color-dark": "#3e2626",
+  "warn-color-dark": "#3a3229",
+  "success-color-dark": "#1c221d",
+  "status-looking-to-play": "#3b82f6",
+  "status-away-from-keyboard": "#ff8f2c",
+  "status-do-not-disturb": "#eb6e6e",
+  "content-color": "var(--gray-200)",
+  "text-content-color": "var(--content-color)",
+  "sidebar-text-color": "var(--text-color)",
+  "typing-indicator-color": "var(--text-color)",
+  "typing-indicator-secondary-color": "var(--text-muted-color)",
+  "markup-code-bg": "var(--surface-overlay-bg)",
+  "markup-codeblock-bg": "var(--surface-bg)",
+  "markup-spoiler-bg": "var(--surface-overlay-bg)",
+  "markup-spoiler-bg-hover": "var(--surface-interactive-bg)",
+  "drawer-item-bg": "var(--item-bg)",
+  "drawer-item-hover-bg": "var(--surface-raised-bg)",
   "control-hover-bg": "var(--gray-300)",
   "item-hover-indicator-color": "var(--gray-500)",
 
@@ -75,18 +104,23 @@ export const DefaultTheme = {
 
   "status-offline": "#adadad",
   "status-online": "#78e380",
-  "status-looking_to_play": "#3b82f6",
-  "status-away_from_keyboard": "#ff8f2c",
-  "status-do_not_disturb": "#eb6e6e",
+  "status-looking_to_play": "var(--status-looking-to-play)",
+  "status-away_from_keyboard": "var(--status-away-from-keyboard)",
+  "status-do_not_disturb": "var(--status-do-not-disturb)",
 
   "font-mono": `"SF Mono", "Cascadia Code", "Consolas", "Roboto Mono", "Menlo", "Monaco", "Courier New", monospace`,
 };
 
-type Theme = typeof DefaultTheme;
+export type Theme = typeof DefaultTheme;
 
-let currentTheme: Partial<Theme> = DefaultTheme;
+let currentTheme: Partial<Theme> = getLocalItem("theme", DefaultTheme)!;
 
-export const updateTheme = () => {
+export const updateTheme = (theme?: Partial<Theme>) => {
+  if (theme) {
+    currentTheme = normalizeThemeColors(theme);
+    setLocalItem("theme", currentTheme);
+  }
+
   for (const [key, value] of Object.entries(DefaultTheme)) {
     const customValue = currentTheme[key as keyof typeof currentTheme];
     document.documentElement.style.setProperty(
@@ -101,9 +135,72 @@ updateTheme();
 export function mapLegacyThemeKey(key: string) {
   const legacyMapping: Record<string, string> = {
     "background-color": "background",
+    "pane-color": "pane-bg",
+    "side-pane-color": "side-pane-bg",
+    "header-background-color": "header-bg",
+    "header-background-color-blur-disabled": "header-bg-blur-disabled",
+    "tooltip-background-color": "tooltip-bg",
+    "chat-input-background-color": "chat-input-bg",
+    "chat-input-background-color-blur-disabled": "chat-input-bg-blur-disabled",
+    "chat-markup-bar-background-color": "format-bar-bg",
+    "chat-markup-bar-background-color-blur-disabled":
+      "format-bar-bg-blur-disabled",
+    "message-hover-background-color": "message-hover-bg",
+    "message-floating-options-background-color": "message-floating-options-bg",
+    "primary-color-dark": "primary-color-dark",
+    "alert-color-dark": "alert-color-dark",
+    "warn-color-dark": "warn-color-dark",
+    "success-color-dark": "success-color-dark",
+    "status-looking-to-play": "status-looking-to-play",
+    "status-away-from-keyboard": "status-away-from-keyboard",
+    "status-do-not-disturb": "status-do-not-disturb",
+    "content-color": "content-color",
+    "side-pane-text-color": "sidebar-text-color",
+    "typing-indicator-color": "typing-indicator-color",
+    "typing-indicator-secondary-color": "typing-indicator-secondary-color",
+    "markup-code-background-color": "markup-code-bg",
+    "markup-codeblock-background-color": "markup-codeblock-bg",
+    "markup-spoiler-background-color": "markup-spoiler-bg",
+    "markup-spoiler-background-color-hover": "markup-spoiler-bg-hover",
+    "drawer-item-background-color": "drawer-item-bg",
+    "drawer-item-hover-background-color": "drawer-item-hover-bg",
   };
 
-  const isModernKey = key in DefaultTheme;
+  if (Object.hasOwn(legacyMapping, key)) {
+    return legacyMapping[key];
+  }
 
-  return legacyMapping[key] || (isModernKey ? key : undefined);
+  return Object.hasOwn(DefaultTheme, key) ? key : undefined;
+}
+
+const warnedUnknownThemeKeys = new Set<string>();
+
+export function normalizeThemeColors(
+  colors: Record<string, string>,
+): Record<string, string> {
+  const mergedColors = {
+    ...DefaultTheme,
+    ...colors,
+  } as Record<string, string>;
+
+  Object.entries(mergedColors).forEach(([key, value]) => {
+    if (Object.hasOwn(DefaultTheme, key)) {
+      return;
+    }
+
+    const modernKey = mapLegacyThemeKey(key);
+    if (modernKey) {
+      mergedColors[modernKey] = value;
+      delete mergedColors[key];
+      return;
+    }
+
+    if (warnedUnknownThemeKeys.has(key)) {
+      return;
+    }
+    warnedUnknownThemeKeys.add(key);
+    console.warn(`Unknown theme color key: ${key}`);
+  });
+
+  return mergedColors;
 }

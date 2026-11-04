@@ -81,7 +81,7 @@
     border: 1px solid var(--border-color);
     border-radius: 4px;
     color: var(--color-200);
-    background-color: var(--surface-bg);
+    background-color: var(--markup-code-bg);
   }
   .vertical {
     overflow: auto;
@@ -92,10 +92,10 @@
 
   .spoiler {
     border-radius: 4px;
-    background-color: var(--surface-overlay-bg);
+    background-color: var(--markup-spoiler-bg);
     cursor: pointer;
     &:hover {
-      background-color: var(--surface-interactive-bg);
+      background-color: var(--markup-spoiler-bg-hover);
     }
 
     &.spoil .innerSpoiler {

@@ -10,7 +10,7 @@
   padding-left: 2px;
   border: solid 1px var(--border-color);
   border-radius: var(--radius-max);
-  background: var(--surface-bg);
+  background: var(--message-floating-options-bg);
   gap: 2px;
 
   &.hide {

@@ -16,6 +16,9 @@
     pointer-events: all;
   }
   .chatInput {
+    --input-background-color: var(--chat-input-bg);
+    --format-bar-background-color: var(--format-bar-bg);
+
     .inputInnerContainer {
       align-items: flex-end;
     }

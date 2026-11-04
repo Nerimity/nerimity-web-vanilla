@@ -3,7 +3,7 @@
   margin-right: 2px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-4);
-  background-color: var(--surface-bg);
+  background-color: var(--markup-codeblock-bg);
   &.nowrap {
     :global .highlighter {
       overflow: auto;

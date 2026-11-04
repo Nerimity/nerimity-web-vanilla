@@ -7,5 +7,5 @@
   padding: 4px 8px;
   border: solid 1px var(--border-color);
   border-radius: var(--radius-max);
-  background-color: var(--surface-bg);
+  background-color: var(--tooltip-bg);
 }

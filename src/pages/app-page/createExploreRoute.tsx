@@ -30,7 +30,11 @@ import { HoverAnimator } from "../../utils/HoverAnimator";
 import { createIntersectionObserver } from "../../utils/observer";
 import { getRecentServerChannelId } from "../../utils/recentServerChannels";
 import { router } from "../../utils/router";
-import { DefaultTheme, mapLegacyThemeKey } from "../../utils/theme";
+import {
+  DefaultTheme,
+  normalizeThemeColors,
+  updateTheme,
+} from "../../utils/theme";
 import type { RouteContext } from "./AppPage";
 
 import style from "./createExploreRoute.module.css";
@@ -69,6 +73,8 @@ const Tabs = () => {
     </div>
   );
 };
+
+const elToExploreTheme = new WeakMap<HTMLElement, ExploreTheme>();
 
 const ServerItem = (props: { item: RawExploreItem }) => {
   const server = props.item.server!;
@@ -247,8 +253,6 @@ const BotItem = (props: { item: RawExploreItem }) => {
     </div>
   );
 };
-let alreadyWarned: string[] = [];
-
 const ThemeItem = (props: { item: ExploreTheme }) => {
   const name = props.item.name;
   const maintainers = props.item.maintainers?.map((maintainer) => (
@@ -259,34 +263,14 @@ const ThemeItem = (props: { item: ExploreTheme }) => {
     </>
   ));
 
-  props.item.colors = {
-    ...DefaultTheme,
-    ...props.item.colors,
-  };
+  const mergedColors = normalizeThemeColors(props.item.colors);
 
-  Object.entries(props.item.colors).forEach(([key]) => {
-    if (!(key in DefaultTheme)) {
-      const modernKey = mapLegacyThemeKey(key);
-      if (modernKey) {
-        props.item.colors![modernKey] = props.item.colors[key]!;
-        delete props.item.colors[key];
-        return;
-      }
-      if (alreadyWarned.includes(key)) {
-        return;
-      }
-      alreadyWarned.push(key);
-
-      console.warn(`Unknown theme color key: ${key}`);
-    }
-  });
-
-  return (
+  const el = (
     <div
-      class={[style.serverItem, style.botItem]}
-      style={Object.entries(props.item.colors).reduce(
+      class={[style.serverItem, style.themeItem]}
+      style={Object.entries(mergedColors).reduce(
         (acc, [key, value]) => {
-          if (key in DefaultTheme) {
+          if (Object.hasOwn(DefaultTheme, key)) {
             acc[`--${key}`] = value;
           }
           return acc;
@@ -305,17 +289,25 @@ const ThemeItem = (props: { item: ExploreTheme }) => {
           {Object.keys(DefaultTheme).map((key) => (
             <span
               class={style.colorPreviewItem}
-              style={{ "--color": props.item.colors[key] }}
+              style={{ "--color": mergedColors[key] }}
             ></span>
           ))}
         </div>
 
         <div class={style.actions}>
-          <Button icon="palette" label={t`Apply Theme`} primary />
+          <Button
+            icon="palette"
+            data-action="apply-theme"
+            label={t`Apply Theme`}
+            primary
+          />
         </div>
       </div>
     </div>
-  );
+  ) as HTMLDivElement;
+
+  elToExploreTheme.set(el, props.item);
+  return el;
 };
 const HorizList = (props: {
   name: string;
@@ -449,6 +441,13 @@ const createExploreRoute = ({ content }: RouteContext) => {
     }
   };
 
+  const applyThemeClick = async (e: MouseEvent) => {
+    const themeEl = closestFromEvent(e, `.${style.themeItem}`);
+    const theme = elToExploreTheme.get(themeEl!);
+    if (!theme) return;
+    updateTheme(theme.colors);
+  };
+
   el.addEventListener(
     "click",
     async (e) => {
@@ -457,6 +456,10 @@ const createExploreRoute = ({ content }: RouteContext) => {
         const action = actionEl.dataset.action;
         if (action === "join") {
           joinServerClick(e);
+        }
+
+        if (action === "apply-theme") {
+          applyThemeClick(e);
         }
       }
     },

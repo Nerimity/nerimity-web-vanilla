@@ -252,13 +252,13 @@
   }
 }
 
-:global(body.mobileWidth) .serverItem.botItem {
+:global(body.mobileWidth) .serverItem.themeItem {
   .details {
     margin-top: 0;
   }
 }
 
-.botItem {
+.themeItem {
   color: var(--text-color);
   background: var(--explore-page-bg);
   .details {

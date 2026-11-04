@@ -8,7 +8,7 @@
   margin-top: 4px;
   border: solid 1px var(--border-subtle-color);
   border-radius: var(--radius-max);
-  color: var(--text-color);
+  color: var(--typing-indicator-color);
   background: var(--surface-bg);
   font-size: 12px;
   gap: 4px;
@@ -17,14 +17,14 @@
     visibility: hidden;
   }
   .icon {
-    color: var(--text-muted-color);
+    color: var(--typing-indicator-secondary-color);
     font-size: 16px;
   }
 
   .usernames {
-    color: var(--text-muted-color);
+    color: var(--typing-indicator-secondary-color);
     b {
-      color: var(--text-color);
+      color: var(--typing-indicator-color);
     }
   }
   .avatars {

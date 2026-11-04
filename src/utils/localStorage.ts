@@ -1,6 +1,7 @@
 import type { KlipyItem } from "../services/klipyService";
 import type { DiscoverSort } from "../services/PostService";
 import type { Sound, SoundType } from "./sounds";
+import type { Theme } from "./theme";
 
 export interface RecentEmoji {
   type: "default" | "custom";
@@ -25,6 +26,7 @@ interface LocalStorageData {
   rightDrawerWidth: number;
   leftDrawerWidth: number;
   sidebarWidth: number;
+  theme: Partial<Theme>;
 }
 
 export type LocalStorageKeys = keyof LocalStorageData;

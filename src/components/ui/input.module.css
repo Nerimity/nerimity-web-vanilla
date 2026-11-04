@@ -51,7 +51,10 @@
   border-bottom: none;
   border-top-left-radius: var(--radius-10);
   border-top-right-radius: var(--radius-10);
-  background-color: var(--input-background-color);
+  background-color: var(
+    --format-bar-background-color,
+    var(--input-background-color)
+  );
 
   :global(.button) {
     padding: 4px;
