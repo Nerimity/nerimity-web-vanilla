@@ -264,7 +264,7 @@ msgid "Search messages..."
 msgstr "Search messages..."
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:45
-#: src/pages/app-page/createExploreRoute.tsx:766
+#: src/pages/app-page/createExploreRoute.tsx:901
 #: src/store/userPresenceStore.ts:43
 msgid "Offline"
 msgstr "Offline"
@@ -1091,118 +1091,126 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/app-page/createExploreRoute.tsx:90
-#: src/pages/app-page/createExploreRoute.tsx:182
+#: src/pages/app-page/createExploreRoute.tsx:104
+#: src/pages/app-page/createExploreRoute.tsx:202
 msgid "by <0>{username}</0>"
 msgstr "by <0>{username}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:105
+#: src/pages/app-page/createExploreRoute.tsx:119
 msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
-#: src/pages/app-page/createExploreRoute.tsx:126
-#: src/pages/app-page/createExploreRoute.tsx:218
+#: src/pages/app-page/createExploreRoute.tsx:140
+#: src/pages/app-page/createExploreRoute.tsx:238
 msgid "{count} Lifetime Bumps"
 msgstr "{count} Lifetime Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:128
-#: src/pages/app-page/createExploreRoute.tsx:220
+#: src/pages/app-page/createExploreRoute.tsx:142
+#: src/pages/app-page/createExploreRoute.tsx:240
 msgid "Bumped <0>{date}</0>"
 msgstr "Bumped <0>{date}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:145
+#: src/pages/app-page/createExploreRoute.tsx:159
 msgid "Visit Server"
 msgstr "Visit Server"
 
-#: src/pages/app-page/createExploreRoute.tsx:145
+#: src/pages/app-page/createExploreRoute.tsx:159
 msgid "Join Server"
 msgstr "Join Server"
 
-#: src/pages/app-page/createExploreRoute.tsx:149
-#: src/pages/app-page/createExploreRoute.tsx:230
+#: src/pages/app-page/createExploreRoute.tsx:163
+#: src/pages/app-page/createExploreRoute.tsx:250
 msgid "Bump ~ {bumpCount}"
 msgstr "Bump ~ {bumpCount}"
 
-#: src/pages/app-page/createExploreRoute.tsx:197
+#: src/pages/app-page/createExploreRoute.tsx:217
 msgid "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 msgstr "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 
-#: src/pages/app-page/createExploreRoute.tsx:229
+#: src/pages/app-page/createExploreRoute.tsx:249
 msgid "Invite Bot"
 msgstr "Invite Bot"
 
-#: src/pages/app-page/createExploreRoute.tsx:324
+#: src/pages/app-page/createExploreRoute.tsx:285
+msgid "Contributors: {maintainers}"
+msgstr "Contributors: {maintainers}"
+
+#: src/pages/app-page/createExploreRoute.tsx:301
+msgid "Apply Theme"
+msgstr "Apply Theme"
+
+#: src/pages/app-page/createExploreRoute.tsx:417
 msgid "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
 msgstr "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
 
-#: src/pages/app-page/createExploreRoute.tsx:328
+#: src/pages/app-page/createExploreRoute.tsx:421
 msgid "Please report bots that are malicious, broken themes or servers that break the TOS."
 msgstr "Please report bots that are malicious, broken themes or servers that break the TOS."
 
-#: src/pages/app-page/createExploreRoute.tsx:457
-#: src/pages/app-page/createExploreRoute.tsx:647
+#: src/pages/app-page/createExploreRoute.tsx:560
+#: src/pages/app-page/createExploreRoute.tsx:782
 msgid "Pinned Servers"
 msgstr "Pinned Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:469
+#: src/pages/app-page/createExploreRoute.tsx:572
 msgid "Bumped Servers"
 msgstr "Bumped Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:480
+#: src/pages/app-page/createExploreRoute.tsx:583
 msgid "Bumped Bots"
 msgstr "Bumped Bots"
 
-#: src/pages/app-page/createExploreRoute.tsx:483
+#: src/pages/app-page/createExploreRoute.tsx:590
 msgid "Recent Themes"
 msgstr "Recent Themes"
 
-#: src/pages/app-page/createExploreRoute.tsx:510
-#: src/pages/app-page/createExploreRoute.tsx:758
+#: src/pages/app-page/createExploreRoute.tsx:645
+#: src/pages/app-page/createExploreRoute.tsx:893
 msgid "All"
 msgstr "All"
 
-#: src/pages/app-page/createExploreRoute.tsx:514
+#: src/pages/app-page/createExploreRoute.tsx:649
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/app-page/createExploreRoute.tsx:518
+#: src/pages/app-page/createExploreRoute.tsx:653
 msgid "Clans"
 msgstr "Clans"
 
-#: src/pages/app-page/createExploreRoute.tsx:525
-#: src/pages/app-page/createExploreRoute.tsx:773
+#: src/pages/app-page/createExploreRoute.tsx:660
+#: src/pages/app-page/createExploreRoute.tsx:908
 msgid "Most Bumps"
 msgstr "Most Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:529
-#: src/pages/app-page/createExploreRoute.tsx:777
+#: src/pages/app-page/createExploreRoute.tsx:664
+#: src/pages/app-page/createExploreRoute.tsx:912
 msgid "Most Members"
 msgstr "Most Members"
 
-#: src/pages/app-page/createExploreRoute.tsx:533
-#: src/pages/app-page/createExploreRoute.tsx:781
+#: src/pages/app-page/createExploreRoute.tsx:668
+#: src/pages/app-page/createExploreRoute.tsx:916
 msgid "Recently Added"
 msgstr "Recently Added"
 
-#: src/pages/app-page/createExploreRoute.tsx:537
-#: src/pages/app-page/createExploreRoute.tsx:785
+#: src/pages/app-page/createExploreRoute.tsx:672
+#: src/pages/app-page/createExploreRoute.tsx:920
 msgid "Recently Bumped"
 msgstr "Recently Bumped"
 
-#: src/pages/app-page/createExploreRoute.tsx:541
+#: src/pages/app-page/createExploreRoute.tsx:676
 msgid "Most Active"
 msgstr "Most Active"
 
-#: src/pages/app-page/createExploreRoute.tsx:762
+#: src/pages/app-page/createExploreRoute.tsx:897
 #: src/store/userPresenceStore.ts:19
 msgid "Online"
 msgstr "Online"
 
-#: src/pages/app-page/createExploreRoute.tsx:800
+#: src/pages/app-page/createExploreRoute.tsx:935
 msgid "Search servers..."
 msgstr "Search servers..."
 
-#: src/pages/app-page/createExploreRoute.tsx:812
+#: src/pages/app-page/createExploreRoute.tsx:947
 msgid "Search bots..."
 msgstr "Search bots..."
 
