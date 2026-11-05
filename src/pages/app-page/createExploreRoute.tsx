@@ -522,6 +522,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
 
   const destroy = () => {
     ac.abort();
+    tabAc.abort();
     hoverAnimator.destroy();
     el.remove();
   };
@@ -868,6 +869,10 @@ const ExploreListTab = ({
       appendItems(servers);
       if (hasMore) loadPage(lastId, ac.signal);
     };
+
+    signal.addEventListener("abort", () => generationAc?.abort(), {
+      once: true,
+    });
 
     const debouncedReloadServers = debounce(reloadServers, 800);
     searchInput.addEventListener(

@@ -97,7 +97,14 @@ const createDropdown = (opts: {
         });
       }
 
-      popupAc = new AbortController();
+      const currentPopupAc = (popupAc = new AbortController());
+      currentPopupAc.signal.addEventListener(
+        "abort",
+        () => {
+          popupEl = null;
+        },
+        { once: true },
+      );
 
       createModal(
         () => (
