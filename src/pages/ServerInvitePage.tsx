@@ -14,7 +14,7 @@ import {
   type ServerInviteDetails,
 } from "../services/serverService";
 import { closestFromEvent } from "../utils/dom";
-import { getRecentServerChannelId } from "../utils/recentServerChannels";
+import { getLocalItem } from "../utils/localStorage";
 import { router } from "../utils/router";
 
 import style from "./ServerInvitePage.module.css";
@@ -182,7 +182,12 @@ const createServerInviteModal = (opts: { page: boolean; code: string }) => {
         location.href = "/app";
       }
       if (action === "visit") {
-        const recentChannelId = getRecentServerChannelId(server?.id!);
+        const recentServerChannels = getLocalItem("recentServerChannels", [])!;
+
+        let recentChannelId = recentServerChannels.find(
+          (item) => item[0] === server?.id!,
+        )?.[1];
+
         const channelId = recentChannelId ?? server?.defaultChannelId!;
         location.href = `/app/servers/${server?.id!}/${channelId}`;
       }
