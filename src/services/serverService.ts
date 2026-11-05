@@ -109,10 +109,13 @@ export const getServerCommands = async (serverId: string) => {
   );
 };
 
-export type ServerWithMemberCount = RawServer & { memberCount: number };
+export type ServerInviteDetails = RawServer & {
+  memberCount: number;
+  isJoined: boolean | null;
+};
 
 export const getServerDetailsByCode = async (code: string) => {
-  return request<ServerWithMemberCount>(`/servers/invites/${code}`, {
+  return request<ServerInviteDetails>(`/servers/invites/${code}`, {
     useToken: true,
     method: "GET",
   });
@@ -135,6 +138,7 @@ export const leaveServer = async (serverId: string) => {
     method: "POST",
   });
 };
+
 export const joinServerByInviteCode = async (inviteCode: string) => {
   return request(`/servers/invites/${inviteCode}`, {
     useToken: true,

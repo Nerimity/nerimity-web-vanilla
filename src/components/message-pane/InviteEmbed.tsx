@@ -4,7 +4,7 @@ import { Plural, Trans } from "@trans";
 import {
   getServerDetailsByCode,
   getServerDetailsByEmojiId,
-  type ServerWithMemberCount,
+  type ServerInviteDetails,
 } from "../../services/serverService";
 import { socket } from "../../services/socket";
 import { serverMemberStore } from "../../store/serverMemberStore";
@@ -22,7 +22,7 @@ import { InviteSkeleton } from "../ui/skeleton";
 
 import style from "./InviteEmbed.module.css";
 
-const inviteCache = new Map<string, ServerWithMemberCount | false>();
+const inviteCache = new Map<string, ServerInviteDetails | false>();
 
 const localServer = (serverId: string) => {
   const server = serverStore.servers.get(serverId);
@@ -50,7 +50,7 @@ storeEmitter.on(
     if (server) {
       inviteCache.set(
         `invite/${serverId}`,
-        server as unknown as ServerWithMemberCount,
+        server as unknown as ServerInviteDetails,
       );
     }
 
@@ -108,7 +108,7 @@ export const InviteEmbed = (props: {
       ? `emoji/${props.emojiId}`
       : "";
 
-  let inviteItem: ServerWithMemberCount | null | undefined =
+  let inviteItem: ServerInviteDetails | null | undefined =
     inviteCache.get(cacheId) || undefined;
 
   const el = (
@@ -175,7 +175,7 @@ export const InviteEmbed = (props: {
     const serverId = inviteItem.id;
 
     memberRefreshers.set(el, () => {
-      inviteItem = localServer(serverId) as unknown as ServerWithMemberCount;
+      inviteItem = localServer(serverId) as unknown as ServerInviteDetails;
       inviteCache.set(cacheId, inviteItem);
       render();
     });
@@ -190,14 +190,14 @@ export const InviteEmbed = (props: {
   if (!inviteItem) {
     if (props.emojiId) {
       serverDetailsByEmoji(props.emojiId).then((details) => {
-        inviteItem = (details as ServerWithMemberCount) || null;
+        inviteItem = (details as unknown as ServerInviteDetails) || null;
         inviteCache.set(cacheId, inviteItem);
         render();
         watchMembers();
       });
     } else if (props.code) {
       serverDetailsByCode(props.code).then((server) => {
-        inviteItem = (server as ServerWithMemberCount) || null;
+        inviteItem = (server as ServerInviteDetails) || null;
         inviteCache.set(cacheId, inviteItem);
         render();
         watchMembers();

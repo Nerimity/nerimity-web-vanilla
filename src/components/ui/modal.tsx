@@ -647,7 +647,16 @@ export const createModal = (
       lastMobileWidth = currentMobile;
       updateFooterPosition();
       if (!lastMobileWidth) {
-        modal.style.transform = `initial`;
+        modalPositionAnimation?.cancel();
+        modalPositionAnimation = null;
+        modal.getAnimations().forEach((a) => a.cancel());
+        modal.style.transform = "";
+        modal.style.opacity = "";
+        if (footerElement) {
+          footerElement.getAnimations().forEach((a) => a.cancel());
+          footerElement.style.transform = "";
+        }
+        modalY = 0;
       } else {
         initialPosition();
       }

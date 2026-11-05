@@ -4,10 +4,13 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { postLogin } from "../services/authService";
 import { setLocalItem } from "../utils/localStorage";
+import { router } from "../utils/router";
 
 import style from "./LoginPage.module.css";
 
 const createLoginPage = () => {
+  const getQuery = router.query<{ redirect?: string }>();
+
   const app = document.getElementById("app")!;
   const form = (
     <form class={style.inputs}>
@@ -73,6 +76,14 @@ const createLoginPage = () => {
       return;
     }
     setLocalItem("userToken", res.token);
+
+    let redirect = getQuery().redirect;
+
+    if (redirect) {
+      location.replace(`${window.location.origin}${redirect}`);
+      return;
+    }
+
     location.replace("/app/");
   };
 
