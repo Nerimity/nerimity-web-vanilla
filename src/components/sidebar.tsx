@@ -452,7 +452,7 @@ const MentionList = (props: { signal: AbortSignal }) => {
   const el = (<div></div>) as HTMLDivElement;
 
   const rerender = (channelId?: string) => {
-    const mentions = [...messageMentionStore.mentions.values()];
+    const mentions = messageMentionStore.mentions.array();
     const dmMentions = mentions.filter((m) => !m.serverId);
 
     reconcile({
@@ -506,9 +506,9 @@ const HomeItem = (props: { signal: AbortSignal }) => {
   const match = router.match("/app{/inbox/*}?");
 
   const createEl = () => {
-    const count = [...friendStore.friends.values()].filter(
-      (f) => f.status === FriendStatus.PENDING,
-    ).length;
+    const count = friendStore.friends
+      .array()
+      .filter((f) => f.status === FriendStatus.PENDING).length;
 
     return (
       <SidebarItem

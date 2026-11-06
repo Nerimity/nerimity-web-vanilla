@@ -10,6 +10,7 @@ import {
 } from "../../services/PostService";
 import { accountStore } from "../../store/accountStore";
 import type { RawPost } from "../../Types";
+import { Collection } from "../../utils/Collection";
 import { dateMarkerLabel, formatTimestamp, timeSince } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -32,7 +33,7 @@ import { handlePostPollEmbed } from "./PostPollEmbed";
 
 import style from "./PostItem.module.css";
 
-export const postCache = new Map<string, RawPost>();
+export const postCache = new Collection<string, RawPost>();
 const POST_CACHE_LIMIT = 100;
 
 const viewsEnabledAt = new Date();

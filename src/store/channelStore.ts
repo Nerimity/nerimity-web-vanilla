@@ -9,6 +9,7 @@ import {
 import { applyIfPresent } from "../utils/applyIfPresent";
 import { addBit, hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
+import { Collection } from "../utils/Collection";
 import { createTokenSource } from "../utils/createTokenSource";
 import { storeEmitter } from "../utils/EventEmitter";
 import { updateFavicon } from "../utils/favicon";
@@ -158,8 +159,8 @@ export interface ChannelProperty {
 
 function createChannelStore() {
   let currentChannelId: string | null = null;
-  const channels = new Map<string, Channel>();
-  const properties = new Map<string, ChannelProperty>();
+  const channels = new Collection<string, Channel>();
+  const properties = new Collection<string, ChannelProperty>();
 
   const getProperty = (channelId: string, create = true) => {
     const property = properties.get(channelId);

@@ -19,6 +19,7 @@ import type {
   RawServer,
   RawServerMember,
 } from "../Types";
+import { Collection } from "./Collection";
 
 type WithId<T> = Omit<Partial<T>, "id"> & { id: string };
 
@@ -85,7 +86,7 @@ type StoreEvents = {
 export const storeEmitter = createEventEmitter<StoreEvents>();
 
 export function createEventEmitter<T extends Record<string, unknown>>() {
-  const listeners = new Map<keyof T, Set<(data: any) => void>>();
+  const listeners = new Collection<keyof T, Set<(data: any) => void>>();
 
   const on = <K extends keyof T>(
     event: K | ReadonlyArray<K>,

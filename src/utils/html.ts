@@ -1,5 +1,7 @@
 import morphdom from "morphdom";
 
+import { Collection } from "./Collection";
+
 interface ReconcileOpts<T> {
   container: HTMLElement;
   dataAttr: string;
@@ -28,7 +30,7 @@ export function reconcile<T>(opts: ReconcileOpts<T>) {
 
   const valueIds = new Set(values.map((v) => String(v[opts.valueId])));
 
-  const existingMap = new Map<string, HTMLElement>();
+  const existingMap = new Collection<string, HTMLElement>();
   for (const child of container.children) {
     const el = child as HTMLElement;
     const id = el.dataset[camelAttr];

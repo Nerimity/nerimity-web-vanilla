@@ -246,9 +246,7 @@ const formatServerMentions = (
   });
 
   if (someoneMentioned) {
-    const members = [
-      ...(serverMemberStore.serverMembers.get(serverId)?.values() || []),
-    ];
+    const members = serverMemberStore.membersOf(serverId);
     result = result.replaceAll("@someone", () => {
       const randMember = members[randomIndex(members.length)]!;
       return `[@:s] **${randomKaomoji()} (${randMember.user!.username})**`;

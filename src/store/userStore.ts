@@ -6,6 +6,7 @@ import {
   FriendStatus,
 } from "../Types";
 import { applyIfPresent } from "../utils/applyIfPresent";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore, type CurrentUser } from "./accountStore";
 import { friendStore } from "./friendStore";
@@ -87,8 +88,8 @@ export class User {
 }
 
 function createUserStore() {
-  const users = new Map<string, User>();
-  const clanCache = new Map<string, ServerClan>();
+  const users = new Collection<string, User>();
+  const clanCache = new Collection<string, ServerClan>();
 
   const addUser = (user: RawUser) => {
     if (user.profile?.clan) {

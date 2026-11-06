@@ -11,6 +11,7 @@ import {
 import { userPresenceStore } from "../../store/userPresenceStore";
 import { User, userStore } from "../../store/userStore";
 import { FriendStatus, type RawUser } from "../../Types";
+import { Collection } from "../../utils/Collection";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getFont } from "../../utils/font";
@@ -173,7 +174,8 @@ const createInboxList = () => {
       });
     }
 
-    const inboxes = [...inboxStore.inboxes.values()]
+    const inboxes = inboxStore.inboxes
+      .array()
       .map((item) => ({
         type: 1,
         channelId: item.channelId,
@@ -272,18 +274,19 @@ const createFriendsList = () => {
   ) as HTMLElement;
 
   const sorted = new ManualMemo(() => {
-    const userIdToInbox = new Map<string, Inbox>();
+    const userIdToInbox = new Collection<string, Inbox>();
 
     for (const inbox of inboxStore.inboxes.values()) {
       userIdToInbox.set(inbox.recipientId, inbox);
     }
-    const userIdToMentionCount = new Map<string, number>();
+    const userIdToMentionCount = new Collection<string, number>();
 
     for (const mention of messageMentionStore.mentions.values()) {
       userIdToMentionCount.set(mention.mentionedBy.id, mention.count ?? 0);
     }
 
-    const sorted = [...friendStore.friends.values()]
+    const sorted = friendStore.friends
+      .array()
       .map((friend) => ({
         friend,
         user: userStore.users.get(friend.recipientId),
@@ -404,12 +407,12 @@ const createInboxDrawer = () => {
   ) as HTMLElement;
 
   const rerenderTabs = () => {
-    const requestLength = [...friendStore.friends.values()].filter(
-      (f) => f.status === FriendStatus.PENDING,
-    ).length;
+    const requestLength = friendStore.friends
+      .array()
+      .filter((f) => f.status === FriendStatus.PENDING).length;
 
     let mentionCount = 0;
-    [...messageMentionStore.mentions.values()].forEach((e) => {
+    messageMentionStore.mentions.array().forEach((e) => {
       if (!e.serverId) mentionCount += e.count;
     });
 

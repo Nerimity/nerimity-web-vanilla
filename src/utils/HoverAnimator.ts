@@ -1,3 +1,5 @@
+import { Collection } from "./Collection";
+
 export class HoverAnimator {
   private targets: Array<{
     trigger?: string;
@@ -10,7 +12,7 @@ export class HoverAnimator {
     };
   }>;
   private controller: AbortController;
-  private hoveredStates = new Map<number, WeakSet<Element>>();
+  private hoveredStates = new Collection<number, WeakSet<Element>>();
   private container: HTMLElement;
   private leaveTimeouts = new WeakMap<
     HTMLImageElement,

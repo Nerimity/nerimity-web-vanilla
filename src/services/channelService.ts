@@ -1,4 +1,5 @@
 import type { FullAttachment, RawMessage } from "../Types";
+import { Collection } from "../utils/Collection";
 import { newQueue } from "../utils/queue";
 import { request } from "./request";
 
@@ -30,7 +31,7 @@ const getChannelNotice = async (channelId: string) => {
 };
 
 const noticeQueue = newQueue();
-const notices = new Map<string, string | null>();
+const notices = new Collection<string, string | null>();
 const MAX_CACHE_SIZE = 20;
 
 const touch = (channelId: string, value: string | null) => {

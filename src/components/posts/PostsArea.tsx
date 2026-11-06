@@ -15,6 +15,7 @@ import { accountStore } from "../../store/accountStore";
 import type { AttachmentProperty } from "../../store/channelStore";
 import type { User } from "../../store/userStore";
 import type { RawPost } from "../../Types";
+import { Collection } from "../../utils/Collection";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { fileToDimensions } from "../../utils/file";
@@ -385,7 +386,7 @@ interface PostCreateEvent {
 let inputContent = "";
 let inputFile: undefined | File;
 let pollOptions: string[] = [];
-export const mentionCache = new Map<string, User>();
+export const mentionCache = new Collection<string, User>();
 const MENTION_CACHE_LIMIT = 30;
 const setMentionCache = (user: User) => {
   if (mentionCache.size >= MENTION_CACHE_LIMIT) {
@@ -614,7 +615,7 @@ const PostInputArea = (props: {
         const pollOptions = getPollOptions();
         const formattedContent = formatMessage({
           content: inputContent,
-          postMentions: [...mentionCache.values()],
+          postMentions: mentionCache.array(),
         });
         props.onPostCreate({
           content: formattedContent,

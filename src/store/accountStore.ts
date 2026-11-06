@@ -6,6 +6,7 @@ import {
   type RawServerFolder,
   type RawUserNotificationSettings,
 } from "../Types";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { channelStore } from "./channelStore";
 import { friendStore } from "./friendStore";
@@ -74,7 +75,10 @@ function createAccountStore() {
   } | null = null;
 
   let currentUser: CurrentUser | null = null;
-  let notificationSettings = new Map<string, RawUserNotificationSettings>();
+  let notificationSettings = new Collection<
+    string,
+    RawUserNotificationSettings
+  >();
 
   const setNotificationSettings = (
     newSettings: RawUserNotificationSettings[],

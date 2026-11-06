@@ -10,6 +10,7 @@ import { ServerRole, serverRoleStore } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
 import { User, userStore } from "../../store/userStore";
 import type { RawBotCommand } from "../../Types";
+import { Collection } from "../../utils/Collection";
 import { resolveGradient } from "../../utils/color";
 import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
@@ -213,10 +214,7 @@ export const createInputSuggestions = (opts: {
     if (!channel) return [];
 
     if (channel.serverId) {
-      const members = [
-        ...(serverMemberStore.serverMembers.get(channel.serverId)?.values() ||
-          []),
-      ];
+      const members = serverMemberStore.membersOf(channel.serverId);
 
       const currentMember = serverMemberStore.currentMember(channel.serverId);
       const canMentionRoles = currentMember?.hasPerm(
@@ -226,7 +224,7 @@ export const createInputSuggestions = (opts: {
         RolePermissionFlag.mentionEveryone.bit,
       );
       const roles = canMentionRoles
-        ? [...(serverRoleStore.roles.get(channel.serverId)?.values() || [])]
+        ? serverRoleStore.rolesOf(channel.serverId)
         : [];
 
       const matchedRoles = matchSorter(roles, searchTerm, {
@@ -313,7 +311,10 @@ export const createInputSuggestions = (opts: {
     const emojiMapped: { shortcodes: string[]; id: string }[] = [];
     const emojiEntries = Object.entries(shortcodeToUnicode);
 
-    const byUnicode = new Map<string, { shortcodes: string[]; id: string }>();
+    const byUnicode = new Collection<
+      string,
+      { shortcodes: string[]; id: string }
+    >();
 
     for (let i = 0; i < emojiEntries.length; i++) {
       const [shortcode, unicode] = emojiEntries[i]!;

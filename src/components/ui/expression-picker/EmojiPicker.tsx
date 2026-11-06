@@ -3,6 +3,7 @@ import { matchSorter } from "match-sorter";
 import morphdom from "morphdom";
 
 import { serverStore } from "../../../store/serverStore";
+import { Collection } from "../../../utils/Collection";
 import { debounce } from "../../../utils/debounce";
 import { closestFromEvent } from "../../../utils/dom";
 import {
@@ -458,7 +459,9 @@ const recentEmojis = (
   let currentRow: Array<EmojiCol | CategoryCol> | null = null;
   const mappedEmojis: Array<Array<EmojiCol | CategoryCol>> = [];
 
-  const customEmojiIdToEmoji = new Map(customEmojis.map((e) => [e.id, e]));
+  const customEmojiIdToEmoji = new Collection(
+    customEmojis.map((e) => [e.id, e]),
+  );
 
   mappedEmojis.push([
     { type: "category", name: t`Recent Emojis`, icon: "history" },

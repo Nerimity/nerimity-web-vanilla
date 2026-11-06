@@ -9,6 +9,7 @@ import {
 import { socket } from "../../services/socket";
 import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
+import { Collection } from "../../utils/Collection";
 import { closestFromEvent } from "../../utils/dom";
 import { customEmojiById } from "../../utils/emojis";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -22,7 +23,7 @@ import { InviteSkeleton } from "../ui/skeleton";
 
 import style from "./InviteEmbed.module.css";
 
-const inviteCache = new Map<string, ServerInviteDetails | false>();
+const inviteCache = new Collection<string, ServerInviteDetails | false>();
 
 const localServer = (serverId: string) => {
   const server = serverStore.servers.get(serverId);
@@ -40,7 +41,7 @@ const localServer = (serverId: string) => {
   }
 };
 
-const pendingEmbeds = new Map<string, Set<WeakRef<HTMLElement>>>();
+const pendingEmbeds = new Collection<string, Set<WeakRef<HTMLElement>>>();
 const memberRefreshers = new WeakMap<HTMLElement, () => void>();
 
 storeEmitter.on(

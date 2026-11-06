@@ -38,7 +38,7 @@ export const createEditServerRolesModal = (props: {
     serverStore.currentServerId!,
   );
 
-  const membersArray = members ? [...members.values()] : [];
+  const membersArray = members ? members.array() : [];
 
   const renderRoles = () => {
     const roles = serverStore.currentServerSortedRoles.value();

@@ -5,6 +5,7 @@ import { serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import type { RawMessage } from "../../Types";
+import { Collection } from "../../utils/Collection";
 import { createEventEmitter, storeEmitter } from "../../utils/EventEmitter";
 import { Icon } from "../icon";
 import { Avatar } from "../ui/avatar";
@@ -23,7 +24,10 @@ const createHandleTypingIndicator = () => {
   let channelIds: string[] = [];
 
   // typingUser[channelId][userId] = timestamp
-  const typingUsers: Map<string, Map<string, number>> = new Map();
+  const typingUsers: Collection<
+    string,
+    Collection<string, number>
+  > = new Collection();
 
   const getChannelIds = () => {
     const currentChannelId = channelStore.currentChannelId;
@@ -54,7 +58,7 @@ const createHandleTypingIndicator = () => {
 
     let users = typingUsers.get(payload.channelId);
     if (!users) {
-      users = new Map<string, number>();
+      users = new Collection<string, number>();
       typingUsers.set(payload.channelId, users);
     }
 

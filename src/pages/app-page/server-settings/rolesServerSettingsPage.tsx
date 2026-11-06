@@ -46,9 +46,7 @@ const rolesServerSettingsPage = (context: ServerSettingsContext) => {
   const rerender = async () => {
     const orderedRoles = serverStore.currentServerSortedRoles.rerun();
 
-    const members = [
-      ...(serverMemberStore.serverMembers.get(getServerId()!)?.values() || []),
-    ];
+    const members = serverMemberStore.currentMembers();
     el.replaceChildren(
       <SettingsBlock.Group class="group">
         <SettingsBlock.Root>

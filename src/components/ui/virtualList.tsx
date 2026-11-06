@@ -1,5 +1,7 @@
 import morphdom from "morphdom";
 
+import { Collection } from "../../utils/Collection";
+
 type Item<T, V> = T & { type: V };
 
 interface VirtualListProps<T, V extends string | number> {
@@ -17,7 +19,7 @@ export function createVirtualList<T, V extends string | number>(
   const abortController = new AbortController();
   const { signal } = abortController;
   let cacheItems: Item<T, V>[] = props.items();
-  const elMap = new Map<string, HTMLElement>();
+  const elMap = new Collection<string, HTMLElement>();
   let cachedScrollTop = 0;
   let cachedClientHeight = 0;
 

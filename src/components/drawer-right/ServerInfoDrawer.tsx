@@ -8,6 +8,7 @@ import { userPresenceStore } from "../../store/userPresenceStore";
 import { userStore } from "../../store/userStore";
 import { hasBit } from "../../utils/bitwise";
 import { ChannelPermissionFlag } from "../../utils/channelPermissionFlag";
+import { Collection } from "../../utils/Collection";
 import { resolveGradient } from "../../utils/color";
 import { formatTimestamp } from "../../utils/date";
 import { storeEmitter } from "../../utils/EventEmitter";
@@ -87,7 +88,7 @@ const visibleRoleIds = () => {
   const channelPermissions = currentPermissions();
   const serverRoles =
     serverRoleStore.roles.get(serverStore.currentServerId!) ||
-    new Map<string, ServerRole>();
+    new Collection<string, ServerRole>();
   const set = new Set<string>();
   for (const roleId of Object.keys(channelPermissions)) {
     if (
@@ -148,11 +149,7 @@ export const createServerInfoDrawer = (props: {
     const result = ((prev as any)?.result || []) as Categorized[];
     const userIdToRoleId: Record<string, string | null> = {};
 
-    const members = [
-      ...(serverMemberStore.serverMembers
-        .get(serverStore.currentServerId!)
-        ?.values() || []),
-    ].sort((a, b) => {
+    const members = serverMemberStore.currentMembers().sort((a, b) => {
       const au = a.nickname || userStore.users.get(a.userId)!.username;
       const bu = b.nickname || userStore.users.get(b.userId)!.username;
       return au.localeCompare(bu);

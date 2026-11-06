@@ -1,5 +1,6 @@
 import type { RawServerMember } from "../Types";
 import { hasBit } from "../utils/bitwise";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { patchProperty } from "../utils/object";
 import { RolePermissionFlag } from "../utils/RolePermissionFlag";
@@ -53,14 +54,17 @@ export class ServerMember {
 }
 
 function createServerMemberStore() {
-  const serverMembers = new Map<string, Map<string, ServerMember>>();
+  const serverMembers = new Collection<
+    string,
+    Collection<string, ServerMember>
+  >();
 
   const setServerMembers = (
     newMembers: RawServerMember[],
     serverId?: string,
   ) => {
     if (serverId) {
-      const members = new Map<string, ServerMember>();
+      const members = new Collection<string, ServerMember>();
       for (let i = 0; i < newMembers.length; i++) {
         const member = newMembers[i]!;
         if (member.serverId === serverId) {
@@ -79,7 +83,8 @@ function createServerMemberStore() {
     for (let i = 0; i < newMembers.length; i++) {
       const member = newMembers[i]!;
       const members =
-        serverMembers.get(member.serverId) || new Map<string, ServerMember>();
+        serverMembers.get(member.serverId) ||
+        new Collection<string, ServerMember>();
       userStore.addUser(member.user);
       members.set(member.userId, new ServerMember(member));
       serverMembers.set(member.serverId, members);
@@ -87,7 +92,8 @@ function createServerMemberStore() {
   };
   const setMember = (member: RawServerMember) => {
     const members =
-      serverMembers.get(member.serverId) || new Map<string, ServerMember>();
+      serverMembers.get(member.serverId) ||
+      new Collection<string, ServerMember>();
     userStore.addUser(member.user);
     const newMember = new ServerMember(member);
     members.set(member.userId, newMember);
@@ -227,6 +233,14 @@ function createServerMemberStore() {
   const currentMember = (serverId: string) =>
     serverMemberStore.getMember(serverId, accountStore.currentUser?.id!);
 
+  const membersOf = (serverId: string) => {
+    return serverMembers.get(serverId)?.array() ?? [];
+  };
+
+  const currentMembers = () => {
+    return membersOf(serverStore.currentServerId!);
+  };
+
   return {
     serverMembers,
     currentMember,
@@ -238,5 +252,7 @@ function createServerMemberStore() {
     setMember,
     removeAll,
     remove,
+    membersOf,
+    currentMembers,
   };
 }

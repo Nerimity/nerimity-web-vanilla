@@ -1,3 +1,5 @@
+import { Collection } from "./Collection";
+
 export class HoverHandler {
   private targets: Array<{
     trigger?: string;
@@ -15,7 +17,7 @@ export class HoverHandler {
     };
   }>;
   private controller: AbortController;
-  private hoveredStates = new Map<number, Set<HTMLElement>>();
+  private hoveredStates = new Collection<number, Set<HTMLElement>>();
   private container: HTMLElement;
   private mutationObserver: MutationObserver | null = null;
 

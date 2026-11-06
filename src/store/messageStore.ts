@@ -23,6 +23,7 @@ import {
   type RawServerRole,
   type RawUser,
 } from "../Types";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { getLocalItem } from "../utils/localStorage";
 import { accountStore } from "./accountStore";
@@ -102,7 +103,7 @@ export class Message {
 }
 
 function createMessageStore() {
-  const messages = new Map<string, Message[]>();
+  const messages = new Collection<string, Message[]>();
 
   const loadMessages = async (
     channelId: string,

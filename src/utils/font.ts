@@ -1,3 +1,5 @@
+import { Collection } from "./Collection";
+
 export interface Font {
   id: number;
   name: string;
@@ -89,7 +91,7 @@ export const Fonts: Font[] = [
   },
 ];
 
-const FontsById = new Map<number, Font>(Fonts.map((f) => [f.id, f]));
+const FontsById = new Collection<number, Font>(Fonts.map((f) => [f.id, f]));
 
 const generateStylesheet = () => {
   const el = document.createElement("style");

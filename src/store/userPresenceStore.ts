@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import type { RawUserActivity, RawUserPresence } from "../Types";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
 
@@ -62,7 +63,7 @@ export class UserPresence {
 }
 
 function createPresenceStore() {
-  const presences = new Map<string, UserPresence>();
+  const presences = new Collection<string, UserPresence>();
 
   const setPresences = (newPresences: RawUserPresence[], clear = true) => {
     if (clear) presences.clear();

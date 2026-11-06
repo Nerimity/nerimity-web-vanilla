@@ -15,6 +15,7 @@ import {
 import { applyIfPresent } from "../utils/applyIfPresent";
 import { hasBit } from "../utils/bitwise";
 import { ChannelPermissionFlag } from "../utils/channelPermissionFlag";
+import { Collection } from "../utils/Collection";
 import { debounce } from "../utils/debounce";
 import { storeEmitter } from "../utils/EventEmitter";
 import { ManualMemo } from "../utils/memo";
@@ -89,8 +90,8 @@ export class Server {
 
 function createServerStore() {
   let currentServerId: string | null = null;
-  const servers = new Map<string, Server>();
-  const lastSeenChannelIds = new Map<string, number>();
+  const servers = new Collection<string, Server>();
+  const lastSeenChannelIds = new Collection<string, number>();
 
   const currentServer = () => servers.get(currentServerId!);
 
@@ -225,7 +226,7 @@ function createServerStore() {
     }
     currentChannels.sort((a, b) => a.order! - b.order!);
 
-    const byCategory = new Map<string, Channel[]>();
+    const byCategory = new Collection<string, Channel[]>();
     for (const channel of currentChannels) {
       if (channel.categoryId) {
         const group = byCategory.get(channel.categoryId);
@@ -255,9 +256,10 @@ function createServerStore() {
 
   const serverSortedRoles = (serverId: string) => {
     const serverRoles =
-      serverRoleStore.roles.get(serverId!) || new Map<string, ServerRole>();
+      serverRoleStore.roles.get(serverId!) ||
+      new Collection<string, ServerRole>();
 
-    return [...serverRoles.values()].sort((a, b) => b.order - a.order);
+    return serverRoles.array().sort((a, b) => b.order - a.order);
   };
 
   const currentServerSortedRoles = new ManualMemo(() => {
@@ -373,14 +375,15 @@ function createServerStore() {
         type: "f" as const,
       })) || [];
 
-    const serverIdToFolderId = new Map(
+    const serverIdToFolderId = new Collection(
       folders.flatMap((f) => f.serverIds.map((s) => [s, f.folder.id])),
     );
 
     const orderedServerIds = accountStore.currentUser?.orderedServerIds || [];
-    const orderMap = new Map(orderedServerIds.map((id, i) => [id, i]));
+    const orderMap = new Collection(orderedServerIds.map((id, i) => [id, i]));
 
-    const sortedServers = [...serverStore.servers.values()]
+    const sortedServers = serverStore.servers
+      .array()
       .sort((a, b) => a.createdAt - b.createdAt)
       .map((s) => ({
         server: s,

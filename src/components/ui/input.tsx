@@ -379,10 +379,7 @@ export const handleInputUserSuggestions = (opts: {
     const query = getMentionQuery();
     if (query === null) return [];
 
-    const members = [
-      ...(serverMemberStore.serverMembers.get(channel()?.serverId!)?.values() ||
-        []),
-    ];
+    const members = serverMemberStore.membersOf(channel()?.serverId!);
 
     const matched = !query
       ? members.sort((a, b) => b.joinedAt - a.joinedAt).slice(0, 10)

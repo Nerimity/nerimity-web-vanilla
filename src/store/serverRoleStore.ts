@@ -1,5 +1,6 @@
 import type { RawServerRole } from "../Types";
 import { applyIfPresent } from "../utils/applyIfPresent";
+import { Collection } from "../utils/Collection";
 import { convertShorthandToLinearGradient } from "../utils/color";
 import { storeEmitter } from "../utils/EventEmitter";
 import { accountStore } from "./accountStore";
@@ -83,14 +84,14 @@ export class ServerRole {
 }
 
 function createServerRoleStore() {
-  const roles = new Map<string, Map<string, ServerRole>>();
+  const roles = new Collection<string, Collection<string, ServerRole>>();
 
   const setRoles = (newRoles: RawServerRole[], clear = true) => {
     if (clear) roles.clear();
     for (let i = 0; i < newRoles.length; i++) {
       const role = newRoles[i]!;
       const serverRoles =
-        roles.get(role.serverId) || new Map<string, ServerRole>();
+        roles.get(role.serverId) || new Collection<string, ServerRole>();
       serverRoles.set(role.id, new ServerRole(role));
       roles.set(role.serverId, serverRoles);
     }
@@ -129,5 +130,9 @@ function createServerRoleStore() {
     });
   };
 
-  return { roles, setRoles, addRole, deleteRole, removeAll };
+  const rolesOf = (serverId: string) => {
+    return roles.get(serverId)?.array() || [];
+  };
+
+  return { roles, setRoles, addRole, deleteRole, removeAll, rolesOf };
 }

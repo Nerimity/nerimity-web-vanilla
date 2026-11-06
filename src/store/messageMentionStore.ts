@@ -1,4 +1,5 @@
 import type { RawMessageMention, RawUser } from "../Types";
+import { Collection } from "../utils/Collection";
 
 export const messageMentionStore = createMessageMentionStore();
 
@@ -16,7 +17,7 @@ export class MessageMention {
 }
 
 function createMessageMentionStore() {
-  const mentions = new Map<string, MessageMention>();
+  const mentions = new Collection<string, MessageMention>();
 
   const setMentions = (newMentions: RawMessageMention[]) => {
     mentions.clear();

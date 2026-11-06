@@ -20,7 +20,8 @@ export const createBlockedUsersModal = () => {
   const body = (<Modal.Body width="460px"></Modal.Body>) as HTMLDivElement;
 
   const rerender = () => {
-    const blockedFriend = [...friendStore.friends.values()]
+    const blockedFriend = friendStore.friends
+      .array()
       .filter((f) => f.status === FriendStatus.BLOCKED)
       .sort((a, b) => b.createdAt - a.createdAt);
     body.replaceChildren(

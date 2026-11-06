@@ -43,9 +43,9 @@ const NameAndTag = ({ user }: { user: RawUser }) => {
 
 const Stats = () => {
   const serverCount = serverStore.servers.size;
-  const friendCount = [...friendStore.friends.values()].filter(
-    (f) => f.status === FriendStatus.FRIENDS,
-  ).length;
+  const friendCount = friendStore.friends
+    .array()
+    .filter((f) => f.status === FriendStatus.FRIENDS).length;
 
   return (
     <div class={style.stats}>

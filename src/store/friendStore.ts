@@ -1,4 +1,5 @@
 import { FriendStatus, type RawFriend } from "../Types";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { userStore } from "./userStore";
 
@@ -19,7 +20,7 @@ export class Friend {
 }
 
 function createFriendStore() {
-  const friends = new Map<string, Friend>();
+  const friends = new Collection<string, Friend>();
 
   const setFriends = (newfriends: RawFriend[]) => {
     friends.clear();

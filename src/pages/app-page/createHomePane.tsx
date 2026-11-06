@@ -82,7 +82,8 @@ const Sidebar = (props: { signal: AbortSignal }) => {
     if (props.signal.aborted) return;
 
     const activities = (
-      [...userPresenceStore.presences.values()]
+      userPresenceStore.presences
+        .array()
         .filter((p) => {
           if (userStore.users.get(p.userId)?.bot) return false;
           if (friendStore.isFriendBlocked(p.userId)) return false;

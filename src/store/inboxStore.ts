@@ -1,6 +1,7 @@
 import { alert } from "../components/ui/modal";
 import { closeInbox, openInbox } from "../services/inboxService";
 import type { RawInbox } from "../Types";
+import { Collection } from "../utils/Collection";
 import { storeEmitter } from "../utils/EventEmitter";
 import { router } from "../utils/router";
 import { channelStore } from "./channelStore";
@@ -24,7 +25,7 @@ export class Inbox {
 }
 
 function createInboxStore() {
-  const inboxes = new Map<string, Inbox>();
+  const inboxes = new Collection<string, Inbox>();
 
   const setInboxes = (newInboxes: RawInbox[]) => {
     inboxes.clear();
