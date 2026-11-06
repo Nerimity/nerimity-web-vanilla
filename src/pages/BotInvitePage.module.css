@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 8px;
+}
+.group {
+  width: 100%;
+  max-width: 400px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.fontContainer {
+  padding: 10px;
+  font-size: 16px;
+  .text {
+    background-color: rgb(44, 44, 44);
+  }
+}
+
+body .serverInviteModal {
+  --padding-right: 0;
+  margin: 0;
+  margin-right: -5px;
+
+  .serverInfo {
+    display: flex;
+    flex-direction: column;
+    margin-top: -40px;
+    margin-right: 12px;
+    margin-left: 12px;
+    gap: 4px;
+  }
+
+  .serverName {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .stat {
+    margin-top: auto;
+    color: var(--text-muted-color);
+    font-size: 12px;
+    .statValue {
+      color: var(--text-color);
+    }
+  }
+
+  .errorContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    height: 200px;
+
+    padding: 16px;
+    font-size: 16px;
+    gap: 8px;
+    .errorIcon {
+      color: var(--alert-color);
+      font-size: 38px;
+    }
+  }
+}
+.permissionsContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  gap: 8px;
+}

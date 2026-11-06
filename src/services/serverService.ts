@@ -385,3 +385,20 @@ export async function searchServerMessages(
     },
   });
 }
+
+export const inviteBot = async (opts?: {
+  serverId: string;
+  appId: string;
+  perms: number;
+}) => {
+  return request(
+    `/servers/${opts?.serverId}/invites/applications/${opts?.appId}/bot?permissions=49`,
+    {
+      useToken: true,
+      method: "POST",
+      params: {
+        permissions: opts?.perms.toString(),
+      },
+    },
+  );
+};

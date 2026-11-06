@@ -34,6 +34,8 @@ const Root = (props: {
   pos?: { x: string; y: string; anchor?: ModalAnchor };
   ignoreBgClick?: boolean;
   disableGestures?: boolean;
+  disableGestureClose?: boolean;
+  initialFullHeight?: boolean;
   fullHeight?: boolean;
   backdropClass?: string;
 }) => {
@@ -61,6 +63,8 @@ const Root = (props: {
         data-y={props.pos?.y}
         data-ignore-bg-click={props.ignoreBgClick}
         data-disable-gestures={props.disableGestures}
+        data-disable-gesture-close={props.disableGestureClose}
+        data-initial-full-height={props.initialFullHeight}
         data-full-height={props.fullHeight}
         style={{
           "--x": props.pos?.x,
@@ -133,6 +137,8 @@ export const createModal = (
   const footerOriginalParent = footerElement?.parentElement;
   const footerPlaceholder = document.createComment("footer-placeholder");
   const disableGestures = modal.dataset.disableGestures === "true";
+  const disableGestureClose = modal.dataset.disableGestureClose === "true";
+  const startsFullHeight = modal.dataset.initialFullHeight === "true";
   const alwaysOpenFully = modal.dataset.fullHeight === "true";
 
   if (footerOriginalParent && footerElement) {
@@ -250,16 +256,12 @@ export const createModal = (
       setModalY(currentY);
     }
 
-    const animation = animateModalToY(
-      targetY,
-      mobileModalAnimation,
-      () => {
-        if (modalPositionAnimation === animation) {
-          modalPositionAnimation = null;
-        }
-        updateFooterTransform();
-      },
-    );
+    const animation = animateModalToY(targetY, mobileModalAnimation, () => {
+      if (modalPositionAnimation === animation) {
+        modalPositionAnimation = null;
+      }
+      updateFooterTransform();
+    });
     modalPositionAnimation = animation;
   };
 
@@ -327,7 +329,8 @@ export const createModal = (
       startY = touch.clientY;
       baseY = modalY;
 
-      const currentInitialY = initialY();
+      const currentInitialY =
+        startsFullHeight && !hasUserAdjustedPosition ? getMinY() : initialY();
       startedAtInitialPosition = Math.abs(modalY - currentInitialY) < 2;
 
       lastTouchY = touch.clientY;
@@ -386,10 +389,10 @@ export const createModal = (
       const closeVelocityThreshold = 0.7;
       const deceleration = 0.0035;
 
-      const animateBackToInitial = () => {
+      const animateToPosition = (targetY: number) => {
         const startFooterOffset = getFooterTranslateY(modalY);
-        modalY = currentInitialY;
-        const targetFooterOffset = getFooterTranslateY(modalY);
+        const targetFooterOffset = getFooterTranslateY(targetY);
+        modalY = targetY;
 
         animateModalToY(modalY, mobileModalAnimation, () => {
           updateFooterTransform();
@@ -402,25 +405,33 @@ export const createModal = (
       };
 
       const releaseAtBottom = modalY >= windowHeight - 1;
-      if (releaseAtBottom) {
+      if (releaseAtBottom && !disableGestureClose) {
         destroy();
         return;
       }
 
-      if (startedAtInitialPosition && velocityY > closeVelocityThreshold) {
+      if (
+        startedAtInitialPosition &&
+        velocityY > closeVelocityThreshold &&
+        !disableGestureClose
+      ) {
         destroy();
         return;
       }
 
       if (Math.abs(velocityY) < velocityThreshold) {
-        if (modalY > currentInitialY) {
-          animateBackToInitial();
+        if (startsFullHeight && startedAtInitialPosition) {
+          const targetY =
+            modalY - minY <= currentInitialY - modalY ? minY : currentInitialY;
+          animateToPosition(targetY);
+        } else if (modalY > currentInitialY) {
+          animateToPosition(currentInitialY);
         }
         return;
       }
 
       if (modalY > currentInitialY) {
-        animateBackToInitial();
+        animateToPosition(currentInitialY);
         return;
       }
 
@@ -496,7 +507,7 @@ export const createModal = (
       modalY = windowHeight;
       modal.style.transform = `translateY(${modalY}px)`;
 
-      modalY = initialY();
+      modalY = startsFullHeight ? getMinY() : initialY();
       const startFooterOffset = getFooterTranslateY(windowHeight);
       const targetFooterOffset = getFooterTranslateY(modalY);
       updateFooterTransform();
@@ -665,14 +676,20 @@ export const createModal = (
     const windowHeight = window.innerHeight;
 
     if (alwaysOpenFully) {
-      modalY = getMinY();
-      setModalY(modalY);
+      const targetY = getMinY();
+      if (modalPositionAnimation) {
+        animateModalPositionToY(targetY);
+      } else {
+        modalY = targetY;
+        setModalY(modalY);
+      }
       lastWindowHeight = windowHeight;
       return;
     }
 
     if (modalHeightChanged && !hasUserAdjustedPosition) {
-      animateModalPositionToY(initialY());
+      const targetY = startsFullHeight ? getMinY() : initialY();
+      animateModalPositionToY(targetY);
       lastWindowHeight = windowHeight;
       return;
     }

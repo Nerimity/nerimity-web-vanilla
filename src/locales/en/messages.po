@@ -210,27 +210,27 @@ msgstr "Mute"
 msgid "Copy Profile URL"
 msgstr "Copy Profile URL"
 
-#: src/components/drawer-left/inboxDrawer.tsx:261
+#: src/components/drawer-left/inboxDrawer.tsx:263
 msgid "Blocked"
 msgstr "Blocked"
 
-#: src/components/drawer-left/inboxDrawer.tsx:340
+#: src/components/drawer-left/inboxDrawer.tsx:343
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:343
+#: src/components/drawer-left/inboxDrawer.tsx:346
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:346
+#: src/components/drawer-left/inboxDrawer.tsx:349
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:419
+#: src/components/drawer-left/inboxDrawer.tsx:422
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/drawer-left/inboxDrawer.tsx:425
+#: src/components/drawer-left/inboxDrawer.tsx:428
 msgid "Friends"
 msgstr "Friends"
 
@@ -263,13 +263,13 @@ msgstr "Oldest"
 msgid "Search messages..."
 msgstr "Search messages..."
 
-#: src/components/drawer-right/ServerInfoDrawer.tsx:45
-#: src/pages/app-page/createExploreRoute.tsx:901
-#: src/store/userPresenceStore.ts:43
+#: src/components/drawer-right/ServerInfoDrawer.tsx:46
+#: src/pages/app-page/createExploreRoute.tsx:906
+#: src/store/userPresenceStore.ts:44
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/drawer-right/ServerInfoDrawer.tsx:503
+#: src/components/drawer-right/ServerInfoDrawer.tsx:500
 #: src/components/message-pane/messageItem.tsx:163
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
@@ -290,27 +290,27 @@ msgstr "Invalid Quote"
 msgid "Hidden Quote"
 msgstr "Hidden Quote"
 
-#: src/components/message-pane/InviteEmbed.tsx:137
+#: src/components/message-pane/InviteEmbed.tsx:138
 msgid "{count, plural, =0 {<0>No</0> Members} one {<1>{count}</1> Member} other {<2>{count}</2> Members}}"
 msgstr "{count, plural, =0 {<0>No</0> Members} one {<1>{count}</1> Member} other {<2>{count}</2> Members}}"
 
-#: src/components/message-pane/InviteEmbed.tsx:166
+#: src/components/message-pane/InviteEmbed.tsx:167
 msgid "Visit"
 msgstr "Visit"
 
-#: src/components/message-pane/InviteEmbed.tsx:166
+#: src/components/message-pane/InviteEmbed.tsx:167
 msgid "Join"
 msgstr "Join"
 
-#: src/components/message-pane/InviteEmbed.tsx:238
+#: src/components/message-pane/InviteEmbed.tsx:239
 msgid "Emoji from a private server."
 msgstr "Emoji from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:240
+#: src/components/message-pane/InviteEmbed.tsx:241
 msgid "Clan from a private server."
 msgstr "Clan from a private server."
 
-#: src/components/message-pane/InviteEmbed.tsx:241
+#: src/components/message-pane/InviteEmbed.tsx:242
 msgid "Invalid Invite."
 msgstr "Invalid Invite."
 
@@ -405,27 +405,27 @@ msgstr "Delete"
 msgid "Deleting..."
 msgstr "Deleting..."
 
-#: src/components/message-pane/inputSuggestions.tsx:237
-#: src/components/message-pane/inputSuggestions.tsx:271
+#: src/components/message-pane/inputSuggestions.tsx:235
+#: src/components/message-pane/inputSuggestions.tsx:269
 msgid "Silent message."
 msgstr "Silent message."
 
-#: src/components/message-pane/inputSuggestions.tsx:238
-#: src/components/message-pane/inputSuggestions.tsx:272
+#: src/components/message-pane/inputSuggestions.tsx:236
+#: src/components/message-pane/inputSuggestions.tsx:270
 msgid "Mentions a random user."
 msgstr "Mentions a random user."
 
-#: src/components/message-pane/inputSuggestions.tsx:240
+#: src/components/message-pane/inputSuggestions.tsx:238
 msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
-#: src/components/message-pane/inputSuggestions.tsx:547
+#: src/components/message-pane/inputSuggestions.tsx:548
 #: src/pages/app-page/server-settings/ServerSettings.ts:79
 msgid "Role"
 msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:183
-#: src/components/posts/PostItem.tsx:148
+#: src/components/posts/PostItem.tsx:149
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -438,7 +438,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:209
-#: src/components/posts/PostItem.tsx:155
+#: src/components/posts/PostItem.tsx:156
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -465,7 +465,7 @@ msgstr "Mention"
 msgid "Slow Mode"
 msgstr "Slow Mode"
 
-#: src/components/message-pane/typingIndicator.tsx:196
+#: src/components/message-pane/typingIndicator.tsx:200
 msgid "{count} users are typing..."
 msgstr "{count} users are typing..."
 
@@ -552,6 +552,7 @@ msgid "Close"
 msgstr "Close"
 
 #: src/components/modals/AddFriendModal.tsx:65
+#: src/pages/BotInvitePage.tsx:253
 msgid "Adding..."
 msgstr "Adding..."
 
@@ -604,11 +605,11 @@ msgstr "Don't Block"
 msgid "Blocking..."
 msgstr "Blocking..."
 
-#: src/components/modals/BlockedUsersModal.tsx:37
+#: src/components/modals/BlockedUsersModal.tsx:38
 msgid "Blocked at {date}"
 msgstr "Blocked at {date}"
 
-#: src/components/modals/BlockedUsersModal.tsx:66
+#: src/components/modals/BlockedUsersModal.tsx:67
 msgid "Blocked Users"
 msgstr "Blocked Users"
 
@@ -664,7 +665,7 @@ msgid "Edit Roles - {username}"
 msgstr "Edit Roles - {username}"
 
 #: src/components/modals/EditServerRolesModal.tsx:160
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:185
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:183
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 
@@ -880,8 +881,8 @@ msgid "Dismiss"
 msgstr "Dismiss"
 
 #: src/components/modals/createAuthErrorModal.tsx:65
-#: src/pages/LoginPage.tsx:22
-#: src/pages/LoginPage.tsx:57
+#: src/pages/LoginPage.tsx:25
+#: src/pages/LoginPage.tsx:60
 msgid "Login"
 msgstr "Login"
 
@@ -942,27 +943,27 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:67
+#: src/components/posts/PostItem.tsx:68
 msgid "Deleted or invalid post."
 msgstr "Deleted or invalid post."
 
-#: src/components/posts/PostItem.tsx:216
+#: src/components/posts/PostItem.tsx:217
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:224
+#: src/components/posts/PostItem.tsx:225
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:241
+#: src/components/posts/PostItem.tsx:242
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:261
+#: src/components/posts/PostItem.tsx:262
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:313
+#: src/components/posts/PostItem.tsx:314
 msgid "Estimated Views"
 msgstr "Estimated Views"
 
@@ -974,31 +975,31 @@ msgstr "{totalLocale, plural, =0 {<0>No</0> Votes} one {<1>#</1> vote} other {<2
 msgid "Vote"
 msgstr "Vote"
 
-#: src/components/posts/PostsArea.tsx:417
+#: src/components/posts/PostsArea.tsx:418
 msgid "Option {count}"
 msgstr "Option {count}"
 
-#: src/components/posts/PostsArea.tsx:561
+#: src/components/posts/PostsArea.tsx:562
 msgid "Create a post..."
 msgstr "Create a post..."
 
-#: src/components/posts/PostsArea.tsx:675
+#: src/components/posts/PostsArea.tsx:676
 msgid "Respectful Posting"
 msgstr "Respectful Posting"
 
-#: src/components/posts/PostsArea.tsx:678
+#: src/components/posts/PostsArea.tsx:679
 msgid "Please be <0>respectful</0> when creating posts."
 msgstr "Please be <0>respectful</0> when creating posts."
 
-#: src/components/posts/PostsArea.tsx:683
+#: src/components/posts/PostsArea.tsx:684
 msgid "<0>Self-harm</0> content is not allowed."
 msgstr "<0>Self-harm</0> content is not allowed."
 
-#: src/components/posts/PostsArea.tsx:689
+#: src/components/posts/PostsArea.tsx:690
 msgid "Violating these rules may result in content removal or account suspension."
 msgstr "Violating these rules may result in content removal or account suspension."
 
-#: src/components/posts/PostsArea.tsx:701
+#: src/components/posts/PostsArea.tsx:702
 msgid "I Will Be Respectful"
 msgstr "I Will Be Respectful"
 
@@ -1042,11 +1043,11 @@ msgstr "Don't Crop"
 msgid "Crop"
 msgstr "Crop"
 
-#: src/components/ui/expression-picker/EmojiPicker.tsx:171
+#: src/components/ui/expression-picker/EmojiPicker.tsx:172
 msgid "Search Emojis..."
 msgstr "Search Emojis..."
 
-#: src/components/ui/expression-picker/EmojiPicker.tsx:464
+#: src/components/ui/expression-picker/EmojiPicker.tsx:467
 msgid "Recent Emojis"
 msgstr "Recent Emojis"
 
@@ -1066,7 +1067,7 @@ msgstr "Search {platform}..."
 msgid "Favorites"
 msgstr "Favorites"
 
-#: src/components/ui/modal.tsx:828
+#: src/components/ui/modal.tsx:854
 msgid "Understood"
 msgstr "Understood"
 
@@ -1074,31 +1075,87 @@ msgstr "Understood"
 msgid "Last online {date}"
 msgstr "Last online {date}"
 
-#: src/pages/LoginPage.tsx:14
+#: src/pages/BotInvitePage.tsx:104
+msgid "Login to Invite"
+msgstr "Login to Invite"
+
+#: src/pages/BotInvitePage.tsx:114
+#: src/pages/BotInvitePage.tsx:145
+#: src/pages/ServerInvitePage.tsx:94
+msgid "Back to Nerimity"
+msgstr "Back to Nerimity"
+
+#: src/pages/BotInvitePage.tsx:128
+msgid "You must be logged in to view this page."
+msgstr "You must be logged in to view this page."
+
+#: src/pages/BotInvitePage.tsx:147
+#: src/pages/BotInvitePage.tsx:260
+msgid "Add Bot"
+msgstr "Add Bot"
+
+#: src/pages/BotInvitePage.tsx:164
+msgid "Select Server"
+msgstr "Select Server"
+
+#: src/pages/BotInvitePage.tsx:246
+msgid "Please select a server"
+msgstr "Please select a server"
+
+#: src/pages/BotInvitePage.tsx:266
+msgid "Bot added successfully"
+msgstr "Bot added successfully"
+
+#: src/pages/LoginPage.tsx:17
 #: src/pages/app-page/settings/accountSettingsPage.tsx:29
 msgid "Email"
 msgstr "Email"
 
-#: src/pages/LoginPage.tsx:17
+#: src/pages/LoginPage.tsx:20
 msgid "Password"
 msgstr "Password"
 
-#: src/pages/LoginPage.tsx:29
+#: src/pages/LoginPage.tsx:32
 msgid "Login to continue"
 msgstr "Login to continue"
 
-#: src/pages/LoginPage.tsx:65
+#: src/pages/LoginPage.tsx:68
 msgid "Logging in..."
 msgstr "Logging in..."
+
+#: src/pages/ServerInvitePage.tsx:104
+msgid "Don't Join"
+msgstr "Don't Join"
+
+#: src/pages/ServerInvitePage.tsx:107
+#: src/pages/app-page/createExploreRoute.tsx:159
+msgid "Visit Server"
+msgstr "Visit Server"
+
+#: src/pages/ServerInvitePage.tsx:116
+#: src/pages/ServerInvitePage.tsx:208
+#: src/pages/ServerInvitePage.tsx:219
+#: src/pages/app-page/createExploreRoute.tsx:159
+msgid "Join Server"
+msgstr "Join Server"
+
+#: src/pages/ServerInvitePage.tsx:124
+msgid "Login to Join"
+msgstr "Login to Join"
+
+#: src/pages/ServerInvitePage.tsx:142
+#: src/pages/app-page/createExploreRoute.tsx:119
+msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+
+#: src/pages/ServerInvitePage.tsx:201
+msgid "Joining..."
+msgstr "Joining..."
 
 #: src/pages/app-page/createExploreRoute.tsx:104
 #: src/pages/app-page/createExploreRoute.tsx:202
 msgid "by <0>{username}</0>"
 msgstr "by <0>{username}</0>"
-
-#: src/pages/app-page/createExploreRoute.tsx:119
-msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
-msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
 #: src/pages/app-page/createExploreRoute.tsx:140
 #: src/pages/app-page/createExploreRoute.tsx:238
@@ -1109,14 +1166,6 @@ msgstr "{count} Lifetime Bumps"
 #: src/pages/app-page/createExploreRoute.tsx:240
 msgid "Bumped <0>{date}</0>"
 msgstr "Bumped <0>{date}</0>"
-
-#: src/pages/app-page/createExploreRoute.tsx:159
-msgid "Visit Server"
-msgstr "Visit Server"
-
-#: src/pages/app-page/createExploreRoute.tsx:159
-msgid "Join Server"
-msgstr "Join Server"
 
 #: src/pages/app-page/createExploreRoute.tsx:163
 #: src/pages/app-page/createExploreRoute.tsx:250
@@ -1147,124 +1196,124 @@ msgstr "A listing can be bumped once every 3 hours. All bumps reset every Monday
 msgid "Please report bots that are malicious, broken themes or servers that break the TOS."
 msgstr "Please report bots that are malicious, broken themes or servers that break the TOS."
 
-#: src/pages/app-page/createExploreRoute.tsx:560
-#: src/pages/app-page/createExploreRoute.tsx:782
+#: src/pages/app-page/createExploreRoute.tsx:561
+#: src/pages/app-page/createExploreRoute.tsx:783
 msgid "Pinned Servers"
 msgstr "Pinned Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:572
+#: src/pages/app-page/createExploreRoute.tsx:573
 msgid "Bumped Servers"
 msgstr "Bumped Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:583
+#: src/pages/app-page/createExploreRoute.tsx:584
 msgid "Bumped Bots"
 msgstr "Bumped Bots"
 
-#: src/pages/app-page/createExploreRoute.tsx:590
+#: src/pages/app-page/createExploreRoute.tsx:591
 msgid "Recent Themes"
 msgstr "Recent Themes"
 
-#: src/pages/app-page/createExploreRoute.tsx:645
-#: src/pages/app-page/createExploreRoute.tsx:893
+#: src/pages/app-page/createExploreRoute.tsx:646
+#: src/pages/app-page/createExploreRoute.tsx:898
 msgid "All"
 msgstr "All"
 
-#: src/pages/app-page/createExploreRoute.tsx:649
+#: src/pages/app-page/createExploreRoute.tsx:650
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/app-page/createExploreRoute.tsx:653
+#: src/pages/app-page/createExploreRoute.tsx:654
 msgid "Clans"
 msgstr "Clans"
 
-#: src/pages/app-page/createExploreRoute.tsx:660
-#: src/pages/app-page/createExploreRoute.tsx:908
+#: src/pages/app-page/createExploreRoute.tsx:661
+#: src/pages/app-page/createExploreRoute.tsx:913
 msgid "Most Bumps"
 msgstr "Most Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:664
-#: src/pages/app-page/createExploreRoute.tsx:912
+#: src/pages/app-page/createExploreRoute.tsx:665
+#: src/pages/app-page/createExploreRoute.tsx:917
 msgid "Most Members"
 msgstr "Most Members"
 
-#: src/pages/app-page/createExploreRoute.tsx:668
-#: src/pages/app-page/createExploreRoute.tsx:916
+#: src/pages/app-page/createExploreRoute.tsx:669
+#: src/pages/app-page/createExploreRoute.tsx:921
 msgid "Recently Added"
 msgstr "Recently Added"
 
-#: src/pages/app-page/createExploreRoute.tsx:672
-#: src/pages/app-page/createExploreRoute.tsx:920
+#: src/pages/app-page/createExploreRoute.tsx:673
+#: src/pages/app-page/createExploreRoute.tsx:925
 msgid "Recently Bumped"
 msgstr "Recently Bumped"
 
-#: src/pages/app-page/createExploreRoute.tsx:676
+#: src/pages/app-page/createExploreRoute.tsx:677
 msgid "Most Active"
 msgstr "Most Active"
 
-#: src/pages/app-page/createExploreRoute.tsx:897
-#: src/store/userPresenceStore.ts:19
+#: src/pages/app-page/createExploreRoute.tsx:902
+#: src/store/userPresenceStore.ts:20
 msgid "Online"
 msgstr "Online"
 
-#: src/pages/app-page/createExploreRoute.tsx:935
+#: src/pages/app-page/createExploreRoute.tsx:940
 msgid "Search servers..."
 msgstr "Search servers..."
 
-#: src/pages/app-page/createExploreRoute.tsx:947
+#: src/pages/app-page/createExploreRoute.tsx:952
 msgid "Search bots..."
 msgstr "Search bots..."
 
-#: src/pages/app-page/createHomePane.tsx:223
+#: src/pages/app-page/createHomePane.tsx:224
 msgid "Feed"
 msgstr "Feed"
 
-#: src/pages/app-page/createHomePane.tsx:227
+#: src/pages/app-page/createHomePane.tsx:228
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:917
 msgid "Following"
 msgstr "Following"
 
-#: src/pages/app-page/createHomePane.tsx:231
+#: src/pages/app-page/createHomePane.tsx:232
 #: src/pages/app-page/settings/Settings.ts:76
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/pages/app-page/createHomePane.tsx:251
+#: src/pages/app-page/createHomePane.tsx:252
 msgid "Latest"
 msgstr "Latest"
 
-#: src/pages/app-page/createHomePane.tsx:252
+#: src/pages/app-page/createHomePane.tsx:253
 msgid "Liked in 7 Days"
 msgstr "Liked in 7 Days"
 
-#: src/pages/app-page/createHomePane.tsx:253
+#: src/pages/app-page/createHomePane.tsx:254
 msgid "Liked in 30 Days"
 msgstr "Liked in 30 Days"
 
-#: src/pages/app-page/createHomePane.tsx:254
+#: src/pages/app-page/createHomePane.tsx:255
 msgid "Liked All Time"
 msgstr "Liked All Time"
 
-#: src/pages/app-page/createHomePane.tsx:395
+#: src/pages/app-page/createHomePane.tsx:396
 msgid "<0><1>{username}</1></0> liked your post"
 msgstr "<0><1>{username}</1></0> liked your post"
 
-#: src/pages/app-page/createHomePane.tsx:412
+#: src/pages/app-page/createHomePane.tsx:413
 msgid "<0><1>{username}</1></0> replied to your post"
 msgstr "<0><1>{username}</1></0> replied to your post"
 
-#: src/pages/app-page/createHomePane.tsx:430
+#: src/pages/app-page/createHomePane.tsx:431
 msgid "<0><1>{username}</1></0> followed you"
 msgstr "<0><1>{username}</1></0> followed you"
 
-#: src/pages/app-page/createHomePane.tsx:448
+#: src/pages/app-page/createHomePane.tsx:449
 msgid "<0><1>{username}</1></0> reposted your post"
 msgstr "<0><1>{username}</1></0> reposted your post"
 
-#: src/pages/app-page/createHomePane.tsx:465
+#: src/pages/app-page/createHomePane.tsx:466
 msgid "<0><1>{username}</1></0> mentioned you"
 msgstr "<0><1>{username}</1></0> mentioned you"
 
-#: src/pages/app-page/createHomePane.tsx:482
+#: src/pages/app-page/createHomePane.tsx:483
 msgid "Unknown notification"
 msgstr "Unknown notification"
 
@@ -1586,11 +1635,11 @@ msgstr "Apply this role to members when they join the server."
 msgid "Permanently delete this role and all associated data."
 msgstr "Permanently delete this role and all associated data."
 
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:56
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:54
 msgid "Create New Role"
 msgstr "Create New Role"
 
-#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:57
+#: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:55
 msgid "Create Role"
 msgstr "Create Role"
 
@@ -1957,39 +2006,39 @@ msgstr "Destroy"
 msgid "Last seen {date}"
 msgstr "Last seen {date}"
 
-#: src/store/accountStore.ts:159
+#: src/store/accountStore.ts:163
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:163
+#: src/store/accountStore.ts:167
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:167
+#: src/store/accountStore.ts:171
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:170
+#: src/store/accountStore.ts:174
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:172
+#: src/store/accountStore.ts:176
 msgid "Connected!"
 msgstr "Connected!"
 
-#: src/store/messageStore.ts:353
+#: src/store/messageStore.ts:354
 msgid "Failed to send message"
 msgstr "Failed to send message"
 
-#: src/store/userPresenceStore.ts:25
+#: src/store/userPresenceStore.ts:26
 msgid "Looking to Play"
 msgstr "Looking to Play"
 
-#: src/store/userPresenceStore.ts:31
+#: src/store/userPresenceStore.ts:32
 msgid "Away From Keyboard"
 msgstr "Away From Keyboard"
 
-#: src/store/userPresenceStore.ts:37
+#: src/store/userPresenceStore.ts:38
 msgid "Do Not Disturb"
 msgstr "Do Not Disturb"
 

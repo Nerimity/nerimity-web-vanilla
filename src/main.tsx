@@ -33,6 +33,7 @@ updateFavicon();
   const HomePage = () => import("./pages/HomePage");
   const TestingPage = () => import("./pages/TestingPage");
   const ServerInvitePage = () => import("./pages/ServerInvitePage");
+  const BotInvitePage = () => import("./pages/BotInvitePage");
 
   const App = () => {
     const ac = new AbortController();
@@ -98,6 +99,11 @@ updateFavicon();
     router.createMatchListener(
       "/i/:code",
       handleEnter(() => navigate(ServerInvitePage)),
+      { signal },
+    );
+    router.createMatchListener(
+      "/bot/:appId",
+      handleEnter(() => navigate(BotInvitePage)),
       { signal },
     );
 
