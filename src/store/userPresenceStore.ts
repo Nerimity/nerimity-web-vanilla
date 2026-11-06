@@ -21,19 +21,19 @@ export const UserPresenceDetails = {
     },
   },
   [UserPresenceType.LOOKING_TO_PLAY]: {
-    id: "LOOKING_TO_PLAY",
+    id: "LOOKING-TO-PLAY",
     get text() {
       return t`Looking to Play`;
     },
   },
   [UserPresenceType.AWAY_FROM_KEYBOARD]: {
-    id: "AWAY_FROM_KEYBOARD",
+    id: "AWAY-FROM-KEYBOARD",
     get text() {
       return t`Away From Keyboard`;
     },
   },
   [UserPresenceType.DO_NOT_DISTURB]: {
-    id: "DO_NOT_DISTURB",
+    id: "DO-NOT-DISTURB",
     get text() {
       return t`Do Not Disturb`;
     },

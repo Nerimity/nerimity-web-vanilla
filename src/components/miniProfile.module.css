@@ -208,7 +208,8 @@
 .presenceDot {
   width: 10px;
   height: 10px;
-  margin: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
   border-radius: var(--radius-max);
   background-color: var(--color);
 }

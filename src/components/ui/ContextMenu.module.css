@@ -48,6 +48,7 @@
   flex-shrink: 0;
   width: 100%;
   min-width: max-content;
+  height: 30px;
   border-radius: var(--radius-12);
   cursor: pointer;
   user-select: none;
