@@ -3,6 +3,7 @@ import { Plural, Trans } from "@trans";
 
 import { Banner } from "../../components/Banner";
 import { Icon } from "../../components/icon";
+import { createBotInviteModal } from "../../components/modals/BotInviteModal";
 import { Notice } from "../../components/Notice";
 import { ServerClanItem } from "../../components/serverClanItem";
 import { Avatar } from "../../components/ui/avatar";
@@ -75,6 +76,7 @@ const Tabs = () => {
 };
 
 const elToExploreTheme = new WeakMap<HTMLElement, ExploreTheme>();
+const elToExploreItem = new WeakMap<HTMLElement, RawExploreItem>();
 
 const ServerItem = (props: { item: RawExploreItem }) => {
   const server = props.item.server!;
@@ -179,8 +181,8 @@ const BotItem = (props: { item: RawExploreItem }) => {
   const isOnline = props.item.botApplication?.botUser.online;
   const lifetimeBumps = props.item.lifetimeBumpCount;
 
-  return (
-    <div class={style.serverItem}>
+  const el = (
+    <div class={[style.serverItem, "botItem"]}>
       <Banner user={botUser} />
       <div class={style.details}>
         <Avatar
@@ -246,12 +248,19 @@ const BotItem = (props: { item: RawExploreItem }) => {
           </div>
         </div>
         <div class={style.actions}>
-          <Button icon="robot_2" label={t`Invite Bot`} primary />
+          <Button
+            icon="robot_2"
+            data-action="add-bot"
+            label={t`Invite Bot`}
+            primary
+          />
           <Button icon="arrow_upward" label={t`Bump ~ ${bumpCount}`} />
         </div>
       </div>
     </div>
-  );
+  ) as HTMLDivElement;
+  elToExploreItem.set(el, props.item);
+  return el;
 };
 const ThemeItem = (props: { item: ExploreTheme }) => {
   const name = props.item.name;
@@ -448,6 +457,19 @@ const createExploreRoute = ({ content }: RouteContext) => {
     updateTheme(theme.colors);
   };
 
+  const inviteBot = async (e: MouseEvent) => {
+    const botEl = closestFromEvent(e, `.botItem`);
+    const exploreItem = elToExploreItem.get(botEl!);
+    if (!exploreItem) return;
+
+    const appId = exploreItem.botApplication?.id!;
+    const perms = exploreItem.botPermissions ?? 0;
+    createBotInviteModal({
+      appId,
+      perms,
+    });
+  };
+
   el.addEventListener(
     "click",
     async (e) => {
@@ -460,6 +482,9 @@ const createExploreRoute = ({ content }: RouteContext) => {
 
         if (action === "apply-theme") {
           applyThemeClick(e);
+        }
+        if (action === "add-bot") {
+          inviteBot(e);
         }
       }
     },
