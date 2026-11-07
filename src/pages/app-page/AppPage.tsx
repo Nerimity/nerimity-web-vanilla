@@ -9,6 +9,8 @@ import {
   createPostModal,
   destroyPostModal,
 } from "../../components/modals/createPostModal";
+import { createBotInviteModalLazy } from "../../components/modals/LazyBotInviteModal";
+import { createServerInviteModalLazy } from "../../components/modals/LazyServerInviteModal";
 import { createSidebar } from "../../components/sidebar";
 import { Drawer } from "../../components/ui/drawer";
 import { isMobileWidth } from "../../config";
@@ -236,6 +238,43 @@ const createAppPage = () => {
 
     if (postMatched) {
       router.setQuery("postId", postMatched.params.postId);
+      return false;
+    }
+  }, signal);
+
+  router.beforeNavigate((event) => {
+    const postMatched = router.match<{ postId: string }>(
+      `/p/:postId`,
+      event.newPath,
+    );
+
+    if (postMatched) {
+      router.setQuery("postId", postMatched.params.postId);
+      return false;
+    }
+
+    const botInviteMatched = router.match<{ appId: string }, { perms: string }>(
+      `/bot/:appId`,
+      event.newPath,
+    );
+
+    if (botInviteMatched) {
+      createBotInviteModalLazy({
+        appId: botInviteMatched.params.appId!,
+        perms: Number(botInviteMatched.query.perms) || 0,
+      });
+      return false;
+    }
+
+    const serverInviteMatched = router.match<{ code: string }>(
+      `/i/:code`,
+      event.newPath,
+    );
+
+    if (serverInviteMatched) {
+      createServerInviteModalLazy({
+        code: serverInviteMatched?.params.code!,
+      });
       return false;
     }
   }, signal);

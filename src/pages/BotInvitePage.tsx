@@ -1,4 +1,4 @@
-import { createBotInviteModal } from "../components/modals/BotInviteModal";
+import { createBotInviteModalLazy } from "../components/modals/LazyBotInviteModal";
 import { isMobileWidth } from "../config";
 import { router } from "../utils/router";
 
@@ -16,7 +16,7 @@ const createBotInvitePage = () => {
 
   const getQuery = router.query<{ perms: string }>();
 
-  createBotInviteModal({
+  createBotInviteModalLazy({
     page: true,
     appId: matcher?.params.appId!,
     perms: parseInt(getQuery()?.perms ?? "0"),

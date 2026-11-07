@@ -1,6 +1,7 @@
 import { closestFromEvent } from "../../utils/dom";
 import { addHttps } from "../../utils/url";
 import { createLinkWarnModal } from "../modals/LinkWarnModal";
+import { Link } from "../ui/link";
 
 interface MarkupLink {
   name: string;
@@ -11,6 +12,20 @@ interface MarkupLink {
 export const MarkupLink = (props: MarkupLink) => {
   const safeUrl = addHttps(props.url);
   const warn = props.name !== safeUrl;
+
+  let nerimityLink = safeUrl.startsWith("https://nerimity.com/app");
+  nerimityLink = nerimityLink || safeUrl.startsWith("https://nerimity.com/bot");
+  nerimityLink = nerimityLink || safeUrl.startsWith("https://nerimity.com/i");
+
+  if (nerimityLink) {
+    const path = safeUrl.replace("https://nerimity.com", "");
+    return (
+      <Link href={path} decoration class={props.class}>
+        {props.name}
+      </Link>
+    );
+  }
+
   return (
     <a href={safeUrl} class={props.class} target="_blank" data-warn={warn}>
       {props.name}

@@ -21,11 +21,13 @@ import { createStatusMessage } from "../ui/StatusMessage";
 
 import style from "./BotInviteModal.module.css";
 
-export const createBotInviteModal = (opts: {
+export interface BotInviteModalOpts {
   page?: boolean;
   appId: string;
   perms: number;
-}) => {
+}
+
+export const _createBotInviteModal = (opts: BotInviteModalOpts) => {
   const ac = new AbortController();
 
   let perms = opts.perms;
@@ -84,7 +86,7 @@ export const createBotInviteModal = (opts: {
     footer.replaceChildren(
       <Button
         data-action="close"
-        label={t`Back to Nerimity`}
+        label={opts.page ? t`Back to Nerimity` : t`Close`}
         primary
         icon="home"
       />,
@@ -115,7 +117,12 @@ export const createBotInviteModal = (opts: {
 
     footer.replaceChildren(
       <>
-        <Button label={t`Back to Nerimity`} data-action="close" hoverBorder />
+        <Button
+          label={opts.page ? t`Back to Nerimity` : t`Close`}
+
+          data-action="close"
+          hoverBorder
+        />
 
         <Button label={t`Add Bot`} data-action="add-bot" icon="add" primary />
       </>,
@@ -206,6 +213,8 @@ export const createBotInviteModal = (opts: {
       const actionEl = closestFromEvent(e, "[data-action]");
       const action = actionEl?.dataset.action;
       if (action === "close") {
+        if (!opts.page) return ac.abort();
+
         location.href = "/app";
       }
 

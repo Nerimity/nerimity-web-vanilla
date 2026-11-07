@@ -3,7 +3,7 @@ import { Plural, Trans } from "@trans";
 
 import { Banner } from "../../components/Banner";
 import { Icon } from "../../components/icon";
-import { createBotInviteModal } from "../../components/modals/BotInviteModal";
+import { createBotInviteModalLazy } from "../../components/modals/LazyBotInviteModal";
 import { Notice } from "../../components/Notice";
 import { ServerClanItem } from "../../components/serverClanItem";
 import { Avatar } from "../../components/ui/avatar";
@@ -464,7 +464,7 @@ const createExploreRoute = ({ content }: RouteContext) => {
 
     const appId = exploreItem.botApplication?.id!;
     const perms = exploreItem.botPermissions ?? 0;
-    createBotInviteModal({
+    createBotInviteModalLazy({
       appId,
       perms,
     });

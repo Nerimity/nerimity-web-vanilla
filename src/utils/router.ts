@@ -1,7 +1,12 @@
 import { closestFromEvent } from "./dom";
 
-export interface MatchResult<P = {}> {
+export interface MatchResult<
+  P = {},
+  Q extends Record<string, unknown> = Record<string, string | null>,
+> {
   params: P;
+  query: Q;
+  path: string;
 }
 
 const createRouter = () => {
@@ -89,19 +94,34 @@ const createRouter = () => {
     queueMicrotask(() => window.dispatchEvent(new Event("navigate")));
   };
 
-  const matchResult = <P>(result: URLPatternResult) => {
+  const matchResult = <
+    P,
+    Q extends Record<string, unknown> = Record<string, string | null>,
+  >(
+    result: URLPatternResult,
+    searchParams: URLSearchParams = getQueryParams(),
+  ): MatchResult<P, Q> => {
     return {
       params: result.pathname.groups as P,
+      query: parseQuery<Q>(searchParams),
       path: location.pathname,
     };
   };
-
-  const match = <P = {}>(pattern: string, pathname?: string) => {
+  const match = <
+    P = {},
+    Q extends Record<string, unknown> = Record<string, string | null>,
+  >(
+    pattern: string,
+    pathname?: string,
+  ) => {
     const pat = new URLPattern({ pathname: pattern });
+    const url = new URL(pathname ?? location.href, location.href);
     const result = pat.exec({
-      pathname: stripTrailingSlash(pathname || location.pathname),
+      pathname: stripTrailingSlash(url.pathname),
     });
-    return result ? matchResult<P>(result) : null;
+    return result
+      ? matchResult<P, Q>(result, new URLSearchParams(url.search))
+      : null;
   };
   const namedGroups = (groups: Record<string, string | undefined>) =>
     Object.fromEntries(

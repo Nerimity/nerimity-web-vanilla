@@ -264,7 +264,7 @@ msgid "Search messages..."
 msgstr "Search messages..."
 
 #: src/components/drawer-right/ServerInfoDrawer.tsx:46
-#: src/pages/app-page/createExploreRoute.tsx:906
+#: src/pages/app-page/createExploreRoute.tsx:931
 #: src/store/userPresenceStore.ts:44
 msgid "Offline"
 msgstr "Offline"
@@ -548,11 +548,14 @@ msgid "Add Friend"
 msgstr "Add Friend"
 
 #: src/components/modals/AddFriendModal.tsx:44
+#: src/components/modals/BotInviteModal.tsx:89
+#: src/components/modals/BotInviteModal.tsx:121
+#: src/components/modals/ServerInviteModal.tsx:71
 msgid "Close"
 msgstr "Close"
 
 #: src/components/modals/AddFriendModal.tsx:65
-#: src/pages/BotInvitePage.tsx:253
+#: src/components/modals/BotInviteModal.tsx:233
 msgid "Adding..."
 msgstr "Adding..."
 
@@ -612,6 +615,37 @@ msgstr "Blocked at {date}"
 #: src/components/modals/BlockedUsersModal.tsx:67
 msgid "Blocked Users"
 msgstr "Blocked Users"
+
+#: src/components/modals/BotInviteModal.tsx:79
+msgid "Login to Invite"
+msgstr "Login to Invite"
+
+#: src/components/modals/BotInviteModal.tsx:89
+#: src/components/modals/BotInviteModal.tsx:121
+#: src/components/modals/ServerInviteModal.tsx:71
+msgid "Back to Nerimity"
+msgstr "Back to Nerimity"
+
+#: src/components/modals/BotInviteModal.tsx:103
+msgid "You must be logged in to view this page."
+msgstr "You must be logged in to view this page."
+
+#: src/components/modals/BotInviteModal.tsx:127
+#: src/components/modals/BotInviteModal.tsx:240
+msgid "Add Bot"
+msgstr "Add Bot"
+
+#: src/components/modals/BotInviteModal.tsx:144
+msgid "Select Server"
+msgstr "Select Server"
+
+#: src/components/modals/BotInviteModal.tsx:226
+msgid "Please select a server"
+msgstr "Please select a server"
+
+#: src/components/modals/BotInviteModal.tsx:246
+msgid "Bot added successfully"
+msgstr "Bot added successfully"
 
 #: src/components/modals/ConfirmEmailModal.tsx:114
 msgid "Code Sending..."
@@ -821,6 +855,35 @@ msgstr "Are you sure you want to unmute <0>{username}</0>?"
 #: src/components/modals/MuteMemberModal.tsx:180
 msgid "Don't Unmute"
 msgstr "Don't Unmute"
+
+#: src/components/modals/ServerInviteModal.tsx:82
+msgid "Don't Join"
+msgstr "Don't Join"
+
+#: src/components/modals/ServerInviteModal.tsx:85
+#: src/pages/app-page/createExploreRoute.tsx:161
+msgid "Visit Server"
+msgstr "Visit Server"
+
+#: src/components/modals/ServerInviteModal.tsx:94
+#: src/components/modals/ServerInviteModal.tsx:187
+#: src/components/modals/ServerInviteModal.tsx:198
+#: src/pages/app-page/createExploreRoute.tsx:161
+msgid "Join Server"
+msgstr "Join Server"
+
+#: src/components/modals/ServerInviteModal.tsx:102
+msgid "Login to Join"
+msgstr "Login to Join"
+
+#: src/components/modals/ServerInviteModal.tsx:120
+#: src/pages/app-page/createExploreRoute.tsx:121
+msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
+
+#: src/components/modals/ServerInviteModal.tsx:180
+msgid "Joining..."
+msgstr "Joining..."
 
 #: src/components/modals/TimeModal.tsx:36
 msgid "Relative"
@@ -1075,37 +1138,6 @@ msgstr "Understood"
 msgid "Last online {date}"
 msgstr "Last online {date}"
 
-#: src/pages/BotInvitePage.tsx:104
-msgid "Login to Invite"
-msgstr "Login to Invite"
-
-#: src/pages/BotInvitePage.tsx:114
-#: src/pages/BotInvitePage.tsx:145
-#: src/pages/ServerInvitePage.tsx:94
-msgid "Back to Nerimity"
-msgstr "Back to Nerimity"
-
-#: src/pages/BotInvitePage.tsx:128
-msgid "You must be logged in to view this page."
-msgstr "You must be logged in to view this page."
-
-#: src/pages/BotInvitePage.tsx:147
-#: src/pages/BotInvitePage.tsx:260
-msgid "Add Bot"
-msgstr "Add Bot"
-
-#: src/pages/BotInvitePage.tsx:164
-msgid "Select Server"
-msgstr "Select Server"
-
-#: src/pages/BotInvitePage.tsx:246
-msgid "Please select a server"
-msgstr "Please select a server"
-
-#: src/pages/BotInvitePage.tsx:266
-msgid "Bot added successfully"
-msgstr "Bot added successfully"
-
 #: src/pages/LoginPage.tsx:17
 #: src/pages/app-page/settings/accountSettingsPage.tsx:29
 msgid "Email"
@@ -1123,143 +1155,114 @@ msgstr "Login to continue"
 msgid "Logging in..."
 msgstr "Logging in..."
 
-#: src/pages/ServerInvitePage.tsx:104
-msgid "Don't Join"
-msgstr "Don't Join"
-
-#: src/pages/ServerInvitePage.tsx:107
-#: src/pages/app-page/createExploreRoute.tsx:159
-msgid "Visit Server"
-msgstr "Visit Server"
-
-#: src/pages/ServerInvitePage.tsx:116
-#: src/pages/ServerInvitePage.tsx:208
-#: src/pages/ServerInvitePage.tsx:219
-#: src/pages/app-page/createExploreRoute.tsx:159
-msgid "Join Server"
-msgstr "Join Server"
-
-#: src/pages/ServerInvitePage.tsx:124
-msgid "Login to Join"
-msgstr "Login to Join"
-
-#: src/pages/ServerInvitePage.tsx:142
-#: src/pages/app-page/createExploreRoute.tsx:119
-msgid "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
-msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
-
-#: src/pages/ServerInvitePage.tsx:201
-msgid "Joining..."
-msgstr "Joining..."
-
-#: src/pages/app-page/createExploreRoute.tsx:104
-#: src/pages/app-page/createExploreRoute.tsx:202
+#: src/pages/app-page/createExploreRoute.tsx:106
+#: src/pages/app-page/createExploreRoute.tsx:204
 msgid "by <0>{username}</0>"
 msgstr "by <0>{username}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:140
-#: src/pages/app-page/createExploreRoute.tsx:238
+#: src/pages/app-page/createExploreRoute.tsx:142
+#: src/pages/app-page/createExploreRoute.tsx:240
 msgid "{count} Lifetime Bumps"
 msgstr "{count} Lifetime Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:142
-#: src/pages/app-page/createExploreRoute.tsx:240
+#: src/pages/app-page/createExploreRoute.tsx:144
+#: src/pages/app-page/createExploreRoute.tsx:242
 msgid "Bumped <0>{date}</0>"
 msgstr "Bumped <0>{date}</0>"
 
-#: src/pages/app-page/createExploreRoute.tsx:163
-#: src/pages/app-page/createExploreRoute.tsx:250
+#: src/pages/app-page/createExploreRoute.tsx:165
+#: src/pages/app-page/createExploreRoute.tsx:257
 msgid "Bump ~ {bumpCount}"
 msgstr "Bump ~ {bumpCount}"
 
-#: src/pages/app-page/createExploreRoute.tsx:217
+#: src/pages/app-page/createExploreRoute.tsx:219
 msgid "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 msgstr "{inServerCount, plural, =0 {<0>No</0> Servers} one {<1>#</1> Server} other {<2>#</2> Servers}}"
 
-#: src/pages/app-page/createExploreRoute.tsx:249
+#: src/pages/app-page/createExploreRoute.tsx:254
 msgid "Invite Bot"
 msgstr "Invite Bot"
 
-#: src/pages/app-page/createExploreRoute.tsx:285
+#: src/pages/app-page/createExploreRoute.tsx:294
 msgid "Contributors: {maintainers}"
 msgstr "Contributors: {maintainers}"
 
-#: src/pages/app-page/createExploreRoute.tsx:301
+#: src/pages/app-page/createExploreRoute.tsx:310
 msgid "Apply Theme"
 msgstr "Apply Theme"
 
-#: src/pages/app-page/createExploreRoute.tsx:417
+#: src/pages/app-page/createExploreRoute.tsx:426
 msgid "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
 msgstr "A listing can be bumped once every 3 hours. All bumps reset every Monday at 0:00 UTC."
 
-#: src/pages/app-page/createExploreRoute.tsx:421
+#: src/pages/app-page/createExploreRoute.tsx:430
 msgid "Please report bots that are malicious, broken themes or servers that break the TOS."
 msgstr "Please report bots that are malicious, broken themes or servers that break the TOS."
 
-#: src/pages/app-page/createExploreRoute.tsx:561
-#: src/pages/app-page/createExploreRoute.tsx:783
+#: src/pages/app-page/createExploreRoute.tsx:586
+#: src/pages/app-page/createExploreRoute.tsx:808
 msgid "Pinned Servers"
 msgstr "Pinned Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:573
+#: src/pages/app-page/createExploreRoute.tsx:598
 msgid "Bumped Servers"
 msgstr "Bumped Servers"
 
-#: src/pages/app-page/createExploreRoute.tsx:584
+#: src/pages/app-page/createExploreRoute.tsx:609
 msgid "Bumped Bots"
 msgstr "Bumped Bots"
 
-#: src/pages/app-page/createExploreRoute.tsx:591
+#: src/pages/app-page/createExploreRoute.tsx:616
 msgid "Recent Themes"
 msgstr "Recent Themes"
 
-#: src/pages/app-page/createExploreRoute.tsx:646
-#: src/pages/app-page/createExploreRoute.tsx:898
+#: src/pages/app-page/createExploreRoute.tsx:671
+#: src/pages/app-page/createExploreRoute.tsx:923
 msgid "All"
 msgstr "All"
 
-#: src/pages/app-page/createExploreRoute.tsx:650
+#: src/pages/app-page/createExploreRoute.tsx:675
 msgid "Verified"
 msgstr "Verified"
 
-#: src/pages/app-page/createExploreRoute.tsx:654
+#: src/pages/app-page/createExploreRoute.tsx:679
 msgid "Clans"
 msgstr "Clans"
 
-#: src/pages/app-page/createExploreRoute.tsx:661
-#: src/pages/app-page/createExploreRoute.tsx:913
+#: src/pages/app-page/createExploreRoute.tsx:686
+#: src/pages/app-page/createExploreRoute.tsx:938
 msgid "Most Bumps"
 msgstr "Most Bumps"
 
-#: src/pages/app-page/createExploreRoute.tsx:665
-#: src/pages/app-page/createExploreRoute.tsx:917
+#: src/pages/app-page/createExploreRoute.tsx:690
+#: src/pages/app-page/createExploreRoute.tsx:942
 msgid "Most Members"
 msgstr "Most Members"
 
-#: src/pages/app-page/createExploreRoute.tsx:669
-#: src/pages/app-page/createExploreRoute.tsx:921
+#: src/pages/app-page/createExploreRoute.tsx:694
+#: src/pages/app-page/createExploreRoute.tsx:946
 msgid "Recently Added"
 msgstr "Recently Added"
 
-#: src/pages/app-page/createExploreRoute.tsx:673
-#: src/pages/app-page/createExploreRoute.tsx:925
+#: src/pages/app-page/createExploreRoute.tsx:698
+#: src/pages/app-page/createExploreRoute.tsx:950
 msgid "Recently Bumped"
 msgstr "Recently Bumped"
 
-#: src/pages/app-page/createExploreRoute.tsx:677
+#: src/pages/app-page/createExploreRoute.tsx:702
 msgid "Most Active"
 msgstr "Most Active"
 
-#: src/pages/app-page/createExploreRoute.tsx:902
+#: src/pages/app-page/createExploreRoute.tsx:927
 #: src/store/userPresenceStore.ts:20
 msgid "Online"
 msgstr "Online"
 
-#: src/pages/app-page/createExploreRoute.tsx:940
+#: src/pages/app-page/createExploreRoute.tsx:965
 msgid "Search servers..."
 msgstr "Search servers..."
 
-#: src/pages/app-page/createExploreRoute.tsx:952
+#: src/pages/app-page/createExploreRoute.tsx:977
 msgid "Search bots..."
 msgstr "Search bots..."
 
