@@ -47,7 +47,7 @@ msgstr "Caution"
 msgid "Success"
 msgstr "Success"
 
-#: src/components/appHeader.tsx:41
+#: src/components/appHeader.tsx:44
 #: src/components/miniProfile.tsx:346
 #: src/components/sidebar.tsx:373
 #: src/pages/app-page/settings/Settings.ts:55
@@ -55,11 +55,11 @@ msgstr "Success"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/appHeader.tsx:42
+#: src/components/appHeader.tsx:45
 msgid "Explore"
 msgstr "Explore"
 
-#: src/components/appHeader.tsx:45
+#: src/components/appHeader.tsx:48
 #: src/components/sidebar.tsx:518
 msgid "Home"
 msgstr "Home"
@@ -247,19 +247,19 @@ msgstr "Files"
 msgid "Search"
 msgstr "Search"
 
-#: src/components/drawer-right/SearchDrawer.tsx:49
+#: src/components/drawer-right/SearchDrawer.tsx:50
 msgid "Search In #{name}"
 msgstr "Search In #{name}"
 
-#: src/components/drawer-right/SearchDrawer.tsx:54
+#: src/components/drawer-right/SearchDrawer.tsx:55
 msgid "Newest"
 msgstr "Newest"
 
-#: src/components/drawer-right/SearchDrawer.tsx:55
+#: src/components/drawer-right/SearchDrawer.tsx:56
 msgid "Oldest"
 msgstr "Oldest"
 
-#: src/components/drawer-right/SearchDrawer.tsx:80
+#: src/components/drawer-right/SearchDrawer.tsx:81
 msgid "Search messages..."
 msgstr "Search messages..."
 
@@ -763,6 +763,10 @@ msgstr "Clear local settings"
 msgid "Don't Logout"
 msgstr "Don't Logout"
 
+#: src/components/modals/MentionsModal.tsx:112
+msgid "No mentions"
+msgstr "No mentions"
+
 #: src/components/modals/MuteMemberModal.tsx:20
 msgid "10 minutes"
 msgstr "10 minutes"
@@ -855,6 +859,10 @@ msgstr "Are you sure you want to unmute <0>{username}</0>?"
 #: src/components/modals/MuteMemberModal.tsx:180
 msgid "Don't Unmute"
 msgstr "Don't Unmute"
+
+#: src/components/modals/PinsModal.tsx:88
+msgid "No pinned messages"
+msgstr "No pinned messages"
 
 #: src/components/modals/ServerInviteModal.tsx:82
 msgid "Don't Join"
