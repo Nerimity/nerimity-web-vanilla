@@ -273,3 +273,7 @@ const createRouter = () => {
 };
 
 export const router = createRouter();
+
+export const isChannelRoute = () =>
+  !!router.match("/app/servers/:serverId/:channelId") ||
+  !!router.match("/app/inbox/:channelId");

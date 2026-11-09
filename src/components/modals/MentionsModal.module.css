@@ -1,0 +1,73 @@
+.notificationHeader {
+  display: flex;
+  align-items: center;
+  padding: 4px 6px;
+  margin-top: 26px;
+  margin-bottom: 4px;
+  border-radius: var(--radius-max);
+  background: var(--gray-850);
+  gap: 8px;
+  &:first-child {
+    margin-top: 12px;
+  }
+  .details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .title {
+    font-weight: bold;
+  }
+  .subtitle {
+    color: var(--gray-400);
+    font-size: 12px;
+  }
+}
+
+.avatarSkeleton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.titleSkeleton {
+  width: 120px;
+  height: 14px;
+}
+
+.subtitleSkeleton {
+  width: 80px;
+  height: 10px;
+}
+
+.notificationItem {
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.body {
+  :global(.messageItem) {
+    margin-top: 0;
+    pointer-events: none;
+  }
+}
+.pinsBody {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  gap: 12px;
+}
+
+.noItems {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  height: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  gap: 12px;
+  .icon {
+    color: var(--gray-400);
+    font-size: 32px;
+  }
+}

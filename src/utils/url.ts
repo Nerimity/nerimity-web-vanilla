@@ -16,3 +16,15 @@ export const addHttps = (url: string) => {
   }
   return url;
 };
+
+export const getMessageLink = (opts: {
+  channelId: string;
+  messageId: string;
+  serverId?: string;
+}) => {
+  const channelPath = opts.serverId
+    ? `/app/servers/${opts.serverId}/${opts.channelId}`
+    : `/app/inbox/${opts.channelId}`;
+
+  return `${channelPath}?messageId=${opts.messageId}`;
+};

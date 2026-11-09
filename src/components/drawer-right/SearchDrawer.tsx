@@ -14,6 +14,7 @@ import type { RawMessage } from "../../Types";
 import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { getMessageLink } from "../../utils/url";
 import { CdnIcon } from "../cdnIcon";
 import { Icon } from "../icon";
 import { MessageItem } from "../message-pane/messageItem";
@@ -169,13 +170,11 @@ export const createSearchDrawer = () => {
           const prev = messages[i - 1];
           const channel = channelStore.channels.get(message.channelId);
 
-          let link = "";
-
-          if (channel?.serverId) {
-            link = `/app/servers/${channel?.serverId}/${message.channelId}?messageId=${message.id}`;
-          } else {
-            link = `/app/inbox/${message.channelId}?messageId=${message.id}`;
-          }
+          const link = getMessageLink({
+            channelId: message.channelId,
+            messageId: message.id,
+            serverId: channel?.serverId,
+          });
 
           return (
             <div class={style.messageContainer}>

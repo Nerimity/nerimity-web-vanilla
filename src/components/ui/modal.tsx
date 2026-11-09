@@ -95,7 +95,7 @@ const Header = (props: {
   );
 };
 const Body = (props: {
-  class?: string;
+  class?: any;
   children?: any;
   width?: string;
   maxWidth?: string;

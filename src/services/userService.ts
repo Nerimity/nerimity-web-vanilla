@@ -2,7 +2,9 @@ import type {
   Profile,
   RawBotCommand,
   RawInventoryItem,
+  RawMessage,
   RawPost,
+  RawServer,
   RawUser,
   RawUserPresence,
 } from "../Types";
@@ -255,6 +257,18 @@ export interface SearchUserResult {
 export const searchUser = (query: string) => {
   return request<SearchUserResult[]>("/users/search", {
     params: { q: query },
+    method: "GET",
+    useToken: true,
+  });
+};
+
+export interface RawUserNotification {
+  message: RawMessage;
+  server: RawServer;
+}
+
+export const getUserNotifications = () => {
+  return request<RawUserNotification[]>("/users/notifications", {
     method: "GET",
     useToken: true,
   });

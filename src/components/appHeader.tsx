@@ -6,8 +6,11 @@ import { inboxStore } from "../store/inboxStore";
 import { serverStore } from "../store/serverStore";
 import { userStore } from "../store/userStore";
 import type { RawUser } from "../Types";
+import { closestFromEvent } from "../utils/dom";
 import { storeEmitter } from "../utils/EventEmitter";
-import { router } from "../utils/router";
+import { isChannelRoute, router } from "../utils/router";
+import { createMentionsModal } from "./modals/MentionsModal";
+import { createPinsModal } from "./modals/PinsModal";
 import { createPillUpdater, Pill } from "./Pill";
 import { Button } from "./ui/button";
 import { Drawer } from "./ui/drawer";
@@ -74,21 +77,34 @@ const AppPill = () => {
 export const createAppHeader = () => {
   const abortController = new AbortController();
   const { signal } = abortController;
-  const leftDrawerButton = (
-    <Button icon="side_navigation" class={style.button} />
-  ) as HTMLButtonElement;
-
-  let rightDrawerButton = (
-    <Button icon="info" class={style.button} />
-  ) as HTMLButtonElement;
 
   let headerContainer = (
     <header class={style.header}>
-      {leftDrawerButton}
+      <Button
+        data-action="toggle_left_drawer"
+        icon="side_navigation"
+        class={style.button}
+      />
       <div class={style.details}>
         <AppPill />
       </div>
-      {rightDrawerButton}
+      <div class={style.actions}>
+        <Button
+          data-action="show_pins_popup"
+          icon="push_pin"
+          class={style.button}
+        />
+        <Button
+          data-action="show_mentions_popup"
+          icon="alternate_email"
+          class={style.button}
+        />
+        <Button
+          data-action="toggle_right_drawer"
+          icon="info"
+          class={style.button}
+        />
+      </div>
     </header>
   ) as HTMLDivElement;
 
@@ -99,18 +115,36 @@ export const createAppHeader = () => {
     </>
   ) as unknown as HTMLDivElement;
 
-  leftDrawerButton.addEventListener(
+  headerContainer.addEventListener(
     "click",
-    () => {
-      Drawer().updatePage({ page: 0, toggleLeftDesktop: true });
-    },
-    { signal },
-  );
-
-  rightDrawerButton.addEventListener(
-    "click",
-    () => {
-      Drawer().updatePage({ page: 2, toggleRightDesktop: true });
+    (e) => {
+      const actionEl = closestFromEvent(e, "[data-action]");
+      if (!actionEl) return;
+      const action = actionEl.dataset.action!;
+      if (action === "toggle_left_drawer") {
+        Drawer().updatePage({ page: 0, toggleLeftDesktop: true });
+      }
+      if (action === "toggle_right_drawer") {
+        Drawer().updatePage({ page: 2, toggleRightDesktop: true });
+      }
+      if (action === "show_mentions_popup") {
+        const rect = actionEl.getBoundingClientRect();
+        createMentionsModal({
+          pos: {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height + 4,
+          },
+        });
+      }
+      if (action === "show_pins_popup") {
+        const rect = actionEl.getBoundingClientRect();
+        createPinsModal({
+          pos: {
+            x: rect.x + rect.width / 2,
+            y: rect.y + rect.height + 4,
+          },
+        });
+      }
     },
     { signal },
   );
@@ -131,6 +165,9 @@ export const createAppHeader = () => {
   storeEmitter.on(
     "drawer:rightDrawerAvailable",
     (available) => {
+      const rightDrawerButton = headerContainer.querySelector(
+        "[data-action=toggle_right_drawer]",
+      ) as HTMLButtonElement;
       rightDrawerButton.classList.toggle(style.hide!, !available);
     },
     signal,
@@ -139,6 +176,17 @@ export const createAppHeader = () => {
   const render = () => {
     return container;
   };
+
+  router.createMatchListener(
+    "/*",
+    () => {
+      const pinPopupBtn = headerContainer.querySelector<HTMLDivElement>(
+        "[data-action=show_pins_popup]",
+      )!;
+      pinPopupBtn.style.display = isChannelRoute() ? "block" : "none";
+    },
+    { signal, always: true },
+  );
 
   const updateHeader = (opts?: {
     label?: string;
@@ -157,7 +205,6 @@ export const createAppHeader = () => {
     abortController.abort();
     container.remove();
     headerContainer.remove();
-    (rightDrawerButton as any) = null;
     (container as any) = null;
     (headerContainer as any) = null;
   };

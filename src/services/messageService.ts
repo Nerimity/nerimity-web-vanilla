@@ -124,3 +124,13 @@ export const reactedUsers = async (opts: {
     },
   );
 };
+
+export const pinnedMessages = async (channelId: string) => {
+  return request<{ messages: RawMessage[] }>(
+    `/channels/${channelId}/messages/pins`,
+    {
+      useToken: true,
+      method: "GET",
+    },
+  );
+};
