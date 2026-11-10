@@ -77,11 +77,17 @@ const createLoginPage = () => {
     }
     setLocalItem("userToken", res.token);
 
-    let redirect = getQuery().redirect;
+    const redirect = getQuery().redirect;
 
     if (redirect) {
-      location.replace(`${window.location.origin}${redirect}`);
-      return;
+      try {
+        const redirectUrl = new URL(redirect, window.location.origin);
+
+        if (redirectUrl.origin === window.location.origin) {
+          location.replace(redirectUrl.href);
+          return;
+        }
+      } catch {}
     }
 
     location.replace("/app/");
