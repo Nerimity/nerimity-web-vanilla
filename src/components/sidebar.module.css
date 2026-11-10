@@ -131,6 +131,16 @@
   }
 }
 
+.creatingFolderPreview {
+  height: auto;
+  aspect-ratio: 1 / 0.768;
+  border-radius: var(--radius-10);
+
+  .folderPreview {
+    border-radius: inherit;
+  }
+}
+
 .homeItem {
   margin-top: 4px;
   &:hover {
