@@ -39,6 +39,7 @@ import { Markup } from "./markup/markup";
 import { formatMessage } from "./message-pane/utils";
 import { createEditServerRolesModal } from "./modals/EditServerRolesModal";
 import { createLogoutModal } from "./modals/LogoutModal";
+import { createPostHandler, PostItem } from "./posts/PostItem";
 import { ServerClanItem } from "./serverClanItem";
 import { Avatar } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -165,6 +166,9 @@ export const MiniProfile = (props: {
   overrides?: MiniProfileOverrides;
   showChannelNotice?: boolean;
 }) => {
+  let miniProfileEl = (
+    <div class={[style.miniProfile, props.class]}></div>
+  ) as HTMLDivElement;
   let contentAbort: AbortController | undefined;
   const Content = () => {
     contentAbort?.abort();
@@ -245,7 +249,7 @@ export const MiniProfile = (props: {
             props.animationMode === "focus" && document.hasFocus()
           }
           user={user!}
-        ></Banner>
+        />
         <div class={style.overlayInfo}>
           <Dynamic
             component={isWebhook ? "span" : Link}
@@ -416,14 +420,29 @@ export const MiniProfile = (props: {
                 </div>
               </div>
             )}
+            {details?.latestPost && (
+              <div class={style.latestPostContainer}>
+                <div class={style.title}>{t`Latest Post`}</div>
+                <div>
+                  <PostItem
+                    hideNewDayMarker
+                    embedImageHorizPadding={84}
+                    container={miniProfileEl}
+                    post={details.latestPost}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </>
     );
   };
-  let miniProfileEl = (
-    <div class={[style.miniProfile, props.class]}></div>
-  ) as HTMLDivElement;
+
+  createPostHandler({
+    container: miniProfileEl,
+    signal: props.abort.signal,
+  });
 
   let localUser: RawUser | undefined = userStore.users.get(props.userId);
   let details: UserDetails | null = null;
@@ -441,7 +460,11 @@ export const MiniProfile = (props: {
     localUser = user;
   }
 
-  miniProfileEl.appendChild(<Content />);
+  requestAnimationFrame(() => {
+    if (props.abort.signal.aborted) return;
+    contentAbort?.abort();
+    miniProfileEl.replaceChildren(<Content />);
+  });
 
   const render = () => {
     const primaryColor =

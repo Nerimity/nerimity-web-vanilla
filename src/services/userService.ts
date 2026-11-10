@@ -25,6 +25,7 @@ export type UserDetails = {
   mutualFriendIds: string[];
   mutualServerIds: string[];
   pinnedPosts: RawPost[];
+  latestPost?: RawPost;
   user: RawUser & {
     application?: {
       botCommands?: RawBotCommand[];

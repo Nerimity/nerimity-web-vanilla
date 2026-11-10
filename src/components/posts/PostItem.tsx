@@ -70,6 +70,7 @@ export const PostNotFound = () => (
 );
 
 export const PostItem = (props: {
+  embedImageHorizPadding?: number;
   postId?: string;
   post?: RawPost | null;
   prevPost?: RawPost;
@@ -182,7 +183,7 @@ export const PostItem = (props: {
                 embed={post.embed}
                 content={post.content}
                 container={props.container}
-                imageHorizPadding={68}
+                imageHorizPadding={props.embedImageHorizPadding ?? 68}
                 poll={post.poll}
                 pollCreatorId={post.createdBy.id}
                 customHeight={1120}

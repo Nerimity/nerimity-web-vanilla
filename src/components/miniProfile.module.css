@@ -96,6 +96,15 @@
   }
 }
 
+.latestPostContainer {
+  :global(.postItem) {
+    margin-top: 12px;
+    &:hover {
+      background: var(--gray-900);
+    }
+  }
+}
+
 .section.options {
   flex-direction: row;
   :global(.button) {
