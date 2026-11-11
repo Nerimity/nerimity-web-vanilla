@@ -1,7 +1,13 @@
 import { t } from "@lingui/core/macro";
 import morphdom from "morphdom";
 import type Sortable from "sortablejs";
+import type { SortableEvent } from "sortablejs";
 
+import {
+  createServerFolder,
+  updateServerFolder,
+  updateServerOrder,
+} from "../services/serverService";
 import { accountStore } from "../store/accountStore";
 import { channelStore } from "../store/channelStore";
 import { friendStore } from "../store/friendStore";
@@ -32,6 +38,7 @@ import style from "./sidebar.module.css";
 
 const openedFolderIds = new Set<string>();
 const folderItemAbortControllers = new Map<string, AbortController>();
+export let highlightedFolderOrServerItem: HTMLDivElement | null = null;
 
 const SidebarItem = (props: {
   title?: string;
@@ -104,6 +111,7 @@ const setupServerDragPreview = (
   let draggedOverEl: HTMLDivElement | null = null;
   let draggedOverOriginalBackgroundColor = "";
   let draggedServerId: string | null = null;
+  let draggedFolder = false;
   let draggedPreviewPlaceholder: HTMLElement | null = null;
   let draggedPreviewAvatar: HTMLElement | null = null;
   let draggedServerPreview: HTMLElement | null = null;
@@ -138,6 +146,16 @@ const setupServerDragPreview = (
   };
 
   const setDraggedOverEl = (el: HTMLDivElement | null) => {
+    if (draggedFolder) el = null;
+    if (
+      draggedServerId &&
+      el?.classList.contains("serverItem") &&
+      serverStore
+        .orderedServers()
+        .serverIdToFolderId.has(el.dataset.serverId ?? "")
+    ) {
+      el = null;
+    }
     if (el?.dataset.opened === "true") el = null;
     if (el?.classList.contains("serverItem")) {
       if (el.dataset.serverId === draggedServerId) el = null;
@@ -147,6 +165,7 @@ const setupServerDragPreview = (
       draggedOverEl.style.backgroundColor = draggedOverOriginalBackgroundColor;
     }
     clearDraggedPreview();
+    highlightedFolderOrServerItem = null;
 
     draggedOverEl = el;
     if (el) {
@@ -156,6 +175,7 @@ const setupServerDragPreview = (
       const folder = accountStore.currentUser?.serverFolders.find(
         (item) => item.id === el.dataset.serverId,
       );
+      if (folder) highlightedFolderOrServerItem = el;
       if (!draggedServerId) return;
 
       const server = serverStore.servers.get(draggedServerId);
@@ -203,21 +223,35 @@ const setupServerDragPreview = (
       targetAvatar.style.display = "none";
       el.append(preview);
       draggedServerPreview = preview;
+      highlightedFolderOrServerItem = el;
     }
   };
 
+  let finishDragTimer: ReturnType<typeof setTimeout> | null = null;
+  const finishDrag = () => {
+    if (finishDragTimer !== null) {
+      clearTimeout(finishDragTimer);
+      finishDragTimer = null;
+    }
+    setDraggedOverEl(null);
+    draggedServerId = null;
+    draggedFolder = false;
+  };
+  const finishDragAfterEvent = () => {
+    if (finishDragTimer !== null) clearTimeout(finishDragTimer);
+    finishDragTimer = setTimeout(finishDrag, 0);
+  };
+  signal.addEventListener("abort", finishDrag, { once: true });
   serverListEl.addEventListener(
     "dragstart",
     (event) => {
+      finishDrag();
       const serverItem = closestFromEvent<HTMLDivElement>(event, ".serverItem");
+      draggedFolder = !!closestFromEvent(event, ".folderItem");
       draggedServerId = serverItem?.dataset.serverId ?? null;
     },
     { signal },
   );
-  const finishDrag = () => {
-    setDraggedOverEl(null);
-    draggedServerId = null;
-  };
   serverListEl.addEventListener(
     "dragenter",
     (event) => {
@@ -249,8 +283,8 @@ const setupServerDragPreview = (
     },
     { signal },
   );
-  serverListEl.addEventListener("drop", finishDrag, { signal });
-  serverListEl.addEventListener("dragend", finishDrag, { signal });
+  serverListEl.addEventListener("drop", finishDragAfterEvent, { signal });
+  serverListEl.addEventListener("dragend", finishDragAfterEvent, { signal });
 
   let touchDragTimer: ReturnType<typeof setTimeout> | null = null;
   let touchDragReady = false;
@@ -263,7 +297,7 @@ const setupServerDragPreview = (
       touchDragTimer = null;
     }
     touchDragReady = false;
-    finishDrag();
+    finishDragAfterEvent();
   };
 
   serverListEl.addEventListener(
@@ -273,8 +307,14 @@ const setupServerDragPreview = (
       const touch = event.touches[0];
       if (!touch) return;
 
-      clearTouchDrag();
+      if (touchDragTimer !== null) {
+        clearTimeout(touchDragTimer);
+        touchDragTimer = null;
+      }
+      touchDragReady = false;
+      finishDrag();
       const serverItem = closestFromEvent<HTMLDivElement>(event, ".serverItem");
+      draggedFolder = !!closestFromEvent(event, ".folderItem");
       draggedServerId = serverItem?.dataset.serverId ?? null;
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
@@ -312,9 +352,11 @@ const setupServerDragPreview = (
 const FolderItem = ({
   folder,
   signal,
+  renderList,
 }: {
   folder: RawServerFolder;
   signal: AbortSignal;
+  renderList: (opts?: { forceRecreate?: boolean }) => void;
 }) => {
   folderItemAbortControllers.get(folder.id)?.abort();
 
@@ -391,6 +433,18 @@ const FolderItem = ({
     </SidebarItem>
   );
 
+  const handleEvent = (event: SortableEvent) => {
+    if (highlightedFolderOrServerItem) {
+      renderList({ forceRecreate: true });
+      return;
+    }
+
+    const children = [...event.target.children] as HTMLDivElement[];
+    const serverIds = children.map((e) => e.dataset.serverId!);
+    renderList({ forceRecreate: true });
+    updateServerFolder(folder.id, { serverIds });
+  };
+
   (async () => {
     const Sortable = await lazySortable();
     if (abortController.signal.aborted) return;
@@ -418,8 +472,8 @@ const FolderItem = ({
       draggable: `.serverItem`,
       filter: ".ignoreDrag",
 
-      // onAdd: handleEvent,
-      // onUpdate: handleEvent,
+      onAdd: handleEvent,
+      onUpdate: handleEvent,
     });
   })();
 
@@ -452,7 +506,11 @@ const updateServerItemSelectedState = (
   item?.setAttribute("data-selected", "true");
 };
 
-const rerenderFolder = (folderId: string, rerenderSignal: AbortSignal) => {
+const rerenderFolder = (
+  folderId: string,
+  rerenderSignal: AbortSignal,
+  rerenderList: (opts?: { forceRecreate?: boolean }) => void,
+) => {
   const folder = accountStore.currentUser?.serverFolders.find(
     (f) => f.id === folderId,
   );
@@ -461,15 +519,26 @@ const rerenderFolder = (folderId: string, rerenderSignal: AbortSignal) => {
     `.folderItem[data-server-id="${folder.id}"]`,
   );
   if (!container) return;
-  morphdom(container, <FolderItem signal={rerenderSignal} folder={folder} />);
+  morphdom(
+    container,
+    <FolderItem
+      renderList={rerenderList}
+      signal={rerenderSignal}
+      folder={folder}
+    />,
+  );
 };
 
-const rerenderServerItem = (serverId: string, rerenderSignal: AbortSignal) => {
+const rerenderServerItem = (
+  serverId: string,
+  rerenderSignal: AbortSignal,
+  rerenderList: (opts?: { forceRecreate?: boolean }) => void,
+) => {
   const folderId = serverStore
     .orderedServers()
     .serverIdToFolderId.get(serverId);
   if (folderId) {
-    rerenderFolder(folderId, rerenderSignal);
+    rerenderFolder(folderId, rerenderSignal, rerenderList);
   }
 
   const serverEl = document.querySelector(
@@ -494,9 +563,41 @@ export const createSidebar = () => {
 
   setupServerDragPreview(serverListEl, signal);
 
+  const handleEvent = async (event: SortableEvent) => {
+    if (highlightedFolderOrServerItem) {
+      renderList({ forceRecreate: true });
+      return;
+    }
+    let children = [...event.target.children] as HTMLDivElement[];
+
+    renderList({ scratch: true });
+    if (event.from != event.to) {
+      const folder = event.from.parentElement as HTMLDivElement;
+      const folderId = folder.dataset.serverId!;
+      const folderItems = [...event.from.children] as HTMLDivElement[];
+      const folderServerIds = folderItems.map((s) => s.dataset.serverId!);
+      await updateServerFolder(folderId, { serverIds: folderServerIds });
+
+      if (folderItems.length === 0) {
+        children = children.filter((e) => e.dataset.serverId !== folderId);
+      }
+    }
+
+    const serverIds = children
+      .filter((e) => {
+        const toRemove =
+          e.classList.contains(style.hidden!) &&
+          e.dataset.serverId === event.item.dataset.serverId;
+        return !toRemove;
+      })
+      .map((e) => e.dataset.serverId!);
+    updateServerOrder(serverIds);
+  };
+
   const renderList = async (opts?: {
     id?: string;
     forceRecreate?: boolean;
+    scratch?: boolean;
   }) => {
     rerenderAc.abort();
     rerenderAc = new AbortController();
@@ -508,20 +609,29 @@ export const createSidebar = () => {
 
     const servers = serverStore
       .orderedServers()
-      .servers.filter(
-        (s) => (s.type === "s" && !s.isInFolder) || s.type === "f",
-      );
+      .servers.filter((s) => s.type === "s" || s.type === "f");
+    if (opts?.scratch) {
+      serverListEl.replaceChildren();
+    }
     reconcile({
       container: serverListEl,
       dataAttr: "server-id",
       values: servers,
       valueId: "id",
-      create: (item) =>
-        item.type === "s" ? (
+      create: (item) => {
+        if (item.type === "s" && item.isInFolder)
+          return <div class={style.hidden} data-server-id={item.id}></div>;
+
+        return item.type === "s" ? (
           <ServerItem server={item.server} />
         ) : (
-          <FolderItem signal={rerenderAc.signal} folder={item.folder} />
-        ),
+          <FolderItem
+            signal={rerenderAc.signal}
+            folder={item.folder}
+            renderList={renderList}
+          />
+        );
+      },
       shouldRecreate(_, item) {
         if (opts?.forceRecreate) return true;
         return opts?.id === item.id;
@@ -538,8 +648,31 @@ export const createSidebar = () => {
       draggable: `.serverItem, .folderItem`,
       group: "server",
       filter: ".ignoreDrag",
-      // onAdd: handleEvent,
-      // onUpdate: handleEvent,
+      onAdd: handleEvent,
+      onUpdate: handleEvent,
+      onUnchoose(event) {
+        const highlighted = highlightedFolderOrServerItem;
+        if (!highlighted) return;
+        setTimeout(() => {
+          const id = highlighted?.dataset.serverId!; // folder/serverId;
+          const isFolder = highlighted?.classList.contains("folderItem");
+
+          if (isFolder) {
+            const folder = accountStore.currentUser?.serverFolders.find(
+              (f) => f.id === id,
+            );
+            if (!folder) return;
+            const serverId = event.item.dataset.serverId!;
+            const serverIds = [...folder.serverIds, serverId];
+            updateServerFolder(id, { serverIds });
+            return;
+          }
+          if (!isFolder) {
+            const serverId = event.item.dataset.serverId!;
+            createServerFolder([id, serverId]);
+          }
+        }, 100);
+      },
     });
   };
 
@@ -556,7 +689,7 @@ export const createSidebar = () => {
     "channel:notify_update",
     (event) => {
       if (!event.serverId) return;
-      rerenderServerItem(event.serverId, rerenderAc.signal);
+      rerenderServerItem(event.serverId, rerenderAc.signal, renderList);
     },
     signal,
   );
@@ -564,6 +697,13 @@ export const createSidebar = () => {
     "server:add",
     (event) => {
       renderList({ id: event.server.id });
+    },
+    signal,
+  );
+  storeEmitter.on(
+    "server:order_update",
+    () => {
+      renderList({ forceRecreate: true });
     },
     signal,
   );
@@ -579,7 +719,7 @@ export const createSidebar = () => {
     "server:member_update",
     (event) => {
       if (!event.isMe) return;
-      rerenderServerItem(event.serverId, rerenderAc.signal);
+      rerenderServerItem(event.serverId, rerenderAc.signal, renderList);
     },
     signal,
   );
@@ -587,7 +727,7 @@ export const createSidebar = () => {
     "server:update_role",
     (event) => {
       if (!event.hasRole) return;
-      rerenderServerItem(event.serverId, rerenderAc.signal);
+      rerenderServerItem(event.serverId, rerenderAc.signal, renderList);
     },
     signal,
   );

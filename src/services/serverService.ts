@@ -5,6 +5,7 @@ import type {
   RawExploreItem,
   RawMessage,
   RawServer,
+  RawServerFolder,
   RawServerRole,
   RawUser,
   RawWebhook,
@@ -401,4 +402,32 @@ export const inviteBot = async (opts?: {
       },
     },
   );
+};
+
+export const updateServerOrder = (serverIds: string[]) => {
+  return request("/servers/order", {
+    method: "POST",
+    body: { serverIds },
+    useToken: true,
+  });
+};
+
+export const updateServerFolder = (
+  folderId: string,
+  update: { name?: string; color?: string; serverIds?: string[] },
+) => {
+  return request(`/servers/folders/${folderId}`, {
+    method: "POST",
+    body: update,
+
+    useToken: true,
+  });
+};
+
+export const createServerFolder = (serverIds: string[]) => {
+  return request<RawServerFolder>("/servers/folders", {
+    method: "POST",
+    body: { serverIds },
+    useToken: true,
+  });
 };

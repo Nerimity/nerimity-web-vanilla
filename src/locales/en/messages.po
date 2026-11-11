@@ -48,8 +48,8 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/appHeader.tsx:44
-#: src/components/miniProfile.tsx:346
-#: src/components/sidebar.tsx:373
+#: src/components/miniProfile.tsx:350
+#: src/components/sidebar.tsx:843
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:204
 msgid "Profile"
@@ -60,7 +60,7 @@ msgid "Explore"
 msgstr "Explore"
 
 #: src/components/appHeader.tsx:48
-#: src/components/sidebar.tsx:518
+#: src/components/sidebar.tsx:988
 msgid "Home"
 msgstr "Home"
 
@@ -119,10 +119,10 @@ msgid "Copy URL"
 msgstr "Copy URL"
 
 #: src/components/context-menus/ServerContextMenu.tsx:69
-#: src/components/miniProfile.tsx:359
+#: src/components/miniProfile.tsx:363
 #: src/components/server-settings/createServerSettingsDrawer.tsx:21
 #: src/components/settings/createSettingsDrawer.tsx:16
-#: src/components/sidebar.tsx:403
+#: src/components/sidebar.tsx:873
 msgid "Settings"
 msgstr "Settings"
 
@@ -156,14 +156,14 @@ msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/context-menus/UserContextMenu.tsx:172
-#: src/components/miniProfile.tsx:329
-#: src/components/miniProfile.tsx:353
+#: src/components/miniProfile.tsx:333
+#: src/components/miniProfile.tsx:357
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/context-menus/UserContextMenu.tsx:172
-#: src/components/miniProfile.tsx:329
+#: src/components/miniProfile.tsx:333
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Message"
 msgstr "Message"
@@ -235,7 +235,7 @@ msgid "Friends"
 msgstr "Friends"
 
 #: src/components/drawer-right/DrawerChannelNotice.tsx:16
-#: src/components/miniProfile.tsx:667
+#: src/components/miniProfile.tsx:690
 msgid "Notice"
 msgstr "Notice"
 
@@ -425,7 +425,7 @@ msgid "Role"
 msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:183
-#: src/components/posts/PostItem.tsx:149
+#: src/components/posts/PostItem.tsx:150
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -438,7 +438,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:209
-#: src/components/posts/PostItem.tsx:156
+#: src/components/posts/PostItem.tsx:157
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -469,63 +469,67 @@ msgstr "Slow Mode"
 msgid "{count} users are typing..."
 msgstr "{count} users are typing..."
 
-#: src/components/miniProfile.tsx:275
+#: src/components/miniProfile.tsx:279
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:167
 msgid "Follows You"
 msgstr "Follows You"
 
-#: src/components/miniProfile.tsx:284
+#: src/components/miniProfile.tsx:288
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:418
 msgid "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:307
+#: src/components/miniProfile.tsx:311
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:411
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:319
+#: src/components/miniProfile.tsx:323
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:366
+#: src/components/miniProfile.tsx:370
 #: src/components/modals/LogoutModal.tsx:40
 #: src/components/modals/LogoutModal.tsx:53
 #: src/components/modals/createAuthErrorModal.tsx:53
 msgid "Logout"
 msgstr "Logout"
 
-#: src/components/miniProfile.tsx:379
+#: src/components/miniProfile.tsx:383
 #: src/pages/app-page/server-settings/ServerSettings.ts:63
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:393
+#: src/components/miniProfile.tsx:397
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:410
+#: src/components/miniProfile.tsx:414
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:717
+#: src/components/miniProfile.tsx:425
+msgid "Latest Post"
+msgstr "Latest Post"
+
+#: src/components/miniProfile.tsx:740
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:804
-#: src/components/miniProfile.tsx:847
+#: src/components/miniProfile.tsx:827
+#: src/components/miniProfile.tsx:870
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:853
+#: src/components/miniProfile.tsx:876
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:858
+#: src/components/miniProfile.tsx:881
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:859
+#: src/components/miniProfile.tsx:882
 #: src/components/settings-actions/SettingsActions.tsx:26
 #: src/components/settings-actions/SettingsActions.tsx:43
 msgid "Save"
@@ -1018,23 +1022,23 @@ msgstr "Dismiss ~ {countdown}"
 msgid "Deleted or invalid post."
 msgstr "Deleted or invalid post."
 
-#: src/components/posts/PostItem.tsx:217
+#: src/components/posts/PostItem.tsx:218
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:225
+#: src/components/posts/PostItem.tsx:226
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:242
+#: src/components/posts/PostItem.tsx:243
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:262
+#: src/components/posts/PostItem.tsx:263
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:314
+#: src/components/posts/PostItem.tsx:315
 msgid "Estimated Views"
 msgstr "Estimated Views"
 

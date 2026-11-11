@@ -200,6 +200,35 @@ function createAccountStore() {
     sessionId = id;
   };
 
+  const updateServerOrder = (serverIds: string[]) => {
+    if (currentUser) {
+      currentUser.orderedServerIds = serverIds;
+      storeEmitter.emit("server:order_update");
+    }
+  };
+
+  const updateServerFolder = (folder: RawServerFolder) => {
+    if (currentUser) {
+      if (!folder.serverIds.length) {
+        currentUser.serverFolders = currentUser.serverFolders.filter(
+          (f) => f.id !== folder.id,
+        );
+      } else {
+        currentUser.serverFolders = currentUser.serverFolders.map((f) => {
+          if (f.id != folder.id) return f;
+          return folder;
+        });
+      }
+      storeEmitter.emit("server:order_update");
+    }
+  };
+  const insertServerFolder = (folder: RawServerFolder) => {
+    if (currentUser) {
+      currentUser.serverFolders = [...currentUser.serverFolders, folder];
+      storeEmitter.emit("server:order_update");
+    }
+  };
+
   return {
     get sessionId() {
       return sessionId;
@@ -220,6 +249,9 @@ function createAccountStore() {
     get authError() {
       return authError;
     },
+    insertServerFolder,
+    updateServerFolder,
+    updateServerOrder,
     setSessionId,
     setAuthError,
     setConnected,

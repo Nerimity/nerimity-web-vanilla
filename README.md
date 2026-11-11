@@ -52,9 +52,9 @@ live: https://vanilla.nerimity.com
 - [x] `server:channel_created`
 - [x] `server:channel_updated`
 - [x] `server:channel_deleted`
-- [ ] `server:order_updated`
-- [ ] `server:folder_created`
-- [ ] `server:folder_updated`
+- [x] `server:order_updated`
+- [x] `server:folder_created`
+- [x] `server:folder_updated`
 
 - [x] `server:channel_permissions_updated`
 

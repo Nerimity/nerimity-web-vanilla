@@ -62,6 +62,7 @@ type StoreEvents = {
   "noti_settings:update": { channelId?: string; serverId?: string };
   "server:update_role": { roleId: string; serverId: string; hasRole: boolean };
   "server:create_role": ServerRole;
+  "server:order_update": void;
   "channel:updated": Channel;
   "channel:created": Channel;
   "server:member_update": {

@@ -25,6 +25,7 @@ import {
   type RawMessage,
   type RawNotice,
   type RawServer,
+  type RawServerFolder,
   type RawServerMember,
   type RawServerRole,
   type RawUser,
@@ -78,6 +79,9 @@ const handlers: Record<string, (payload: any) => void> = {
   "server:emoji_add": onServerEmojiAdded,
   "server:emoji_remove": onServerEmojiRemoved,
   "server:emoji_update": onServerEmojiUpdated,
+  "server:order_updated": onServerOrderUpdate,
+  "server:folder_updated": onServerFolderUpdate,
+  "server:folder_created": onServerFolderCreate,
   "friend:request_sent": onFriendRequest,
   "friend:request_pending": onFriendRequest,
   "friend:request_accepted": onFriendRequestAccept,
@@ -315,6 +319,18 @@ function onServerLeft(payload: { serverId: string }) {
   storeEmitter.emit("noti_settings:update");
 
   removeEmojisByServerId(payload.serverId);
+}
+
+function onServerOrderUpdate(payload: { serverIds: string[] }) {
+  accountStore.updateServerOrder(payload.serverIds);
+}
+
+function onServerFolderUpdate(payload: { folder: RawServerFolder }) {
+  accountStore.updateServerFolder(payload.folder);
+}
+
+function onServerFolderCreate(payload: { folder: RawServerFolder }) {
+  accountStore.insertServerFolder(payload.folder);
 }
 
 function onNotificationSettingsUpdate(payload: {

@@ -133,8 +133,8 @@
 
 .creatingFolderPreview {
   height: auto;
-  aspect-ratio: 1 / 0.768;
   border-radius: var(--radius-10);
+  aspect-ratio: 1 / 0.768;
 
   .folderPreview {
     border-radius: inherit;
@@ -163,4 +163,7 @@
     aspect-ratio: 1/1;
     corner-shape: squircle;
   }
+}
+.hidden {
+  display: none;
 }
