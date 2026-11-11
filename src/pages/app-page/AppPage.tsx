@@ -96,7 +96,12 @@ const createAppPage = () => {
   socket.connect();
 
   createUserContextMenuHandler({ signal });
-  createServerContextMenuHandler({ signal });
+  createServerContextMenuHandler({
+    signal,
+    shouldSkip(target) {
+      return !!target.closest(".sidebarServerList");
+    },
+  });
   createPostContextMenuHandler({ signal });
 
   createPostContextMenuHandler({

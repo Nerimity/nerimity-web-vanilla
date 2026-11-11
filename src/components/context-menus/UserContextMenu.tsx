@@ -27,9 +27,9 @@ export const createUserContextMenuHandler = (opts: {
   el?: HTMLElement;
   data?: Record<string, any>;
   signal: AbortSignal;
-  mode?: "contextmenu" | "click";
+  mode?: "contextmenu" | "click" | "manual";
 }) => {
-  ContextMenu.createHandler({
+  return ContextMenu.createHandler({
     mode: opts.mode,
     el: opts.el,
     signal: opts.signal,

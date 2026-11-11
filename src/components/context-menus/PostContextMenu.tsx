@@ -13,9 +13,9 @@ export const createPostContextMenuHandler = (opts: {
   selector?: string;
   idSelector?: string;
   signal: AbortSignal;
-  mode?: "contextmenu" | "click";
+  mode?: "contextmenu" | "click" | "manual";
 }) => {
-  ContextMenu.createHandler({
+  return ContextMenu.createHandler({
     mode: opts.mode,
     signal: opts.signal,
     selector: opts.selector || "[data-post-id]",

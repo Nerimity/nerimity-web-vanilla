@@ -24,8 +24,10 @@ import { storeEmitter } from "../utils/EventEmitter";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { reconcile } from "../utils/html";
 import { lazySortable } from "../utils/lazySortable";
+import { setupLongPressContextMenu } from "../utils/longPressContextMenu";
 import { getRecentServerChannelId } from "../utils/recentServerChannels";
 import { router } from "../utils/router";
+import { createServerContextMenuHandler } from "./context-menus/ServerContextMenu";
 import { Icon } from "./icon";
 import { LogoMono } from "./LogoMono";
 import { NotificationPill } from "./NotificationPill";
@@ -108,47 +110,49 @@ const setupServerDragPreview = (
   serverListEl: HTMLElement,
   signal: AbortSignal,
 ) => {
-  let draggedOverEl: HTMLDivElement | null = null;
-  let draggedOverOriginalBackgroundColor = "";
-  let draggedServerId: string | null = null;
-  let draggedFolder = false;
-  let draggedPreviewPlaceholder: HTMLElement | null = null;
-  let draggedPreviewAvatar: HTMLElement | null = null;
-  let draggedServerPreview: HTMLElement | null = null;
-  let draggedTargetAvatar: HTMLElement | null = null;
-  let draggedTargetAvatarDisplay = "";
-  let draggedTargetColor = "";
+  const dragState = {
+    overEl: null as HTMLDivElement | null,
+    overOriginalBackgroundColor: "",
+    serverId: null as string | null,
+    isFolder: false,
+    previewPlaceholder: null as HTMLElement | null,
+    previewAvatar: null as HTMLElement | null,
+    serverPreview: null as HTMLElement | null,
+    targetAvatar: null as HTMLElement | null,
+    targetAvatarDisplay: "",
+    targetColor: "",
+  };
 
   const clearDraggedPreview = () => {
-    if (draggedPreviewPlaceholder && draggedPreviewAvatar?.isConnected) {
-      draggedPreviewAvatar.replaceWith(draggedPreviewPlaceholder);
+    if (dragState.previewPlaceholder && dragState.previewAvatar?.isConnected) {
+      dragState.previewAvatar.replaceWith(dragState.previewPlaceholder);
     }
-    draggedServerPreview?.remove();
-    if (draggedTargetAvatar) {
-      draggedTargetAvatar.style.display = draggedTargetAvatarDisplay;
+    dragState.serverPreview?.remove();
+    if (dragState.targetAvatar) {
+      dragState.targetAvatar.style.display = dragState.targetAvatarDisplay;
     }
-    if (draggedOverEl?.classList.contains("serverItem")) {
-      draggedOverEl.classList.remove(
+    if (dragState.overEl?.classList.contains("serverItem")) {
+      dragState.overEl.classList.remove(
         style.folderItem!,
         "folderItem",
         style.creatingFolderPreview!,
       );
-      if (draggedTargetColor) {
-        draggedOverEl.style.setProperty("--color", draggedTargetColor);
+      if (dragState.targetColor) {
+        dragState.overEl.style.setProperty("--color", dragState.targetColor);
       } else {
-        draggedOverEl.style.removeProperty("--color");
+        dragState.overEl.style.removeProperty("--color");
       }
     }
-    draggedPreviewPlaceholder = null;
-    draggedPreviewAvatar = null;
-    draggedServerPreview = null;
-    draggedTargetAvatar = null;
+    dragState.previewPlaceholder = null;
+    dragState.previewAvatar = null;
+    dragState.serverPreview = null;
+    dragState.targetAvatar = null;
   };
 
   const setDraggedOverEl = (el: HTMLDivElement | null) => {
-    if (draggedFolder) el = null;
+    if (dragState.isFolder) el = null;
     if (
-      draggedServerId &&
+      dragState.serverId &&
       el?.classList.contains("serverItem") &&
       serverStore
         .orderedServers()
@@ -158,33 +162,34 @@ const setupServerDragPreview = (
     }
     if (el?.dataset.opened === "true") el = null;
     if (el?.classList.contains("serverItem")) {
-      if (el.dataset.serverId === draggedServerId) el = null;
+      if (el.dataset.serverId === dragState.serverId) el = null;
     }
-    if (draggedOverEl === el) return;
-    if (draggedOverEl) {
-      draggedOverEl.style.backgroundColor = draggedOverOriginalBackgroundColor;
+    if (dragState.overEl === el) return;
+    if (dragState.overEl) {
+      dragState.overEl.style.backgroundColor =
+        dragState.overOriginalBackgroundColor;
     }
     clearDraggedPreview();
     highlightedFolderOrServerItem = null;
 
-    draggedOverEl = el;
+    dragState.overEl = el;
     if (el) {
-      draggedOverOriginalBackgroundColor = el.style.backgroundColor;
+      dragState.overOriginalBackgroundColor = el.style.backgroundColor;
       el.style.backgroundColor = "var(--primary-color)";
 
       const folder = accountStore.currentUser?.serverFolders.find(
         (item) => item.id === el.dataset.serverId,
       );
       if (folder) highlightedFolderOrServerItem = el;
-      if (!draggedServerId) return;
+      if (!dragState.serverId) return;
 
-      const server = serverStore.servers.get(draggedServerId);
+      const server = serverStore.servers.get(dragState.serverId);
       if (!server) return;
 
       if (folder) {
         if (
           folder.serverIds.length >= 4 ||
-          folder.serverIds.includes(draggedServerId)
+          folder.serverIds.includes(dragState.serverId)
         ) {
           return;
         }
@@ -198,8 +203,8 @@ const setupServerDragPreview = (
           <Avatar size={24} server={server} imgClass="avatar" />
         ) as HTMLElement;
         placeholder.replaceWith(avatar);
-        draggedPreviewPlaceholder = placeholder;
-        draggedPreviewAvatar = avatar;
+        dragState.previewPlaceholder = placeholder;
+        dragState.previewAvatar = avatar;
         return;
       }
 
@@ -211,9 +216,9 @@ const setupServerDragPreview = (
       const preview = (
         <CreatingFolderPreview servers={[targetServer, server]} />
       ) as HTMLElement;
-      draggedTargetAvatar = targetAvatar;
-      draggedTargetAvatarDisplay = targetAvatar.style.display;
-      draggedTargetColor = el.style.getPropertyValue("--color");
+      dragState.targetAvatar = targetAvatar;
+      dragState.targetAvatarDisplay = targetAvatar.style.display;
+      dragState.targetColor = el.style.getPropertyValue("--color");
       el.classList.add(
         style.folderItem!,
         "folderItem",
@@ -222,7 +227,7 @@ const setupServerDragPreview = (
       el.style.setProperty("--color", "var(--primary-color)");
       targetAvatar.style.display = "none";
       el.append(preview);
-      draggedServerPreview = preview;
+      dragState.serverPreview = preview;
       highlightedFolderOrServerItem = el;
     }
   };
@@ -234,8 +239,8 @@ const setupServerDragPreview = (
       finishDragTimer = null;
     }
     setDraggedOverEl(null);
-    draggedServerId = null;
-    draggedFolder = false;
+    dragState.serverId = null;
+    dragState.isFolder = false;
   };
   const finishDragAfterEvent = () => {
     if (finishDragTimer !== null) clearTimeout(finishDragTimer);
@@ -247,8 +252,8 @@ const setupServerDragPreview = (
     (event) => {
       finishDrag();
       const serverItem = closestFromEvent<HTMLDivElement>(event, ".serverItem");
-      draggedFolder = !!closestFromEvent(event, ".folderItem");
-      draggedServerId = serverItem?.dataset.serverId ?? null;
+      dragState.isFolder = !!closestFromEvent(event, ".folderItem");
+      dragState.serverId = serverItem?.dataset.serverId ?? null;
     },
     { signal },
   );
@@ -266,15 +271,15 @@ const setupServerDragPreview = (
   serverListEl.addEventListener(
     "dragleave",
     (event) => {
-      if (!draggedOverEl) return;
+      if (!dragState.overEl) return;
       const el = closestFromEvent<HTMLDivElement>(
         event,
         ".folderItem, .serverItem",
       );
-      if (el && el !== draggedOverEl) return;
+      if (el && el !== dragState.overEl) return;
       if (
         event.relatedTarget instanceof Node &&
-        draggedOverEl.contains(event.relatedTarget)
+        dragState.overEl.contains(event.relatedTarget)
       ) {
         return;
       }
@@ -314,8 +319,8 @@ const setupServerDragPreview = (
       touchDragReady = false;
       finishDrag();
       const serverItem = closestFromEvent<HTMLDivElement>(event, ".serverItem");
-      draggedFolder = !!closestFromEvent(event, ".folderItem");
-      draggedServerId = serverItem?.dataset.serverId ?? null;
+      dragState.isFolder = !!closestFromEvent(event, ".folderItem");
+      dragState.serverId = serverItem?.dataset.serverId ?? null;
       touchStartX = touch.clientX;
       touchStartY = touch.clientY;
       touchDragTimer = setTimeout(() => {
@@ -327,14 +332,13 @@ const setupServerDragPreview = (
   document.addEventListener(
     "touchmove",
     (event) => {
-      if (!touchDragReady) return;
       const touch = event.touches[0];
+      if (!touch) return;
       if (
-        !touch ||
         Math.hypot(touch.clientX - touchStartX, touch.clientY - touchStartY) < 5
-      ) {
+      )
         return;
-      }
+      if (!touchDragReady) return;
 
       const target = document.elementFromPoint(touch.clientX, touch.clientY);
       const dropTarget =
@@ -555,12 +559,28 @@ export const createSidebar = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
-  let serverListEl = (<div class={style.serverList}></div>) as HTMLElement;
+  let serverListEl = (
+    <div class={[style.serverList, "sidebarServerList"]}></div>
+  ) as HTMLElement;
 
   let sortable: Sortable | null = null;
 
   let rerenderAc = new AbortController();
 
+  const openServerContextMenu = createServerContextMenuHandler({
+    signal,
+    mode: "manual",
+  });
+  setupLongPressContextMenu({
+    el: serverListEl,
+    signal,
+    selector: ".serverItem, .folderItem",
+    open: (event, target) => {
+      if (!target.classList.contains("serverItem")) return false;
+      openServerContextMenu(event, target);
+      return true;
+    },
+  });
   setupServerDragPreview(serverListEl, signal);
 
   const handleEvent = async (event: SortableEvent) => {

@@ -10,17 +10,19 @@ import { ContextMenu } from "../ui/ContextMenu";
 import { alert, createModal, Modal } from "../ui/modal";
 
 export const createServerContextMenuHandler = (opts: {
+  shouldSkip?: (target: HTMLElement) => boolean;
   el?: HTMLElement;
   data?: Record<string, any>;
   signal: AbortSignal;
-  mode?: "contextmenu" | "click";
+  mode?: "contextmenu" | "click" | "manual";
 }) => {
-  ContextMenu.createHandler({
+  return ContextMenu.createHandler({
     mode: opts.mode,
     el: opts.el,
     signal: opts.signal,
     selector: "[data-server-id]",
     attr: "serverId",
+    shouldSkip: opts.shouldSkip,
     resolveData: (serverId) => ({
       server: serverStore.servers.get(serverId),
       member: serverMemberStore.currentMember(serverId),

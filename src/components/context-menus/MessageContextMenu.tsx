@@ -52,10 +52,12 @@ export const MessageContextMenu = (props: {
 export const createMessageContextMenuHandler = (opts: {
   el: HTMLElement;
   signal: AbortSignal;
+  mode?: "contextmenu" | "click" | "manual";
 }) => {
-  ContextMenu.createHandler({
+  return ContextMenu.createHandler({
     el: opts.el,
     signal: opts.signal,
+    mode: opts.mode,
     selector: "[data-message-id]",
     attr: "messageId",
     shouldSkip: (target) => {

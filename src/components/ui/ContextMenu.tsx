@@ -74,7 +74,7 @@ type ContextMenuHandlerConfig<TData> = {
       element: HTMLDivElement;
     },
   ) => void;
-  mode?: "contextmenu" | "click";
+  mode?: "contextmenu" | "click" | "manual";
 };
 
 const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
@@ -90,74 +90,77 @@ const createHandler = <TData,>(config: ContextMenuHandlerConfig<TData>) => {
     { once: true },
   );
 
-  el.addEventListener(
-    config.mode ?? "contextmenu",
-    (event) => {
-      const target = event.target as HTMLElement;
-      if (config.shouldSkip?.(target)) {
-        event.preventDefault();
-        return;
-      }
-
-      const matchEl = target.closest(config.selector) as HTMLElement | null;
-      if (!matchEl) return;
-
-      let id = matchEl.dataset?.[config.attr];
-
-      if (config.idSelector) {
-        const idEl = target.closest(config.idSelector) as HTMLElement | null;
-        if (idEl) {
-          id = idEl.dataset?.[config.attr] ?? id;
-        }
-      }
-
-      if (!id) return;
-
+  const open = (event: MouseEvent, target = event.target as HTMLElement) => {
+    if (config.shouldSkip?.(target)) {
       event.preventDefault();
-      event.stopPropagation();
+      return;
+    }
 
-      const data = config.resolveData(id, matchEl as HTMLDivElement);
-      if (data == null) return;
+    const matchEl = target.closest(config.selector) as HTMLElement | null;
+    if (!matchEl) return;
 
-      abortController?.abort();
-      abortController = new AbortController();
-      const currentSignal = abortController.signal;
+    let id = matchEl.dataset?.[config.attr];
 
-      portalElement().addEventListener(
-        "click",
-        (e: MouseEvent) => {
-          const item = closestFromEvent(e, ".ctx-item");
-          const actionId = item?.id;
+    if (config.idSelector) {
+      const idEl = target.closest(config.idSelector) as HTMLElement | null;
+      if (idEl) {
+        id = idEl.dataset?.[config.attr] ?? id;
+      }
+    }
 
-          if (abortController) {
-            abortController.abort("menu_closed");
-            abortController = null;
-          }
+    if (!id) return;
 
-          if (!actionId) return;
-          config.onAction(actionId, {
-            id,
-            data,
-            event: e,
-            element: matchEl as HTMLDivElement,
-          });
-        },
-        { signal: currentSignal, once: true },
-      );
+    event.preventDefault();
+    event.stopPropagation();
 
-      createModal(
-        () =>
-          config.renderMenu({
-            id,
-            data,
-            x: `${event.clientX}px`,
-            y: `${event.clientY}px`,
-          }),
-        abortController,
-      );
-    },
-    { signal: config.signal },
-  );
+    const data = config.resolveData(id, matchEl as HTMLDivElement);
+    if (data == null) return;
+
+    abortController?.abort();
+    abortController = new AbortController();
+    const currentSignal = abortController.signal;
+
+    portalElement().addEventListener(
+      "click",
+      (e: MouseEvent) => {
+        const item = closestFromEvent(e, ".ctx-item");
+        const actionId = item?.id;
+
+        if (abortController) {
+          abortController.abort("menu_closed");
+          abortController = null;
+        }
+
+        if (!actionId) return;
+        config.onAction(actionId, {
+          id,
+          data,
+          event: e,
+          element: matchEl as HTMLDivElement,
+        });
+      },
+      { signal: currentSignal, once: true },
+    );
+
+    createModal(
+      () =>
+        config.renderMenu({
+          id,
+          data,
+          x: `${event.clientX}px`,
+          y: `${event.clientY}px`,
+        }),
+      abortController,
+    );
+  };
+
+  if (config.mode !== "manual") {
+    el.addEventListener(config.mode ?? "contextmenu", open, {
+      signal: config.signal,
+    });
+  }
+
+  return open;
 };
 
 export const ContextMenu = {
