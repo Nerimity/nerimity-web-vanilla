@@ -1,4 +1,3 @@
-import { debounce } from "../utils/debounce";
 import { closestFromEvent } from "../utils/dom";
 import { portalElement } from "../utils/portal";
 import { throttle } from "../utils/throttle";
