@@ -1,6 +1,7 @@
 import { debounce } from "../utils/debounce";
 import { closestFromEvent } from "../utils/dom";
 import { portalElement } from "../utils/portal";
+import { throttle } from "../utils/throttle";
 import { userAgent } from "../utils/userAgent";
 
 import style from "./CustomTooltip.module.css";
@@ -25,7 +26,7 @@ export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
     el.style.display = "none";
   };
 
-  const show = debounce((tooltip: HTMLElement) => {
+  const show = throttle((tooltip: HTMLElement) => {
     if (tooltip !== current || !tooltip.isConnected) return;
     const tooltipText = tooltip.dataset.tooltip;
     if (!tooltipText) return;
