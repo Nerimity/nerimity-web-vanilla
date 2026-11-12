@@ -204,7 +204,6 @@ const formatPostMentions = (
     return user ? `[@:${user.id}]` : match;
   });
 
-  console.log(someoneMentioned);
   if (someoneMentioned) {
     result = result.replaceAll("@someone", () => `[@:s] **${randomKaomoji()}`);
   }

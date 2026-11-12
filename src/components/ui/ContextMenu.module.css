@@ -7,6 +7,15 @@
     max-width: initial;
   }
 }
+:global(body.desktopWidth) {
+  .submenu {
+    pointer-events: initial;
+  }
+  .submenuModalRoot {
+    background-color: transparent;
+    pointer-events: none;
+  }
+}
 
 .contextMenu {
   display: flex;
@@ -20,6 +29,16 @@
   animation: show 0.2s ease-in-out;
   white-space: nowrap;
   animation-fill-mode: forwards;
+}
+
+.contextMenuModalRoot {
+  overflow: visible;
+}
+
+.item:hover > .submenu,
+.item[data-submenu-open="true"] > .submenu,
+.item:focus-within > .submenu {
+  display: flex;
 }
 
 .separator + .separator {
@@ -79,6 +98,10 @@
     }
   }
 
+  &[data-disabled="true"] {
+    opacity: 0.4;
+    pointer-events: none;
+  }
   &[data-alert="true"] {
     color: var(--alert-color);
     .icon {

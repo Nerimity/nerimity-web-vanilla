@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "chevron_right",
         "arrow_upward",
         "explore",
         "lock",

@@ -8,10 +8,7 @@ import style from "./CustomTooltip.module.css";
 const dataAttribute = "[data-tooltip]";
 
 export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
-  if (userAgent.mobile) return;
   const el = (<div class={style.tooltip}>Tooltip</div>) as HTMLDivElement;
-
-  portalElement().appendChild(el);
 
   let current: HTMLElement | null = null;
 
@@ -23,9 +20,12 @@ export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
     observer.disconnect();
     current = null;
     el.style.display = "none";
+    el.remove();
   };
 
   const show = throttle((tooltip: HTMLElement) => {
+    if (userAgent.mobile) return;
+
     if (tooltip !== current || !tooltip.isConnected) return;
     const tooltipText = tooltip.dataset.tooltip;
     if (!tooltipText) return;
@@ -43,6 +43,7 @@ export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
     const top = rect.top + rect.height / 2 - el.offsetHeight / 2;
     el.style.left = `${left}px`;
     el.style.top = `${Math.max(0, top)}px`;
+    portalElement().appendChild(el);
   }, 150);
 
   document.addEventListener(

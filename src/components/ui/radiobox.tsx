@@ -2,9 +2,9 @@ import { closestFromEvent } from "../../utils/dom";
 
 import style from "./radiobox.module.css";
 
-const Group = (props: { children: any; id: string }) => {
+const Group = (props: { children: any; id: string; class?: any }) => {
   return (
-    <div class={style.group} data-id={props.id}>
+    <div class={[style.group, props.class]} data-id={props.id}>
       {props.children}
     </div>
   );

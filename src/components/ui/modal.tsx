@@ -31,6 +31,7 @@ const isTopModal = (entry: { destroy: () => void }) =>
 
 const Root = (props: {
   children: any;
+  class?: any;
   pos?: { x: string; y: string; anchor?: ModalAnchor };
   ignoreBgClick?: boolean;
   disableGestures?: boolean;
@@ -56,9 +57,14 @@ const Root = (props: {
     return "0%";
   };
   return (
-    <div class={[style.modalBackdrop, props.backdropClass]}>
+    <div class={[style.modalBackdrop, "modalBackdrop", props.backdropClass]}>
       <div
-        class={[style.modalRoot, "modalRoot", props.pos && style.hasPos]}
+        class={[
+          style.modalRoot,
+          "modalRoot",
+          props.pos && style.hasPos,
+          props.class,
+        ]}
         data-x={props.pos?.x}
         data-y={props.pos?.y}
         data-ignore-bg-click={props.ignoreBgClick}
