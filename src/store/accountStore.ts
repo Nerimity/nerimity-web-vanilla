@@ -101,14 +101,16 @@ function createAccountStore() {
   const updateNotificationSetting = (
     updated: Partial<RawUserNotificationSettings>,
   ) => {
-    const serverOrChannelId = updated.serverId || updated.channelId!;
+    const serverOrChannelId = updated.channelId || updated.serverId!;
 
     notificationSettings.set(serverOrChannelId, {
       ...notificationSettings.get(serverOrChannelId)!,
       ...updated,
     });
+
     channelStore.notificationsMemo.rerun();
     serverStore.notificationsMemo.rerun();
+
     storeEmitter.emit("noti_settings:update", {
       channelId: updated.channelId,
       serverId: updated.serverId,
@@ -141,7 +143,7 @@ function createAccountStore() {
     pingMode?: number | null;
     soundMode?: number | null;
   }) => {
-    const id = opts.serverId || opts.channelId!;
+    const id = opts.channelId! || opts.serverId!;
 
     const currentSoundMode =
       notificationSettings.get(id)?.notificationSoundMode ??
@@ -159,15 +161,16 @@ function createAccountStore() {
 
     if (opts.pingMode !== null && currentSoundMode === null) {
       newSoundMode = opts.pingMode;
-    } else if (
+    }
+    if (
       opts.pingMode === NotificationMode.MENTIONS_ONLY &&
       currentSoundMode === NotificationMode.ALL
     ) {
       newSoundMode = NotificationMode.MENTIONS_ONLY;
-    } else if (opts.pingMode === NotificationMode.MUTE) {
+    }
+    if (opts.pingMode === NotificationMode.MUTE) {
       newSoundMode = NotificationMode.MUTE;
     }
-
     return postNotificationSettings({
       notificationPingMode: opts.pingMode,
       ...(newSoundMode !== null

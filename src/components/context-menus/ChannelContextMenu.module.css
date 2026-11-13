@@ -1,0 +1,16 @@
+.radioBoxContainer {
+  height: initial;
+  padding: 0;
+  .radioBox {
+    width: 100%;
+    height: 30px;
+    padding-right: 6px;
+    padding-left: 6px;
+  }
+}
+.radioGroup {
+  gap: 0;
+}
+.submenuTitle {
+  margin-left: 4px;
+}

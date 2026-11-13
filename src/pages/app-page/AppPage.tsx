@@ -1,4 +1,5 @@
 import { createAppHeader } from "../../components/appHeader";
+import { createChannelContextMenuHandler } from "../../components/context-menus/ChannelContextMenu";
 import { createPostContextMenuHandler } from "../../components/context-menus/PostContextMenu";
 import { createServerContextMenuHandler } from "../../components/context-menus/ServerContextMenu";
 import { createUserContextMenuHandler } from "../../components/context-menus/UserContextMenu";
@@ -102,6 +103,11 @@ const createAppPage = () => {
       return !!target.closest(".sidebarServerList");
     },
   });
+
+  createChannelContextMenuHandler({
+    signal,
+  });
+
   createPostContextMenuHandler({ signal });
 
   createPostContextMenuHandler({
