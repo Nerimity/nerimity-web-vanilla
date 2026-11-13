@@ -1,7 +1,9 @@
 import { t } from "@lingui/core/macro";
 
+import { postNotificationSettings } from "../services/userService";
 import {
   FriendStatus,
+  NotificationMode,
   type RawNotice,
   type RawServerFolder,
   type RawUserNotificationSettings,
@@ -133,6 +135,49 @@ function createAccountStore() {
     };
   };
 
+  const updateUserNotificationSettings = (opts: {
+    serverId?: string;
+    channelId?: string;
+    pingMode?: number | null;
+    soundMode?: number | null;
+  }) => {
+    const id = opts.serverId || opts.channelId!;
+
+    const currentSoundMode =
+      notificationSettings.get(id)?.notificationSoundMode ??
+      (opts.channelId ? null : 0);
+
+    if (opts.soundMode !== undefined) {
+      return postNotificationSettings({
+        serverId: opts.serverId,
+        channelId: opts.channelId,
+        notificationSoundMode: opts.soundMode,
+      });
+    }
+
+    let newSoundMode: number | null | undefined = null;
+
+    if (opts.pingMode !== null && currentSoundMode === null) {
+      newSoundMode = opts.pingMode;
+    } else if (
+      opts.pingMode === NotificationMode.MENTIONS_ONLY &&
+      currentSoundMode === NotificationMode.ALL
+    ) {
+      newSoundMode = NotificationMode.MENTIONS_ONLY;
+    } else if (opts.pingMode === NotificationMode.MUTE) {
+      newSoundMode = NotificationMode.MUTE;
+    }
+
+    return postNotificationSettings({
+      notificationPingMode: opts.pingMode,
+      ...(newSoundMode !== null
+        ? { notificationSoundMode: newSoundMode }
+        : undefined),
+      serverId: opts.serverId,
+      channelId: opts.channelId,
+    });
+  };
+
   const setCurrentUser = (user: CurrentUser) => {
     currentUser = user;
   };
@@ -261,5 +306,6 @@ function createAccountStore() {
     connectionState,
     updateNotificationSetting,
     hasNotifications,
+    updateUserNotificationSettings,
   };
 }

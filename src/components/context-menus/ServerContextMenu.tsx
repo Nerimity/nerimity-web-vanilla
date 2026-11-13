@@ -6,6 +6,8 @@ import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { Server, serverStore } from "../../store/serverStore";
 import { NotificationMode } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { portalElement } from "../../utils/portal";
 import { router } from "../../utils/router";
 import { Button } from "../ui/button";
 import { ContextMenu } from "../ui/ContextMenu";
@@ -44,6 +46,17 @@ export const createServerContextMenuHandler = (opts: {
       },
     ],
     renderMenu: ({ x, y, data, signal }) => {
+      const getSubmenuEl = () =>
+        portalElement().querySelector(
+          `.submenu[data-id="notifications"]`,
+        ) as HTMLDivElement;
+
+      const rerenderSubmenu = () => {
+        getSubmenuEl()?.replaceChildren(
+          <NotificationsSubmenu serverId={data.server?.id!} />,
+        );
+      };
+
       const el = (
         <ServerContextMenu
           x={x}
@@ -53,16 +66,25 @@ export const createServerContextMenuHandler = (opts: {
         />
       ) as HTMLDivElement;
 
+      storeEmitter.on("noti_settings:update", rerenderSubmenu, signal);
+
       Radiobox.createHandler({
-        onChange(event) {
-          event.el
-            .closest(".submenu")
-            ?.replaceChildren(
-              <NotificationsSubmenu serverId={data.server?.id!} />,
-            );
+        onChange: (event) => {
+          rerenderSubmenu();
+
+          const id = event.id as "server-sound-mode" | "server-ping-mode";
+
+          const index = event.index;
+
+          accountStore.updateUserNotificationSettings({
+            serverId: data.server?.id!,
+            ...(id === "server-ping-mode"
+              ? { pingMode: index }
+              : { soundMode: index }),
+          });
         },
         signal,
-        el,
+        el: portalElement(),
       });
 
       return el;
@@ -100,7 +122,7 @@ const ServerContextMenu = (props: {
       <ContextMenu.Item id="notifications">
         <ContextMenu.Icon name="notifications" />
         <ContextMenu.Label>{t`Notifications`}</ContextMenu.Label>
-        <ContextMenu.Icon name="chevron_right" />
+        <ContextMenu.RightArrowIcon />
       </ContextMenu.Item>
       <ContextMenu.Item id="settings">
         <ContextMenu.Icon name="settings" />
@@ -130,7 +152,7 @@ const ServerContextMenu = (props: {
 const NotificationsSubmenu = (props: { serverId: string }) => {
   return (
     <>
-      <div>{t`Ping`}</div>
+      <div class={style.submenuTitle}>{t`Ping`}</div>
 
       <Radiobox.Group id="server-ping-mode" class={style.radioGroup}>
         <NotificationItem
@@ -153,7 +175,7 @@ const NotificationsSubmenu = (props: { serverId: string }) => {
         />
       </Radiobox.Group>
 
-      <div>{t`Sound`}</div>
+      <div class={style.submenuTitle}>{t`Sound`}</div>
       <Radiobox.Group id="server-sound-mode" class={style.radioGroup}>
         <NotificationItem
           value={NotificationMode.ALL}

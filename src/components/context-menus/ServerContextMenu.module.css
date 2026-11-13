@@ -11,3 +11,6 @@
 .radioGroup {
   gap: 0;
 }
+.submenuTitle {
+  margin-left: 4px;
+}

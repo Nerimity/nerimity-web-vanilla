@@ -35,6 +35,11 @@ const SubmenuRoot = (props: {
 const ItemIcon = (props: { name: string }) => {
   return <Icon name={props.name} class={style.icon} />;
 };
+
+const RightArrowIcon = () => {
+  return <Icon name="chevron_right" class={[style.icon, style.rightArrow]} />;
+};
+
 const ItemLabel = (props: { children: any }) => {
   return <div class={style.label}>{props.children}</div>;
 };
@@ -277,6 +282,7 @@ export const ContextMenu = {
   Root,
   SubmenuRoot,
   Icon: ItemIcon,
+  RightArrowIcon,
   Item,
   Label: ItemLabel,
   Separator,

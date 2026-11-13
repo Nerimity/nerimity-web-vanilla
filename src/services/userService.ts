@@ -274,3 +274,17 @@ export const getUserNotifications = () => {
     useToken: true,
   });
 };
+
+interface PostNotificationSettings {
+  notificationSoundMode?: number | null;
+  notificationPingMode?: number | null;
+  serverId?: string;
+  channelId?: string;
+}
+export const postNotificationSettings = (update: PostNotificationSettings) => {
+  return request("/users/notifications", {
+    method: "POST",
+    useToken: true,
+    body: update,
+  });
+};
