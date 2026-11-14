@@ -28,6 +28,7 @@ import { createMessageHoverActions } from "./messageHoverActions";
 import { MessageItem } from "./messageItem";
 import { createMessageReactionHandler } from "./MessageReactions";
 import { getLastSeenMessage, shouldGroup } from "./utils";
+import { handleYoutubeEmbed } from "./YoutubeEmbed";
 
 import style from "./messagePane.module.css";
 
@@ -234,6 +235,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   });
 
   const imageEmbedResizer = createImageEmbedResizer(scrollContainer);
+  handleYoutubeEmbed(scrollContainer, signal);
 
   let previousChannelId = channelStore.currentChannelId;
 

@@ -375,6 +375,7 @@ export interface RawMessageEmbed {
   // for youtube
   uploadDate: string;
   channelName: string;
+  viewCount: number;
   domain: string;
 }
 

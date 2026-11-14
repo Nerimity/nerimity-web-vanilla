@@ -23,6 +23,7 @@ import { Markup } from "../markup/markup";
 import { createImageEmbedResizer } from "../message-pane/imageEmbed";
 import { PostMessageEmbeds } from "../message-pane/PostMessageEmbeds";
 import { isNewUser } from "../message-pane/utils";
+import { handleYoutubeEmbed } from "../message-pane/YoutubeEmbed";
 import { ServerClanItem } from "../serverClanItem";
 import { Avatar } from "../ui/avatar";
 import { Button } from "../ui/button";
@@ -383,6 +384,8 @@ export const createPostHandler = (opts: {
   );
 
   const imageEmbedResizer = createImageEmbedResizer(opts.container);
+
+  handleYoutubeEmbed(opts.container, opts.signal);
 
   handleImagePreviewModal({
     root: opts.container,

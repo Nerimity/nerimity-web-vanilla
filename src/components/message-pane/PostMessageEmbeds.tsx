@@ -1,11 +1,12 @@
 import type { AttachmentProperty } from "../../store/channelStore";
 import type { Attachment, RawMessageEmbed, RawPostPoll } from "../../Types";
-import { inviteLinkRegex } from "../../utils/regex";
+import { inviteLinkRegex, YoutubeLinkRegex } from "../../utils/regex";
 import { PostPollEmbed } from "../posts/PostPollEmbed";
 import { FileEmbed } from "./FileEmbed";
 import { ImageEmbed } from "./imageEmbed";
 import { InviteEmbed } from "./InviteEmbed";
 import { OGEmbed } from "./OGEmbed";
+import { YoutubeEmbed } from "./YoutubeEmbed";
 
 export const PostMessageEmbeds = (props: {
   attachments?: Attachment[];
@@ -26,6 +27,8 @@ export const PostMessageEmbeds = (props: {
   const isVideo = attachment?.mime?.startsWith("video/");
   const isAudio = attachment?.mime?.startsWith("audio/");
   const inviteCode = props.content?.match(inviteLinkRegex)?.[1];
+
+  const youtubeMatch = props.content?.match(YoutubeLinkRegex);
 
   const fileEmbed =
     (attachment && !imageAttachment) ||
@@ -54,19 +57,34 @@ export const PostMessageEmbeds = (props: {
           customHeight={props.customHeight}
         />
       ) : null}
-      {inviteCode && <InviteEmbed code={inviteCode} />}
 
       {props.poll && (
         <PostPollEmbed poll={props.poll} pollCreatorId={props.pollCreatorId} />
       )}
 
-      {ogEmbed && (
-        <OGEmbed
-          embed={embed}
-          container={props.container}
-          customHeight={props.customHeight}
-        />
-      )}
+      {(() => {
+        if (inviteCode) return <InviteEmbed code={inviteCode} />;
+
+        if (embed && youtubeMatch)
+          return (
+            <YoutubeEmbed
+              container={props.container}
+              customHeight={props.customHeight}
+              embed={embed}
+              regex={youtubeMatch}
+            />
+          );
+
+        if (ogEmbed) {
+          return (
+            <OGEmbed
+              embed={embed}
+              container={props.container}
+              customHeight={props.customHeight}
+            />
+          );
+        }
+      })()}
     </>
   );
 };
