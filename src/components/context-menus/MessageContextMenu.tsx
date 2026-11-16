@@ -3,7 +3,7 @@ import { t } from "@lingui/core/macro";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore, type Message } from "../../store/messageStore";
-import { MessageType } from "../../Types";
+import { MessageType, type HtmlNode } from "../../Types";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { createDeleteMessageModal } from "../message-pane/deleteMessageModal";
@@ -11,11 +11,30 @@ import { createPinMessageModal } from "../message-pane/pinMessageModal";
 import { canDeleteMessage } from "../message-pane/utils";
 import { ContextMenu } from "../ui/ContextMenu";
 
+function nodeToString(node: HtmlNode): string {
+  const attrs = Object.entries(node.attributes ?? {})
+    .map(([key, value]) => ` ${key}="${value.replace(/"/g, "&quot;")}"`)
+    .join("");
+
+  const children = node.content
+    .map((item) => (typeof item === "string" ? item : nodeToString(item)))
+    .join("");
+
+  return `<${node.tag}${attrs}>${children}</${node.tag}>`;
+}
+
+function htmlEmbedToString(input: string | HtmlNode | HtmlNode[]): string {
+  if (typeof input === "string") return input;
+  if (Array.isArray(input)) return input.map(nodeToString).join("\n");
+  return nodeToString(input);
+}
+
 export const MessageContextMenu = (props: {
   message: Message;
   x: string;
   y: string;
 }) => {
+  const content = props.message.content;
   const pinned = props.message.pinned;
 
   const isContent = props.message.type === MessageType.CONTENT;
@@ -64,10 +83,18 @@ export const MessageContextMenu = (props: {
         </ContextMenu.Item>
       )}
       <ContextMenu.Separator />
-      <ContextMenu.Item id="copy">
-        <ContextMenu.Icon name="content_copy" />
-        <ContextMenu.Label>{t`Copy Content`}</ContextMenu.Label>
-      </ContextMenu.Item>
+      {props.message.htmlEmbed && (
+        <ContextMenu.Item id="copy_html">
+          <ContextMenu.Icon name="content_copy" />
+          <ContextMenu.Label>{t`Copy HTML`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
+      {content?.trim() && (
+        <ContextMenu.Item id="copy">
+          <ContextMenu.Icon name="content_copy" />
+          <ContextMenu.Label>{t`Copy Content`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Item id="copy_id">
         <ContextMenu.Icon name="content_copy" />
         <ContextMenu.Label>{t`Copy ID`}</ContextMenu.Label>
@@ -127,6 +154,9 @@ export const createMessageContextMenuHandler = (opts: {
           break;
         case "copy_id":
           navigator.clipboard.writeText(message.id);
+          break;
+        case "copy_html":
+          navigator.clipboard.writeText(htmlEmbedToString(message.htmlEmbed!));
           break;
         case "copy_object":
           console.log("Copied Object to clipboard", message);

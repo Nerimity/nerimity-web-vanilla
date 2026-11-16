@@ -62,7 +62,7 @@ export const Fonts: Font[] = [
     name: "Grandstander",
     class: "font-grandstander",
     import: () => import("@fontsource/grandstander/latin-400.css"),
-    scale: 1.1,
+    scale: 0.9,
     lineHeight: 1.15,
   },
   {
