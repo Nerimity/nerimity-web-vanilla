@@ -4,6 +4,7 @@ import { mobileWidth } from "../../config";
 import { closestFromEvent } from "../../utils/dom";
 import { createResizeObserver } from "../../utils/observer";
 import { portalElement } from "../../utils/portal";
+import { router } from "../../utils/router";
 import { Icon } from "../icon";
 import { Button } from "./button";
 
@@ -844,7 +845,8 @@ export const alert = (opts: {
   title?: string;
   icon?: string;
   alert?: boolean;
-  message: string;
+  message: any;
+  closeOnPathChange?: boolean;
 }) => {
   const ac = new AbortController();
   createModal(() => {
@@ -878,6 +880,16 @@ export const alert = (opts: {
       },
       { signal: ac.signal },
     );
+
+    if (opts.closeOnPathChange) {
+      router.createMatchListener(
+        "/*",
+        () => {
+          ac.abort();
+        },
+        { always: true, defer: true, signal: ac.signal },
+      );
+    }
 
     return el;
   }, ac);

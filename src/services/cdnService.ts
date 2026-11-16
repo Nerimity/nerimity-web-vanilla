@@ -10,7 +10,7 @@ const generateToken = async (channelId?: string, userToken?: string | null) => {
   if (existingToken) {
     const expired = Date.now() - existingToken.createdAt > 2 * 60 * 1000;
     if (!expired) {
-      return existingToken.token;
+      return [existingToken.token, null] as const;
     }
   }
 
@@ -18,7 +18,7 @@ const generateToken = async (channelId?: string, userToken?: string | null) => {
     (channelId ? `/channels/${channelId}` : "") + "/cdn/token",
     { useToken: userToken || true, method: "POST" },
   );
-  if (error) throw error;
+  if (error) return [null, error] as const;
 
   const newToken = {
     token: res.token,
@@ -33,7 +33,7 @@ const generateToken = async (channelId?: string, userToken?: string | null) => {
       .slice(0, 9),
   ]);
 
-  return res.token;
+  return [res.token, null] as const;
 };
 
 export async function nerimityCDNUploadRequest(opts: {
@@ -47,11 +47,15 @@ export async function nerimityCDNUploadRequest(opts: {
 }) {
   const url = new URL(`${cdnUrl}${opts.type}/${opts.groupId || ""}`);
 
+  const [token, err] = await generateToken(opts.channelId, opts.userToken);
+
+  if (err) return [null, err] as const;
+
   return xhrRequest<{ fileId: string }>(url.href, {
     method: "POST",
     file: opts.file,
     params: opts.points ? { points: JSON.stringify(opts.points) } : undefined,
-    useToken: await generateToken(opts.channelId, opts.userToken),
+    useToken: token,
     onProgress: opts.onUploadProgress,
   });
 }

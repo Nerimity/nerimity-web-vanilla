@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { Markup } from "../components/markup/markup";
 import { alert } from "../components/ui/modal";
 import { nerimityCDNUploadRequest } from "../services/cdnService";
 import {
@@ -328,7 +329,10 @@ function createMessageStore() {
         channelId,
       });
       if (error) {
-        console.log(error);
+        alert({
+          message: Markup({ text: error.message }),
+          closeOnPathChange: true,
+        });
         setMessageState(channelId, localMessage.id, "error");
         return;
       }
