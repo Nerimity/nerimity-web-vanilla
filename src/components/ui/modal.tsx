@@ -322,9 +322,11 @@ export const createModal = (
   const stackEntry = { destroy: () => {} };
   pushModal(stackEntry);
 
+  let touchStarted = false;
   window.addEventListener(
     "touchstart",
     (event) => {
+      touchStarted = true;
       if (disableGestures) return;
 
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
@@ -383,6 +385,8 @@ export const createModal = (
   window.addEventListener(
     "touchend",
     () => {
+      if (!touchStarted) return;
+      touchStarted = false;
       if (disableGestures) return;
 
       if (!isMobileWidth() || !isTopModal(stackEntry)) return;
