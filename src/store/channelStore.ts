@@ -128,9 +128,6 @@ export class Channel {
   }
 }
 
-// setTimeout(() => {
-//   console.log(accountStore.currentUser);
-// }, 5000);
 export interface AttachmentProperty {
   file: File;
 

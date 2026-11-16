@@ -227,7 +227,6 @@ export const createPost = async (opts: {
       groupId: userId,
       onUploadProgress,
     });
-    console.log(res, err);
 
     if (err) {
       return [null, err] as const;
