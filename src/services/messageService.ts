@@ -134,3 +134,15 @@ export const pinnedMessages = async (channelId: string) => {
     },
   );
 };
+export const pinMessage = async (channelId: string, messageId: string) => {
+  return request(`/channels/${channelId}/messages/pins/${messageId}`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+export const unpinMessage = async (channelId: string, messageId: string) => {
+  return request(`/channels/${channelId}/messages/pins/${messageId}`, {
+    useToken: true,
+    method: "DELETE",
+  });
+};

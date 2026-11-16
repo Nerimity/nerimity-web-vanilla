@@ -68,6 +68,11 @@ export class Server {
     this.verified = data.verified;
     this.clan = data.clan;
   }
+
+  get currentMember() {
+    return serverMemberStore.currentMember(this.id);
+  }
+
   getOrLoadBotCommands() {
     return getBotCommandsQueue.add(async () => {
       if (this.botCommands) return { cache: true, commands: this.botCommands };

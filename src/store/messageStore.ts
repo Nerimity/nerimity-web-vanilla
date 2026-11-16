@@ -79,6 +79,10 @@ export class Message {
   webhookId?: string;
   pinned?: boolean;
 
+  get channel() {
+    return channelStore.channels.get(this.channelId);
+  }
+
   constructor(data: RawMessage) {
     this.id = data.id;
     this.content = data.content;

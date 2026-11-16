@@ -82,6 +82,7 @@ type StoreEvents = {
   "message_property:select_bot_command": RawBotCommand;
   "friend:request": { friend: Friend };
   "post:updated": RawPost;
+  quote_message: { message: Message };
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

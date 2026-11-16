@@ -467,6 +467,23 @@ export const createChatbar = () => {
   storeEmitter.on("ws:connectStateUpdate", updatePlaceholder, signal);
   createFileClipboardHandler({ signal });
 
+  storeEmitter.on(
+    "quote_message",
+    (event) => {
+      const message = event.message;
+      inputEl!.focus();
+      inputEl!.setRangeText(
+        `[q:${message.id}]`,
+        inputEl!.selectionStart,
+        inputEl.selectionEnd,
+        "end",
+      );
+
+      handleInput();
+    },
+    signal,
+  );
+
   const destroy = () => {
     abortController.abort();
 

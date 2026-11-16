@@ -3,7 +3,11 @@ import { t } from "@lingui/core/macro";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore, type Message } from "../../store/messageStore";
+import { MessageType } from "../../Types";
+import { storeEmitter } from "../../utils/EventEmitter";
+import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { createDeleteMessageModal } from "../message-pane/deleteMessageModal";
+import { createPinMessageModal } from "../message-pane/pinMessageModal";
 import { canDeleteMessage } from "../message-pane/utils";
 import { ContextMenu } from "../ui/ContextMenu";
 
@@ -12,16 +16,43 @@ export const MessageContextMenu = (props: {
   x: string;
   y: string;
 }) => {
-  const canEdit = props.message.createdBy.id === accountStore.currentUser?.id;
+  const pinned = props.message.pinned;
+
+  const isContent = props.message.type === MessageType.CONTENT;
+  const canEdit =
+    isContent && props.message.createdBy.id === accountStore.currentUser?.id;
+
+  const channel = props.message.channel;
+  const server = channel?.server;
+  const member = server?.currentMember;
+
+  const canPin = (() => {
+    if (!isContent) return;
+    if (!server) return true;
+    if (!member) return;
+    return member.hasPerm(RolePermissionFlag.manageChannels.bit);
+  })();
 
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
+      {canPin && (
+        <ContextMenu.Item id="pin" alert={pinned}>
+          <ContextMenu.Icon name="push_pin" />
+          <ContextMenu.Label>
+            {pinned ? t`Unpin Message` : t`Pin Message`}
+          </ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       {canEdit && (
         <ContextMenu.Item id="edit">
           <ContextMenu.Icon name="edit" />
           <ContextMenu.Label>{t`Edit Message`}</ContextMenu.Label>
         </ContextMenu.Item>
       )}
+      <ContextMenu.Item id="quote">
+        <ContextMenu.Icon name="format_quote" />
+        <ContextMenu.Label>{t`Quote Message`}</ContextMenu.Label>
+      </ContextMenu.Item>
       <ContextMenu.Item id="reply">
         <ContextMenu.Icon name="reply" />
         <ContextMenu.Label>{t`Reply Message`}</ContextMenu.Label>
@@ -73,11 +104,17 @@ export const createMessageContextMenuHandler = (opts: {
     ),
     onAction: (actionId, { data: message, event }) => {
       switch (actionId) {
+        case "quote":
+          storeEmitter.emit("quote_message", { message });
+          break;
         case "delete":
           createDeleteMessageModal({
             message,
             skipConfirmation: event.shiftKey,
           });
+          break;
+        case "pin":
+          createPinMessageModal({ message, skipConfirmation: event.shiftKey });
           break;
         case "edit":
           channelStore.setEditingMessage(
