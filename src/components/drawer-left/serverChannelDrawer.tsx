@@ -6,6 +6,7 @@ import { storeEmitter } from "../../utils/EventEmitter";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
 import { CdnIcon } from "../cdnIcon";
+import { createServerContextMenuHandler } from "../context-menus/ServerContextMenu";
 import { Icon } from "../icon";
 import {
   handleTypingIndicator,
@@ -13,6 +14,7 @@ import {
 } from "../message-pane/typingIndicator";
 import { NotificationPill } from "../NotificationPill";
 import { createPillUpdater, Pill } from "../Pill";
+import { Button } from "../ui/button";
 import { Drawer } from "../ui/drawer";
 import { Item } from "../ui/item";
 
@@ -38,13 +40,21 @@ export const createServerChannelDrawer = () => {
     <div class={style.serverChannelList}></div>
   ) as HTMLDivElement;
 
+  let headerEl = (
+    <div class={style.header}>
+      <HeaderPill />
+      <Button
+        data-server-id={serverStore.currentServerId}
+        class={style.headerButton}
+        icon="more_horiz"
+      />
+    </div>
+  ) as HTMLDivElement;
   let containerEl = (
     <div class={style.outerContainer}>
       <div class={style.headerBackdrop}></div>
       <div class={[style.container, "scrollbarHover"]}>
-        <div class={style.header}>
-          <HeaderPill />
-        </div>
+        {headerEl}
 
         {channelListEl}
       </div>
@@ -55,6 +65,12 @@ export const createServerChannelDrawer = () => {
   let hoverAnimator: HoverAnimator | null = null;
   const abortController = new AbortController();
   const { signal } = abortController;
+
+  createServerContextMenuHandler({
+    mode: "click",
+    signal,
+    el: headerEl,
+  });
 
   const renderList = (opts?: {
     channelId?: string;
@@ -120,7 +136,16 @@ export const createServerChannelDrawer = () => {
     signal,
   );
   storeEmitter.on("ws:authStateUpdate", updatePill, signal);
-  storeEmitter.on("navigate:serverId", updatePill, signal);
+  storeEmitter.on(
+    "navigate:serverId",
+    () => {
+      headerEl
+        .querySelector("[data-server-id]")
+        ?.setAttribute("data-server-id", serverStore.currentServerId!);
+      updatePill();
+    },
+    signal,
+  );
 
   const render = () => {
     hoverAnimator = new HoverAnimator(containerEl, [

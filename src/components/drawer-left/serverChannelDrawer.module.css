@@ -16,10 +16,15 @@
   height: 50px;
   padding-right: 2px;
   padding-left: 2px;
+  gap: 4px;
 
   .verifiedIcon {
     color: var(--primary-color);
     font-size: 12px;
+  }
+  .headerButton {
+    margin-left: auto;
+    border-radius: var(--radius-max);
   }
 }
 .headerBackdrop {
