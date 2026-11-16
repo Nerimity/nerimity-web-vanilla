@@ -14,13 +14,16 @@ export class Inbox {
   channelId: string;
   createdAt: number;
   recipientId: string;
-  lastSeen: number;
   constructor(data: RawInbox) {
     this.id = data.id;
     this.channelId = data.channelId;
     this.createdAt = data.createdAt;
     this.recipientId = data.recipientId;
-    this.lastSeen = data.lastSeen;
+
+    const channel = channelStore.channels.get(this.channelId);
+    if (channel) {
+      channel.lastSeen = data.lastSeen;
+    }
   }
 }
 

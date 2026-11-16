@@ -16,6 +16,7 @@ import {
 } from "../store/userPresenceStore";
 import { userStore } from "../store/userStore";
 import {
+  ChannelType,
   FriendStatus,
   MessageType,
   type RawChannel,
@@ -54,6 +55,7 @@ const handlers: Record<string, (payload: any) => void> = {
   "message:created": onMessageCreated,
   "message:deleted": onMessageDeleted,
   "message:updated": onMessageUpdated,
+  "message:mark_unread": onMessageMarkUnread,
   "notification:dismissed": onNotificationDismissed,
   "server:members_fetched": onServerMembersFetched,
   "inbox:opened": onInboxOpened,
@@ -124,9 +126,9 @@ async function onAuthError(payload: any) {
 function onAuthenticated(payload: any) {
   accountStore.setNotificationSettings(payload.notificationSettings);
   channelStore.setChannels(payload.channels);
+  channelStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
   inboxStore.setInboxes(payload.inbox);
   serverStore.setServers(payload.servers, payload.currentServerId);
-  serverStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
   serverMemberStore.setServerMembers(payload.serverMembers);
   serverRoleStore.setRoles(payload.serverRoles);
   userPresenceStore.setPresences(payload.presences);
@@ -206,7 +208,7 @@ function onMessageCreated(payload: { message: RawMessage; socketId?: string }) {
     : channelStore.hasNotification(channel);
 
   if (!isSystemMessage && createdByMe) {
-    serverStore.updateLastSeenServerChannel(
+    channelStore.updateLastSeenServerChannel(
       message.channelId,
       message.createdAt + 1,
     );
@@ -258,9 +260,32 @@ function onMessageUpdated(payload: {
   );
 }
 
+function onMessageMarkUnread(payload: { at: number; channelId: string }) {
+  const channel = channelStore.channels.get(payload.channelId);
+  if (!channel) return;
+  channelStore.updateLastSeenServerChannel(payload.channelId, payload.at);
+  if (channel.type === ChannelType.DM_TEXT) {
+    const mention = messageMentionStore.incrementMention({
+      channelId: payload.channelId,
+      count: 1,
+      mentionedBy: accountStore.currentUser!,
+    });
+    mention.count = 1;
+    storeEmitter.emit("mention:dm_update", mention);
+  } else {
+    channelStore.notificationsMemo.rerun();
+    serverStore.notificationsMemo.rerun();
+    storeEmitter.emit("channel:notify_update", {
+      channelId: payload.channelId,
+      serverId: channel?.serverId,
+      markUnread: true,
+    });
+  }
+}
+
 function onNotificationDismissed(payload: { channelId: string }) {
   messageMentionStore.removeMention(payload.channelId);
-  serverStore.updateLastSeenServerChannel(payload.channelId);
+  channelStore.updateLastSeenServerChannel(payload.channelId);
 }
 
 function onServerMembersFetched(payload: {

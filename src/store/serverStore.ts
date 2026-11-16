@@ -96,7 +96,6 @@ export class Server {
 function createServerStore() {
   let currentServerId: string | null = null;
   const servers = new Collection<string, Server>();
-  const lastSeenChannelIds = new Collection<string, number>();
 
   const currentServer = () => servers.get(currentServerId!);
 
@@ -140,27 +139,6 @@ function createServerStore() {
     }
     servers.delete(serverId);
     storeEmitter.emit("server:remove", { serverId });
-  };
-
-  const setLastSeenChannelIds = (data: Record<string, number>) => {
-    lastSeenChannelIds.clear();
-    for (const [id, lastSeenAt] of Object.entries(data)) {
-      lastSeenChannelIds.set(id, lastSeenAt);
-    }
-  };
-
-  const updateLastSeenServerChannel = (channelId: string, seenAt?: number) => {
-    const channel = channelStore.channels.get(channelId);
-    lastSeenChannelIds.set(
-      channelId,
-      seenAt || (channel?.lastMessagedAt || Date.now()) + 1,
-    );
-    delete channelStore.notificationsMemo.value()[channelId];
-    serverStore.notificationsMemo.rerun();
-    storeEmitter.emit("channel:notify_update", {
-      channelId,
-      serverId: channel?.serverId,
-    });
   };
 
   const setCurrentServerId = (id?: string) => {
@@ -464,14 +442,13 @@ function createServerStore() {
     },
     currentServer,
     notificationsMemo,
-    setLastSeenChannelIds,
-    lastSeenChannelIds,
+
     memberTopColor,
     setCurrentServerId,
     currentChannelsSorted,
     serverSortedRoles,
     currentServerSortedRoles,
-    updateLastSeenServerChannel,
+
     memberTopColorAndIcon,
     remove,
   };

@@ -30,6 +30,16 @@ const getChannelNotice = async (channelId: string) => {
   );
 };
 
+export const markChannelUnread = async (
+  channelId: string,
+  messageId: string,
+) => {
+  return request(`/channels/${channelId}/messages/${messageId}/mark-unread`, {
+    useToken: true,
+    method: "POST",
+  });
+};
+
 const noticeQueue = newQueue();
 const notices = new Collection<string, string | null>();
 const MAX_CACHE_SIZE = 20;

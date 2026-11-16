@@ -35,6 +35,7 @@ export class Channel {
   permissions?: ChannelPermissions[];
   lastMessagedAt?: number;
   slowModeSeconds?: number;
+  lastSeen?: number;
   constructor(data: RawChannel) {
     this.id = data.id;
     this.name = data.name;
@@ -174,6 +175,15 @@ function createChannelStore() {
     };
     properties.set(channelId, newProperty);
     return newProperty;
+  };
+
+  const setLastSeenChannelIds = (data: Record<string, number>) => {
+    for (const [id, lastSeenAt] of Object.entries(data)) {
+      const channel = channels.get(id);
+      if (channel) {
+        channel.lastSeen = lastSeenAt;
+      }
+    }
   };
 
   const deleteChannel = (channelId: string, serverId?: string) => {
@@ -396,7 +406,6 @@ function createChannelStore() {
 
   const hasNotification = (channel: Channel) => {
     const mentions = messageMentionStore.mentions;
-    const lastSeen = serverStore.lastSeenChannelIds;
     const notifySettings = accountStore.notificationSettings.get(channel.id);
 
     const muted =
@@ -413,7 +422,7 @@ function createChannelStore() {
     if (!channel.serverId) return false;
     const lastMessagedAt = channel.lastMessagedAt! || 0;
 
-    const lastSeenAt = lastSeen.get(channel.id) || 0;
+    const lastSeenAt = channel.lastSeen || 0;
 
     const hasNotSeen = !lastSeenAt || lastMessagedAt! > lastSeenAt;
 
@@ -462,12 +471,26 @@ function createChannelStore() {
     });
   };
 
+  const updateLastSeenServerChannel = (channelId: string, seenAt?: number) => {
+    const channel = channelStore.channels.get(channelId);
+    if (!channel) return;
+    channel.lastSeen = seenAt || (channel?.lastMessagedAt || Date.now()) + 1;
+
+    delete channelStore.notificationsMemo.value()[channelId];
+    serverStore.notificationsMemo.rerun();
+    storeEmitter.emit("channel:notify_update", {
+      channelId,
+      serverId: channel?.serverId,
+    });
+  };
+
   return {
     channels,
     setChannels,
     get currentChannelId() {
       return currentChannelId;
     },
+    updateLastSeenServerChannel,
     addReply,
     removeReply,
     setEditingMessage,
@@ -487,6 +510,7 @@ function createChannelStore() {
     removeChannel,
     updateSelectedBotCommand,
     removeAllServerChannels,
+    setLastSeenChannelIds,
   };
 }
 

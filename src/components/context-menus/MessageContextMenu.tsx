@@ -1,5 +1,6 @@
 import { t } from "@lingui/core/macro";
 
+import { markChannelUnread } from "../../services/channelService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore, type Message } from "../../store/messageStore";
@@ -54,6 +55,10 @@ export const MessageContextMenu = (props: {
 
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
+      <ContextMenu.Item id="mark_unread">
+        <ContextMenu.Icon name="mark_chat_unread" />
+        <ContextMenu.Label>{t`Mark Unread`}</ContextMenu.Label>
+      </ContextMenu.Item>
       {canPin && (
         <ContextMenu.Item id="pin" alert={pinned}>
           <ContextMenu.Icon name="push_pin" />
@@ -129,7 +134,7 @@ export const createMessageContextMenuHandler = (opts: {
     renderMenu: ({ data, x, y }) => (
       <MessageContextMenu message={data} x={x} y={y} />
     ),
-    onAction: (actionId, { data: message, event }) => {
+    onAction: async (actionId, { data: message, event }) => {
       switch (actionId) {
         case "quote":
           storeEmitter.emit("quote_message", { message });
@@ -139,6 +144,9 @@ export const createMessageContextMenuHandler = (opts: {
             message,
             skipConfirmation: event.shiftKey,
           });
+          break;
+        case "mark_unread":
+          markChannelUnread(message.channelId, message.id);
           break;
         case "pin":
           createPinMessageModal({ message, skipConfirmation: event.shiftKey });

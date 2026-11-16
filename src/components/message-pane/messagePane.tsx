@@ -150,6 +150,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     forceScrollDown?: boolean;
     removeLastSeenMarker?: boolean;
     updateLastSeenMarker?: boolean;
+    markUnread?: boolean;
   };
 
   const restoreScrollPosition = (opts?: RerenderOpts) => {
@@ -219,6 +220,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     skeletonsTop.classList.toggle(style.hide!, !shouldShowTopSkel());
     restoreScrollPosition(opts);
     requestAnimationFrame(() => {
+      if (opts?.markUnread) return;
       updateScrolledToBottom();
       dismissNotification();
     });
@@ -299,6 +301,17 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     signal,
   );
 
+  storeEmitter.on(
+    "channel:notify_update",
+    ({ markUnread, channelId }) => {
+      if (channelStore.currentChannelId !== channelId) return;
+      if (!markUnread) return;
+      lastSeenMessage = null;
+      rerender({ forceRecreate: true, markUnread: true });
+    },
+    signal,
+  );
+
   const isFocusedAtBottom = () => document.hasFocus() && isScrolledToBottom;
 
   const dismissNotification = () => {
@@ -314,7 +327,10 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
   createIntersectionObserver(
     bottomSentinel,
     scrollContainer,
-    dismissNotification,
+    () => {
+      isScrolledToBottom = true;
+      dismissNotification();
+    },
     {
       signal,
       rootMargin: "0px 0px -50px 0px",

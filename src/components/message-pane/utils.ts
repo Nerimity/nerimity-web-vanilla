@@ -42,7 +42,7 @@ export const isNewDay = (
 };
 
 export const getLastSeenMessage = (channelId: string, messages: Message[]) => {
-  const lastSeenAt = serverStore.lastSeenChannelIds.get(channelId);
+  const lastSeenAt = channelStore.channels.get(channelId)?.lastSeen;
   const selfUserId = accountStore.currentUser?.id;
   if (!lastSeenAt) return null;
   const message = messages.find((m) => {
