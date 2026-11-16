@@ -190,12 +190,12 @@ const createInboxList = () => {
         if (bHasCount !== aHasCount) return bHasCount - aHasCount;
         const aTime =
           a.channel?.lastMessagedAt ??
-          a.inbox.lastSeen ??
+          a.channel.lastSeen ??
           a.inbox.createdAt ??
           0;
         const bTime =
           b.channel?.lastMessagedAt ??
-          b.inbox.lastSeen ??
+          b.channel.lastSeen ??
           b.inbox.createdAt ??
           0;
         return bTime - aTime;
