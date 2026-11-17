@@ -1,5 +1,6 @@
 import { lingui } from "@lingui/vite-plugin";
 import { defineConfig } from "vite";
+import checker from "vite-plugin-checker";
 
 import { shikiLangsPlugin } from "./vite-plugins/vitePluginCopyShikiLangs.ts";
 import { googleFontsLocal } from "./vite-plugins/vitePluginGoogleFontsLocal.ts";
@@ -14,6 +15,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    checker({ typescript: true, enableBuild: false }),
     shikiLangsPlugin(),
     devRerenderHighlighter(),
     googleFontsLocal({
