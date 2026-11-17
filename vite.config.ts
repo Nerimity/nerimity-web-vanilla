@@ -20,6 +20,9 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "bug_report",
+        "open_in_browser",
+        "event",
         "animation",
         "mark_chat_unread",
         "format_quote",
@@ -52,6 +55,7 @@ export default defineConfig({
         "lock_open",
         "search_activity",
         "code_xml",
+        "code",
         "visibility_off",
         "select_check_box",
         "link",
@@ -86,6 +90,7 @@ export default defineConfig({
         "image",
         "undo",
         "person",
+        "preview",
         "account_circle",
         "add_reaction",
         "add",

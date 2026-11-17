@@ -436,10 +436,19 @@ const createInboxDrawer = () => {
   rerenderTabs();
 
   let containerEl = (
-    <div class={["scrollbarHover"]}>
+    <div class={[style.container, "scrollbarHover"]}>
       {tabsContainer}
-
       {inboxList?.inboxListEl}
+      <div class={style.bottomFloating}>
+        <div class={style.item}>
+          <Icon name="event" />
+          {t`Reminders`}
+        </div>
+        <div class={style.item}>
+          <Icon name="book" />
+          {t`Notes`}
+        </div>
+      </div>
     </div>
   ) as HTMLElement;
 
