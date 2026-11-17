@@ -82,6 +82,9 @@
     justify-content: center;
     max-width: 100%;
   }
+  .authArea {
+    justify-content: center;
+  }
   .buttons {
     justify-content: center;
   }
@@ -107,7 +110,7 @@
   flex-wrap: wrap;
   width: fit-content;
   max-width: 100%;
-  padding: 8px 12px;
+  padding: 4px 6px;
   border-radius: var(--radius-max);
   background-color: var(--gray-800);
   gap: 10px;
