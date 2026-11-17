@@ -18,6 +18,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "animation",
         "mark_chat_unread",
         "format_quote",
         "chevron_right",

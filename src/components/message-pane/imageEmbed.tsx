@@ -2,6 +2,7 @@ import type { AttachmentProperty } from "../../store/channelStore";
 import type { LocalAttachment, LocalEmbed } from "../../store/messageStore";
 import { buildImageUrl, constrainDimensions } from "../../utils/image";
 import { throttle } from "../../utils/throttle";
+import { Icon } from "../icon";
 import { Skeleton } from "../ui/skeleton";
 
 import style from "./imageEmbed.module.css";
@@ -130,6 +131,15 @@ export const ImageEmbed = (props: {
       )}
       {skeleton}
       {img}
+      {animated && (
+        <div
+          class={[style.gifTag, "gifTag"]}
+          style={{ display: document.hasFocus() ? "none" : "flex" }}
+        >
+          <Icon name="animation" />
+          GIF
+        </div>
+      )}
     </div>
   );
 };

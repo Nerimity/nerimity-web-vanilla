@@ -15,24 +15,32 @@ export class FocusAnimator {
     this.update(document.hasFocus());
   }
 
-  private update(hovered: boolean) {
+  private update(focus: boolean) {
     if (!this.container) return;
     this.container
       .querySelectorAll<HTMLImageElement>(this.image)
       .forEach((img) => {
-        this.updateImageState(img, hovered);
+        this.updateImageState(img, focus);
       });
   }
 
   trigger() {
     this.update(document.hasFocus());
   }
-  private updateImageState(img: HTMLImageElement, hovered: boolean) {
+
+  private updateTag = (img: HTMLImageElement, focused: boolean) => {
+    const imgTag = img.parentElement?.querySelector<HTMLDivElement>(".gifTag");
+    if (!imgTag) return;
+    imgTag.style.display = focused ? "none" : "flex";
+  };
+
+  private updateImageState(img: HTMLImageElement, focused: boolean) {
     if (img.dataset.imgAnim === undefined) return;
 
+    this.updateTag(img, focused);
     const url = new URL(img.src);
 
-    if (hovered) {
+    if (focused) {
       if (url.searchParams.has("type")) {
         url.searchParams.delete("type");
         img.src = url.toString();
