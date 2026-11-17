@@ -23,9 +23,21 @@ const LoggedOutActions = () => (
       label={t`Join Now`}
       primary
     />
-    <Button component="a" icon="login" href="/login" label={t`Login`} />
+    <Button
+      hoverBorder
+      component="a"
+      icon="login"
+      href="/login"
+      label={t`Login`}
+    />
     {isDev && (
-      <Button icon="bug_report" component="a" href="/testing" label="Testing" />
+      <Button
+        icon="bug_report"
+        component="a"
+        href="/testing"
+        hoverBorder
+        label="Testing"
+      />
     )}
   </div>
 );
@@ -54,6 +66,7 @@ const LoggedInActions = () => (
       />
       <Button
         component="a"
+        hoverBorder
         icon={t`logout`}
         href="/logout"
         label="Logout"
@@ -62,6 +75,7 @@ const LoggedInActions = () => (
       {isDev && (
         <Button
           icon="bug_report"
+          hoverBorder
           component="a"
           href="/testing"
           label="Testing"
