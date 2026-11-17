@@ -111,8 +111,8 @@ export const DefaultTheme = {
 export type Theme = typeof DefaultTheme;
 
 let currentTheme: Partial<Theme> = {
-  ...getLocalItem("theme", DefaultTheme),
   ...DefaultTheme,
+  ...getLocalItem("theme", DefaultTheme),
 }!;
 
 export const updateTheme = (theme?: Partial<Theme>) => {
