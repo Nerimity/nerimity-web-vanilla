@@ -13,7 +13,7 @@
   display: flex;
   flex-shrink: 0;
   width: 100%;
-  max-width: 433px;
+  max-width: 468px;
   padding: 12px;
   border-radius: 30px;
   background-color: var(--gray-900);
@@ -76,7 +76,7 @@
   border-radius: var(--radius-max);
 }
 
-@media (max-width: 455px) {
+@media (max-width: 500px) {
   .innerContainer {
     align-items: center;
     justify-content: center;
@@ -139,7 +139,7 @@
   flex-direction: column;
   flex-shrink: 0;
   width: 100%;
-  max-width: 433px;
+  max-width: 468px;
   padding: 12px;
   border-radius: 30px;
   background-color: var(--gray-900);

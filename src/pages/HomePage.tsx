@@ -14,6 +14,18 @@ import style from "./HomePage.module.css";
 
 let details: UserDetails | null = null;
 
+const SourceCodeButton = () => (
+  <Button
+    component="a"
+    hoverBorder
+    icon="code"
+    href="https://github.com/Nerimity"
+    label={t`Source Code`}
+    target="_blank"
+    rel="noopener noreferrer"
+  />
+);
+
 const LoggedOutActions = () => (
   <div class={style.buttons}>
     <Button
@@ -30,15 +42,7 @@ const LoggedOutActions = () => (
       href="/login"
       label={t`Login`}
     />
-    {isDev && (
-      <Button
-        icon="bug_report"
-        component="a"
-        href="/testing"
-        hoverBorder
-        label="Testing"
-      />
-    )}
+    <SourceCodeButton />
   </div>
 );
 const LoggedInActions = () => (
@@ -72,15 +76,7 @@ const LoggedInActions = () => (
         label="Logout"
         alert
       />
-      {isDev && (
-        <Button
-          icon="bug_report"
-          hoverBorder
-          component="a"
-          href="/testing"
-          label="Testing"
-        />
-      )}
+      <SourceCodeButton />
     </div>
   </div>
 );
@@ -121,13 +117,13 @@ const FeaturesCard = () => {
     </div>
   ) as HTMLDivElement;
   const el = (
-    <section class={style.featuresCard}>
+    <div class={style.featuresCard}>
       {cardAreaEl}
       <div class={style.featureButtons}>
         <Button data-action="back" icon="chevron_backward" />
         <Button data-action="forward" icon="chevron_forward" />
       </div>
-    </section>
+    </div>
   );
 
   el.addEventListener("click", (e) => {
@@ -193,12 +189,21 @@ const createHomePage = () => {
             <div class={style.title}>Nerimity</div>
             <div
               class={style.description}
-            >{t`A modern and sleek chat app.`}</div>
+            >{t`Nerimity offers an elegant and feature-rich experience that sets it apart.`}</div>
             {loggedInAs}
           </div>
         </div>
       </div>
       <FeaturesCard />
+      {isDev && (
+        <Button
+          icon="bug_report"
+          hoverBorder
+          component="a"
+          href="/testing"
+          label="Testing"
+        />
+      )}
     </div>
   ) as HTMLFormElement;
 
