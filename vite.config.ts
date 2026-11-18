@@ -20,6 +20,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "timer",
         "bug_report",
         "open_in_browser",
         "event",

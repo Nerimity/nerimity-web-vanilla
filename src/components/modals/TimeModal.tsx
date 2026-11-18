@@ -16,6 +16,7 @@ import { createModal, Modal } from "../ui/modal";
 import style from "./TimeModal.module.css";
 
 interface TimeModalOts {
+  mode?: keyof typeof TimestampType;
   onConfirm: (
     event:
       | {
@@ -57,7 +58,7 @@ export const createTimeModal = (opts: TimeModalOts) => {
     <Modal.Root disableGestures fullHeight>
       <Modal.Header label={t`Time`} icon="schedule" />
       <Modal.Body width="320px" class={style.body}>
-        {tabsEl}
+        {!opts.mode && tabsEl}
         {contentEl}
       </Modal.Body>
       <Modal.Footer>

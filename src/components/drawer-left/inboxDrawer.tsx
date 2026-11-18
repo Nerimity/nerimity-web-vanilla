@@ -20,6 +20,7 @@ import { reconcile } from "../../utils/html";
 import { ManualMemo } from "../../utils/memo";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
+import { createRemindersModal } from "../message-pane/RemindersModal";
 import { createAddFriendModal } from "../modals/AddFriendModal";
 import { createBlockedUsersModal } from "../modals/BlockedUsersModal";
 import { NotificationPill } from "../NotificationPill";
@@ -440,11 +441,11 @@ const createInboxDrawer = () => {
       {tabsContainer}
       {inboxList?.inboxListEl}
       <div class={style.bottomFloating}>
-        <div class={style.item}>
+        <div data-action="reminders" class={style.item}>
           <Icon name="event" />
           {t`Reminders`}
         </div>
-        <div class={style.item}>
+        <div data-action="notes" class={style.item}>
           <Icon name="book" />
           {t`Notes`}
         </div>
@@ -513,6 +514,10 @@ const createInboxDrawer = () => {
   containerEl.addEventListener(
     "click",
     (e) => {
+      if (closestFromEvent(e, "[data-action='reminders']")) {
+        createRemindersModal();
+        return;
+      }
       if (closestFromEvent(e, "[data-action='blocked']")) {
         createBlockedUsersModal();
         return;

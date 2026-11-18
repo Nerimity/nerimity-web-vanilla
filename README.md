@@ -23,9 +23,9 @@ live: https://vanilla.nerimity.com
 - [ ] `user:blocked`
 - [ ] `user:unblocked`
 
-- [ ] `user:reminder_add`
-- [ ] `user:reminder_update`
-- [ ] `user:reminder_remove`
+- [x] `user:reminder_add`
+- [x] `user:reminder_update`
+- [x] `user:reminder_remove`
 
 - [x] `friend:request_sent`
 - [x] `friend:request_pending`
@@ -72,7 +72,7 @@ live: https://vanilla.nerimity.com
 - [x] `message:updated`
 - [x] `message:deleted`
 - [ ] `message:deleted_batch`
-- [ ] `message:mark_unread`
+- [x] `message:mark_unread`
 
 - [x] `message:reaction_added`
 - [x] `message:reaction_removed`

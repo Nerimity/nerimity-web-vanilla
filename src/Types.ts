@@ -328,6 +328,15 @@ export interface RawMessage {
   pinned?: boolean;
 }
 
+export interface RawReminder {
+  id: string;
+  message?: RawMessage;
+  post?: RawPost;
+  channelId?: string;
+  createdAt: number;
+  remindAt: number;
+}
+
 export interface HtmlNode {
   tag: string;
   attributes: Record<string, string> | null;

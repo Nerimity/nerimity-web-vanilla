@@ -87,6 +87,7 @@ type StoreEvents = {
   "friend:request": { friend: Friend };
   "post:updated": RawPost;
   quote_message: { message: Message };
+  "reminders:update": void;
 };
 
 export const storeEmitter = createEventEmitter<StoreEvents>();

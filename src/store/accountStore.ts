@@ -5,6 +5,7 @@ import {
   FriendStatus,
   NotificationMode,
   type RawNotice,
+  type RawReminder,
   type RawServerFolder,
   type RawUserNotificationSettings,
 } from "../Types";
@@ -55,6 +56,8 @@ export type CurrentUser = User & {
   lastOnlineStatus?: number;
   hideFollowers: boolean;
   hideFollowing: boolean;
+
+  reminders: RawReminder[];
 };
 
 function createAccountStore() {

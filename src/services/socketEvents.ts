@@ -25,6 +25,7 @@ import {
   type RawInbox,
   type RawMessage,
   type RawNotice,
+  type RawReminder,
   type RawServer,
   type RawServerFolder,
   type RawServerMember,
@@ -90,6 +91,10 @@ const handlers: Record<string, (payload: any) => void> = {
   "friend:removed": onFriendRemove,
   "user:blocked": onUserBlocked,
   "user:unblocked": onUserUnblocked,
+
+  "user:reminder_remove": onReminderRemove,
+  "user:reminder_add": onReminderAdd,
+  "user:reminder_update": onReminderUpdate,
 };
 
 export const socketEventHandler = async (event: string, payload: any) => {
@@ -577,4 +582,25 @@ function onUserUnblocked(payload: { userId: string }) {
 function onNoticeCreated(payload: RawNotice) {
   accountStore.currentUser?.notices.push(payload);
   showWarnModal();
+}
+
+function onReminderRemove(payload: { id: string }) {
+  const user = accountStore.currentUser;
+  if (!user) return;
+  user.reminders = user.reminders.filter((r) => r.id !== payload.id);
+  storeEmitter.emit("reminders:update");
+}
+function onReminderAdd(payload: RawReminder) {
+  const user = accountStore.currentUser;
+  if (!user) return;
+  user.reminders.push(payload);
+  storeEmitter.emit("reminders:update");
+}
+
+function onReminderUpdate(payload: RawReminder) {
+  const user = accountStore.currentUser;
+  if (!user) return;
+  user.reminders = user.reminders.filter((r) => r.id !== payload.id);
+  user.reminders.push(payload);
+  storeEmitter.emit("reminders:update");
 }
