@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   plugins: [
-    checker({ typescript: true, enableBuild: false }),
+    checker({ typescript: true, oxlint: true, enableBuild: false }),
     shikiLangsPlugin(),
     devRerenderHighlighter(),
     googleFontsLocal({
