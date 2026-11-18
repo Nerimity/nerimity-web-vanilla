@@ -62,11 +62,13 @@ export function playSoundByType(type: SoundType) {
   playSound(types[type]);
 }
 
+const audio = new Audio();
+
 export function playSound(name: Sound = "default") {
   if (!navigator.userActivation.hasBeenActive) return;
-  const audio = new Audio();
 
   if (name === "mute") return;
+  audio.currentTime = 0;
   audio.src = `/sounds/${name}.mp3`;
   audio.volume = getLocalItem("soundNotificationVolume")! / 100;
   audio.load();

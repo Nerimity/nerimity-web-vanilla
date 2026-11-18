@@ -7,6 +7,7 @@ import type { RawReminder } from "../../Types";
 import { formatTimestamp } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { playSoundByType } from "../../utils/sounds";
 import { createTimeModal } from "../modals/TimeModal";
 import { PostItem } from "../posts/PostItem";
 import { Button } from "../ui/button";
@@ -109,8 +110,11 @@ const Item = (props: { item: RawReminder; body: HTMLDivElement }) => {
 const hasActiveReminders = () =>
   accountStore.currentUser?.reminders.find((r) => r.remindAt <= Date.now());
 
+let abortController: AbortController | null = null;
+
 export const createRemindersModal = () => {
-  const abortController = new AbortController();
+  if (abortController && !abortController?.signal.aborted) return;
+  abortController = new AbortController();
   const { signal } = abortController;
 
   let itemsEl = (<div class={style.items}></div>) as HTMLDivElement;
@@ -222,8 +226,20 @@ export const createRemindersModal = () => {
     signal,
   );
 
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    () => {
+      rerenderItems();
+      if (hasActiveReminders()) {
+        playSoundByType("REMINDER");
+      }
+    },
+    signal,
+  );
+
   const intervalId = setInterval(() => {
     if (hasActiveReminders()) {
+      playSoundByType("REMINDER");
       rerenderItems();
     }
   }, 1000);
@@ -240,3 +256,56 @@ export const createRemindersModal = () => {
     return modal;
   }, abortController);
 };
+
+export const createReminderCheckerService = () => {
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  const checkReminders = () => {
+    const reminders =
+      accountStore.currentUser?.reminders.sort(
+        (a, b) => a.remindAt - b.remindAt,
+      ) || [];
+
+    const latestReminder = reminders[0];
+    if (!latestReminder) return 10000;
+    const now = Date.now();
+
+    const isActive = latestReminder.remindAt <= now;
+
+    if (isActive) {
+      createRemindersModal();
+    }
+
+    const isInMinute = latestReminder?.remindAt - now < 60 * 1000;
+    return isInMinute ? 1000 : 10000;
+  };
+
+  storeEmitter.on(
+    "reminders:update",
+    () => {
+      checkReminders();
+      reminderService(checkReminders());
+    },
+    signal,
+  );
+
+  storeEmitter.on(
+    "ws:authStateUpdate",
+    () => {
+      checkReminders();
+      reminderService(checkReminders());
+    },
+    signal,
+  );
+
+  let timeoutId = 0;
+  const reminderService = (delay: number) => {
+    clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      const nextCheckTime = checkReminders();
+      reminderService(nextCheckTime);
+    }, delay);
+  };
+};
+createReminderCheckerService();
