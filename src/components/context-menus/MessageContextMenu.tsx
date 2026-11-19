@@ -93,6 +93,10 @@ export const MessageContextMenu = (props: {
         </ContextMenu.Item>
       )}
       <ContextMenu.Separator />
+      <ContextMenu.Item id="copy_url">
+        <ContextMenu.Icon name="content_copy" />
+        <ContextMenu.Label>{t`Copy URL`}</ContextMenu.Label>
+      </ContextMenu.Item>
       {props.message.htmlEmbed && (
         <ContextMenu.Item id="copy_html">
           <ContextMenu.Icon name="content_copy" />
@@ -195,6 +199,19 @@ export const createMessageContextMenuHandler = (opts: {
         case "copy_id":
           navigator.clipboard.writeText(message.id);
           break;
+        case "copy_url": {
+          const channel = message.channel;
+          if (channel?.serverId) {
+            navigator.clipboard.writeText(
+              `https://nerimity.com/app/servers/${channel.serverId}/${message.channelId}?messageId=${message.id}`,
+            );
+          } else {
+            navigator.clipboard.writeText(
+              `https://nerimity.com/app/inbox/${channel?.id}?messageId=${message.id}`,
+            );
+          }
+          break;
+        }
         case "copy_html":
           navigator.clipboard.writeText(htmlEmbedToString(message.htmlEmbed!));
           break;
