@@ -1,14 +1,16 @@
 import { t } from "@lingui/core/macro";
 
+import { updateMemberProfile } from "../../services/serverService";
 import { unblockUser } from "../../services/userService";
 import { accountStore } from "../../store/accountStore";
 import { friendStore } from "../../store/friendStore";
 import { inboxStore } from "../../store/inboxStore";
 import { messageStore } from "../../store/messageStore";
-import { serverMemberStore } from "../../store/serverMemberStore";
+import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { FriendStatus } from "../../Types";
+import { closestFromEvent } from "../../utils/dom";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { router } from "../../utils/router";
 import { createBanMemberModal } from "../modals/BanMemberModal";
@@ -19,9 +21,14 @@ import {
   createMuteMemberModal,
   createUnmuteMemberModal,
 } from "../modals/MuteMemberModal";
+import { Notice } from "../Notice";
 import { Avatar } from "../ui/avatar";
+import { Button } from "../ui/button";
 import { ContextMenu } from "../ui/ContextMenu";
-import { alert } from "../ui/modal";
+import { Input } from "../ui/input";
+import { alert, createModal, Modal } from "../ui/modal";
+
+import style from "./UserContextMenu.module.css";
 
 export const createUserContextMenuHandler = (opts: {
   el?: HTMLElement;
@@ -91,9 +98,13 @@ export const createUserContextMenuHandler = (opts: {
           }
           createBlockUserModal({ userId, username });
           break;
-        case "message": {
+        case "message":
           inboxStore.openChannel(userId);
-        }
+          break;
+
+        case "nickname":
+          createServerNicknameModal({ member: data.member! });
+          break;
       }
     },
   });
@@ -149,6 +160,12 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const canEditRoles =
     isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
 
+  const canNickname = (() => {
+    const isAdmin = isSelfCreator || selfHasAdminPerm;
+    const result = isSelf || isAdmin;
+    return result;
+  })();
+
   const muted =
     targetMember?.muteExpireAt && targetMember.muteExpireAt! > Date.now();
 
@@ -171,6 +188,12 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
         <ContextMenu.Icon name={isSelf ? "book" : "mail"} />
         <ContextMenu.Label>{isSelf ? t`Notes` : t`Message`}</ContextMenu.Label>
       </ContextMenu.Item>
+      {canNickname && (
+        <ContextMenu.Item id="nickname">
+          <ContextMenu.Icon name="edit" />
+          <ContextMenu.Label>{t`Nickname`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       {!isSelf && (
         <ContextMenu.Item id="block" alert={!blocked}>
           <ContextMenu.Icon name="block" />
@@ -229,4 +252,77 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
       </ContextMenu.Item>
     </ContextMenu.Root>
   );
+};
+
+const createServerNicknameModal = (props: { member: ServerMember }) => {
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  const modal = (
+    <Modal.Root>
+      <Modal.Header label={t`Nickname`} icon="edit" />
+      <Modal.Body class={style.nicknameModalBody}>
+        <Notice
+          type="info"
+          description={t`Everyone in this server will see this nickname.`}
+        />
+        <Input placeholder={t`Nickname`} value={props.member.nickname} />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          data-action="close"
+          label={t`Don't nickname`}
+          icon="close"
+          hoverBorder
+        />
+        <Button
+          data-action="nickname"
+          label={t`Nickname`}
+          icon="edit"
+          primary
+        />
+      </Modal.Footer>
+    </Modal.Root>
+  ) as HTMLDivElement;
+
+  let requesting = false;
+
+  modal.addEventListener(
+    "click",
+    async (e) => {
+      if (closestFromEvent(e, `[data-action="close"]`)) return ac.abort();
+      if (closestFromEvent(e, `[data-action="nickname"]`)) {
+        if (requesting) return;
+
+        const labelEl = modal.querySelector(`[data-action="nickname"] .label`);
+        const inputEl = modal.querySelector<HTMLInputElement>(`input`);
+
+        if (!labelEl) return;
+        if (!inputEl) return;
+
+        requesting = true;
+        labelEl.textContent = t`Nicknaming...`;
+
+        const value = inputEl.value;
+
+        const [, err] = await updateMemberProfile(
+          props.member.serverId,
+          props.member.userId,
+          {
+            nickname: value.trim() || null,
+          },
+        );
+        requesting = false;
+        labelEl.textContent = t`Nickname`;
+        if (err) {
+          alert({ message: err.message });
+          return;
+        }
+        ac.abort();
+      }
+    },
+    { signal },
+  );
+
+  createModal(() => modal, ac);
 };

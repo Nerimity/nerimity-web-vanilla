@@ -431,3 +431,15 @@ export const createServerFolder = (serverIds: string[]) => {
     useToken: true,
   });
 };
+
+export const updateMemberProfile = (
+  serverId: string,
+  userId: string,
+  update?: { nickname?: null | string },
+) => {
+  return request(`/servers/${serverId}/members/${userId}/profile`, {
+    method: "POST",
+    body: update,
+    useToken: true,
+  });
+};
