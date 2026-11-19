@@ -26,7 +26,8 @@ export const createChannelContextMenuHandler = (opts: {
     signal: opts.signal,
     selector: "[data-channel-id]",
     attr: "channelId",
-    shouldSkip: opts.shouldSkip,
+    shouldSkip:
+      opts.shouldSkip || ((target) => !!target.closest("[data-user-id]")),
     resolveData: (channelId) => {
       const channel = channelStore.channels.get(channelId);
 
