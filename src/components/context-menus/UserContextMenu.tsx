@@ -161,6 +161,7 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
     isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
 
   const canNickname = (() => {
+    if (!server) return false;
     const isAdmin = isSelfCreator || selfHasAdminPerm;
     const result = isSelf || isAdmin;
     return result;
