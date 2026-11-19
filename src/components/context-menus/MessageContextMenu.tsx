@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { markChannelUnread } from "../../services/channelService";
+import { addReminder } from "../../services/reminderService";
 import { accountStore } from "../../store/accountStore";
 import { channelStore } from "../../store/channelStore";
 import { messageStore, type Message } from "../../store/messageStore";
@@ -10,7 +11,9 @@ import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { createDeleteMessageModal } from "../message-pane/deleteMessageModal";
 import { createPinMessageModal } from "../message-pane/pinMessageModal";
 import { canDeleteMessage } from "../message-pane/utils";
+import { createTimeModal } from "../modals/TimeModal";
 import { ContextMenu } from "../ui/ContextMenu";
+import { alert } from "../ui/modal";
 
 function nodeToString(node: HtmlNode): string {
   const attrs = Object.entries(node.attributes ?? {})
@@ -55,6 +58,10 @@ export const MessageContextMenu = (props: {
 
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="msg-ctx">
+      <ContextMenu.Item id="set_reminder">
+        <ContextMenu.Icon name="notification_add" />
+        <ContextMenu.Label>{t`Set Reminder`}</ContextMenu.Label>
+      </ContextMenu.Item>
       <ContextMenu.Item id="mark_unread">
         <ContextMenu.Icon name="mark_chat_unread" />
         <ContextMenu.Label>{t`Mark Unread`}</ContextMenu.Label>
@@ -62,9 +69,7 @@ export const MessageContextMenu = (props: {
       {canPin && (
         <ContextMenu.Item id="pin" alert={pinned}>
           <ContextMenu.Icon name="push_pin" />
-          <ContextMenu.Label>
-            {pinned ? t`Unpin Message` : t`Pin Message`}
-          </ContextMenu.Label>
+          <ContextMenu.Label>{pinned ? t`Unpin` : t`Pin`}</ContextMenu.Label>
         </ContextMenu.Item>
       )}
       {canEdit && (
@@ -79,7 +84,7 @@ export const MessageContextMenu = (props: {
       </ContextMenu.Item>
       <ContextMenu.Item id="reply">
         <ContextMenu.Icon name="reply" />
-        <ContextMenu.Label>{t`Reply Message`}</ContextMenu.Label>
+        <ContextMenu.Label>{t`Reply`}</ContextMenu.Label>
       </ContextMenu.Item>
       {canDeleteMessage({ message: props.message }) && (
         <ContextMenu.Item alert id="delete">
@@ -135,7 +140,34 @@ export const createMessageContextMenuHandler = (opts: {
       <MessageContextMenu message={data} x={x} y={y} />
     ),
     onAction: async (actionId, { data: message, event }) => {
+      const setReminder = () => {
+        if (
+          accountStore.currentUser?.reminders.find(
+            (r) => r.message?.id === message.id,
+          )
+        ) {
+          alert({ message: "Reminder Already Exists." });
+          return;
+        }
+
+        createTimeModal({
+          onConfirm(event) {
+            if (event.type !== "tr") return;
+            const timestamp = event.val * 1000;
+            addReminder({ timestamp, messageId: message.id }).then(
+              ([, err]) => {
+                if (err) alert({ message: err.message });
+              },
+            );
+          },
+          mode: "RELATIVE",
+        });
+      };
+
       switch (actionId) {
+        case "set_reminder":
+          setReminder();
+          break;
         case "quote":
           storeEmitter.emit("quote_message", { message });
           break;

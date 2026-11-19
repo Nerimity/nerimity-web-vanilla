@@ -341,6 +341,7 @@ const createMessagePane = ({ content: contentEl }: RouteContext) => {
     el: logs,
     signal,
     onCheckboxChange({ content, message }) {
+      if (!message) return;
       messageStore.editMessage(message.channelId, message.id, content);
     },
   });

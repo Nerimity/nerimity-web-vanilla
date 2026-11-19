@@ -49,7 +49,7 @@ msgstr "Success"
 
 #: src/components/appHeader.tsx:44
 #: src/components/miniProfile.tsx:350
-#: src/components/sidebar.tsx:843
+#: src/components/sidebar.tsx:863
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:204
 msgid "Profile"
@@ -60,41 +60,127 @@ msgid "Explore"
 msgstr "Explore"
 
 #: src/components/appHeader.tsx:48
-#: src/components/sidebar.tsx:988
+#: src/components/sidebar.tsx:1008
 msgid "Home"
 msgstr "Home"
 
-#: src/components/context-menus/MessageContextMenu.tsx:22
-msgid "Edit Message"
-msgstr "Edit Message"
+#: src/components/context-menus/ChannelContextMenu.tsx:128
+#: src/components/context-menus/ServerContextMenu.tsx:124
+#: src/pages/app-page/createHomePane.tsx:232
+#: src/pages/app-page/settings/Settings.ts:76
+msgid "Notifications"
+msgstr "Notifications"
 
-#: src/components/context-menus/MessageContextMenu.tsx:27
-msgid "Reply Message"
-msgstr "Reply Message"
+#: src/components/context-menus/ChannelContextMenu.tsx:133
+#: src/components/context-menus/ServerContextMenu.tsx:129
+#: src/components/miniProfile.tsx:363
+#: src/components/server-settings/createServerSettingsDrawer.tsx:21
+#: src/components/settings/createSettingsDrawer.tsx:16
+#: src/components/sidebar.tsx:893
+msgid "Settings"
+msgstr "Settings"
 
-#: src/components/context-menus/MessageContextMenu.tsx:32
-#: src/components/message-pane/deleteMessageModal.tsx:40
-msgid "Delete Message"
-msgstr "Delete Message"
+#: src/components/context-menus/ChannelContextMenu.tsx:139
+#: src/components/context-menus/ServerContextMenu.tsx:135
+msgid "Leave"
+msgstr "Leave"
 
-#: src/components/context-menus/MessageContextMenu.tsx:38
-#: src/components/context-menus/PostContextMenu.tsx:111
-msgid "Copy Content"
-msgstr "Copy Content"
-
-#: src/components/context-menus/MessageContextMenu.tsx:42
+#: src/components/context-menus/ChannelContextMenu.tsx:146
+#: src/components/context-menus/MessageContextMenu.tsx:107
 #: src/components/context-menus/PostContextMenu.tsx:119
-#: src/components/context-menus/ServerContextMenu.tsx:82
+#: src/components/context-menus/ServerContextMenu.tsx:142
 #: src/components/context-menus/UserContextMenu.tsx:220
 msgid "Copy ID"
 msgstr "Copy ID"
 
-#: src/components/context-menus/MessageContextMenu.tsx:46
+#: src/components/context-menus/ChannelContextMenu.tsx:150
+#: src/components/context-menus/MessageContextMenu.tsx:111
 #: src/components/context-menus/PostContextMenu.tsx:123
-#: src/components/context-menus/ServerContextMenu.tsx:86
+#: src/components/context-menus/ServerContextMenu.tsx:146
 #: src/components/context-menus/UserContextMenu.tsx:224
 msgid "Copy Object"
 msgstr "Copy Object"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:159
+#: src/components/context-menus/ServerContextMenu.tsx:155
+msgid "Ping"
+msgstr "Ping"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:165
+#: src/components/context-menus/ChannelContextMenu.tsx:193
+msgid "Initial"
+msgstr "Initial"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:171
+#: src/components/context-menus/ChannelContextMenu.tsx:199
+#: src/components/context-menus/ServerContextMenu.tsx:161
+#: src/components/context-menus/ServerContextMenu.tsx:183
+msgid "Everything"
+msgstr "Everything"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:177
+#: src/components/context-menus/ChannelContextMenu.tsx:205
+#: src/components/context-menus/ServerContextMenu.tsx:167
+#: src/components/context-menus/ServerContextMenu.tsx:189
+msgid "Mentions Only"
+msgstr "Mentions Only"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:183
+#: src/components/context-menus/ChannelContextMenu.tsx:211
+#: src/components/context-menus/ServerContextMenu.tsx:173
+#: src/components/context-menus/ServerContextMenu.tsx:195
+#: src/components/context-menus/UserContextMenu.tsx:212
+#: src/components/modals/MuteMemberModal.tsx:94
+#: src/components/modals/MuteMemberModal.tsx:131
+msgid "Mute"
+msgstr "Mute"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:188
+#: src/components/context-menus/ServerContextMenu.tsx:178
+msgid "Sound"
+msgstr "Sound"
+
+#: src/components/context-menus/MessageContextMenu.tsx:60
+msgid "Set Reminder"
+msgstr "Set Reminder"
+
+#: src/components/context-menus/MessageContextMenu.tsx:64
+msgid "Mark Unread"
+msgstr "Mark Unread"
+
+#: src/components/context-menus/MessageContextMenu.tsx:69
+msgid "Unpin"
+msgstr "Unpin"
+
+#: src/components/context-menus/MessageContextMenu.tsx:69
+msgid "Pin"
+msgstr "Pin"
+
+#: src/components/context-menus/MessageContextMenu.tsx:75
+msgid "Edit Message"
+msgstr "Edit Message"
+
+#: src/components/context-menus/MessageContextMenu.tsx:80
+msgid "Quote Message"
+msgstr "Quote Message"
+
+#: src/components/context-menus/MessageContextMenu.tsx:84
+msgid "Reply"
+msgstr "Reply"
+
+#: src/components/context-menus/MessageContextMenu.tsx:89
+#: src/components/message-pane/deleteMessageModal.tsx:40
+msgid "Delete Message"
+msgstr "Delete Message"
+
+#: src/components/context-menus/MessageContextMenu.tsx:96
+msgid "Copy HTML"
+msgstr "Copy HTML"
+
+#: src/components/context-menus/MessageContextMenu.tsx:102
+#: src/components/context-menus/PostContextMenu.tsx:111
+msgid "Copy Content"
+msgstr "Copy Content"
 
 #: src/components/context-menus/PostContextMenu.tsx:88
 msgid "Unpin Post"
@@ -118,36 +204,24 @@ msgstr "Delete Post"
 msgid "Copy URL"
 msgstr "Copy URL"
 
-#: src/components/context-menus/ServerContextMenu.tsx:69
-#: src/components/miniProfile.tsx:363
-#: src/components/server-settings/createServerSettingsDrawer.tsx:21
-#: src/components/settings/createSettingsDrawer.tsx:16
-#: src/components/sidebar.tsx:873
-msgid "Settings"
-msgstr "Settings"
-
-#: src/components/context-menus/ServerContextMenu.tsx:75
-msgid "Leave"
-msgstr "Leave"
-
-#: src/components/context-menus/ServerContextMenu.tsx:101
+#: src/components/context-menus/ServerContextMenu.tsx:262
 msgid "Leave {serverName}"
 msgstr "Leave {serverName}"
 
-#: src/components/context-menus/ServerContextMenu.tsx:103
+#: src/components/context-menus/ServerContextMenu.tsx:264
 msgid "Are you sure you want to leave {serverName}?"
 msgstr "Are you sure you want to leave {serverName}?"
 
-#: src/components/context-menus/ServerContextMenu.tsx:110
+#: src/components/context-menus/ServerContextMenu.tsx:271
 msgid "Don't Leave"
 msgstr "Don't Leave"
 
-#: src/components/context-menus/ServerContextMenu.tsx:117
-#: src/components/context-menus/ServerContextMenu.tsx:129
+#: src/components/context-menus/ServerContextMenu.tsx:278
+#: src/components/context-menus/ServerContextMenu.tsx:290
 msgid "Leave Server"
 msgstr "Leave Server"
 
-#: src/components/context-menus/ServerContextMenu.tsx:129
+#: src/components/context-menus/ServerContextMenu.tsx:290
 msgid "Leaving..."
 msgstr "Leaving..."
 
@@ -156,6 +230,7 @@ msgid "View Profile"
 msgstr "View Profile"
 
 #: src/components/context-menus/UserContextMenu.tsx:172
+#: src/components/drawer-left/inboxDrawer.tsx:450
 #: src/components/miniProfile.tsx:333
 #: src/components/miniProfile.tsx:357
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
@@ -200,39 +275,39 @@ msgstr "Kick"
 msgid "Unmute"
 msgstr "Unmute"
 
-#: src/components/context-menus/UserContextMenu.tsx:212
-#: src/components/modals/MuteMemberModal.tsx:94
-#: src/components/modals/MuteMemberModal.tsx:131
-msgid "Mute"
-msgstr "Mute"
-
 #: src/components/context-menus/UserContextMenu.tsx:228
 msgid "Copy Profile URL"
 msgstr "Copy Profile URL"
 
-#: src/components/drawer-left/inboxDrawer.tsx:263
+#: src/components/drawer-left/inboxDrawer.tsx:264
 msgid "Blocked"
 msgstr "Blocked"
 
-#: src/components/drawer-left/inboxDrawer.tsx:343
+#: src/components/drawer-left/inboxDrawer.tsx:344
 msgid "Requests ~ {count}"
 msgstr "Requests ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:346
+#: src/components/drawer-left/inboxDrawer.tsx:347
 msgid "Online ~ {count}"
 msgstr "Online ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:349
+#: src/components/drawer-left/inboxDrawer.tsx:350
 msgid "Offline ~ {count}"
 msgstr "Offline ~ {count}"
 
-#: src/components/drawer-left/inboxDrawer.tsx:422
+#: src/components/drawer-left/inboxDrawer.tsx:423
 msgid "Inbox"
 msgstr "Inbox"
 
-#: src/components/drawer-left/inboxDrawer.tsx:428
+#: src/components/drawer-left/inboxDrawer.tsx:429
 msgid "Friends"
 msgstr "Friends"
+
+#: src/components/drawer-left/inboxDrawer.tsx:446
+#: src/components/message-pane/RemindersModal.tsx:216
+#: src/utils/sounds.ts:42
+msgid "Reminders"
+msgstr "Reminders"
 
 #: src/components/drawer-right/DrawerChannelNotice.tsx:16
 #: src/components/miniProfile.tsx:690
@@ -318,6 +393,38 @@ msgstr "Invalid Invite."
 #: src/components/message-pane/messageItem.tsx:119
 msgid "New Messages"
 msgstr "New Messages"
+
+#: src/components/message-pane/RemindersModal.tsx:34
+msgid "5 Minutes"
+msgstr "5 Minutes"
+
+#: src/components/message-pane/RemindersModal.tsx:35
+msgid "1 Hour"
+msgstr "1 Hour"
+
+#: src/components/message-pane/RemindersModal.tsx:36
+msgid "3 Hours"
+msgstr "3 Hours"
+
+#: src/components/message-pane/RemindersModal.tsx:39
+msgid "Same time tomorrow"
+msgstr "Same time tomorrow"
+
+#: src/components/message-pane/RemindersModal.tsx:70
+#: src/components/modals/createAuthErrorModal.tsx:55
+#: src/components/modals/createAuthErrorModal.tsx:60
+#: src/components/modals/createWarnModal.tsx:90
+msgid "Dismiss"
+msgstr "Dismiss"
+
+#: src/components/message-pane/RemindersModal.tsx:78
+msgid "Snooze (5 Minutes)"
+msgstr "Snooze (5 Minutes)"
+
+#: src/components/message-pane/RemindersModal.tsx:94
+#: src/components/ui/EditPostModal.tsx:24
+msgid "Edit"
+msgstr "Edit"
 
 #: src/components/message-pane/SystemMessage.tsx:29
 msgid "{username} has been added."
@@ -425,7 +532,7 @@ msgid "Role"
 msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:183
-#: src/components/posts/PostItem.tsx:150
+#: src/components/posts/PostItem.tsx:151
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -438,7 +545,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:209
-#: src/components/posts/PostItem.tsx:157
+#: src/components/posts/PostItem.tsx:158
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -454,6 +561,39 @@ msgstr "Silent"
 #: src/components/message-pane/messageItem.tsx:316
 msgid "Message was deleted."
 msgstr "Message was deleted."
+
+#: src/components/message-pane/pinMessageModal.tsx:30
+msgid "Unpin this message?"
+msgstr "Unpin this message?"
+
+#: src/components/message-pane/pinMessageModal.tsx:30
+msgid "Pin this message?"
+msgstr "Pin this message?"
+
+#: src/components/message-pane/pinMessageModal.tsx:44
+#: src/components/message-pane/pinMessageModal.tsx:59
+#: src/components/message-pane/pinMessageModal.tsx:80
+msgid "Unpin Message"
+msgstr "Unpin Message"
+
+#: src/components/message-pane/pinMessageModal.tsx:44
+#: src/components/message-pane/pinMessageModal.tsx:59
+#: src/components/message-pane/pinMessageModal.tsx:80
+msgid "Pin Message"
+msgstr "Pin Message"
+
+#: src/components/message-pane/pinMessageModal.tsx:52
+#: src/components/modals/GenericConfirmModal.tsx:42
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/message-pane/pinMessageModal.tsx:73
+msgid "Unpinning..."
+msgstr "Unpinning..."
+
+#: src/components/message-pane/pinMessageModal.tsx:73
+msgid "Pinning..."
+msgstr "Pinning..."
 
 #: src/components/message-pane/repliesIndicator.tsx:75
 msgid "Mention"
@@ -672,7 +812,7 @@ msgstr "Don't Confirm"
 #: src/components/modals/ConfirmEmailModal.tsx:167
 #: src/components/modals/ConfirmPasswordModal.tsx:63
 #: src/components/modals/ConfirmPasswordModal.tsx:151
-#: src/components/modals/TimeModal.tsx:64
+#: src/components/modals/TimeModal.tsx:65
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -706,10 +846,6 @@ msgstr "Edit Roles - {username}"
 #: src/pages/app-page/server-settings/rolesServerSettingsPage.tsx:183
 msgid "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
 msgstr "{memberCount, plural, =0 {No members} one {# member} other {# members}}"
-
-#: src/components/modals/GenericConfirmModal.tsx:42
-msgid "Cancel"
-msgstr "Cancel"
 
 #: src/components/modals/GenericConfirmModal.tsx:81
 msgid "Working..."
@@ -788,7 +924,7 @@ msgid "60m"
 msgstr "60m"
 
 #: src/components/modals/MuteMemberModal.tsx:22
-#: src/components/modals/TimeModal.tsx:144
+#: src/components/modals/TimeModal.tsx:145
 msgid "6 hours"
 msgstr "6 hours"
 
@@ -797,7 +933,7 @@ msgid "6h"
 msgstr "6h"
 
 #: src/components/modals/MuteMemberModal.tsx:23
-#: src/components/modals/TimeModal.tsx:145
+#: src/components/modals/TimeModal.tsx:146
 msgid "12 hours"
 msgstr "12 hours"
 
@@ -897,35 +1033,35 @@ msgstr "{memberCount, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other
 msgid "Joining..."
 msgstr "Joining..."
 
-#: src/components/modals/TimeModal.tsx:36
+#: src/components/modals/TimeModal.tsx:37
 msgid "Relative"
 msgstr "Relative"
 
-#: src/components/modals/TimeModal.tsx:40
+#: src/components/modals/TimeModal.tsx:41
 msgid "Offset"
 msgstr "Offset"
 
-#: src/components/modals/TimeModal.tsx:58
+#: src/components/modals/TimeModal.tsx:59
 msgid "Time"
 msgstr "Time"
 
-#: src/components/modals/TimeModal.tsx:141
+#: src/components/modals/TimeModal.tsx:142
 msgid "15 minutes"
 msgstr "15 minutes"
 
-#: src/components/modals/TimeModal.tsx:142
+#: src/components/modals/TimeModal.tsx:143
 msgid "30 minutes"
 msgstr "30 minutes"
 
-#: src/components/modals/TimeModal.tsx:143
+#: src/components/modals/TimeModal.tsx:144
 msgid "1 hour"
 msgstr "1 hour"
 
-#: src/components/modals/TimeModal.tsx:146
+#: src/components/modals/TimeModal.tsx:147
 msgid "1 day"
 msgstr "1 day"
 
-#: src/components/modals/TimeModal.tsx:268
+#: src/components/modals/TimeModal.tsx:269
 msgid "Presets"
 msgstr "Presets"
 
@@ -949,13 +1085,8 @@ msgstr "Token not provided."
 msgid "You are suspended."
 msgstr "You are suspended."
 
-#: src/components/modals/createAuthErrorModal.tsx:55
-#: src/components/modals/createAuthErrorModal.tsx:60
-#: src/components/modals/createWarnModal.tsx:90
-msgid "Dismiss"
-msgstr "Dismiss"
-
 #: src/components/modals/createAuthErrorModal.tsx:65
+#: src/pages/HomePage.tsx:43
 #: src/pages/LoginPage.tsx:25
 #: src/pages/LoginPage.tsx:60
 msgid "Login"
@@ -1018,27 +1149,27 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:68
+#: src/components/posts/PostItem.tsx:69
 msgid "Deleted or invalid post."
 msgstr "Deleted or invalid post."
 
-#: src/components/posts/PostItem.tsx:218
+#: src/components/posts/PostItem.tsx:219
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:226
+#: src/components/posts/PostItem.tsx:227
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:243
+#: src/components/posts/PostItem.tsx:244
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:263
+#: src/components/posts/PostItem.tsx:264
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:315
+#: src/components/posts/PostItem.tsx:316
 msgid "Estimated Views"
 msgstr "Estimated Views"
 
@@ -1098,10 +1229,6 @@ msgstr "Saving..."
 msgid "Editing..."
 msgstr "Editing..."
 
-#: src/components/ui/EditPostModal.tsx:24
-msgid "Edit"
-msgstr "Edit"
-
 #: src/components/ui/EditPostModal.tsx:52
 msgid "Don't Edit"
 msgstr "Don't Edit"
@@ -1142,13 +1269,69 @@ msgstr "Search {platform}..."
 msgid "Favorites"
 msgstr "Favorites"
 
-#: src/components/ui/modal.tsx:854
+#: src/components/ui/modal.tsx:866
 msgid "Understood"
 msgstr "Understood"
 
 #: src/components/userPresence.tsx:62
 msgid "Last online {date}"
 msgstr "Last online {date}"
+
+#: src/pages/HomePage.tsx:23
+msgid "Source Code"
+msgstr "Source Code"
+
+#: src/pages/HomePage.tsx:35
+msgid "Join Now"
+msgstr "Join Now"
+
+#: src/pages/HomePage.tsx:65
+msgid "Open App"
+msgstr "Open App"
+
+#: src/pages/HomePage.tsx:74
+msgid "logout"
+msgstr "logout"
+
+#: src/pages/HomePage.tsx:90
+msgid "Free animated avatars & emojis"
+msgstr "Free animated avatars & emojis"
+
+#: src/pages/HomePage.tsx:91
+msgid "Sleek design"
+msgstr "Sleek design"
+
+#: src/pages/HomePage.tsx:92
+msgid "Change your tag for free"
+msgstr "Change your tag for free"
+
+#: src/pages/HomePage.tsx:93
+msgid "Create posts on your profile"
+msgstr "Create posts on your profile"
+
+#: src/pages/HomePage.tsx:94
+msgid "Create your own community"
+msgstr "Create your own community"
+
+#: src/pages/HomePage.tsx:95
+msgid "Find new communities"
+msgstr "Find new communities"
+
+#: src/pages/HomePage.tsx:96
+msgid "Runs on donations"
+msgstr "Runs on donations"
+
+#: src/pages/HomePage.tsx:97
+msgid "Full source code on GitHub"
+msgstr "Full source code on GitHub"
+
+#: src/pages/HomePage.tsx:98
+msgid "Express yourself with borders"
+msgstr "Express yourself with borders"
+
+#: src/pages/HomePage.tsx:192
+msgid "Nerimity offers an elegant and feature-rich experience that sets it apart."
+msgstr "Nerimity offers an elegant and feature-rich experience that sets it apart."
 
 #: src/pages/LoginPage.tsx:17
 #: src/pages/app-page/settings/accountSettingsPage.tsx:29
@@ -1286,11 +1469,6 @@ msgstr "Feed"
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:917
 msgid "Following"
 msgstr "Following"
-
-#: src/pages/app-page/createHomePane.tsx:232
-#: src/pages/app-page/settings/Settings.ts:76
-msgid "Notifications"
-msgstr "Notifications"
 
 #: src/pages/app-page/createHomePane.tsx:252
 msgid "Latest"
@@ -2021,27 +2199,27 @@ msgstr "Destroy"
 msgid "Last seen {date}"
 msgstr "Last seen {date}"
 
-#: src/store/accountStore.ts:163
+#: src/store/accountStore.ts:214
 msgid "Invalid token."
 msgstr "Invalid token."
 
-#: src/store/accountStore.ts:167
+#: src/store/accountStore.ts:218
 msgid "Authentication error."
 msgstr "Authentication error."
 
-#: src/store/accountStore.ts:171
+#: src/store/accountStore.ts:222
 msgid "Authenticating..."
 msgstr "Authenticating..."
 
-#: src/store/accountStore.ts:174
+#: src/store/accountStore.ts:225
 msgid "Connecting..."
 msgstr "Connecting..."
 
-#: src/store/accountStore.ts:176
+#: src/store/accountStore.ts:227
 msgid "Connected!"
 msgstr "Connected!"
 
-#: src/store/messageStore.ts:354
+#: src/store/messageStore.ts:362
 msgid "Failed to send message"
 msgstr "Failed to send message"
 
@@ -2363,10 +2541,6 @@ msgstr "Messages"
 #: src/utils/sounds.ts:37
 msgid "Mentions"
 msgstr "Mentions"
-
-#: src/utils/sounds.ts:42
-msgid "Reminders"
-msgstr "Reminders"
 
 #: src/utils/sounds.ts:47
 msgid "Call Join"

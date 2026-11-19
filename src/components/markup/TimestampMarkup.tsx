@@ -1,8 +1,13 @@
+import { addReminder } from "../../services/reminderService";
+import { accountStore } from "../../store/accountStore";
 import {
   formatTimestamp,
   formatTimestampOffset,
   formatTimestampRelative,
 } from "../../utils/date";
+import { closestFromEvent } from "../../utils/dom";
+import { createTimeModal } from "../modals/TimeModal";
+import { alert } from "../ui/modal";
 import { Mention } from "./Mention";
 
 export const TimestampType = {
@@ -62,6 +67,50 @@ export const handleTimestampMarkupEvents = (opts: {
 }) => {
   updateAll(opts.el);
   const intervalId = setInterval(() => updateAll(opts.el), 1000);
+
+  opts.el.addEventListener(
+    "click",
+    (e) => {
+      const timestampMention = closestFromEvent(
+        e,
+        `[data-type="tr"][data-timestamp-mention]`,
+      );
+      if (!timestampMention) return;
+
+      const postEl = closestFromEvent(e, "[data-post-id]");
+      const messageEl = closestFromEvent(e, "[data-message-id]");
+      if (messageEl || postEl) {
+        const messageId = messageEl?.dataset.messageId;
+        const postId = postEl?.dataset.postId;
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        if (
+          accountStore.currentUser?.reminders.find((r) => {
+            if (postId) return postId === r.post?.id;
+            return messageId === r.message?.id;
+          })
+        ) {
+          alert({ message: "Reminder Already Exists." });
+          return;
+        }
+
+        createTimeModal({
+          defaultTimestamp: parseInt(timestampMention.dataset.timestamp!),
+          mode: "RELATIVE",
+          onConfirm(event) {
+            if (event.type !== "tr") return;
+            const timestamp = event.val * 1000;
+            addReminder({ timestamp, messageId, postId }).then(([, err]) => {
+              if (err) alert({ message: err.message });
+            });
+          },
+        });
+      }
+    },
+    { signal: opts.signal },
+  );
 
   opts.signal.addEventListener(
     "abort",

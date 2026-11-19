@@ -87,7 +87,7 @@ const CustomColorExprRegex = new RegExp(
 
 const markupCheckbox = new WeakMap<
   HTMLElement,
-  { message: Message; entity: Entity }
+  { message?: Message; post?: RawPost; entity: Entity }
 >();
 
 const TimeOffsetRegex = /^[+-]\d{4}$/;
@@ -332,6 +332,12 @@ function transformEntity(entity: Entity, ctx: RenderContext): any {
           entity: entity,
         });
       }
+      if (props.post) {
+        markupCheckbox.set(checkbox, {
+          post: props.post,
+          entity: entity,
+        });
+      }
 
       return checkbox;
     }
@@ -455,7 +461,11 @@ export function Markup(props: Props) {
 
 export function handleMarkupEvents(opts: {
   el: HTMLDivElement;
-  onCheckboxChange: (event: { message: Message; content: string }) => void;
+  onCheckboxChange: (event: {
+    message?: Message;
+    post?: RawPost;
+    content: string;
+  }) => void;
   signal: AbortSignal;
 }) {
   const { el, onCheckboxChange, signal } = opts;
@@ -481,7 +491,11 @@ export function handleMarkupEvents(opts: {
 }
 function handleMarkupCheckboxClick(opts: {
   el: HTMLDivElement;
-  onChange: (event: { message: Message; content: string }) => void;
+  onChange: (event: {
+    message?: Message;
+    post?: RawPost;
+    content: string;
+  }) => void;
   signal: AbortSignal;
 }) {
   Checkbox.createHandler({
@@ -491,12 +505,12 @@ function handleMarkupCheckboxClick(opts: {
       const data = markupCheckbox.get(el);
       if (!data) return;
 
-      const text = data.message.content ?? "";
+      const text = (data.message || data.post!).content ?? "";
       const before = text.slice(0, data.entity.outerSpan.start);
       const checkbox = `-[${state ? "x" : " "}]`;
       const after = text.slice(data.entity.outerSpan.end, text.length);
       const content = `${before}${checkbox}${after}`;
-      opts.onChange({ message: data.message, content });
+      opts.onChange({ message: data.message, post: data.post, content });
     },
   });
 }

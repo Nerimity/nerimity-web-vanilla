@@ -16,6 +16,7 @@ import { createModal, Modal } from "../ui/modal";
 import style from "./TimeModal.module.css";
 
 interface TimeModalOts {
+  defaultTimestamp?: number;
   mode?: keyof typeof TimestampType;
   onConfirm: (
     event:
@@ -76,7 +77,10 @@ export const createTimeModal = (opts: TimeModalOts) => {
     contentAbortController = new AbortController();
     contentEl.replaceChildren(
       currentTab === "relative" ? (
-        <RelativeContent signal={contentAbortController.signal} />
+        <RelativeContent
+          signal={contentAbortController.signal}
+          defaultTimestamp={opts.defaultTimestamp}
+        />
       ) : (
         <OffsetContent signal={contentAbortController.signal} />
       ),
@@ -149,8 +153,11 @@ const Presets = () => [
 const hours = Array.from({ length: 24 }, (_, index) => index);
 const minutes = Array.from({ length: 60 }, (_, index) => index);
 
-const RelativeContent = (props: { signal: AbortSignal }) => {
-  let date = new Date();
+const RelativeContent = (props: {
+  signal: AbortSignal;
+  defaultTimestamp?: number;
+}) => {
+  let date = new Date(props.defaultTimestamp || Date.now());
 
   const updateSelectedPreset = () => {
     const buttons = el.querySelectorAll<HTMLDivElement>("[data-preset-index");

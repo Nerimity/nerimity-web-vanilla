@@ -3,6 +3,7 @@ import { Trans } from "@trans";
 
 import {
   deletePost,
+  editPost,
   getPost,
   likePost,
   repostPost,
@@ -19,7 +20,7 @@ import { getFont } from "../../utils/font";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { router } from "../../utils/router";
 import { Icon } from "../icon";
-import { Markup } from "../markup/markup";
+import { handleMarkupEvents, Markup } from "../markup/markup";
 import { createImageEmbedResizer } from "../message-pane/imageEmbed";
 import { PostMessageEmbeds } from "../message-pane/PostMessageEmbeds";
 import { isNewUser } from "../message-pane/utils";
@@ -107,6 +108,8 @@ export const PostItem = (props: {
 
   const font = getFont(creator.profile?.font);
 
+  const isCurrentUser = creator.id == accountStore.currentUser?.id;
+
   const el = (
     <div class="postItemOuter" data-post-id={post.id}>
       {newDay && <Marker label={dateMarkerLabel(post.createdAt, true)} />}
@@ -172,6 +175,7 @@ export const PostItem = (props: {
                 <Markup
                   replaceCommandBotId
                   animateInitialOnFocus
+                  canEditCheckboxes={isCurrentUser}
                   text={post.content || ""}
                   container={props.container}
                   post={post}
@@ -394,6 +398,18 @@ export const createPostHandler = (opts: {
   });
 
   handlePostPollEmbed(opts);
+
+  handleMarkupEvents({
+    el: opts.container,
+    signal: opts.signal,
+    async onCheckboxChange(event) {
+      if (!event.post) return;
+      const [post] = await editPost(event.post.id, event.content);
+      if (!post) return;
+      postCache.set(event.post.id, post!);
+      storeEmitter.emit("post:updated", post!);
+    },
+  });
 
   const hoverAnimator = new HoverAnimator(opts.container, [
     { trigger: `.postItemOuter`, image: ".clanIcon img" },
