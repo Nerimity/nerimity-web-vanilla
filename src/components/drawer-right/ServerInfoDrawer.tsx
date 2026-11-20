@@ -470,6 +470,9 @@ const memberItem = (cat: Categorized) => {
       ? formatTimestamp(member.muteExpireAt)
       : null;
 
+    const isCreator = member.isCreator;
+    const isAdmin = member.hasPerm(RolePermissionFlag.admin.bit, true);
+
     return (
       <Link
         href={`/app/profile/${cat.member.userId}`}
@@ -502,6 +505,18 @@ const memberItem = (cat: Categorized) => {
             class={style.muted}
           />
         )}
+
+        {isCreator ? (
+          <img
+            class={style.creatorOrAdminIcon}
+            src="https://nerimity.com/twemojis/1f451.svg"
+          />
+        ) : isAdmin ? (
+          <img
+            class={style.creatorOrAdminIcon}
+            src="https://nerimity.com/twemojis/1f6e1.svg"
+          />
+        ) : null}
       </Link>
     );
   } else {

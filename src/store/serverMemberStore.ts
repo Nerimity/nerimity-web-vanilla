@@ -35,6 +35,10 @@ export class ServerMember {
   get server() {
     return serverStore.servers.get(this.serverId);
   }
+  get isCreator() {
+    return this.server?.createdById === this.userId;
+  }
+
   /**
    *
    * @param perm

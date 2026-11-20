@@ -23,6 +23,10 @@
     color: var(--alert-color);
     font-size: 18px;
   }
+  .creatorOrAdminIcon {
+    width: 18px;
+    height: 18px;
+  }
 
   .memberInfo {
     display: inline-flex;
