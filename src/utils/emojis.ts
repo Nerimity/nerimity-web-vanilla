@@ -1,8 +1,17 @@
 import { emojiUrl } from "../config";
 import { serverStore } from "../store/serverStore";
 import type { RawCustomEmoji, RawServer } from "../Types";
+import { _allCustomEmojis, _createCustomEmojiLoader } from "./emojis.worker";
+import EmojisWorker from "./emojis.worker?worker";
 import { getIdb } from "./idb";
 import { getLocalItem, setLocalItem, type RecentEmoji } from "./localStorage";
+
+const worker = new EmojisWorker();
+worker.onmessage = ({ data }) => {
+  if (data.customShortcodeToIds) {
+    customShortcodeToIds = data.customShortcodeToIds;
+  }
+};
 
 const U200D = String.fromCharCode(0x200d);
 const UFE0Fg = /\uFE0F/g;
@@ -114,67 +123,17 @@ export type CustomEmoji = RawCustomEmoji & {
   serverId: string;
 };
 export const createCustomEmojiLoader = async (opts?: { clear?: boolean }) => {
-  const db = await getIdb();
-  if (!db) return null;
-
-  const tx = db.transaction("custom_emojis", "readwrite");
-
-  if (opts?.clear) {
-    tx.store.clear();
-  }
-
-  const putFromServers = (servers: RawServer[]) => {
-    for (let i = 0; i < servers.length; i++) {
-      const server = servers[i]!;
-      putFromServer(server);
-    }
-  };
-
-  const putFromServer = (server: RawServer) => {
-    const customEmojis = server.customEmojis || [];
-    putMany(server.id, customEmojis);
-  };
-
-  const putMany = (serverId: string, emojis: RawCustomEmoji[]) => {
-    for (let i = 0; i < emojis.length; i++) {
-      const emoji = emojis[i]!;
-      tx.store.put({ ...emoji, serverId });
-    }
-  };
-
-  const put = (serverId: string, emoji: RawCustomEmoji) => {
-    tx.store.put({ ...emoji, serverId });
-  };
-  const remove = (emojiId: string) => {
-    tx.store.delete(emojiId);
-  };
-
-  const update = async (emojiId: string, name: string) => {
-    const existing = await tx.store.get(emojiId);
-    if (!existing) return;
-    tx.store.put({ ...existing, name });
-  };
-
-  const done = async () => {
-    await tx.done;
-    loadCustomShortcodeToIds();
-  };
-
-  return {
-    put,
-    putFromServers,
-    putFromServer,
-    putMany,
-    done,
-    remove,
-    update,
-  };
+  return _createCustomEmojiLoader({ ...opts, shortcodeToUnicode });
 };
 
 export const loadCustomEmojisFromServers = async (servers: RawServer[]) => {
-  const customEmojiLoader = await createCustomEmojiLoader({ clear: true });
-  customEmojiLoader?.putFromServers(servers);
-  customEmojiLoader?.done();
+  worker.postMessage({
+    event: "loadCustomEmojisFromServers",
+    payload: {
+      servers,
+      shortcodeToUnicode: true,
+    },
+  });
 };
 
 export const addRecentEmoji = (recentEmoji: RecentEmoji) => {
@@ -207,30 +166,7 @@ export const loadCustomShortcodeToIds = async () => {
 };
 
 export async function allCustomEmojis(opts?: { uniqueName?: boolean }) {
-  const db = await getIdb();
-  if (!db) return [];
-  const customEmojis = await db.getAllFromIndex("custom_emojis", "name");
-
-  const counts: { [key: string]: number } = {};
-
-  if (!opts?.uniqueName) return customEmojis;
-  for (let i = 0; i < customEmojis.length; i++) {
-    const emoji = customEmojis[i]!;
-
-    let count = counts[emoji.name] || 0;
-
-    const name = emoji.name;
-    const isDuplicate = shortcodeToUnicode[name];
-    if (isDuplicate) {
-      count++;
-    }
-    const uniqueName = count ? `${emoji.name}-${count}` : emoji.name;
-
-    counts[emoji.name] = count + 1;
-    emoji.name = uniqueName;
-  }
-
-  return customEmojis;
+  return _allCustomEmojis({ ...opts, shortcodeToUnicode });
 }
 
 export async function customEmojiById(id: string) {
