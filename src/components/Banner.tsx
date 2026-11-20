@@ -54,6 +54,7 @@ export const Banner = (props: {
             <img
               {...(animated && { "data-img-anim": "" })}
               class={[style.bannerImage, props.imgClass]}
+              fetchpriority="high"
               src={url}
             />
           )}
