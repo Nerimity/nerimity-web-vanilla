@@ -43,6 +43,7 @@ import {
 import { storeEmitter } from "../utils/EventEmitter";
 import { handleMessageNotifications } from "../utils/notifications";
 import { router } from "../utils/router";
+import { decompressInWorker } from "../utils/zstdClient";
 import { socket } from "./socket";
 
 const handlers: Record<string, (payload: any) => void> = {
@@ -97,19 +98,42 @@ const handlers: Record<string, (payload: any) => void> = {
   "user:reminder_update": onReminderUpdate,
 };
 
-export const socketEventHandler = async (event: string, payload: any) => {
-  if (payload instanceof ArrayBuffer) {
-    const { decompressObject } = await import("../utils/zstd");
-    payload = decompressObject(new Uint8Array(payload));
-  }
-
+const dispatch = (event: string, payload: any) => {
   const handler = handlers[event];
   if (!handler) {
     console.warn("Unhandled socket event:", event, payload);
     return;
   }
+  try {
+    handler(payload);
+  } catch (err) {
+    console.error("Socket handler failed:", event, err);
+  }
+};
 
-  handler(payload);
+let tail: Promise<void> = Promise.resolve();
+let pending = 0;
+
+export const socketEventHandler = (event: string, payload: any) => {
+  const decoded =
+    payload instanceof ArrayBuffer ? decompressInWorker(payload) : undefined;
+
+  if (!decoded && pending === 0) {
+    dispatch(event, payload);
+    return;
+  }
+
+  if (decoded) decoded.catch(() => {});
+  pending++;
+  tail = tail.then(async () => {
+    try {
+      dispatch(event, decoded ? await decoded : payload);
+    } catch (err) {
+      console.error("Socket event decode failed:", event, err);
+    } finally {
+      pending--;
+    }
+  });
 };
 
 const showWarnModal = async () => {
