@@ -34,7 +34,7 @@ const noticeType = () => ({
 
 interface NoticeProps {
   type: keyof ReturnType<typeof noticeType>;
-  description?: string;
+  description?: string | string[];
   title?: string;
   icon?: string;
 }
@@ -48,7 +48,17 @@ export const Notice = (props: NoticeProps) => {
         <Icon class={style.icon} name={props.icon || type.icon} />
         {props.title || type.title}
       </div>
-      <div class={style.description}>{props.description}</div>
+      <div class={style.description}>
+        {Array.isArray(props.description) ? (
+          <>
+            {props.description.map((d) => (
+              <div>~ {d}</div>
+            ))}
+          </>
+        ) : (
+          props.description
+        )}
+      </div>
     </div>
   );
 };

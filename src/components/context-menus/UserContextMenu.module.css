@@ -1,3 +1,27 @@
 .nicknameModalBody {
   gap: 12px;
 }
+
+.transferOwnerModalBody {
+  gap: 12px;
+  .previewContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .preview {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: var(--radius-max);
+    background-color: var(--gray-800);
+    gap: 8px;
+  }
+  .tag {
+    color: var(--gray-300);
+  }
+  .sub {
+    color: var(--gray-300);
+    font-size: 12px;
+  }
+}

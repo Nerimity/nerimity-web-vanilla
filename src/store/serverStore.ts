@@ -90,6 +90,7 @@ export class Server {
     applyIfPresent(this, updated, "banner");
     applyIfPresent(this, updated, "verified");
     applyIfPresent(this, updated, "clan");
+    applyIfPresent(this, updated, "createdById");
   }
 }
 

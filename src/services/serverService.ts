@@ -443,3 +443,15 @@ export const updateMemberProfile = (
     useToken: true,
   });
 };
+
+export async function transferOwnership(
+  serverId: string,
+  password: string,
+  newOwnerUserId: string,
+): Promise<any> {
+  return request(`/servers/${serverId}/transfer-ownership`, {
+    method: "POST",
+    body: { password, newOwnerUserId },
+    useToken: true,
+  });
+}

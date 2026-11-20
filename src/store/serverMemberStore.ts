@@ -32,6 +32,9 @@ export class ServerMember {
   get user() {
     return userStore.users.get(this.userId);
   }
+  get server() {
+    return serverStore.servers.get(this.serverId);
+  }
   /**
    *
    * @param perm

@@ -89,7 +89,7 @@ msgstr "Leave"
 #: src/components/context-menus/MessageContextMenu.tsx:114
 #: src/components/context-menus/PostContextMenu.tsx:119
 #: src/components/context-menus/ServerContextMenu.tsx:142
-#: src/components/context-menus/UserContextMenu.tsx:244
+#: src/components/context-menus/UserContextMenu.tsx:265
 msgid "Copy ID"
 msgstr "Copy ID"
 
@@ -97,7 +97,7 @@ msgstr "Copy ID"
 #: src/components/context-menus/MessageContextMenu.tsx:118
 #: src/components/context-menus/PostContextMenu.tsx:123
 #: src/components/context-menus/ServerContextMenu.tsx:146
-#: src/components/context-menus/UserContextMenu.tsx:248
+#: src/components/context-menus/UserContextMenu.tsx:269
 msgid "Copy Object"
 msgstr "Copy Object"
 
@@ -129,7 +129,7 @@ msgstr "Mentions Only"
 #: src/components/context-menus/ChannelContextMenu.tsx:212
 #: src/components/context-menus/ServerContextMenu.tsx:173
 #: src/components/context-menus/ServerContextMenu.tsx:195
-#: src/components/context-menus/UserContextMenu.tsx:236
+#: src/components/context-menus/UserContextMenu.tsx:248
 #: src/components/modals/MuteMemberModal.tsx:94
 #: src/components/modals/MuteMemberModal.tsx:131
 msgid "Mute"
@@ -226,11 +226,11 @@ msgstr "Leave Server"
 msgid "Leaving..."
 msgstr "Leaving..."
 
-#: src/components/context-menus/UserContextMenu.tsx:186
+#: src/components/context-menus/UserContextMenu.tsx:198
 msgid "View Profile"
 msgstr "View Profile"
 
-#: src/components/context-menus/UserContextMenu.tsx:190
+#: src/components/context-menus/UserContextMenu.tsx:202
 #: src/components/drawer-left/inboxDrawer.tsx:450
 #: src/components/miniProfile.tsx:333
 #: src/components/miniProfile.tsx:357
@@ -238,67 +238,111 @@ msgstr "View Profile"
 msgid "Notes"
 msgstr "Notes"
 
-#: src/components/context-menus/UserContextMenu.tsx:190
+#: src/components/context-menus/UserContextMenu.tsx:202
 #: src/components/miniProfile.tsx:333
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Message"
 msgstr "Message"
 
-#: src/components/context-menus/UserContextMenu.tsx:195
-#: src/components/context-menus/UserContextMenu.tsx:264
-#: src/components/context-menus/UserContextMenu.tsx:270
-#: src/components/context-menus/UserContextMenu.tsx:281
-#: src/components/context-menus/UserContextMenu.tsx:317
+#: src/components/context-menus/UserContextMenu.tsx:207
+#: src/components/context-menus/UserContextMenu.tsx:287
+#: src/components/context-menus/UserContextMenu.tsx:293
+#: src/components/context-menus/UserContextMenu.tsx:305
+#: src/components/context-menus/UserContextMenu.tsx:342
 msgid "Nickname"
 msgstr "Nickname"
 
-#: src/components/context-menus/UserContextMenu.tsx:202
+#: src/components/context-menus/UserContextMenu.tsx:214
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:191
 msgid "Unblock"
 msgstr "Unblock"
 
-#: src/components/context-menus/UserContextMenu.tsx:202
+#: src/components/context-menus/UserContextMenu.tsx:214
 #: src/components/modals/BlockUserModal.tsx:52
 #: src/components/modals/BlockUserModal.tsx:70
 msgid "Block"
 msgstr "Block"
 
-#: src/components/context-menus/UserContextMenu.tsx:210
+#: src/components/context-menus/UserContextMenu.tsx:222
 msgid "Edit Roles"
 msgstr "Edit Roles"
 
-#: src/components/context-menus/UserContextMenu.tsx:217
+#: src/components/context-menus/UserContextMenu.tsx:229
 #: src/components/modals/BanMemberModal.tsx:72
 #: src/components/modals/BanMemberModal.tsx:98
 msgid "Ban"
 msgstr "Ban"
 
-#: src/components/context-menus/UserContextMenu.tsx:223
+#: src/components/context-menus/UserContextMenu.tsx:235
 #: src/components/modals/KickMemberModal.tsx:54
 #: src/components/modals/KickMemberModal.tsx:75
 msgid "Kick"
 msgstr "Kick"
 
-#: src/components/context-menus/UserContextMenu.tsx:231
+#: src/components/context-menus/UserContextMenu.tsx:243
 #: src/components/modals/MuteMemberModal.tsx:181
 msgid "Unmute"
 msgstr "Unmute"
 
-#: src/components/context-menus/UserContextMenu.tsx:252
+#: src/components/context-menus/UserContextMenu.tsx:258
+#: src/components/context-menus/UserContextMenu.tsx:371
+msgid "Transfer Ownership"
+msgstr "Transfer Ownership"
+
+#: src/components/context-menus/UserContextMenu.tsx:273
 msgid "Copy Profile URL"
 msgstr "Copy Profile URL"
 
-#: src/components/context-menus/UserContextMenu.tsx:268
+#: src/components/context-menus/UserContextMenu.tsx:291
 msgid "Everyone in this server will see this nickname."
 msgstr "Everyone in this server will see this nickname."
 
-#: src/components/context-menus/UserContextMenu.tsx:275
+#: src/components/context-menus/UserContextMenu.tsx:299
 msgid "Don't nickname"
 msgstr "Don't nickname"
 
-#: src/components/context-menus/UserContextMenu.tsx:305
+#: src/components/context-menus/UserContextMenu.tsx:330
 msgid "Nicknaming..."
 msgstr "Nicknaming..."
+
+#: src/components/context-menus/UserContextMenu.tsx:376
+msgid "This will transfer ownership to a new owner."
+msgstr "This will transfer ownership to a new owner."
+
+#: src/components/context-menus/UserContextMenu.tsx:377
+msgid "This server will be unverified."
+msgstr "This server will be unverified."
+
+#: src/components/context-menus/UserContextMenu.tsx:386
+msgid "Server"
+msgstr "Server"
+
+#: src/components/context-menus/UserContextMenu.tsx:396
+msgid "New Owner"
+msgstr "New Owner"
+
+#: src/components/context-menus/UserContextMenu.tsx:401
+#: src/components/modals/ConfirmPasswordModal.tsx:42
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:63
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#: src/components/context-menus/UserContextMenu.tsx:407
+msgid "Don't transfer"
+msgstr "Don't transfer"
+
+#: src/components/context-menus/UserContextMenu.tsx:413
+#: src/components/context-menus/UserContextMenu.tsx:454
+msgid "Transfer"
+msgstr "Transfer"
+
+#: src/components/context-menus/UserContextMenu.tsx:441
+msgid "Password not provided."
+msgstr "Password not provided."
+
+#: src/components/context-menus/UserContextMenu.tsx:446
+msgid "Transferring..."
+msgstr "Transferring..."
 
 #: src/components/drawer-left/inboxDrawer.tsx:264
 msgid "Blocked"
@@ -845,11 +889,6 @@ msgstr "Confirming..."
 #: src/components/modals/ConfirmEmailModal.tsx:175
 msgid "Email Confirmed!"
 msgstr "Email Confirmed!"
-
-#: src/components/modals/ConfirmPasswordModal.tsx:42
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:63
-msgid "Confirm Password"
-msgstr "Confirm Password"
 
 #: src/components/modals/ConfirmPasswordModal.tsx:47
 msgid "Enter your password to continue."

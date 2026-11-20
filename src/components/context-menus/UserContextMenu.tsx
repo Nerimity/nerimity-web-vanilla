@@ -1,6 +1,9 @@
 import { t } from "@lingui/core/macro";
 
-import { updateMemberProfile } from "../../services/serverService";
+import {
+  transferOwnership,
+  updateMemberProfile,
+} from "../../services/serverService";
 import { unblockUser } from "../../services/userService";
 import { accountStore } from "../../store/accountStore";
 import { friendStore } from "../../store/friendStore";
@@ -11,6 +14,7 @@ import { serverStore } from "../../store/serverStore";
 import { userStore } from "../../store/userStore";
 import { FriendStatus } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
+import { getFont } from "../../utils/font";
 import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { router } from "../../utils/router";
 import { createBanMemberModal } from "../modals/BanMemberModal";
@@ -27,6 +31,7 @@ import { Button } from "../ui/button";
 import { ContextMenu } from "../ui/ContextMenu";
 import { Input } from "../ui/input";
 import { alert, createModal, Modal } from "../ui/modal";
+import { createStatusMessage } from "../ui/StatusMessage";
 
 import style from "./UserContextMenu.module.css";
 
@@ -105,6 +110,9 @@ export const createUserContextMenuHandler = (opts: {
         case "nickname":
           createServerNicknameModal({ member: data.member! });
           break;
+        case "transfer_ownership":
+          createServerTransferOwnershipModal({ member: data.member! });
+          break;
       }
     },
   });
@@ -140,6 +148,8 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
   const selfHasKickPerm = selfMember?.hasPerm(KICK_BIT);
   const selfHasManageRolesPerm = selfMember?.hasPerm(MANAGE_ROLES_BIT);
 
+  const isBot = user?.bot;
+
   const canBan =
     !isSelf &&
     !targetIsCreator &&
@@ -166,6 +176,8 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
     const result = isSelf || isAdmin;
     return result;
   })();
+
+  const canTransferOwnership = server && !isSelf && isSelfCreator && !isBot;
 
   const muted =
     targetMember?.muteExpireAt && targetMember.muteExpireAt! > Date.now();
@@ -238,6 +250,15 @@ const UserContextMenu = (props: { x: string; y: string; userId: string }) => {
           )}
         </>
       )}
+      {canTransferOwnership && (
+        <>
+          <ContextMenu.Separator />
+          <ContextMenu.Item id="transfer_ownership" alert>
+            <ContextMenu.Icon name="next_week" />
+            <ContextMenu.Label>{t`Transfer Ownership`}</ContextMenu.Label>
+          </ContextMenu.Item>
+        </>
+      )}
       <ContextMenu.Separator />
       <ContextMenu.Item id="copy_id">
         <ContextMenu.Icon name="content_copy" />
@@ -259,6 +280,8 @@ const createServerNicknameModal = (props: { member: ServerMember }) => {
   const ac = new AbortController();
   const { signal } = ac;
 
+  const status = createStatusMessage();
+
   const modal = (
     <Modal.Root>
       <Modal.Header label={t`Nickname`} icon="edit" />
@@ -268,6 +291,7 @@ const createServerNicknameModal = (props: { member: ServerMember }) => {
           description={t`Everyone in this server will see this nickname.`}
         />
         <Input placeholder={t`Nickname`} value={props.member.nickname} />
+        {status.element}
       </Modal.Body>
       <Modal.Footer>
         <Button
@@ -300,6 +324,7 @@ const createServerNicknameModal = (props: { member: ServerMember }) => {
 
         if (!labelEl) return;
         if (!inputEl) return;
+        status.set();
 
         requesting = true;
         labelEl.textContent = t`Nicknaming...`;
@@ -316,7 +341,119 @@ const createServerNicknameModal = (props: { member: ServerMember }) => {
         requesting = false;
         labelEl.textContent = t`Nickname`;
         if (err) {
-          alert({ message: err.message });
+          status.set(err.message, "error");
+          return;
+        }
+        ac.abort();
+      }
+    },
+    { signal },
+  );
+
+  createModal(() => modal, ac);
+};
+
+const createServerTransferOwnershipModal = (props: {
+  member: ServerMember;
+}) => {
+  const ac = new AbortController();
+  const { signal } = ac;
+
+  const status = createStatusMessage();
+
+  const user = props.member.user;
+  const server = props.member.server;
+
+  const userFont = getFont(user?.profile?.font);
+
+  const modal = (
+    <Modal.Root>
+      <Modal.Header label={t`Transfer Ownership`} icon="next_week" alert />
+      <Modal.Body class={style.transferOwnerModalBody}>
+        <Notice
+          type="caution"
+          description={[
+            t`This will transfer ownership to a new owner.`,
+            t`This server will be unverified.`,
+          ]}
+        />
+
+        <div class={style.previewContainer}>
+          <div class={style.preview}>
+            <Avatar size={32} server={server} />
+            <div>
+              <div>{server?.name}</div>
+              <div class={style.sub}>{t`Server`}</div>
+            </div>
+          </div>
+          <div class={style.preview}>
+            <Avatar size={32} user={user} />
+            <div>
+              <span>
+                <span class={[userFont?.class, "font"]}>{user?.username}</span>
+                <span class={style.tag}>:{user?.tag}</span>
+              </span>
+              <div class={style.sub}>{t`New Owner`}</div>
+            </div>
+          </div>
+        </div>
+
+        <Input placeholder={t`Confirm Password`} type="password" />
+        {status.element}
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          data-action="close"
+          label={t`Don't transfer`}
+          icon="close"
+          hoverBorder
+        />
+        <Button
+          data-action="transfer"
+          label={t`Transfer`}
+          icon="next_week"
+          primary
+          alert
+        />
+      </Modal.Footer>
+    </Modal.Root>
+  ) as HTMLDivElement;
+
+  let requesting = false;
+
+  modal.addEventListener(
+    "click",
+    async (e) => {
+      if (closestFromEvent(e, `[data-action="close"]`)) return ac.abort();
+      if (closestFromEvent(e, `[data-action="transfer"]`)) {
+        if (requesting) return;
+
+        const labelEl = modal.querySelector(`[data-action="transfer"] .label`);
+        const inputEl = modal.querySelector<HTMLInputElement>(`input`);
+
+        if (!labelEl) return;
+        if (!inputEl) return;
+
+        status.set();
+
+        const password = inputEl.value;
+        if (!password.trim()) {
+          status.set(t`Password not provided.`, "error");
+          return;
+        }
+
+        requesting = true;
+        labelEl.textContent = t`Transferring...`;
+
+        const [, err] = await transferOwnership(
+          props.member.serverId,
+          password,
+          props.member.userId,
+        );
+        requesting = false;
+        labelEl.textContent = t`Transfer`;
+        if (err) {
+          status.set(err.message, "error");
           return;
         }
         ac.abort();
