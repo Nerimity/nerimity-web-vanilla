@@ -5,6 +5,7 @@ import * as auditLogsServerSettingsPage from "./auditLogsServerSettingsPage";
 import * as channelServerSettingsPage from "./channelServerSettingsPage";
 import * as channelsServerSettingsPage from "./channelsServerSettingsPage";
 import * as generalServerSettingsPage from "./generalServerSettingsPage";
+import * as inviteSettingsPage from "./inviteSettingsPage";
 import * as roleServerSettingsPage from "./roleServerSettingsPage";
 import * as rolesServerSettingsPage from "./rolesServerSettingsPage";
 
@@ -104,5 +105,13 @@ export const ServerSettings: ServerSetting[] = [
     path: "/channels/:channelId{/*}?",
     hideFromDrawer: true,
     load: channelServerSettingsPage,
+  },
+
+  {
+    id: "invites",
+    icon: "mail",
+    name: () => t`Invites`,
+    path: "/invites",
+    load: inviteSettingsPage,
   },
 ];

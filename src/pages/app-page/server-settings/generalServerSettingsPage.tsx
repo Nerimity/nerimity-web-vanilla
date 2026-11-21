@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { createFileInput } from "../../../components/FileInput";
 import { createGenericDeleteModal } from "../../../components/modals/GenericDeleteModal";
+import { Notice } from "../../../components/Notice";
 import { createSettingsActions } from "../../../components/settings-actions/SettingsActions";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { Button } from "../../../components/ui/button";
@@ -105,8 +106,15 @@ const generalServerSettingsPage = (context: ServerSettingsContext) => {
     },
   });
 
+  let verified = serverStore.currentServer()?.verified;
   let el = (
     <div class={style.page}>
+      {verified && (
+        <Notice
+          type="warn"
+          description={t`You will lose all of the perks of having your server verified if you rename it.`}
+        />
+      )}
       {/* name */}
       <SettingsBlock.Root>
         <SettingsBlock.Icon name="edit" />

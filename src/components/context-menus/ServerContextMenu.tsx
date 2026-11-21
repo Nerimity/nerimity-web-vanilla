@@ -99,6 +99,9 @@ export const createServerContextMenuHandler = (opts: {
         case "leave":
           LeaveServerModal(serverId);
           break;
+        case "invites":
+          router.navigate(`/app/servers/${serverId}/settings/invites`);
+          break;
         case "mark_read":
           serverStore.markAsRead(serverId);
           break;
@@ -143,6 +146,13 @@ const ServerContextMenu = (props: {
         <ContextMenu.Icon name="mark_chat_read" />
         <ContextMenu.Label>{t`Mark Read`}</ContextMenu.Label>
       </ContextMenu.Item>
+      <ContextMenu.Separator />
+
+      <ContextMenu.Item id="invites">
+        <ContextMenu.Icon name="mail" />
+        <ContextMenu.Label>{t`Invites`}</ContextMenu.Label>
+      </ContextMenu.Item>
+
       <ContextMenu.Item id="notifications">
         <ContextMenu.Icon name="notifications" />
         <ContextMenu.Label>{t`Notifications`}</ContextMenu.Label>
