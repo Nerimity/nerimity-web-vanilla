@@ -9,6 +9,7 @@ import { NotificationMode } from "../../Types";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { portalElement } from "../../utils/portal";
+import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { router } from "../../utils/router";
 import { Button } from "../ui/button";
 import { ContextMenu } from "../ui/ContextMenu";
@@ -127,6 +128,15 @@ const ServerContextMenu = (props: {
     channelStore.hasNotification(c),
   );
 
+  const showSettings = (() => {
+    if (isServerOwner) return true;
+    return Object.values(RolePermissionFlag).find((p) => {
+      if (!props.member.hasPerm(p.bit)) return false;
+      if (p.showSettings) return true;
+      return false;
+    });
+  })();
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
       <ContextMenu.Item id="mark_read" disabled={!hasNotifications}>
@@ -138,10 +148,12 @@ const ServerContextMenu = (props: {
         <ContextMenu.Label>{t`Notifications`}</ContextMenu.Label>
         <ContextMenu.RightArrowIcon />
       </ContextMenu.Item>
-      <ContextMenu.Item id="settings">
-        <ContextMenu.Icon name="settings" />
-        <ContextMenu.Label>{t`Settings`}</ContextMenu.Label>
-      </ContextMenu.Item>
+      {showSettings && (
+        <ContextMenu.Item id="settings">
+          <ContextMenu.Icon name="settings" />
+          <ContextMenu.Label>{t`Settings`}</ContextMenu.Label>
+        </ContextMenu.Item>
+      )}
       <ContextMenu.Separator />
       {!isServerOwner && (
         <ContextMenu.Item id="leave" alert>

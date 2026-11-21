@@ -6,6 +6,7 @@ export const RolePermissionFlag = {
     icon: "shield",
     bit: 1 << 0,
     description: () => t`Enables all permissions.`,
+    showSettings: true,
   },
   sendMessage: {
     name: () => t`Send Message`,
@@ -13,30 +14,35 @@ export const RolePermissionFlag = {
     bit: 1 << 1,
     description: () =>
       t`Enable sending messages in this server. Server admins can still send messages.`,
+    showSettings: false,
   },
   manageRoles: {
     name: () => t`Manage Roles`,
     icon: "manage_accounts",
     bit: 1 << 2,
     description: () => t`Permission for updating or deleting roles.`,
+    showSettings: true,
   },
   manageChannels: {
     name: () => t`Manage Channels`,
     icon: "dns",
     bit: 1 << 3,
     description: () => t`Permission for updating or deleting channels.`,
+    showSettings: true,
   },
   kickMembers: {
     name: () => t`Kick Members`,
     icon: "person_remove",
     bit: 1 << 4,
     description: () => t`Permission to kick users.`,
+    showSettings: true,
   },
   banMembers: {
     name: () => t`Ban Members`,
     icon: "block",
     bit: 1 << 5,
     description: () => t`Permission to ban users.`,
+    showSettings: true,
   },
   mentionEveryone: {
     name: () => t`Mention Everyone`,
@@ -44,17 +50,20 @@ export const RolePermissionFlag = {
     bit: 1 << 6,
     description: () =>
       t`Enable mentioning @everyone. Server admins can still mention everyone.`,
+    showSettings: false,
   },
   nicknameMembers: {
     name: () => t`Nickname Members`,
     icon: "badge",
     bit: 1 << 7,
     description: () => t`Allow users to change their nickname in the server.`,
+    showSettings: false,
   },
   mentionRoles: {
     name: () => t`Mention Roles`,
     icon: "alternate_email",
     bit: 1 << 8,
     description: () => t`Allow users to mention roles.`,
+    showSettings: false,
   },
 };
