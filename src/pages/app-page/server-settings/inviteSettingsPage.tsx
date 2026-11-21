@@ -1,15 +1,21 @@
 import { t } from "@lingui/core/macro";
+import { Plural, Trans } from "@trans";
 
+import { Icon } from "../../../components/icon";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
-import { createServerRole } from "../../../services/serverService";
-import { serverRoleStore } from "../../../store/serverRoleStore";
+import { Avatar } from "../../../components/ui/avatar";
+import { Link } from "../../../components/ui/link";
+import {
+  getServerInvites,
+  type ServerInvite,
+} from "../../../services/serverService";
 import { serverStore } from "../../../store/serverStore";
+import { formatTimestamp } from "../../../utils/date";
 import { closestFromEvent } from "../../../utils/dom";
-import { router } from "../../../utils/router";
 import type { ServerSettingsContext } from "./ServerSettings";
 
-import style from "./rolesServerSettingsPage.module.css";
+import style from "./inviteSettingsPage.module.css";
 
 const getStrings = () => ({});
 
@@ -17,12 +23,11 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
   const ac = new AbortController();
   const { signal } = ac;
 
-  const getServerId = () => serverStore.currentServerId;
-
   let el = (<div class={style.page}></div>) as HTMLDivElement;
 
+  let invites: ServerInvite[] = [];
+
   const rerender = () => {
-    const orderedRoles = serverStore.currentServerSortedRoles.rerun();
     const verified = serverStore.currentServer()?.verified;
 
     el.replaceChildren(
@@ -33,13 +38,13 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
             description={t`Custom invite links are only available for verified servers.`}
           />
         )}
-        <SettingsBlock.Root>
+        <SettingsBlock.Root class={!verified && style.disabled}>
           <SettingsBlock.Icon name="mail" />
           <SettingsBlock.Details title={t`Custom Invite`} />
         </SettingsBlock.Root>
         <SettingsBlock.Group class="group">
-          {orderedRoles.map(() => (
-            <RoleItem />
+          {invites.map((invite) => (
+            <ServerInviteItem invite={invite} />
           ))}
         </SettingsBlock.Group>
       </>,
@@ -48,31 +53,27 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
 
   rerender();
 
-  let createdRoleId = "";
+  getServerInvites(serverStore.currentServerId!).then(([res]) => {
+    if (!res) return;
+    invites = res.sort((a, b) => {
+      if (a.isCustom && !b.isCustom) return -1;
+      if (!a.isCustom && b.isCustom) return 1;
+
+      return b.createdAt - a.createdAt;
+    });
+    rerender();
+  });
+
   el.addEventListener(
     "click",
     async (event) => {
       const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
       if (action === "create-role") {
-        const [role] = await createServerRole(getServerId()!);
-        if (role) {
-          createdRoleId = role.id;
-          navigateToCreatedRole(role.id);
-        }
       }
     },
     { signal },
   );
-
-  const navigateToCreatedRole = (roleId: string) => {
-    if (createdRoleId != roleId) return;
-    if (signal.aborted) return;
-    const role = serverRoleStore.roles.get(getServerId()!)?.has(roleId);
-    if (!role) return;
-    if (signal.aborted) return;
-    router.navigate(`./${roleId}`);
-  };
 
   context.content.replaceChildren(el);
 
@@ -85,8 +86,54 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
   return { destroy };
 };
 
-const RoleItem = (_props: {}) => {
-  return <SettingsBlock.Root>test</SettingsBlock.Root>;
+const ServerInviteItem = (props: { invite: ServerInvite }) => {
+  // const href = `https://nerimity.com/i/${props.invite.code}`;
+
+  const creator = props.invite.createdBy;
+
+  return (
+    <SettingsBlock.Root>
+      <Avatar user={creator} size={32} />
+      <div class={style.outerDetails}>
+        <div class={style.code}>
+          <code>
+            <span class={style.dim}>https://nerimity.com/i/</span>
+            {props.invite.code}
+          </code>
+          <Icon class={style.copyIcon} name="content_copy" />
+        </div>
+
+        <div class={style.details}>
+          <Icon name="person" />
+          <Link href={`https://nerimity.com/app/profile/${creator.id}`}>
+            {creator.username}
+          </Link>
+          <Icon name="person" />
+          <Plural
+            value={props.invite.uses}
+            _0={
+              <Trans>
+                <span class={style.full}>No</span> Use
+              </Trans>
+            }
+
+            one={
+              <Trans>
+                <span class={style.full}>#</span> Use
+              </Trans>
+            }
+            other={
+              <Trans>
+                <span class={style.full}>#</span> uses
+              </Trans>
+            }
+          />
+          <Icon name="person" />
+          <span>{formatTimestamp(props.invite.createdAt)}</span>
+        </div>
+      </div>
+    </SettingsBlock.Root>
+  );
 };
 
 export { getStrings, inviteSettingsPage as create };

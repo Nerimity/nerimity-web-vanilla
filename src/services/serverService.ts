@@ -1,3 +1,4 @@
+import type { User } from "../store/userStore";
 import type {
   ChannelType,
   RawBotCommand,
@@ -452,6 +453,23 @@ export async function transferOwnership(
   return request(`/servers/${serverId}/transfer-ownership`, {
     method: "POST",
     body: { password, newOwnerUserId },
+    useToken: true,
+  });
+}
+
+export interface ServerInvite {
+  code: string;
+  createdAt: number;
+  createdBy: User;
+  createdById: string;
+  id: string;
+  isCustom: boolean;
+  serverId: string;
+  uses: number;
+}
+export function getServerInvites(serverId: string) {
+  return request<ServerInvite[]>(`/servers/${serverId}/invites`, {
+    method: "GET",
     useToken: true,
   });
 }
