@@ -2,6 +2,7 @@ import { t } from "@lingui/core/macro";
 
 import { leaveServer } from "../../services/serverService";
 import { accountStore } from "../../store/accountStore";
+import { channelStore } from "../../store/channelStore";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { Server, serverStore } from "../../store/serverStore";
 import { NotificationMode } from "../../Types";
@@ -97,6 +98,9 @@ export const createServerContextMenuHandler = (opts: {
         case "leave":
           LeaveServerModal(serverId);
           break;
+        case "mark_read":
+          serverStore.markAsRead(serverId);
+          break;
         case "copy_id":
           navigator.clipboard.writeText(serverId);
           break;
@@ -117,8 +121,18 @@ const ServerContextMenu = (props: {
 }) => {
   const isServerOwner = props.server.createdById === props.member.userId;
 
+  const channels = serverStore.sortedChannels(props.server.id, false);
+
+  const hasNotifications = channels.find((c) =>
+    channelStore.hasNotification(c),
+  );
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
+      <ContextMenu.Item id="mark_read" disabled={!hasNotifications}>
+        <ContextMenu.Icon name="mark_chat_read" />
+        <ContextMenu.Label>{t`Mark Read`}</ContextMenu.Label>
+      </ContextMenu.Item>
       <ContextMenu.Item id="notifications">
         <ContextMenu.Icon name="notifications" />
         <ContextMenu.Label>{t`Notifications`}</ContextMenu.Label>

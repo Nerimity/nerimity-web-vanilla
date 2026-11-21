@@ -1,7 +1,7 @@
 import { t } from "@lingui/core/macro";
 
 import { accountStore } from "../../store/accountStore";
-import { channelStore } from "../../store/channelStore";
+import { Channel, channelStore } from "../../store/channelStore";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { Server } from "../../store/serverStore";
 import { NotificationMode } from "../../Types";
@@ -64,6 +64,7 @@ export const createChannelContextMenuHandler = (opts: {
         <ChannelContextMenu
           x={x}
           y={y}
+          channel={data.channel!}
           server={data.server!}
           member={data.member!}
         />
@@ -100,6 +101,9 @@ export const createChannelContextMenuHandler = (opts: {
             `/app/servers/${data.server?.id}/settings/channels/${channelId}`,
           );
           break;
+        case "mark_read":
+          channelStore.dismissNotification(channelId);
+          break;
         case "leave":
           break;
         case "copy_id":
@@ -119,11 +123,18 @@ const ChannelContextMenu = (props: {
   y: string;
   server: Server;
   member: ServerMember;
+  channel: Channel;
 }) => {
   const isServerOwner = props.server.createdById === props.member.userId;
 
+  const hasNotifications = channelStore.hasNotification(props.channel);
+
   return (
     <ContextMenu.Root pos={{ x: props.x, y: props.y }} id="user-ctx">
+      <ContextMenu.Item id="mark_read" disabled={!hasNotifications}>
+        <ContextMenu.Icon name="mark_chat_read" />
+        <ContextMenu.Label>{t`Mark Read`}</ContextMenu.Label>
+      </ContextMenu.Item>
       <ContextMenu.Item id="notifications">
         <ContextMenu.Icon name="notifications" />
         <ContextMenu.Label>{t`Notifications`}</ContextMenu.Label>

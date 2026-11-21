@@ -394,6 +394,15 @@ function createServerStore() {
 
   let joining = false;
 
+  const markAsRead = (serverId: string) => {
+    const channels = serverStore.sortedChannels(serverId, false);
+
+    channels.forEach((c) => {
+      const hasNotification = channelStore.hasNotification(c);
+      if (hasNotification) channelStore.dismissNotification(c.id);
+    });
+  };
+
   const joinServer = async (serverId: string, code?: string) => {
     if (!accountStore.authenticated) {
       return [null, { message: "Not authenticated" }] as const;
@@ -449,7 +458,7 @@ function createServerStore() {
     currentChannelsSorted,
     serverSortedRoles,
     currentServerSortedRoles,
-
+    markAsRead,
     memberTopColorAndIcon,
     remove,
   };
