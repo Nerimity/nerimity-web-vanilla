@@ -49,7 +49,7 @@ msgstr "Success"
 
 #: src/components/appHeader.tsx:44
 #: src/components/miniProfile.tsx:350
-#: src/components/sidebar.tsx:863
+#: src/components/sidebar.tsx:869
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:204
 msgid "Profile"
@@ -60,83 +60,88 @@ msgid "Explore"
 msgstr "Explore"
 
 #: src/components/appHeader.tsx:48
-#: src/components/sidebar.tsx:1008
+#: src/components/sidebar.tsx:1014
 msgid "Home"
 msgstr "Home"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:129
-#: src/components/context-menus/ServerContextMenu.tsx:124
+#: src/components/context-menus/ChannelContextMenu.tsx:136
+#: src/components/context-menus/ServerContextMenu.tsx:144
+msgid "Mark Read"
+msgstr "Mark Read"
+
+#: src/components/context-menus/ChannelContextMenu.tsx:140
+#: src/components/context-menus/ServerContextMenu.tsx:148
 #: src/pages/app-page/createHomePane.tsx:232
 #: src/pages/app-page/settings/Settings.ts:76
 msgid "Notifications"
 msgstr "Notifications"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:134
-#: src/components/context-menus/ServerContextMenu.tsx:129
+#: src/components/context-menus/ChannelContextMenu.tsx:145
+#: src/components/context-menus/ServerContextMenu.tsx:154
 #: src/components/miniProfile.tsx:363
 #: src/components/server-settings/createServerSettingsDrawer.tsx:21
 #: src/components/settings/createSettingsDrawer.tsx:16
-#: src/components/sidebar.tsx:893
+#: src/components/sidebar.tsx:899
 msgid "Settings"
 msgstr "Settings"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:140
-#: src/components/context-menus/ServerContextMenu.tsx:135
+#: src/components/context-menus/ChannelContextMenu.tsx:151
+#: src/components/context-menus/ServerContextMenu.tsx:161
 msgid "Leave"
 msgstr "Leave"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:147
+#: src/components/context-menus/ChannelContextMenu.tsx:158
 #: src/components/context-menus/MessageContextMenu.tsx:114
 #: src/components/context-menus/PostContextMenu.tsx:119
-#: src/components/context-menus/ServerContextMenu.tsx:142
+#: src/components/context-menus/ServerContextMenu.tsx:168
 #: src/components/context-menus/UserContextMenu.tsx:265
 msgid "Copy ID"
 msgstr "Copy ID"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:151
+#: src/components/context-menus/ChannelContextMenu.tsx:162
 #: src/components/context-menus/MessageContextMenu.tsx:118
 #: src/components/context-menus/PostContextMenu.tsx:123
-#: src/components/context-menus/ServerContextMenu.tsx:146
+#: src/components/context-menus/ServerContextMenu.tsx:172
 #: src/components/context-menus/UserContextMenu.tsx:269
 msgid "Copy Object"
 msgstr "Copy Object"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:160
-#: src/components/context-menus/ServerContextMenu.tsx:155
+#: src/components/context-menus/ChannelContextMenu.tsx:171
+#: src/components/context-menus/ServerContextMenu.tsx:181
 msgid "Ping"
 msgstr "Ping"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:166
-#: src/components/context-menus/ChannelContextMenu.tsx:194
+#: src/components/context-menus/ChannelContextMenu.tsx:177
+#: src/components/context-menus/ChannelContextMenu.tsx:205
 msgid "Initial"
 msgstr "Initial"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:172
-#: src/components/context-menus/ChannelContextMenu.tsx:200
-#: src/components/context-menus/ServerContextMenu.tsx:161
-#: src/components/context-menus/ServerContextMenu.tsx:183
+#: src/components/context-menus/ChannelContextMenu.tsx:183
+#: src/components/context-menus/ChannelContextMenu.tsx:211
+#: src/components/context-menus/ServerContextMenu.tsx:187
+#: src/components/context-menus/ServerContextMenu.tsx:209
 msgid "Everything"
 msgstr "Everything"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:178
-#: src/components/context-menus/ChannelContextMenu.tsx:206
-#: src/components/context-menus/ServerContextMenu.tsx:167
-#: src/components/context-menus/ServerContextMenu.tsx:189
+#: src/components/context-menus/ChannelContextMenu.tsx:189
+#: src/components/context-menus/ChannelContextMenu.tsx:217
+#: src/components/context-menus/ServerContextMenu.tsx:193
+#: src/components/context-menus/ServerContextMenu.tsx:215
 msgid "Mentions Only"
 msgstr "Mentions Only"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:184
-#: src/components/context-menus/ChannelContextMenu.tsx:212
-#: src/components/context-menus/ServerContextMenu.tsx:173
-#: src/components/context-menus/ServerContextMenu.tsx:195
+#: src/components/context-menus/ChannelContextMenu.tsx:195
+#: src/components/context-menus/ChannelContextMenu.tsx:223
+#: src/components/context-menus/ServerContextMenu.tsx:199
+#: src/components/context-menus/ServerContextMenu.tsx:221
 #: src/components/context-menus/UserContextMenu.tsx:248
 #: src/components/modals/MuteMemberModal.tsx:94
 #: src/components/modals/MuteMemberModal.tsx:131
 msgid "Mute"
 msgstr "Mute"
 
-#: src/components/context-menus/ChannelContextMenu.tsx:189
-#: src/components/context-menus/ServerContextMenu.tsx:178
+#: src/components/context-menus/ChannelContextMenu.tsx:200
+#: src/components/context-menus/ServerContextMenu.tsx:204
 msgid "Sound"
 msgstr "Sound"
 
@@ -205,24 +210,24 @@ msgstr "Edit Post"
 msgid "Delete Post"
 msgstr "Delete Post"
 
-#: src/components/context-menus/ServerContextMenu.tsx:262
+#: src/components/context-menus/ServerContextMenu.tsx:288
 msgid "Leave {serverName}"
 msgstr "Leave {serverName}"
 
-#: src/components/context-menus/ServerContextMenu.tsx:264
+#: src/components/context-menus/ServerContextMenu.tsx:290
 msgid "Are you sure you want to leave {serverName}?"
 msgstr "Are you sure you want to leave {serverName}?"
 
-#: src/components/context-menus/ServerContextMenu.tsx:271
+#: src/components/context-menus/ServerContextMenu.tsx:297
 msgid "Don't Leave"
 msgstr "Don't Leave"
 
-#: src/components/context-menus/ServerContextMenu.tsx:278
-#: src/components/context-menus/ServerContextMenu.tsx:290
+#: src/components/context-menus/ServerContextMenu.tsx:304
+#: src/components/context-menus/ServerContextMenu.tsx:316
 msgid "Leave Server"
 msgstr "Leave Server"
 
-#: src/components/context-menus/ServerContextMenu.tsx:290
+#: src/components/context-menus/ServerContextMenu.tsx:316
 msgid "Leaving..."
 msgstr "Leaving..."
 
@@ -409,7 +414,7 @@ msgstr "Search messages..."
 msgid "Offline"
 msgstr "Offline"
 
-#: src/components/drawer-right/ServerInfoDrawer.tsx:500
+#: src/components/drawer-right/ServerInfoDrawer.tsx:503
 #: src/components/message-pane/messageItem.tsx:163
 msgid "Muted until {mutedUntil}"
 msgstr "Muted until {mutedUntil}"
@@ -597,7 +602,7 @@ msgid "Role"
 msgstr "Role"
 
 #: src/components/message-pane/messageItem.tsx:183
-#: src/components/posts/PostItem.tsx:154
+#: src/components/posts/PostItem.tsx:157
 msgid "New to Nerimity"
 msgstr "New to Nerimity"
 
@@ -610,7 +615,7 @@ msgid "Webhook"
 msgstr "Webhook"
 
 #: src/components/message-pane/messageItem.tsx:209
-#: src/components/posts/PostItem.tsx:161
+#: src/components/posts/PostItem.tsx:164
 #: src/utils/UserBadgeFlag.ts:518
 msgid "Bot"
 msgstr "Bot"
@@ -897,6 +902,21 @@ msgstr "Enter your password to continue."
 #: src/components/modals/ConfirmPasswordModal.tsx:52
 msgid "Remember for 5 minutes"
 msgstr "Remember for 5 minutes"
+
+#: src/components/modals/EditFolderModal.tsx:65
+msgid "Update Folder"
+msgstr "Update Folder"
+
+#: src/components/modals/EditFolderModal.tsx:71
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:57
+#: src/pages/app-page/settings/profileSettingsPage.tsx:459
+msgid "Don't Update"
+msgstr "Don't Update"
+
+#: src/components/modals/EditFolderModal.tsx:78
+#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:24
+msgid "Update"
+msgstr "Update"
 
 #: src/components/modals/EditServerRolesModal.tsx:60
 msgid "Edit Roles - {username}"
@@ -1209,27 +1229,27 @@ msgstr "if you continue with this behavior, your account will be suspended."
 msgid "Dismiss ~ {countdown}"
 msgstr "Dismiss ~ {countdown}"
 
-#: src/components/posts/PostItem.tsx:70
+#: src/components/posts/PostItem.tsx:73
 msgid "Deleted or invalid post."
 msgstr "Deleted or invalid post."
 
-#: src/components/posts/PostItem.tsx:223
+#: src/components/posts/PostItem.tsx:226
 msgid "Pinned"
 msgstr "Pinned"
 
-#: src/components/posts/PostItem.tsx:231
+#: src/components/posts/PostItem.tsx:234
 msgid "Reposted by<0><1>{username}</1></0>"
 msgstr "Reposted by<0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:248
+#: src/components/posts/PostItem.tsx:251
 msgid "Replying to <0><1>{username}</1></0>"
 msgstr "Replying to <0><1>{username}</1></0>"
 
-#: src/components/posts/PostItem.tsx:268
+#: src/components/posts/PostItem.tsx:271
 msgid "Mentioned you"
 msgstr "Mentioned you"
 
-#: src/components/posts/PostItem.tsx:320
+#: src/components/posts/PostItem.tsx:323
 msgid "Estimated Views"
 msgstr "Estimated Views"
 
@@ -1998,19 +2018,10 @@ msgstr "Privacy"
 msgid "Updating..."
 msgstr "Updating..."
 
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:24
-msgid "Update"
-msgstr "Update"
-
 #: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:40
 #: src/pages/app-page/settings/accountSettingsPage.tsx:36
 msgid "DM Notice"
 msgstr "DM Notice"
-
-#: src/pages/app-page/settings/UpdateDMNoticeModal.tsx:57
-#: src/pages/app-page/settings/profileSettingsPage.tsx:459
-msgid "Don't Update"
-msgstr "Don't Update"
 
 #: src/pages/app-page/settings/accountSettingsPage.tsx:31
 msgid "Tag"
@@ -2303,68 +2314,68 @@ msgstr "Admin"
 msgid "Enables all permissions."
 msgstr "Enables all permissions."
 
-#: src/utils/RolePermissionFlag.ts:11
+#: src/utils/RolePermissionFlag.ts:12
 #: src/utils/channelPermissionFlag.ts:12
 msgid "Send Message"
 msgstr "Send Message"
 
-#: src/utils/RolePermissionFlag.ts:15
+#: src/utils/RolePermissionFlag.ts:16
 msgid "Enable sending messages in this server. Server admins can still send messages."
 msgstr "Enable sending messages in this server. Server admins can still send messages."
 
-#: src/utils/RolePermissionFlag.ts:18
+#: src/utils/RolePermissionFlag.ts:20
 msgid "Manage Roles"
 msgstr "Manage Roles"
 
-#: src/utils/RolePermissionFlag.ts:21
+#: src/utils/RolePermissionFlag.ts:23
 msgid "Permission for updating or deleting roles."
 msgstr "Permission for updating or deleting roles."
 
-#: src/utils/RolePermissionFlag.ts:24
+#: src/utils/RolePermissionFlag.ts:27
 msgid "Manage Channels"
 msgstr "Manage Channels"
 
-#: src/utils/RolePermissionFlag.ts:27
+#: src/utils/RolePermissionFlag.ts:30
 msgid "Permission for updating or deleting channels."
 msgstr "Permission for updating or deleting channels."
 
-#: src/utils/RolePermissionFlag.ts:30
+#: src/utils/RolePermissionFlag.ts:34
 msgid "Kick Members"
 msgstr "Kick Members"
 
-#: src/utils/RolePermissionFlag.ts:33
+#: src/utils/RolePermissionFlag.ts:37
 msgid "Permission to kick users."
 msgstr "Permission to kick users."
 
-#: src/utils/RolePermissionFlag.ts:36
+#: src/utils/RolePermissionFlag.ts:41
 msgid "Ban Members"
 msgstr "Ban Members"
 
-#: src/utils/RolePermissionFlag.ts:39
+#: src/utils/RolePermissionFlag.ts:44
 msgid "Permission to ban users."
 msgstr "Permission to ban users."
 
-#: src/utils/RolePermissionFlag.ts:42
+#: src/utils/RolePermissionFlag.ts:48
 msgid "Mention Everyone"
 msgstr "Mention Everyone"
 
-#: src/utils/RolePermissionFlag.ts:46
+#: src/utils/RolePermissionFlag.ts:52
 msgid "Enable mentioning @everyone. Server admins can still mention everyone."
 msgstr "Enable mentioning @everyone. Server admins can still mention everyone."
 
-#: src/utils/RolePermissionFlag.ts:49
+#: src/utils/RolePermissionFlag.ts:56
 msgid "Nickname Members"
 msgstr "Nickname Members"
 
-#: src/utils/RolePermissionFlag.ts:52
+#: src/utils/RolePermissionFlag.ts:59
 msgid "Allow users to change their nickname in the server."
 msgstr "Allow users to change their nickname in the server."
 
-#: src/utils/RolePermissionFlag.ts:55
+#: src/utils/RolePermissionFlag.ts:63
 msgid "Mention Roles"
 msgstr "Mention Roles"
 
-#: src/utils/RolePermissionFlag.ts:58
+#: src/utils/RolePermissionFlag.ts:66
 msgid "Allow users to mention roles."
 msgstr "Allow users to mention roles."
 

@@ -1,0 +1,49 @@
+.body {
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.folderPreview {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  flex-shrink: 0;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-14);
+  cursor: pointer;
+  &:hover {
+    .paletteIcon {
+      display: block;
+    }
+    .folderIcon {
+      display: none;
+    }
+  }
+
+  &:after {
+    position: absolute;
+    opacity: 0.2;
+    background: var(--color);
+    content: "";
+    inset: 0;
+  }
+
+  .paletteIcon {
+    display: none;
+  }
+  :global(.icon) {
+    color: var(--color);
+    font-size: 20px;
+  }
+}
+.input {
+  width: 100%;
+}

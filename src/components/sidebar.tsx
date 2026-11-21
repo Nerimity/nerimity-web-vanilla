@@ -30,6 +30,7 @@ import { router } from "../utils/router";
 import { createServerContextMenuHandler } from "./context-menus/ServerContextMenu";
 import { Icon } from "./icon";
 import { LogoMono } from "./LogoMono";
+import { createEditFolderModal } from "./modals/EditFolderModal";
 import { NotificationPill } from "./NotificationPill";
 import { createResizeHandler } from "./ResizeHandle";
 import { Avatar } from "./ui/avatar";
@@ -576,9 +577,14 @@ export const createSidebar = () => {
     signal,
     selector: ".serverItem, .folderItem",
     open: (event, target) => {
-      if (!target.classList.contains("serverItem")) return false;
-      openServerContextMenu(event, target);
-      return true;
+      if (target.classList.contains("serverItem")) {
+        openServerContextMenu(event, target);
+        return true;
+      }
+      if (target.classList.contains("folderItem")) {
+        createEditFolderModal({ folderId: target.dataset.serverId! });
+      }
+      return false;
     },
   });
   setupServerDragPreview(serverListEl, signal);
