@@ -65,19 +65,19 @@ msgid "Home"
 msgstr "Home"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:136
-#: src/components/context-menus/ServerContextMenu.tsx:144
+#: src/components/context-menus/ServerContextMenu.tsx:147
 msgid "Mark Read"
 msgstr "Mark Read"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:140
-#: src/components/context-menus/ServerContextMenu.tsx:148
+#: src/components/context-menus/ServerContextMenu.tsx:158
 #: src/pages/app-page/createHomePane.tsx:232
 #: src/pages/app-page/settings/Settings.ts:76
 msgid "Notifications"
 msgstr "Notifications"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:145
-#: src/components/context-menus/ServerContextMenu.tsx:154
+#: src/components/context-menus/ServerContextMenu.tsx:164
 #: src/components/miniProfile.tsx:363
 #: src/components/server-settings/createServerSettingsDrawer.tsx:21
 #: src/components/settings/createSettingsDrawer.tsx:16
@@ -86,14 +86,14 @@ msgid "Settings"
 msgstr "Settings"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:151
-#: src/components/context-menus/ServerContextMenu.tsx:161
+#: src/components/context-menus/ServerContextMenu.tsx:171
 msgid "Leave"
 msgstr "Leave"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:158
 #: src/components/context-menus/MessageContextMenu.tsx:114
 #: src/components/context-menus/PostContextMenu.tsx:119
-#: src/components/context-menus/ServerContextMenu.tsx:168
+#: src/components/context-menus/ServerContextMenu.tsx:178
 #: src/components/context-menus/UserContextMenu.tsx:265
 msgid "Copy ID"
 msgstr "Copy ID"
@@ -101,13 +101,13 @@ msgstr "Copy ID"
 #: src/components/context-menus/ChannelContextMenu.tsx:162
 #: src/components/context-menus/MessageContextMenu.tsx:118
 #: src/components/context-menus/PostContextMenu.tsx:123
-#: src/components/context-menus/ServerContextMenu.tsx:172
+#: src/components/context-menus/ServerContextMenu.tsx:182
 #: src/components/context-menus/UserContextMenu.tsx:269
 msgid "Copy Object"
 msgstr "Copy Object"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:171
-#: src/components/context-menus/ServerContextMenu.tsx:181
+#: src/components/context-menus/ServerContextMenu.tsx:191
 msgid "Ping"
 msgstr "Ping"
 
@@ -118,22 +118,22 @@ msgstr "Initial"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:183
 #: src/components/context-menus/ChannelContextMenu.tsx:211
-#: src/components/context-menus/ServerContextMenu.tsx:187
-#: src/components/context-menus/ServerContextMenu.tsx:209
+#: src/components/context-menus/ServerContextMenu.tsx:197
+#: src/components/context-menus/ServerContextMenu.tsx:219
 msgid "Everything"
 msgstr "Everything"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:189
 #: src/components/context-menus/ChannelContextMenu.tsx:217
-#: src/components/context-menus/ServerContextMenu.tsx:193
-#: src/components/context-menus/ServerContextMenu.tsx:215
+#: src/components/context-menus/ServerContextMenu.tsx:203
+#: src/components/context-menus/ServerContextMenu.tsx:225
 msgid "Mentions Only"
 msgstr "Mentions Only"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:195
 #: src/components/context-menus/ChannelContextMenu.tsx:223
-#: src/components/context-menus/ServerContextMenu.tsx:199
-#: src/components/context-menus/ServerContextMenu.tsx:221
+#: src/components/context-menus/ServerContextMenu.tsx:209
+#: src/components/context-menus/ServerContextMenu.tsx:231
 #: src/components/context-menus/UserContextMenu.tsx:248
 #: src/components/modals/MuteMemberModal.tsx:94
 #: src/components/modals/MuteMemberModal.tsx:131
@@ -141,7 +141,7 @@ msgid "Mute"
 msgstr "Mute"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:200
-#: src/components/context-menus/ServerContextMenu.tsx:204
+#: src/components/context-menus/ServerContextMenu.tsx:214
 msgid "Sound"
 msgstr "Sound"
 
@@ -210,24 +210,30 @@ msgstr "Edit Post"
 msgid "Delete Post"
 msgstr "Delete Post"
 
-#: src/components/context-menus/ServerContextMenu.tsx:288
+#: src/components/context-menus/ServerContextMenu.tsx:153
+#: src/pages/app-page/server-settings/ServerSettings.ts:113
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:74
+msgid "Invites"
+msgstr "Invites"
+
+#: src/components/context-menus/ServerContextMenu.tsx:298
 msgid "Leave {serverName}"
 msgstr "Leave {serverName}"
 
-#: src/components/context-menus/ServerContextMenu.tsx:290
+#: src/components/context-menus/ServerContextMenu.tsx:300
 msgid "Are you sure you want to leave {serverName}?"
 msgstr "Are you sure you want to leave {serverName}?"
 
-#: src/components/context-menus/ServerContextMenu.tsx:297
+#: src/components/context-menus/ServerContextMenu.tsx:307
 msgid "Don't Leave"
 msgstr "Don't Leave"
 
-#: src/components/context-menus/ServerContextMenu.tsx:304
-#: src/components/context-menus/ServerContextMenu.tsx:316
+#: src/components/context-menus/ServerContextMenu.tsx:314
+#: src/components/context-menus/ServerContextMenu.tsx:326
 msgid "Leave Server"
 msgstr "Leave Server"
 
-#: src/components/context-menus/ServerContextMenu.tsx:316
+#: src/components/context-menus/ServerContextMenu.tsx:326
 msgid "Leaving..."
 msgstr "Leaving..."
 
@@ -597,7 +603,7 @@ msgid "Mentions everyone."
 msgstr "Mentions everyone."
 
 #: src/components/message-pane/inputSuggestions.tsx:548
-#: src/pages/app-page/server-settings/ServerSettings.ts:79
+#: src/pages/app-page/server-settings/ServerSettings.ts:80
 msgid "Role"
 msgstr "Role"
 
@@ -706,7 +712,7 @@ msgid "Logout"
 msgstr "Logout"
 
 #: src/components/miniProfile.tsx:383
-#: src/pages/app-page/server-settings/ServerSettings.ts:63
+#: src/pages/app-page/server-settings/ServerSettings.ts:64
 msgid "Roles"
 msgstr "Roles"
 
@@ -1692,20 +1698,20 @@ msgstr "Unfriend"
 msgid "Unfriending..."
 msgstr "Unfriending..."
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:49
+#: src/pages/app-page/server-settings/ServerSettings.ts:50
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:37
 msgid "General"
 msgstr "General"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:56
+#: src/pages/app-page/server-settings/ServerSettings.ts:57
 msgid "Audit Logs"
 msgstr "Audit Logs"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:87
+#: src/pages/app-page/server-settings/ServerSettings.ts:88
 msgid "Channels"
 msgstr "Channels"
 
-#: src/pages/app-page/server-settings/ServerSettings.ts:103
+#: src/pages/app-page/server-settings/ServerSettings.ts:104
 msgid "Channel"
 msgstr "Channel"
 
@@ -1758,7 +1764,7 @@ msgid "Webhooks"
 msgstr "Webhooks"
 
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:39
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:26
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:27
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:27
 msgid "Name"
 msgstr "Name"
@@ -1793,6 +1799,7 @@ msgstr "Permanently delete this channel and all associated data."
 
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:563
 #: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:44
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:81
 msgid "Create"
 msgstr "Create"
 
@@ -1828,52 +1835,74 @@ msgstr "Category"
 msgid "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 msgstr "{memberSize, plural, =0 {<0>No</0> Members} one {<1>#</1> Member} other {<2>#</2> Members}}"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:27
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:28
 #: src/pages/app-page/settings/accountSettingsPage.tsx:32
 msgid "Avatar"
 msgstr "Avatar"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:28
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:29
 #: src/pages/app-page/settings/accountSettingsPage.tsx:33
 msgid "Banner"
 msgstr "Banner"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:29
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:317
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:30
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:325
 msgid "Delete Server"
 msgstr "Delete Server"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:30
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:31
 msgid "Default Channel"
 msgstr "Default Channel"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:31
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:32
 msgid "System Channel"
 msgstr "System Channel"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:95
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:96
 #: src/pages/app-page/settings/profileSettingsPage.tsx:193
 msgid "None"
 msgstr "None"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:128
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:142
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:115
+msgid "You will lose all of the perks of having your server verified if you rename it."
+msgstr "You will lose all of the perks of having your server verified if you rename it."
+
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:136
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:150
 #: src/pages/app-page/settings/accountSettingsPage.tsx:155
 #: src/pages/app-page/settings/accountSettingsPage.tsx:169
 msgid "Browse"
 msgstr "Browse"
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:152
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:160
 msgid "New members will be directed to this channel."
 msgstr "New members will be directed to this channel."
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:162
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:170
 msgid "Where system messages should appear."
 msgstr "Where system messages should appear."
 
-#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:174
+#: src/pages/app-page/server-settings/generalServerSettingsPage.tsx:182
 msgid "Permanently delete this server and all associated data."
 msgstr "Permanently delete this server and all associated data."
+
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:50
+msgid "Custom invite links are only available for verified servers."
+msgstr "Custom invite links are only available for verified servers."
+
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:56
+msgid "Custom Invite"
+msgstr "Custom Invite"
+
+#. placeholder {0}: invites.length
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:75
+msgid "{0, plural, =0 {No invites} one {# invite  } other {# invites}}"
+msgstr "{0, plural, =0 {No invites} one {# invite  } other {# invites}}"
+
+#. placeholder {0}: props.invite.uses
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:156
+msgid "{0, plural, =0 {<0>No</0> Use} one {<1>#</1> Use} other {<2>#</2> uses}}"
+msgstr "{0, plural, =0 {<0>No</0> Use} one {<1>#</1> Use} other {<2>#</2> uses}}"
 
 #: src/pages/app-page/server-settings/roleServerSettingsPage.tsx:28
 msgid "Role Color"

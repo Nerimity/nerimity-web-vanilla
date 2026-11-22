@@ -1,15 +1,18 @@
-import { t } from "@lingui/core/macro";
+import { plural, t } from "@lingui/core/macro";
 import { Plural, Trans } from "@trans";
 
 import { Icon } from "../../../components/icon";
 import { Notice } from "../../../components/Notice";
 import { SettingsBlock } from "../../../components/SettingsBlock";
 import { Avatar } from "../../../components/ui/avatar";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
 import { Link } from "../../../components/ui/link";
 import {
   getServerInvites,
   type ServerInvite,
 } from "../../../services/serverService";
+import { accountStore } from "../../../store/accountStore";
 import { serverStore } from "../../../store/serverStore";
 import { formatTimestamp } from "../../../utils/date";
 import { closestFromEvent } from "../../../utils/dom";
@@ -27,38 +30,70 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
 
   let invites: ServerInvite[] = [];
 
+  const getCustomInvite = () => invites.find((i) => i.isCustom);
+
   const rerender = () => {
     const verified = serverStore.currentServer()?.verified;
 
+    const customInvite = getCustomInvite();
+
+    const isCreator =
+      serverStore.currentServer()?.createdById === accountStore.currentUser?.id;
+
     el.replaceChildren(
       <>
-        {!verified && (
-          <Notice
-            type="info"
-            description={t`Custom invite links are only available for verified servers.`}
-          />
+        {isCreator && (
+          <>
+            {!verified && (
+              <Notice
+                type="info"
+                description={t`Custom invite links are only available for verified servers.`}
+              />
+            )}
+            <SettingsBlock.Group class="group">
+              <SettingsBlock.Root class={!verified && style.disabled}>
+                <SettingsBlock.Icon name="mail" />
+                <SettingsBlock.Details title={t`Custom Invite`} />
+                <div class={style.createCustomInvite}>
+                  <Input
+                    class={style.customInviteInput}
+                    value={customInvite?.code || ""}
+                    placeholder="code"
+                  />
+                  <Button icon="save" data-action="update_custom_invite" />
+                </div>
+              </SettingsBlock.Root>
+              {customInvite && <ServerInviteItem invite={customInvite!} />}
+            </SettingsBlock.Group>
+          </>
         )}
-        <SettingsBlock.Root class={!verified && style.disabled}>
-          <SettingsBlock.Icon name="mail" />
-          <SettingsBlock.Details title={t`Custom Invite`} />
-        </SettingsBlock.Root>
         <SettingsBlock.Group class="group">
-          {invites.map((invite) => (
-            <ServerInviteItem invite={invite} />
-          ))}
+          <SettingsBlock.Root>
+            <SettingsBlock.Icon name="mail" />
+            <SettingsBlock.Details
+              title={t`Invites`}
+              description={plural(invites.length, {
+                0: "No invites",
+                one: "# invite  ",
+                other: "# invites",
+              })}
+            />
+            <Button icon="add" label={t`Create`} data-action="create_invite" />
+          </SettingsBlock.Root>
+
+          {invites
+            .filter((i) => !i.isCustom)
+            .map((invite) => (
+              <ServerInviteItem invite={invite} />
+            ))}
         </SettingsBlock.Group>
       </>,
     );
   };
 
-  rerender();
-
   getServerInvites(serverStore.currentServerId!).then(([res]) => {
     if (!res) return;
     invites = res.sort((a, b) => {
-      if (a.isCustom && !b.isCustom) return -1;
-      if (!a.isCustom && b.isCustom) return 1;
-
       return b.createdAt - a.createdAt;
     });
     rerender();
@@ -69,7 +104,13 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
     async (event) => {
       const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
-      if (action === "create-role") {
+      if (action === "update_custom_invite") {
+      }
+      if (action === "create_invite") {
+      }
+      if (action === "copy") {
+      }
+      if (action === "delete") {
       }
     },
     { signal },
@@ -97,41 +138,48 @@ const ServerInviteItem = (props: { invite: ServerInvite }) => {
       <div class={style.outerDetails}>
         <div class={style.code}>
           <code>
-            <span class={style.dim}>https://nerimity.com/i/</span>
+            <span class={style.dim}>nerimity.com/i/</span>
             {props.invite.code}
           </code>
-          <Icon class={style.copyIcon} name="content_copy" />
+          <Icon class={style.copyIcon} data-action="copy" name="content_copy" />
         </div>
 
         <div class={style.details}>
-          <Icon name="person" />
-          <Link href={`https://nerimity.com/app/profile/${creator.id}`}>
-            {creator.username}
-          </Link>
-          <Icon name="person" />
-          <Plural
-            value={props.invite.uses}
-            _0={
-              <Trans>
-                <span class={style.full}>No</span> Use
-              </Trans>
-            }
+          <div class={style.detail}>
+            <Icon name="person" />
+            <Link href={`https://nerimity.com/app/profile/${creator.id}`}>
+              {creator.username}
+            </Link>
+          </div>
+          <div class={style.detail}>
+            <Icon name="login" />
+            <Plural
+              value={props.invite.uses}
+              _0={
+                <Trans>
+                  <span class={style.full}>No</span> Use
+                </Trans>
+              }
 
-            one={
-              <Trans>
-                <span class={style.full}>#</span> Use
-              </Trans>
-            }
-            other={
-              <Trans>
-                <span class={style.full}>#</span> uses
-              </Trans>
-            }
-          />
-          <Icon name="person" />
-          <span>{formatTimestamp(props.invite.createdAt)}</span>
+              one={
+                <Trans>
+                  <span class={style.full}>#</span> Use
+                </Trans>
+              }
+              other={
+                <Trans>
+                  <span class={style.full}>#</span> uses
+                </Trans>
+              }
+            />
+          </div>
+          <div class={style.detail}>
+            <Icon name="event" />
+            <span>{formatTimestamp(props.invite.createdAt)}</span>
+          </div>
         </div>
       </div>
+      <Button icon="delete" alert data-action="delete" />
     </SettingsBlock.Root>
   );
 };
