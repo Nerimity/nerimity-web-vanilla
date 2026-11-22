@@ -473,3 +473,28 @@ export function getServerInvites(serverId: string) {
     useToken: true,
   });
 }
+export function createServerInvite(serverId: string) {
+  return request<Omit<ServerInvite, "createdBy">>(
+    `/servers/${serverId}/invites`,
+    {
+      method: "POST",
+      useToken: true,
+    },
+  );
+}
+export function createServerCustomInvite(serverId: string, code: string) {
+  return request<Omit<ServerInvite, "createdBy">>(
+    `/servers/${serverId}/invites/custom`,
+    {
+      method: "POST",
+      useToken: true,
+      body: { code },
+    },
+  );
+}
+export function deleteServerInvites(serverId: string, code: string) {
+  return request(`/servers/${serverId}/invites/${code}`, {
+    method: "DELETE",
+    useToken: true,
+  });
+}

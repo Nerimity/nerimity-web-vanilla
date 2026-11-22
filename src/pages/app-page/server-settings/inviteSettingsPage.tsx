@@ -8,7 +8,11 @@ import { Avatar } from "../../../components/ui/avatar";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Link } from "../../../components/ui/link";
+import { alert } from "../../../components/ui/modal";
 import {
+  createServerCustomInvite,
+  createServerInvite,
+  deleteServerInvites,
   getServerInvites,
   type ServerInvite,
 } from "../../../services/serverService";
@@ -104,13 +108,63 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
     async (event) => {
       const actionEl = closestFromEvent(event, "[data-action]");
       const action = actionEl?.dataset?.action;
+
+      const inviteItem = closestFromEvent(event, `[data-invite-code]`);
+      const inviteCode = inviteItem?.dataset.inviteCode;
+
       if (action === "update_custom_invite") {
+        const inputEl = el.querySelector<HTMLInputElement>(
+          `.${style.customInviteInput} input`,
+        );
+        const value = inputEl?.value.trim();
+        if (!value) return;
+
+        createServerCustomInvite(serverStore.currentServerId!, value).then(
+          ([res, err]) => {
+            if (err) {
+              alert({ message: err.message });
+              return;
+            }
+            const existingInvite = invites.find((i) => i.isCustom);
+            if (existingInvite) {
+              existingInvite.code = value;
+            }
+            const customInvite = {
+              ...res,
+              createdBy: accountStore.currentUser,
+            };
+
+            invites.unshift(customInvite as ServerInvite);
+            rerender();
+          },
+        );
       }
       if (action === "create_invite") {
+        createServerInvite(serverStore.currentServerId!).then(([res, err]) => {
+          if (err) {
+            alert({ message: err.message });
+            return;
+          }
+          const customInvite = { ...res, createdBy: accountStore.currentUser };
+          invites.unshift(customInvite as ServerInvite);
+          rerender();
+        });
       }
       if (action === "copy") {
+        navigator.clipboard.writeText(`https://nerimity.com/i/${inviteCode}`);
+        alert({ message: t`Copied to clipboard.`, alert: false });
       }
       if (action === "delete") {
+        deleteServerInvites(serverStore.currentServerId!, inviteCode!).then(
+          ([, err]) => {
+            if (err) {
+              alert({ message: err.message });
+              return;
+            }
+            invites = invites.filter((i) => i.code !== inviteCode!);
+            rerender();
+          },
+        );
       }
     },
     { signal },
@@ -128,12 +182,10 @@ const inviteSettingsPage = (context: ServerSettingsContext) => {
 };
 
 const ServerInviteItem = (props: { invite: ServerInvite }) => {
-  // const href = `https://nerimity.com/i/${props.invite.code}`;
-
   const creator = props.invite.createdBy;
 
   return (
-    <SettingsBlock.Root>
+    <SettingsBlock.Root data-invite-code={props.invite.code}>
       <Avatar user={creator} size={32} />
       <div class={style.outerDetails}>
         <div class={style.code}>

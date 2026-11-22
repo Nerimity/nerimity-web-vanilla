@@ -212,7 +212,7 @@ msgstr "Delete Post"
 
 #: src/components/context-menus/ServerContextMenu.tsx:153
 #: src/pages/app-page/server-settings/ServerSettings.ts:113
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:74
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:78
 msgid "Invites"
 msgstr "Invites"
 
@@ -1799,7 +1799,7 @@ msgstr "Permanently delete this channel and all associated data."
 
 #: src/pages/app-page/server-settings/channelServerSettingsPage.tsx:563
 #: src/pages/app-page/server-settings/channelsServerSettingsPage.tsx:44
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:81
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:85
 msgid "Create"
 msgstr "Create"
 
@@ -1886,21 +1886,25 @@ msgstr "Where system messages should appear."
 msgid "Permanently delete this server and all associated data."
 msgstr "Permanently delete this server and all associated data."
 
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:50
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:54
 msgid "Custom invite links are only available for verified servers."
 msgstr "Custom invite links are only available for verified servers."
 
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:56
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:60
 msgid "Custom Invite"
 msgstr "Custom Invite"
 
 #. placeholder {0}: invites.length
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:75
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:79
 msgid "{0, plural, =0 {No invites} one {# invite  } other {# invites}}"
 msgstr "{0, plural, =0 {No invites} one {# invite  } other {# invites}}"
 
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:155
+msgid "Copied to clipboard."
+msgstr "Copied to clipboard."
+
 #. placeholder {0}: props.invite.uses
-#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:156
+#: src/pages/app-page/server-settings/inviteSettingsPage.tsx:208
 msgid "{0, plural, =0 {<0>No</0> Use} one {<1>#</1> Use} other {<2>#</2> uses}}"
 msgstr "{0, plural, =0 {<0>No</0> Use} one {<1>#</1> Use} other {<2>#</2> uses}}"
 
