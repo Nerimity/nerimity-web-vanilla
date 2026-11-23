@@ -1,3 +1,6 @@
+import { t } from "@lingui/core/macro";
+import morphdom from "morphdom";
+
 import { channelStore, type Channel } from "../../store/channelStore";
 import { serverStore } from "../../store/serverStore";
 import { ChannelType } from "../../Types";
@@ -5,6 +8,7 @@ import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { HoverAnimator } from "../../utils/HoverAnimator";
 import { reconcile } from "../../utils/html";
+import { router } from "../../utils/router";
 import { CdnIcon } from "../cdnIcon";
 import { createServerContextMenuHandler } from "../context-menus/ServerContextMenu";
 import { Icon } from "../icon";
@@ -40,6 +44,30 @@ export const createServerChannelDrawer = () => {
     <div class={style.serverChannelList}></div>
   ) as HTMLDivElement;
 
+  const headerItemsEl = (
+    <div class={style.headerItems}></div>
+  ) as HTMLDivElement;
+
+  const rerenderHeader = () => {
+    const showCustomize = serverStore.currentServer()?.customizePage;
+    headerItemsEl.style.display = showCustomize ? "flex" : "none";
+    morphdom(
+      headerItemsEl,
+      <div>
+        <Item.Base
+          class={style.item}
+          selected={!!router.match("/app/servers/:serverId/customize")}
+          href={`/app/servers/${serverStore.currentServerId}/customize`}
+        >
+          <Icon class={style.icon} name="dashboard_customize" outlined />
+          <Item.Label>{t`Customize`}</Item.Label>
+        </Item.Base>
+      </div>,
+      { childrenOnly: true },
+    );
+  };
+  rerenderHeader();
+
   let headerEl = (
     <div class={style.header}>
       <HeaderPill />
@@ -55,7 +83,7 @@ export const createServerChannelDrawer = () => {
       <div class={style.headerBackdrop}></div>
       <div class={[style.container, "scrollbarHover"]}>
         {headerEl}
-
+        {headerItemsEl}
         {channelListEl}
       </div>
     </div>
@@ -76,6 +104,7 @@ export const createServerChannelDrawer = () => {
     channelId?: string;
     forceRecreate?: boolean;
   }) => {
+    rerenderHeader();
     const serverChannels = serverStore.currentChannelsSorted.value() || [];
 
     handleTypingIndicator?.updateChannelIds(serverChannels.map((c) => c.id));
@@ -147,10 +176,18 @@ export const createServerChannelDrawer = () => {
     signal,
   );
 
+  router.createMatchListener(
+    "/app/servers/:serverId/customize",
+    () => {
+      rerenderHeader();
+    },
+    { signal },
+  );
+
   const render = () => {
     hoverAnimator = new HoverAnimator(containerEl, [
       {
-        trigger: `.${style.channelItem}:not(.${style.categoryItem})`,
+        trigger: `.${style.item}:not(.${style.categoryItem})`,
         image: ".channelIcon img",
         crossAnimate: {
           attr: "data-category-id",
@@ -164,7 +201,7 @@ export const createServerChannelDrawer = () => {
     channelListEl.addEventListener(
       "click",
       (e) => {
-        if (closestFromEvent(e, `.${style.channelItem}`)) {
+        if (closestFromEvent(e, `.${style.item}`)) {
           Drawer().updatePage({ page: 1 });
         }
       },
@@ -190,9 +227,7 @@ export const createServerChannelDrawer = () => {
   typingEmitter.on(
     "typing:update",
     (typingChannels) => {
-      const channelEls = channelListEl.querySelectorAll(
-        `.${style.channelItem}`,
-      );
+      const channelEls = channelListEl.querySelectorAll(`.${style.item}`);
       channelEls.forEach((c) => {
         const el = c as HTMLDivElement;
         const typingEl = el.querySelector(
@@ -221,7 +256,7 @@ const createChannelItemHelper = () => {
 
     return (
       <Item.Base
-        class={[style.channelItem, isCategory && style.categoryItem]}
+        class={[style.item, isCategory && style.categoryItem]}
         data-channel-id={channel.id}
         title={channel.name}
         href={
@@ -266,7 +301,7 @@ const createChannelItemHelper = () => {
 
   const updateSelected = (container: HTMLElement, channelId: string) => {
     const selected = container.querySelector(
-      `.${style.channelItem}[data-selected="true"]`,
+      `.${style.item}[data-selected="true"]`,
     );
 
     if (selected) {
@@ -274,7 +309,7 @@ const createChannelItemHelper = () => {
     }
 
     const item = container.querySelector(
-      `.${style.channelItem}[data-channel-id="${channelId}"]`,
+      `.${style.item}[data-channel-id="${channelId}"]`,
     );
 
     item?.setAttribute("data-selected", "true");

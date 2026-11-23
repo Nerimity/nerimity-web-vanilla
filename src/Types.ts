@@ -200,6 +200,9 @@ export interface RawServer {
   customEmojis?: RawCustomEmoji[];
   verified?: boolean;
   systemChannelId?: string;
+  _count: {
+    welcomeQuestions: number;
+  };
 }
 
 export const LastOnlineStatus = {
@@ -477,4 +480,24 @@ export interface RawInventoryItem {
   userId: string;
   itemId: string;
   acquiredAt: number;
+}
+
+export interface RawServerWelcomeQuestion {
+  id: string;
+  title: string;
+  multiselect: boolean;
+  answers: RawServerWelcomeAnswer[];
+  createdAt?: number;
+  order: number;
+}
+
+export interface RawServerWelcomeAnswer {
+  id: string;
+  title: string;
+  roleIds: string[];
+  createdAt?: number;
+  answered: boolean;
+  questionId: string;
+  order: number;
+  _count: { answeredUsers: number };
 }

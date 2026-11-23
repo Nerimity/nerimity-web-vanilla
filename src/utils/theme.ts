@@ -74,7 +74,7 @@ export const DefaultTheme = {
   "control-border-color": "var(--gray-800)",
   "control-outline-color": "var(--gray-500)",
   "control-selected-outline-color": "var(--gray-400)",
-  "control-strong-outline-color": "var(--gray-600)",
+  "control-strong-outline-color": "var(--gray-400)",
 
   "gray-50": "hsl(220, 0%, 95%)",
   "gray-100": "hsl(220, 0%, 90%)",

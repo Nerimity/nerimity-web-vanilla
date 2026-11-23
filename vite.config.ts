@@ -20,6 +20,7 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "dashboard_customize",
         "mark_chat_read",
         "next_week",
         "notification_add",

@@ -142,6 +142,7 @@ const createAppPage = () => {
 
   const appRouteSource = createTokenSource();
   const contentSource = createTokenSource();
+  const rightDrawerSource = createTokenSource();
 
   const clearCurrentServerIfLeavingServerContext = () => {
     const pathname = location.pathname;
@@ -188,6 +189,15 @@ const createAppPage = () => {
     }),
 
     registerPaneRoute<Page, { serverId: string }>({
+      paths: "/app/servers/:serverId/customize",
+      signal,
+      tokenSource: contentSource,
+      load: () => import("./createServerCustomizePane"),
+      onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
+      onUnmatch: clearCurrentServerIfLeavingServerContext,
+      context,
+    }),
+    registerPaneRoute<Page, { serverId: string }>({
       paths: "/app/servers/:serverId/settings{/*}?",
       signal,
       tokenSource: appRouteSource,
@@ -206,6 +216,17 @@ const createAppPage = () => {
       load: () => import("./createServerChannelRoute"),
       context,
     }),
+    registerPaneRoute<Page, { serverId: string; channelId: string }>({
+      paths: "/app/servers/:serverId/:channelId",
+      signal,
+      tokenSource: rightDrawerSource,
+      shouldMatch: (res) =>
+        res?.params.channelId !== "settings" &&
+        res?.params.channelId !== "customize",
+      onUnmatch: () => rightDrawerSource.invalidate(),
+      load: () => import("./createServerRightDrawerRoute"),
+      context,
+    }),
     registerPaneRoute<Page>({
       paths: "/app/settings{/*}?",
       signal,
@@ -218,7 +239,9 @@ const createAppPage = () => {
       paths: ["/app/servers/:serverId/:channelId", "/app/inbox/:channelId"],
       signal,
       tokenSource: contentSource,
-      shouldMatch: (res) => res?.params.channelId !== "settings",
+      shouldMatch: (res) =>
+        res?.params.channelId !== "settings" &&
+        res?.params.channelId !== "customize",
       onRoute: (res) => channelStore.setCurrentChannelId(res?.params.channelId),
       onMatch: () => drawer.updateRightDrawerAvailable(true),
       onUnmatch: () => drawer.updateRightDrawerAvailable(false),

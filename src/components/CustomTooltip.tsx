@@ -32,6 +32,7 @@ export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
 
     el.textContent = tooltipText;
     el.style.display = "block";
+    portalElement().appendChild(el);
     const rect = tooltip.getBoundingClientRect();
     const gap = 8;
 
@@ -43,7 +44,6 @@ export const handleCustomTooltip = (opts: { signal: AbortSignal }) => {
     const top = rect.top + rect.height / 2 - el.offsetHeight / 2;
     el.style.left = `${left}px`;
     el.style.top = `${Math.max(0, top)}px`;
-    portalElement().appendChild(el);
   }, 150);
 
   document.addEventListener(

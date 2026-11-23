@@ -1,0 +1,93 @@
+.page {
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  padding-right: 12px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.continueButton {
+  align-self: flex-start;
+  padding-right: 12px;
+  border-radius: var(--radius-max);
+  gap: 4px;
+}
+.questionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+.answerList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 8px;
+}
+.answerItem {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px;
+  border-radius: var(--radius-18);
+  background: var(--gray-850);
+  cursor: pointer;
+  user-select: none;
+  gap: 6px;
+  &:hover {
+    background: var(--gray-800);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    gap: 12px;
+  }
+
+  .answeredCount {
+    display: flex;
+    align-items: center;
+    opacity: 0.6;
+    gap: 4px;
+    :global(.icon) {
+      font-size: 12px;
+    }
+  }
+}
+
+.roleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.role {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 4px;
+  padding-right: 6px;
+  border: solid 1px var(--gray-600);
+  border-radius: var(--radius-max);
+  background-color: var(--gray-800);
+  font-size: 12px;
+  font-weight: 500;
+  gap: 4px;
+
+  .icon {
+    overflow: hidden;
+    padding: 0;
+    border-radius: var(--radius-max);
+  }
+}
+.box {
+  pointer-events: none;
+}

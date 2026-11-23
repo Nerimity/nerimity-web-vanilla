@@ -8,6 +8,7 @@ import type {
   RawServer,
   RawServerFolder,
   RawServerRole,
+  RawServerWelcomeQuestion,
   RawUser,
   RawWebhook,
 } from "../Types";
@@ -494,6 +495,34 @@ export function createServerCustomInvite(serverId: string, code: string) {
 }
 export function deleteServerInvites(serverId: string, code: string) {
   return request(`/servers/${serverId}/invites/${code}`, {
+    method: "DELETE",
+    useToken: true,
+  });
+}
+
+export async function getWelcomeQuestions(serverId: string) {
+  return request<RawServerWelcomeQuestion[]>(
+    `/servers/${serverId}` + "/welcome/questions",
+    {
+      method: "GET",
+      useToken: true,
+    },
+  );
+}
+export async function answerWelcomeQuestion(
+  serverId: string,
+  answerId: string,
+) {
+  return request(`/servers/${serverId}/welcome/answers/${answerId}/answer`, {
+    method: "POST",
+    useToken: true,
+  });
+}
+export async function removeAnswerWelcomeQuestion(
+  serverId: string,
+  answerId: string,
+) {
+  return request(`/servers/${serverId}/welcome/answers/${answerId}/answer`, {
     method: "DELETE",
     useToken: true,
   });

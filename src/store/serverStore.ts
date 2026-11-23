@@ -50,6 +50,8 @@ export class Server {
   verified?: boolean;
   botCommands?: RawBotCommand[];
   clan?: ServerClan;
+  customizePage?: boolean;
+
   /**
    * @description if true, server members are not loaded yet.
    */
@@ -67,10 +69,18 @@ export class Server {
     this.banner = data.banner;
     this.verified = data.verified;
     this.clan = data.clan;
+
+    if (data._count.welcomeQuestions) {
+      this.customizePage = true;
+    }
   }
 
   get currentMember() {
     return serverMemberStore.currentMember(this.id);
+  }
+
+  get defaultChannel() {
+    return channelStore.channels.get(this.defaultChannelId);
   }
 
   getOrLoadBotCommands() {

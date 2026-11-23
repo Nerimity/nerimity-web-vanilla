@@ -385,6 +385,11 @@ msgstr "Friends"
 msgid "Reminders"
 msgstr "Reminders"
 
+#: src/components/drawer-left/serverChannelDrawer.tsx:63
+#: src/pages/app-page/createServerCustomizePane.tsx:82
+msgid "Customize"
+msgstr "Customize"
+
 #: src/components/drawer-right/DrawerChannelNotice.tsx:16
 #: src/components/miniProfile.tsx:690
 msgid "Notice"
@@ -1595,6 +1600,10 @@ msgstr "<0><1>{username}</1></0> mentioned you"
 #: src/pages/app-page/createHomePane.tsx:483
 msgid "Unknown notification"
 msgstr "Unknown notification"
+
+#: src/pages/app-page/createServerCustomizePane.tsx:71
+msgid "Continue to {channelName}"
+msgstr "Continue to {channelName}"
 
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:196
 msgid "Accept Request"

@@ -40,6 +40,13 @@
   pointer-events: none;
 }
 
+.headerItems {
+  display: flex;
+  flex: 1;
+  margin-bottom: 12px;
+  gap: 2px;
+}
+
 .serverChannelList {
   display: flex;
   flex: 1;
@@ -49,10 +56,10 @@
   gap: 2px;
 }
 
-.channelItem {
+.item {
+  width: 100%;
   padding: 6px 6px;
   border-radius: var(--radius-8);
-
   &.categoryItem {
     margin-top: 16px;
     margin-bottom: 2px;
@@ -60,6 +67,10 @@
     &:first-child {
       margin-top: 0;
     }
+  }
+
+  .icon {
+    font-size: 16px;
   }
 
   .itemLabel {
