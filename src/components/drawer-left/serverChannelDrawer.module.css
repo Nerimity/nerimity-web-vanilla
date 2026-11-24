@@ -43,6 +43,7 @@
 .headerItems {
   display: flex;
   flex: 1;
+  flex-direction: column;
   margin-bottom: 12px;
   gap: 2px;
 }
@@ -70,6 +71,8 @@
   }
 
   .icon {
+    margin-right: 3px;
+    margin-left: 6px;
     font-size: 16px;
   }
 

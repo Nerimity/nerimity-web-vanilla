@@ -189,6 +189,15 @@ const createAppPage = () => {
     }),
 
     registerPaneRoute<Page, { serverId: string }>({
+      paths: "/app/servers/:serverId/members",
+      signal,
+      tokenSource: contentSource,
+      load: () => import("./createServerMembersPane"),
+      onRoute: (res) => serverStore.setCurrentServerId(res?.params.serverId),
+      onUnmatch: clearCurrentServerIfLeavingServerContext,
+      context,
+    }),
+    registerPaneRoute<Page, { serverId: string }>({
       paths: "/app/servers/:serverId/customize",
       signal,
       tokenSource: contentSource,
@@ -222,6 +231,7 @@ const createAppPage = () => {
       tokenSource: rightDrawerSource,
       shouldMatch: (res) =>
         res?.params.channelId !== "settings" &&
+        res?.params.channelId !== "members" &&
         res?.params.channelId !== "customize",
       onUnmatch: () => rightDrawerSource.invalidate(),
       load: () => import("./createServerRightDrawerRoute"),
@@ -241,6 +251,7 @@ const createAppPage = () => {
       tokenSource: contentSource,
       shouldMatch: (res) =>
         res?.params.channelId !== "settings" &&
+        res?.params.channelId !== "members" &&
         res?.params.channelId !== "customize",
       onRoute: (res) => channelStore.setCurrentChannelId(res?.params.channelId),
       onMatch: () => drawer.updateRightDrawerAvailable(true),

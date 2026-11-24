@@ -390,6 +390,11 @@ msgstr "Reminders"
 msgid "Customize"
 msgstr "Customize"
 
+#: src/components/drawer-left/serverChannelDrawer.tsx:71
+#: src/pages/app-page/createServerMembersPane.tsx:196
+msgid "Members"
+msgstr "Members"
+
 #: src/components/drawer-right/DrawerChannelNotice.tsx:16
 #: src/components/miniProfile.tsx:690
 msgid "Notice"
@@ -400,6 +405,7 @@ msgid "Files"
 msgstr "Files"
 
 #: src/components/drawer-right/RightDrawer.tsx:28
+#: src/pages/app-page/createServerMembersPane.tsx:89
 msgid "Search"
 msgstr "Search"
 
@@ -722,6 +728,7 @@ msgid "Roles"
 msgstr "Roles"
 
 #: src/components/miniProfile.tsx:397
+#: src/pages/app-page/createServerMembersPane.tsx:111
 msgid "Joined"
 msgstr "Joined"
 
@@ -1504,6 +1511,7 @@ msgstr "Recent Themes"
 
 #: src/pages/app-page/createExploreRoute.tsx:671
 #: src/pages/app-page/createExploreRoute.tsx:923
+#: src/pages/app-page/createServerMembersPane.tsx:93
 msgid "All"
 msgstr "All"
 
@@ -1605,6 +1613,31 @@ msgstr "Unknown notification"
 msgid "Continue to {channelName}"
 msgstr "Continue to {channelName}"
 
+#: src/pages/app-page/createServerMembersPane.tsx:97
+msgid "24 Hours"
+msgstr "24 Hours"
+
+#: src/pages/app-page/createServerMembersPane.tsx:101
+msgid "Muted"
+msgstr "Muted"
+
+#: src/pages/app-page/createServerMembersPane.tsx:110
+msgid "Member"
+msgstr "Member"
+
+#: src/pages/app-page/createServerMembersPane.tsx:112
+#: src/pages/app-page/profile-pane/createProfilePane.tsx:633
+msgid "Joined Nerimity"
+msgstr "Joined Nerimity"
+
+#: src/pages/app-page/createServerMembersPane.tsx:165
+msgid "Previous"
+msgstr "Previous"
+
+#: src/pages/app-page/createServerMembersPane.tsx:166
+msgid "Next"
+msgstr "Next"
+
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:196
 msgid "Accept Request"
 msgstr "Accept Request"
@@ -1660,10 +1693,6 @@ msgstr "Mutual Friends"
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:558
 msgid "Mutual Servers"
 msgstr "Mutual Servers"
-
-#: src/pages/app-page/profile-pane/createProfilePane.tsx:633
-msgid "Joined Nerimity"
-msgstr "Joined Nerimity"
 
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:677
 #: src/pages/app-page/settings/Settings.ts:69

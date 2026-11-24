@@ -157,13 +157,13 @@ function onAuthenticated(payload: any) {
   channelStore.setChannels(payload.channels);
   channelStore.setLastSeenChannelIds(payload.lastSeenServerChannelIds);
   inboxStore.setInboxes(payload.inbox);
+  userStore.addUser(payload.user);
   serverStore.setServers(payload.servers, payload.currentServerId);
   serverMemberStore.setServerMembers(payload.serverMembers);
   serverRoleStore.setRoles(payload.serverRoles);
   userPresenceStore.setPresences(payload.presences);
   messageMentionStore.setMentions(payload.messageMentions);
   accountStore.setCurrentUser(payload.user);
-  userStore.addUser(payload.user);
   friendStore.setFriends(payload.friends);
 
   loadCustomEmojisFromServers(payload.servers);

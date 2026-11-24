@@ -62,6 +62,14 @@ export const createServerChannelDrawer = () => {
           <Icon class={style.icon} name="dashboard_customize" outlined />
           <Item.Label>{t`Customize`}</Item.Label>
         </Item.Base>
+        <Item.Base
+          class={style.item}
+          selected={!!router.match("/app/servers/:serverId/members")}
+          href={`/app/servers/${serverStore.currentServerId}/members`}
+        >
+          <Icon class={style.icon} name="group" outlined />
+          <Item.Label>{t`Members`}</Item.Label>
+        </Item.Base>
       </div>,
       { childrenOnly: true },
     );
@@ -178,11 +186,12 @@ export const createServerChannelDrawer = () => {
 
   router.createMatchListener(
     "/app/servers/:serverId/customize",
-    () => {
-      rerenderHeader();
-    },
+    rerenderHeader,
     { signal },
   );
+  router.createMatchListener("/app/servers/:serverId/members", rerenderHeader, {
+    signal,
+  });
 
   const render = () => {
     hoverAnimator = new HoverAnimator(containerEl, [

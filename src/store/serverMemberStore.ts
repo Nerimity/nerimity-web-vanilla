@@ -39,6 +39,10 @@ export class ServerMember {
     return this.server?.createdById === this.userId;
   }
 
+  get displayName() {
+    return this.nickname || this.user?.username;
+  }
+
   /**
    *
    * @param perm
