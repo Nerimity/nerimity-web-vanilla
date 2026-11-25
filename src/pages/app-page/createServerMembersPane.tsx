@@ -11,6 +11,7 @@ import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
 import { serverStore } from "../../store/serverStore";
 import { resolveGradient } from "../../utils/color";
 import { formatTimestamp } from "../../utils/date";
+import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
 import { getAppHeader, type RouteContext } from "./AppPage";
 
@@ -110,6 +111,7 @@ const createServerMembersPane = ({ content }: RouteContext) => {
       { id: "member", title: t`Member`, orderable: true },
       { id: "joined", title: t`Joined`, orderable: true },
       { id: "joined_nerimity", title: t`Joined Nerimity`, orderable: true },
+      { id: "roles", title: t`Roles` },
     ],
     rows() {
       return pageMembers().map((m) => {
@@ -162,12 +164,41 @@ const createServerMembersPane = ({ content }: RouteContext) => {
       <>
         {currentPage} of {totalPages() || 1}
         <div class={style.buttons}>
-          <Button label={t`Previous`} primary={currentPage !== 1} />
-          <Button label={t`Next`} primary={currentPage !== totalPages()} />
+          <Button
+            data-action="previous"
+            label={t`Previous`}
+            primary={currentPage !== 1}
+          />
+          <Button
+            data-action="next"
+            label={t`Next`}
+            primary={currentPage !== totalPages()}
+          />
         </div>
       </>,
     );
   };
+
+  footer.addEventListener(
+    "click",
+    (e) => {
+      const button = closestFromEvent(e, `[data-action]`);
+      if (!button) return;
+      const action = button.dataset.action!;
+      const active = button.dataset.primary === "true";
+      if (action === "previous") {
+        if (!active) return;
+        currentPage -= 1;
+        updateQuery();
+      }
+      if (action === "next") {
+        if (!active) return;
+        currentPage += 1;
+        updateQuery();
+      }
+    },
+    { signal },
+  );
 
   storeEmitter.on(
     "ws:authStateUpdate",
@@ -177,10 +208,15 @@ const createServerMembersPane = ({ content }: RouteContext) => {
 
   serverStore.currentServerSortedRoles.onUpdate(table.rerender, signal);
 
-  input?.addEventListener("input", () => {
-    query = input.value;
-    updateQuery();
-  });
+  input?.addEventListener(
+    "input",
+    () => {
+      currentPage = 1;
+      query = input.value;
+      updateQuery();
+    },
+    { signal },
+  );
 
   Item.handler<Filter>({
     signal,
