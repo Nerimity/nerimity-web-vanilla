@@ -25,24 +25,27 @@ thead {
   border: solid 1px transparent;
   border-radius: var(--radius-8);
 
-  cursor: pointer;
   user-select: none;
   text-align: start;
   font-size: 12px;
   gap: 4px;
 
-  &.orderable:hover {
-    border: solid 1px var(--gray-700);
-    background-color: var(--gray-850);
-    .icon {
-      color: var(--text-color);
+  &.orderable {
+    cursor: pointer;
+
+    &:hover {
+      border: solid 1px var(--gray-700);
+      background-color: var(--gray-850);
+      .icon {
+        color: var(--text-color);
+      }
     }
-  }
-  &.orderable.highlight {
-    border: solid 1px var(--gray-700);
-    background-color: var(--gray-800);
-    .icon {
-      color: var(--text-color);
+    &.highlight {
+      border: solid 1px var(--gray-700);
+      background-color: var(--gray-800);
+      .icon {
+        color: var(--text-color);
+      }
     }
   }
   .icon {

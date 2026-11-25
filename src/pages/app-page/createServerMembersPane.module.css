@@ -51,3 +51,19 @@
     color: var(--gray-400);
   }
 }
+.roleCell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  .roleItem {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    padding-right: 6px;
+    border: solid 1px var(--gray-500);
+    border-radius: var(--radius-12);
+    background-color: var(--gray-850);
+    font-size: 12px;
+    gap: 4px;
+  }
+}

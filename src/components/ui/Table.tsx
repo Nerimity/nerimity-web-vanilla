@@ -42,7 +42,7 @@ const DesktopTable = (opts: CreateTableOpts) => {
                 ]}
               >
                 {h.title}
-                <Icon name="unfold_more" class={style.icon} />
+                {h.orderable && <Icon name="unfold_more" class={style.icon} />}
               </div>
             </th>
           ))}
@@ -71,6 +71,11 @@ export const createTable = (opts: CreateTableOpts) => {
       const headerEl = closestFromEvent(e, "[data-header-id]");
       if (!headerEl) return;
       const headerId = headerEl.dataset.headerId!;
+
+      if (!opts.headers.find((h) => h.id === headerId)?.orderable) {
+        return;
+      }
+
       const orderBy = opts.orderBy();
       const alreadySelected = orderBy.headerId === headerId;
 

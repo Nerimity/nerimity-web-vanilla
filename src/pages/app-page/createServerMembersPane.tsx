@@ -1,6 +1,7 @@
 import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
+import { CdnIcon } from "../../components/cdnIcon";
 import { Avatar } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { GradientText } from "../../components/ui/gradientText";
@@ -8,7 +9,9 @@ import { Input } from "../../components/ui/input";
 import { Item } from "../../components/ui/item";
 import { createTable, type OrderBy } from "../../components/ui/Table";
 import { ServerMember, serverMemberStore } from "../../store/serverMemberStore";
+import type { ServerRole } from "../../store/serverRoleStore";
 import { serverStore } from "../../store/serverStore";
+import type { User } from "../../store/userStore";
 import { resolveGradient } from "../../utils/color";
 import { formatTimestamp } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
@@ -117,24 +120,11 @@ const createServerMembersPane = ({ content }: RouteContext) => {
       return pageMembers().map((m) => {
         const user = m.user;
 
-        const topRoleColor = serverStore.memberTopColor(m);
-
-        const color =
-          resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
         return [
-          <div class={style.memberCell}>
-            <Avatar size={28} user={user} />
-            <div>
-              <GradientText class={style.displayName} color={color}>
-                {m.displayName}
-              </GradientText>
-              <div class={style.username}>
-                {user?.username}:<span class={style.dim}>{user?.tag}</span>
-              </div>
-            </div>
-          </div>,
+          <MemberCell member={m} user={user!} />,
           formatTimestamp(m.joinedAt),
           formatTimestamp(user?.joinedAt!),
+          <RoleCell member={m} />,
         ];
       });
     },
@@ -242,6 +232,55 @@ const createServerMembersPane = ({ content }: RouteContext) => {
   };
 
   return { destroy };
+};
+
+const MemberCell = ({ user, member }: { user: User; member: ServerMember }) => {
+  const topRoleColor = serverStore.memberTopColor(member);
+
+  const color =
+    resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
+  return (
+    <div class={style.memberCell}>
+      <Avatar size={28} user={user} />
+      <div>
+        <GradientText class={style.displayName} color={color}>
+          {member.displayName}
+        </GradientText>
+        <div class={style.username}>
+          {user?.username}:<span class={style.dim}>{user?.tag}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+const RoleCell = ({ member }: { member: ServerMember }) => {
+  // const topRoleColor = serverStore.memberTopColor(member);
+
+  // const color =
+  //   resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
+
+  const serverRoles = serverStore.currentServerSortedRoles.value();
+
+  const roles = serverRoles.filter((role) => member?.roleIds.includes(role.id));
+
+  return (
+    <div class={style.roleCell}>
+      {roles.map((r) => (
+        <RoleItem role={r} />
+      ))}
+    </div>
+  );
+};
+
+const RoleItem = (props: { role: ServerRole }) => {
+  const color = resolveGradient(props.role.gradient || props.role.hexColor);
+
+  return (
+    <div class={style.roleItem}>
+      <CdnIcon size={12} role={props.role} />
+      <GradientText color={color}>{props.role.name}</GradientText>
+    </div>
+  );
 };
 
 export default createServerMembersPane;
