@@ -2,6 +2,8 @@ import { t } from "@lingui/core/macro";
 import { matchSorter } from "match-sorter";
 
 import { CdnIcon } from "../../components/cdnIcon";
+import { Icon } from "../../components/icon";
+import { createEditServerRolesModal } from "../../components/modals/EditServerRolesModal";
 import { Avatar } from "../../components/ui/avatar";
 import { Button } from "../../components/ui/button";
 import { GradientText } from "../../components/ui/gradientText";
@@ -16,6 +18,7 @@ import { resolveGradient } from "../../utils/color";
 import { formatTimestamp } from "../../utils/date";
 import { closestFromEvent } from "../../utils/dom";
 import { storeEmitter } from "../../utils/EventEmitter";
+import { RolePermissionFlag } from "../../utils/RolePermissionFlag";
 import { getAppHeader, type RouteContext } from "./AppPage";
 
 import style from "./createServerMembersPane.module.css";
@@ -120,12 +123,15 @@ const createServerMembersPane = ({ content }: RouteContext) => {
       return pageMembers().map((m) => {
         const user = m.user;
 
-        return [
-          <MemberCell member={m} user={user!} />,
-          formatTimestamp(m.joinedAt),
-          formatTimestamp(user?.joinedAt!),
-          <RoleCell member={m} />,
-        ];
+        return {
+          id: user?.id!,
+          row: [
+            <MemberCell member={m} user={user!} />,
+            formatTimestamp(m.joinedAt),
+            formatTimestamp(user?.joinedAt!),
+            <RoleCell member={m} />,
+          ],
+        };
       });
     },
     onOrderChange(event) {
@@ -169,13 +175,23 @@ const createServerMembersPane = ({ content }: RouteContext) => {
     );
   };
 
-  footer.addEventListener(
+  el.addEventListener(
     "click",
     (e) => {
       const button = closestFromEvent(e, `[data-action]`);
       if (!button) return;
       const action = button.dataset.action!;
       const active = button.dataset.primary === "true";
+
+      if (action === "edit_role") {
+        const row = closestFromEvent(e, `[data-row-id]`);
+        const userId = row?.dataset.rowId;
+        if (!userId) return;
+        createEditServerRolesModal({
+          userId,
+        });
+      }
+
       if (action === "previous") {
         if (!active) return;
         currentPage -= 1;
@@ -254,20 +270,32 @@ const MemberCell = ({ user, member }: { user: User; member: ServerMember }) => {
   );
 };
 const RoleCell = ({ member }: { member: ServerMember }) => {
-  // const topRoleColor = serverStore.memberTopColor(member);
-
-  // const color =
-  //   resolveGradient(topRoleColor?.gradient || topRoleColor?.color) ?? "";
-
   const serverRoles = serverStore.currentServerSortedRoles.value();
 
   const roles = serverRoles.filter((role) => member?.roleIds.includes(role.id));
+
+  const server = serverStore.currentServer();
+  const selfMember = serverMemberStore.currentMember(server?.id!);
+
+  const isTargetInServer = !!member;
+  const isSelfCreator = server?.createdById === selfMember?.userId;
+  const selfHasManageRolesPerm = selfMember?.hasPerm(
+    RolePermissionFlag.manageRoles.bit,
+  );
+
+  const canEditRoles =
+    isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
 
   return (
     <div class={style.roleCell}>
       {roles.map((r) => (
         <RoleItem role={r} />
       ))}
+      {canEditRoles && (
+        <div data-action="edit_role" class={[style.roleItem, style.roleAdd]}>
+          <Icon name="add" />
+        </div>
+      )}
     </div>
   );
 };
@@ -277,7 +305,7 @@ const RoleItem = (props: { role: ServerRole }) => {
 
   return (
     <div class={style.roleItem}>
-      <CdnIcon size={12} role={props.role} />
+      {props.role.icon && <CdnIcon size={12} role={props.role} />}
       <GradientText color={color}>{props.role.name}</GradientText>
     </div>
   );

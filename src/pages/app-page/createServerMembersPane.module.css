@@ -63,7 +63,21 @@
     border: solid 1px var(--gray-500);
     border-radius: var(--radius-12);
     background-color: var(--gray-850);
+    user-select: none;
     font-size: 12px;
     gap: 4px;
+    &.roleAdd {
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--gray-700);
+      }
+      :global(.icon) {
+        font-size: 12px;
+      }
+    }
   }
 }

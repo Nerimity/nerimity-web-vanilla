@@ -1,6 +1,7 @@
 .table {
   width: 100%;
   border-spacing: 0;
+  table-layout: fixed;
 }
 thead {
   position: relative;
@@ -56,4 +57,5 @@ thead {
 
 .cell {
   padding: 4px 8px;
+  overflow-wrap: anywhere;
 }

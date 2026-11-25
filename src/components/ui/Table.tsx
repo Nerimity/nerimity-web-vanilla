@@ -20,7 +20,7 @@ export interface OrderBy {
 interface CreateTableOpts {
   signal: AbortSignal;
   headers: TableHeader[];
-  rows: () => any[][];
+  rows: () => { row: any[]; id: string }[];
   orderBy: () => OrderBy;
   onOrderChange?: (event: OrderBy) => void;
 }
@@ -50,8 +50,8 @@ const DesktopTable = (opts: CreateTableOpts) => {
       </thead>
       <tbody>
         {opts.rows().map((r) => (
-          <tr>
-            {r.map((c) => (
+          <tr data-row-id={r.id}>
+            {r.row.map((c) => (
               <td class={style.cell}>{c}</td>
             ))}
           </tr>

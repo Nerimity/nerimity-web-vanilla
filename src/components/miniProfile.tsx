@@ -30,6 +30,7 @@ import { FocusAnimator } from "../utils/FocusAnimator";
 import { getFont } from "../utils/font";
 import { HoverAnimator } from "../utils/HoverAnimator";
 import { portalElement } from "../utils/portal";
+import { RolePermissionFlag } from "../utils/RolePermissionFlag";
 import { router } from "../utils/router";
 import { UserBadgeValues, type UserBadge } from "../utils/UserBadgeFlag";
 import { Banner } from "./Banner";
@@ -654,10 +655,26 @@ const createRolesSection = (opts: {
       member?.roleIds.includes(role.id),
     );
 
+    const server = serverStore.currentServer();
+    const selfMember = serverMemberStore.currentMember(server?.id!);
+
+    const isTargetInServer = !!member;
+    const isSelfCreator = server?.createdById === selfMember?.userId;
+    const selfHasManageRolesPerm = selfMember?.hasPerm(
+      RolePermissionFlag.manageRoles.bit,
+    );
+
+    const canEditRoles =
+      isTargetInServer && (isSelfCreator || selfHasManageRolesPerm);
+
     if (!roles) return;
     rolesEl?.replaceChildren(
-      ...roles.map((role) => (<RoleItem role={role} />) as HTMLElement),
-      (<AddRoleItem />) as HTMLElement,
+      <>
+        {roles.map((role) => (
+          <RoleItem role={role} />
+        ))}
+        {canEditRoles && <AddRoleItem />}
+      </>,
     );
   };
 
