@@ -1,5 +1,10 @@
+import morphdom from "morphdom";
+
+import { isMobileWidth } from "../../config";
 import { closestFromEvent } from "../../utils/dom";
+import { storeEmitter } from "../../utils/EventEmitter";
 import { Icon } from "../icon";
+import { Item } from "./item";
 
 import style from "./Table.module.css";
 interface TableHeader {
@@ -61,6 +66,48 @@ const DesktopTable = (opts: CreateTableOpts) => {
   );
 };
 
+const MobileTable = (opts: CreateTableOpts) => {
+  const orderBy = opts.orderBy();
+  const header = (
+    <div>
+      <div>Sort By</div>
+      <div class={style.mobileSortContainer}>
+        {opts.headers
+          .filter((f) => f.orderable)
+          .map((h) => (
+            <Item.Base
+              handlePosition="bottom"
+              selected={orderBy.headerId === h.id}
+              data-header-id={h.id}
+            >
+              <Item.Label>{h.title}</Item.Label>
+              {h.orderable && <Icon name="unfold_more" class={style.icon} />}
+            </Item.Base>
+          ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      {header}
+
+      <div class={style.mobileRows}>
+        {opts.rows().map((r) => (
+          <div data-row-id={r.id}>
+            {r.row.map((c, i) => (
+              <div class={style.mobileCell}>
+                <div class={style.title}>{opts.headers[i]?.title}</div>
+                <div>{c}</div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export const createTable = (opts: CreateTableOpts) => {
   const signal = opts.signal;
   const tableEl = (<div></div>) as HTMLDivElement;
@@ -90,9 +137,14 @@ export const createTable = (opts: CreateTableOpts) => {
 
   const rerender = () => {
     if (signal.aborted) return;
-    tableEl.replaceChildren(DesktopTable(opts));
+
+    let el = isMobileWidth() ? MobileTable(opts) : DesktopTable(opts);
+
+    morphdom(tableEl, <div>{el}</div>, { childrenOnly: true });
   };
   rerender();
+
+  storeEmitter.on("drawer:modeChange", rerender, signal);
 
   return {
     element: tableEl,

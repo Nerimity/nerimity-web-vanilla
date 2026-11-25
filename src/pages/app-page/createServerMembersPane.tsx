@@ -192,15 +192,19 @@ const createServerMembersPane = ({ content }: RouteContext) => {
         });
       }
 
+      const parentEl = content.parentElement!;
+
       if (action === "previous") {
         if (!active) return;
         currentPage -= 1;
         updateQuery();
+        parentEl.scrollTop = 0;
       }
       if (action === "next") {
         if (!active) return;
         currentPage += 1;
         updateQuery();
+        parentEl.scrollTop = 0;
       }
     },
     { signal },
@@ -213,6 +217,15 @@ const createServerMembersPane = ({ content }: RouteContext) => {
   );
 
   serverStore.currentServerSortedRoles.onUpdate(table.rerender, signal);
+
+  storeEmitter.on(
+    "server:member_update",
+    (event) => {
+      if (event.serverId !== serverStore.currentServerId) return;
+      table.rerender();
+    },
+    signal,
+  );
 
   input?.addEventListener(
     "input",

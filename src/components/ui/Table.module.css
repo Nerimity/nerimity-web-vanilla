@@ -1,7 +1,7 @@
 .table {
   width: 100%;
-  border-spacing: 0;
   table-layout: fixed;
+  border-spacing: 0;
 }
 thead {
   position: relative;
@@ -58,4 +58,33 @@ thead {
 .cell {
   padding: 4px 8px;
   overflow-wrap: anywhere;
+}
+
+.mobileSortContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+  user-select: none;
+  gap: 4px;
+
+  :global(.icon) {
+    color: var(--gray-400);
+    font-size: 12px;
+  }
+}
+
+.mobileRows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileCell {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  gap: 2px;
+  .title {
+    font-weight: bold;
+  }
 }
