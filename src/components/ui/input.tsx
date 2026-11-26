@@ -13,6 +13,7 @@ import { debounce } from "../../utils/debounce";
 import { closestFromEvent } from "../../utils/dom";
 import type { CustomEmoji, EmojiData } from "../../utils/emojis";
 import { createResizeObserver } from "../../utils/observer";
+import { Icon } from "../icon";
 import { createTimeModal } from "../modals/TimeModal";
 import { Avatar } from "./avatar";
 import { Button } from "./button";
@@ -44,6 +45,7 @@ interface InputProps {
   showFormatBarEmoji?: boolean;
   showFormatBarGif?: boolean;
   footer?: any;
+  icon?: string;
   [key: string]: any;
 }
 export const Input = (props: InputProps) => {
@@ -77,6 +79,7 @@ export const Input = (props: InputProps) => {
 
       <div class={[style.inputInnerContainer, "inputContainer"]}>
         <div class={style.inputInnerInnerContainer}>
+          {props.icon && <Icon class={style.prefixIcon} name={props.icon} />}
           {prefix}
           <Dynamic
             id={id}

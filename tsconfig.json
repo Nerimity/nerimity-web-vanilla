@@ -26,5 +26,5 @@
       "@nerimity/jsx/*": ["./src/jsx-runtime/*"]
     }
   },
-  "include": ["src", "vite.config.ts", "zoomist.d.ts"]
+  "include": ["src", "vite.config.ts", "zoomist.d.ts", "turnstile.d.ts"]
 }

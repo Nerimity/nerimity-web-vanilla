@@ -41,6 +41,12 @@
 .inputInnerInnerContainer {
   display: flex;
   align-items: center;
+  .prefixIcon {
+    margin-left: 8px;
+    opacity: 0.6;
+    user-select: none;
+    font-size: 16px;
+  }
 }
 
 .formatBar {

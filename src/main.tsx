@@ -30,6 +30,7 @@ updateFavicon();
 
   const AppPage = () => import("./pages/app-page/AppPage");
   const LoginPage = () => import("./pages/LoginPage");
+  const RegisterPage = () => import("./pages/RegisterPage");
   const HomePage = () => import("./pages/HomePage");
   const TestingPage = () => import("./pages/TestingPage");
   const ServerInvitePage = () => import("./pages/ServerInvitePage");
@@ -81,6 +82,16 @@ updateFavicon();
           return location.replace("/app/");
         }
         navigate(LoginPage);
+      }),
+      { signal },
+    );
+    router.createMatchListener(
+      "/register",
+      handleEnter(() => {
+        if (getLocalItem("userToken")) {
+          return location.replace("/app/");
+        }
+        navigate(RegisterPage);
       }),
       { signal },
     );

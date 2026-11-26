@@ -15,11 +15,13 @@ const createLoginPage = () => {
   const form = (
     <form class={style.inputs}>
       <Input
+        icon="alternate_email"
         class="emailInput"
         label={t`Email / username:tag`}
         autocomplete="username"
       />
       <Input
+        icon="key"
         class="passwordInput"
         label={t`Password`}
         type="password"
@@ -35,6 +37,12 @@ const createLoginPage = () => {
       <div class={style.container}>
         <div class={style.title}>{t`Login to continue`}</div>
         {form}
+        <Button
+          icon="add"
+          href="/register"
+          label={t`Create an Account`}
+          hoverBorder
+        />
       </div>
     </div>
   ) as unknown as HTMLDivElement;
