@@ -48,7 +48,7 @@ msgid "Success"
 msgstr "Success"
 
 #: src/components/appHeader.tsx:44
-#: src/components/miniProfile.tsx:350
+#: src/components/miniProfile.tsx:351
 #: src/components/sidebar.tsx:869
 #: src/pages/app-page/settings/Settings.ts:55
 #: src/pages/app-page/settings/accountSettingsPage.tsx:204
@@ -78,7 +78,7 @@ msgstr "Notifications"
 
 #: src/components/context-menus/ChannelContextMenu.tsx:145
 #: src/components/context-menus/ServerContextMenu.tsx:164
-#: src/components/miniProfile.tsx:363
+#: src/components/miniProfile.tsx:364
 #: src/components/server-settings/createServerSettingsDrawer.tsx:21
 #: src/components/settings/createSettingsDrawer.tsx:16
 #: src/components/sidebar.tsx:899
@@ -243,14 +243,14 @@ msgstr "View Profile"
 
 #: src/components/context-menus/UserContextMenu.tsx:202
 #: src/components/drawer-left/inboxDrawer.tsx:450
-#: src/components/miniProfile.tsx:333
-#: src/components/miniProfile.tsx:357
+#: src/components/miniProfile.tsx:334
+#: src/components/miniProfile.tsx:358
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Notes"
 msgstr "Notes"
 
 #: src/components/context-menus/UserContextMenu.tsx:202
-#: src/components/miniProfile.tsx:333
+#: src/components/miniProfile.tsx:334
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:264
 msgid "Message"
 msgstr "Message"
@@ -391,12 +391,12 @@ msgid "Customize"
 msgstr "Customize"
 
 #: src/components/drawer-left/serverChannelDrawer.tsx:71
-#: src/pages/app-page/createServerMembersPane.tsx:196
+#: src/pages/app-page/createServerMembersPane.tsx:251
 msgid "Members"
 msgstr "Members"
 
 #: src/components/drawer-right/DrawerChannelNotice.tsx:16
-#: src/components/miniProfile.tsx:690
+#: src/components/miniProfile.tsx:707
 msgid "Notice"
 msgstr "Notice"
 
@@ -405,7 +405,7 @@ msgid "Files"
 msgstr "Files"
 
 #: src/components/drawer-right/RightDrawer.tsx:28
-#: src/pages/app-page/createServerMembersPane.tsx:89
+#: src/pages/app-page/createServerMembersPane.tsx:96
 msgid "Search"
 msgstr "Search"
 
@@ -696,68 +696,69 @@ msgstr "Slow Mode"
 msgid "{count} users are typing..."
 msgstr "{count} users are typing..."
 
-#: src/components/miniProfile.tsx:279
+#: src/components/miniProfile.tsx:280
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:167
 msgid "Follows You"
 msgstr "Follows You"
 
-#: src/components/miniProfile.tsx:288
+#: src/components/miniProfile.tsx:289
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:418
 msgid "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 msgstr "{followers, plural, =0 {<0>No</0> Followers} one {<1>#</1> Follower} other {<2>#</2> Followers}}"
 
-#: src/components/miniProfile.tsx:311
+#: src/components/miniProfile.tsx:312
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:411
 msgid "<0>{following}</0> Following"
 msgstr "<0>{following}</0> Following"
 
-#: src/components/miniProfile.tsx:323
+#: src/components/miniProfile.tsx:324
 msgid "Full Profile"
 msgstr "Full Profile"
 
-#: src/components/miniProfile.tsx:370
+#: src/components/miniProfile.tsx:371
 #: src/components/modals/LogoutModal.tsx:40
 #: src/components/modals/LogoutModal.tsx:53
 #: src/components/modals/createAuthErrorModal.tsx:53
 msgid "Logout"
 msgstr "Logout"
 
-#: src/components/miniProfile.tsx:383
+#: src/components/miniProfile.tsx:384
+#: src/pages/app-page/createServerMembersPane.tsx:120
 #: src/pages/app-page/server-settings/ServerSettings.ts:64
 msgid "Roles"
 msgstr "Roles"
 
-#: src/components/miniProfile.tsx:397
-#: src/pages/app-page/createServerMembersPane.tsx:111
+#: src/components/miniProfile.tsx:398
+#: src/pages/app-page/createServerMembersPane.tsx:118
 msgid "Joined"
 msgstr "Joined"
 
-#: src/components/miniProfile.tsx:414
+#: src/components/miniProfile.tsx:415
 msgid "About Me"
 msgstr "About Me"
 
-#: src/components/miniProfile.tsx:425
+#: src/components/miniProfile.tsx:426
 msgid "Latest Post"
 msgstr "Latest Post"
 
-#: src/components/miniProfile.tsx:740
+#: src/components/miniProfile.tsx:757
 msgid "Appear As Offline"
 msgstr "Appear As Offline"
 
-#: src/components/miniProfile.tsx:827
-#: src/components/miniProfile.tsx:870
+#: src/components/miniProfile.tsx:844
+#: src/components/miniProfile.tsx:887
 msgid "Set Custom Status"
 msgstr "Set Custom Status"
 
-#: src/components/miniProfile.tsx:876
+#: src/components/miniProfile.tsx:893
 msgid "What are you up to?"
 msgstr "What are you up to?"
 
-#: src/components/miniProfile.tsx:881
+#: src/components/miniProfile.tsx:898
 msgid "Don't save"
 msgstr "Don't save"
 
-#: src/components/miniProfile.tsx:882
+#: src/components/miniProfile.tsx:899
 #: src/components/settings-actions/SettingsActions.tsx:26
 #: src/components/settings-actions/SettingsActions.tsx:43
 msgid "Save"
@@ -1511,7 +1512,7 @@ msgstr "Recent Themes"
 
 #: src/pages/app-page/createExploreRoute.tsx:671
 #: src/pages/app-page/createExploreRoute.tsx:923
-#: src/pages/app-page/createServerMembersPane.tsx:93
+#: src/pages/app-page/createServerMembersPane.tsx:100
 msgid "All"
 msgstr "All"
 
@@ -1613,19 +1614,19 @@ msgstr "Unknown notification"
 msgid "Continue to {channelName}"
 msgstr "Continue to {channelName}"
 
-#: src/pages/app-page/createServerMembersPane.tsx:97
+#: src/pages/app-page/createServerMembersPane.tsx:104
 msgid "24 Hours"
 msgstr "24 Hours"
 
-#: src/pages/app-page/createServerMembersPane.tsx:101
+#: src/pages/app-page/createServerMembersPane.tsx:108
 msgid "Muted"
 msgstr "Muted"
 
-#: src/pages/app-page/createServerMembersPane.tsx:110
+#: src/pages/app-page/createServerMembersPane.tsx:117
 msgid "Member"
 msgstr "Member"
 
-#: src/pages/app-page/createServerMembersPane.tsx:112
+#: src/pages/app-page/createServerMembersPane.tsx:119
 #: src/pages/app-page/profile-pane/createProfilePane.tsx:633
 msgid "Joined Nerimity"
 msgstr "Joined Nerimity"
@@ -1634,7 +1635,7 @@ msgstr "Joined Nerimity"
 msgid "Previous"
 msgstr "Previous"
 
-#: src/pages/app-page/createServerMembersPane.tsx:166
+#: src/pages/app-page/createServerMembersPane.tsx:170
 msgid "Next"
 msgstr "Next"
 
