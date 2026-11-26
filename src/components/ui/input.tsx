@@ -33,6 +33,7 @@ interface InputProps {
     | "one-time-code"
     | "new-password"
     | "email"
+    | "username"
     | "off";
   placeholder?: string;
   id?: string;

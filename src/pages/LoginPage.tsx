@@ -14,7 +14,11 @@ const createLoginPage = () => {
   const app = document.getElementById("app")!;
   const form = (
     <form class={style.inputs}>
-      <Input class="emailInput" label={t`Email`} autocomplete="email" />
+      <Input
+        class="emailInput"
+        label={t`Email / username:tag`}
+        autocomplete="username"
+      />
       <Input
         class="passwordInput"
         label={t`Password`}
