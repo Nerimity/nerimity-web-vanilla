@@ -23,7 +23,6 @@ export const createCaptcha = (props: {
   onTimeout?: () => void;
   retry?: "auto" | "never" | undefined;
 }) => {
-  loadCaptchaScript();
   const el = (<div id="turnstile-container"></div>) as HTMLDivElement;
   let widgetId: string | undefined = undefined;
   const onReady = () => {
@@ -39,8 +38,10 @@ export const createCaptcha = (props: {
     });
   };
   if (ready()) {
-    ready();
+    onReady();
   }
+  loadCaptchaScript();
+
   window.onloadTurnstileCallback = onReady;
 
   const reset = () => {

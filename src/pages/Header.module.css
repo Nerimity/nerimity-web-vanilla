@@ -1,0 +1,76 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: 12px;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  max-width: 1000px;
+  height: 60px;
+  border-radius: var(--radius-16);
+  background-color: var(--gray-850);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-16);
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  gap: 6px;
+  &:hover {
+    background-color: var(--gray-800);
+  }
+  .title {
+    padding-right: 6px;
+  }
+  .logo {
+    height: 100%;
+    padding: 6px;
+  }
+}
+
+.right {
+  display: flex;
+  margin: 6px;
+  margin-left: auto;
+  gap: 8px;
+  :global(.button) {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+.skeleton {
+  width: 110px;
+  height: 100%;
+  border-radius: var(--radius-12);
+}
+.skeletonAvatar {
+  align-self: center;
+  width: 32px;
+  height: 32px;
+  margin-right: 6px;
+  margin-left: 4px;
+  border-radius: var(--radius-max);
+}
+
+.avatar {
+  align-self: center;
+  margin-right: 6px;
+  margin-left: 4px;
+}
+
+@media (max-width: 520px) {
+  .title {
+    display: none;
+  }
+  .debugBgn {
+    display: none;
+  }
+}

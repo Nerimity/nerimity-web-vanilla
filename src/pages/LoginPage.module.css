@@ -3,7 +3,6 @@
   overflow: auto;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
   width: 100%;
   min-height: 100%;
   .container {
@@ -13,6 +12,7 @@
     max-width: 256px;
     padding: 8px;
     padding-left: 8px;
+    margin-top: 60px;
   }
   .inputs {
     display: flex;

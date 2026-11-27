@@ -20,6 +20,8 @@ export default defineConfig({
     devRerenderHighlighter(),
     googleFontsLocal({
       icons: [
+        "contract",
+        "groups",
         "unfold_more",
         "dashboard_customize",
         "mark_chat_read",

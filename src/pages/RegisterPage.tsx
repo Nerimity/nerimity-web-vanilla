@@ -6,6 +6,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { registerRequest } from "../services/authService";
 import { setLocalItem } from "../utils/localStorage";
+import { Header } from "./Header";
 
 import style from "./RegisterPage.module.css";
 
@@ -63,6 +64,7 @@ const createRegisterPage = () => {
 
   const contentPane = (
     <div class={style.page}>
+      <Header padding signal={abortController.signal} />
       <div class={style.container}>
         <div class={style.title}>{t`Welcome to Nerimity!`}</div>
         <Notice

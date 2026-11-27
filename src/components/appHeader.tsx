@@ -203,7 +203,7 @@ export const createAppHeader = () => {
 
   const destroy = () => {
     abortController.abort();
-    container.remove();
+    container?.remove?.();
     headerContainer.remove();
     (container as any) = null;
     (headerContainer as any) = null;

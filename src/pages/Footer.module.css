@@ -1,0 +1,52 @@
+.footerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding-top: 12px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1000px;
+  padding: 8px;
+  border-radius: var(--radius-18);
+  background-color: var(--gray-850);
+  gap: 6px;
+}
+
+.first {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: space-between;
+}
+.nerimity {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--radius-16);
+  gap: 4px;
+  &:hover {
+    background-color: var(--gray-800);
+  }
+  .logo {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 4px;
+  gap: 8px;
+}
+
+.third {
+  display: flex;
+  margin-top: 12px;
+  gap: 8px;
+}

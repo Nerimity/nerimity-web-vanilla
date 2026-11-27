@@ -1,18 +1,12 @@
 import { t } from "@lingui/core/macro";
 
 import { Icon } from "../components/icon";
-import { Avatar } from "../components/ui/avatar";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/skeleton";
-import { isDev } from "../config";
-import { request } from "../services/request";
-import type { UserDetails } from "../services/userService";
-import { closestFromEvent } from "../utils/dom";
-import { getLocalItem } from "../utils/localStorage";
+import { Footer } from "./Footer";
+import { Header } from "./Header";
 
 import style from "./HomePage.module.css";
-
-let details: UserDetails | null = null;
 
 const SourceCodeButton = () => (
   <Button
@@ -47,19 +41,6 @@ const LoggedOutActions = () => (
 );
 const LoggedInActions = () => (
   <div class={style.loggedInActions}>
-    {details && (
-      <div class={style.userDetailsOuter}>
-        <div class={style.userDetails}>
-          <Avatar
-            hoverSelector={`.${style.userDetailsOuter}`}
-            user={details.user}
-            size={24}
-          />
-          <span class={style.userName}>{details.user.username}</span>
-        </div>
-      </div>
-    )}
-
     <div class={style.buttons}>
       <Button
         label={t`Open App`}
@@ -68,14 +49,7 @@ const LoggedInActions = () => (
         primary
         href="/app"
       />
-      <Button
-        component="a"
-        hoverBorder
-        icon={t`logout`}
-        href="/logout"
-        label="Logout"
-        alert
-      />
+
       <SourceCodeButton />
     </div>
   </div>
@@ -96,6 +70,7 @@ const Features = () =>
     { icon: "volunteer_activism", label: t`Runs on donations` },
     { icon: "code", label: t`Full source code on GitHub` },
     { icon: "account_circle", label: t`Express yourself with borders` },
+    { icon: "groups", label: t`Join a clan and show its tag` },
   ] satisfies Feature[];
 
 const FeatureCard = ({ feature }: { feature: Feature }) => {
@@ -108,53 +83,23 @@ const FeatureCard = ({ feature }: { feature: Feature }) => {
 };
 
 const FeaturesCard = () => {
-  let currentIndex = 0;
-  const getCurrentFeature = () => Features()[currentIndex]!;
-
-  const cardAreaEl = (
-    <div class={"cardArea"}>
-      <FeatureCard feature={getCurrentFeature()} />
-    </div>
-  ) as HTMLDivElement;
   const el = (
     <div class={style.featuresCard}>
-      {cardAreaEl}
-      <div class={style.featureButtons}>
-        <Button data-action="back" icon="chevron_backward" />
-        <Button data-action="forward" icon="chevron_forward" />
-      </div>
+      {Features().map((f) => (
+        <FeatureCard feature={f} />
+      ))}
     </div>
   );
-
-  el.addEventListener("click", (e) => {
-    const actionButton = closestFromEvent(e, "[data-action]");
-    if (!actionButton) return;
-    const action = actionButton.dataset.action!;
-    if (action === "back") {
-      if (currentIndex === 0) {
-        currentIndex = Features().length - 1;
-      } else {
-        currentIndex--;
-      }
-    }
-    if (action == "forward") {
-      if (currentIndex === Features().length - 1) {
-        currentIndex = 0;
-      } else {
-        currentIndex++;
-      }
-    }
-    cardAreaEl.replaceChildren(<FeatureCard feature={getCurrentFeature()} />);
-  });
 
   return el;
 };
 
 const createHomePage = () => {
+  const ac = new AbortController();
+  const { signal } = ac;
   const loggedInAs = (
     <div class={style.authArea}>
       <div class={style.skeletons}>
-        <Skeleton class={style.authLoadingSkeleton1} />
         <Skeleton class={style.authLoadingSkeleton} />
       </div>
     </div>
@@ -166,48 +111,30 @@ const createHomePage = () => {
     );
   };
 
-  if (!getLocalItem("userToken")) {
-    renderActions("LoggedOutActions");
-  } else {
-    request<UserDetails>("/users", { useToken: true }).then(([res, err]) => {
-      if (err) {
-        alert(err.message);
-      } else {
-        details = res;
-      }
-      renderActions("LoggedInActions");
-    });
-  }
-
   const app = document.getElementById("app")!;
   const content = (
     <div class={style.homeContainer}>
       <div class={style.innerContainer}>
-        <div class={style.header}>
-          <img class={style.logo} src="/logo.png" />
-          <div class={style.info}>
-            <div class={style.title}>Nerimity</div>
-            <div
-              class={style.description}
-            >{t`Nerimity offers an elegant and feature-rich experience that sets it apart.`}</div>
-            {loggedInAs}
+        <Header onType={renderActions} signal={signal} />
+        <div class={style.block}>
+          <div class={style.header}>
+            <div class={style.info}>
+              <div class={style.title}>{t`A modern and sleek chat app.`}</div>
+              <div
+                class={style.description}
+              >{t`Nerimity offers an elegant and feature-rich experience that sets it apart.`}</div>
+              {loggedInAs}
+            </div>
           </div>
         </div>
+        <FeaturesCard />
+        <Footer />
       </div>
-      <FeaturesCard />
-      {isDev && (
-        <Button
-          icon="bug_report"
-          hoverBorder
-          component="a"
-          href="/testing"
-          label="Testing"
-        />
-      )}
     </div>
   ) as HTMLFormElement;
 
   const destroy = () => {
+    ac.abort();
     content.remove();
   };
 

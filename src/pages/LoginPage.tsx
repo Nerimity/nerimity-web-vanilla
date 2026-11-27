@@ -7,10 +7,13 @@ import { createGoogleAccountLink } from "../services/userService";
 import { closestFromEvent } from "../utils/dom";
 import { setLocalItem } from "../utils/localStorage";
 import { router } from "../utils/router";
+import { Header } from "./Header";
 
 import style from "./LoginPage.module.css";
 
 const createLoginPage = () => {
+  const abortController = new AbortController();
+
   const getQuery = router.query<{ redirect?: string; code?: string }>();
 
   const app = document.getElementById("app")!;
@@ -38,6 +41,7 @@ const createLoginPage = () => {
 
   const contentPane = (
     <div class={style.loginPage}>
+      <Header padding signal={abortController.signal} />
       <div class={style.container}>
         <div class={style.title}>{t`Login to continue`}</div>
         {form}
@@ -58,8 +62,6 @@ const createLoginPage = () => {
       </div>
     </div>
   ) as unknown as HTMLDivElement;
-
-  const abortController = new AbortController();
 
   let loggingIn = false;
 
