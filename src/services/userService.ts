@@ -288,3 +288,12 @@ export const postNotificationSettings = (update: PostNotificationSettings) => {
     body: update,
   });
 };
+
+export function createGoogleAccountLink(login?: boolean) {
+  return request<string>(`/connections/google/create-link`, {
+    params: login ? { login } : undefined,
+    method: "GET",
+    text: true,
+    useToken: true,
+  });
+}

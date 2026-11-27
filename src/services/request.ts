@@ -53,7 +53,7 @@ export async function request<T, E extends object = {}>(
     return [null, error as Error & E] as const;
   }
   if (opts?.text) {
-    return [res.text() as T, null] as const;
+    return [(await res.text()) as T, null] as const;
   }
 
   const json = await res.json();

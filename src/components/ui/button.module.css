@@ -93,4 +93,8 @@
     color: var(--primary-color);
     font-size: 18px;
   }
+  .imgIcon {
+    width: 18px;
+    height: 18px;
+  }
 }

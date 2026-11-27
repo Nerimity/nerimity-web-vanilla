@@ -6,6 +6,7 @@ import style from "./button.module.css";
 
 interface ButtonProps {
   icon?: string;
+  iconSrc?: string;
   label?: string;
   class?: string | (string | false | undefined)[];
   hoverBorder?: boolean;
@@ -30,6 +31,7 @@ export const Button = (props: ButtonProps) => {
     success,
     primary,
     label,
+    iconSrc,
     icon,
     class: className,
     ...rest
@@ -49,6 +51,7 @@ export const Button = (props: ButtonProps) => {
       data-primary={primary}
       {...rest}
     >
+      {iconSrc && <img class={[style.imgIcon, "imgIcon"]} src={iconSrc} />}
       {icon && (
         <Icon
           outlined={props.iconOutlined}

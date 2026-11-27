@@ -3,13 +3,15 @@ import { t } from "@lingui/core/macro";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { postLogin } from "../services/authService";
+import { createGoogleAccountLink } from "../services/userService";
+import { closestFromEvent } from "../utils/dom";
 import { setLocalItem } from "../utils/localStorage";
 import { router } from "../utils/router";
 
 import style from "./LoginPage.module.css";
 
 const createLoginPage = () => {
-  const getQuery = router.query<{ redirect?: string }>();
+  const getQuery = router.query<{ redirect?: string; code?: string }>();
 
   const app = document.getElementById("app")!;
   const form = (
@@ -32,17 +34,27 @@ const createLoginPage = () => {
     </form>
   ) as unknown as HTMLFormElement;
 
+  let platform = "Google";
+
   const contentPane = (
     <div class={style.loginPage}>
       <div class={style.container}>
         <div class={style.title}>{t`Login to continue`}</div>
         {form}
-        <Button
-          icon="add"
-          href="/register"
-          label={t`Create an Account`}
-          hoverBorder
-        />
+        <div class={style.otherButtons}>
+          <Button
+            iconSrc="/third-party/google.svg"
+            data-action="login_google"
+
+            label={t`Login with ${platform}`}
+          />
+          <Button
+            href="/register"
+            icon="add"
+            hoverBorder
+            label={t`Create an Account`}
+          />
+        </div>
       </div>
     </div>
   ) as unknown as HTMLDivElement;
@@ -73,7 +85,7 @@ const createLoginPage = () => {
     loggingIn = false;
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (googleCode?: string) => {
     if (loggingIn) return;
     loggingIn = true;
     resetError();
@@ -82,7 +94,7 @@ const createLoginPage = () => {
     const email = emailInput.value as string;
     const password = passwordInput.value as string;
 
-    const [res, err] = await postLogin({ email, password });
+    const [res, err] = await postLogin({ email, password, googleCode });
     if (err) {
       setError(err.message);
       return;
@@ -105,6 +117,11 @@ const createLoginPage = () => {
     location.replace("/app/");
   };
 
+  if (getQuery().code) {
+    handleLogin(getQuery().code);
+    router.setQuery("code", null);
+  }
+
   form.addEventListener(
     "submit",
     (e) => {
@@ -115,6 +132,16 @@ const createLoginPage = () => {
       signal: abortController.signal,
     },
   );
+
+  contentPane.addEventListener("click", (e) => {
+    if (closestFromEvent(e, `[data-action="login_google"]`)) {
+      createGoogleAccountLink(true).then(([link]) => {
+        if (link) {
+          window.location.href = link;
+        }
+      });
+    }
+  });
 
   const destroy = () => {
     abortController.abort();
