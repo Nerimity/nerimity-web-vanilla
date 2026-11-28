@@ -4,6 +4,7 @@ import checker from "vite-plugin-checker";
 
 import { shikiLangsPlugin } from "./vite-plugins/vitePluginCopyShikiLangs.ts";
 import { googleFontsLocal } from "./vite-plugins/vitePluginGoogleFontsLocal.ts";
+import { noRawGray } from "./vite-plugins/vitePluginNoRawGray.ts";
 import { devRerenderHighlighter } from "./vite-plugins/vitePluginRerenderHighlighter.ts";
 
 export default defineConfig({
@@ -16,6 +17,7 @@ export default defineConfig({
   },
   plugins: [
     checker({ typescript: true, oxlint: true, enableBuild: false }),
+    noRawGray(),
     shikiLangsPlugin(),
     devRerenderHighlighter(),
     googleFontsLocal({

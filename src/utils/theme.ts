@@ -109,6 +109,22 @@ export const DefaultTheme = {
 };
 
 export type Theme = typeof DefaultTheme;
+// const categorizedThemes: { [key: string]: (keyof Theme)[] } = {
+//   Surface: [],
+//   Overlays: [],
+//   Input: [],
+//   MarkupBar: [],
+//   Message: [],
+//   Accent: [],
+//   Alert: [],
+//   Warn: [],
+//   Success: [],
+//   Status: [],
+//   Text: [],
+//   Markup: [],
+//   Drawer: [],
+//   Other: [],
+// };
 
 let currentTheme: Partial<Theme> = {
   ...DefaultTheme,
