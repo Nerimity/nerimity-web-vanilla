@@ -64,11 +64,11 @@
   &.expandable {
     &[data-expanded="true"] {
       .actionIcon {
-        rotate: 180deg;
+        rotate: 0deg;
       }
     }
     .actionIcon {
-      rotate: 0deg;
+      rotate: 180deg;
     }
   }
 
@@ -83,7 +83,11 @@
         &:before {
           background: linear-gradient(
             100deg,
-            color-mix(in srgb, var(--alert-color) 8%, var(--surface-overlay-bg)),
+            color-mix(
+              in srgb,
+              var(--alert-color) 8%,
+              var(--surface-overlay-bg)
+            ),
             var(--surface-overlay-bg)
           );
         }
