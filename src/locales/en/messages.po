@@ -334,6 +334,7 @@ msgstr "New Owner"
 
 #: src/components/context-menus/UserContextMenu.tsx:401
 #: src/components/modals/ConfirmPasswordModal.tsx:42
+#: src/pages/RegisterPage.tsx:50
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:63
 msgid "Confirm Password"
 msgstr "Confirm Password"
@@ -1185,9 +1186,10 @@ msgid "You are suspended."
 msgstr "You are suspended."
 
 #: src/components/modals/createAuthErrorModal.tsx:65
-#: src/pages/HomePage.tsx:43
-#: src/pages/LoginPage.tsx:25
-#: src/pages/LoginPage.tsx:60
+#: src/pages/HomePage.tsx:37
+#: src/pages/LoginPage.tsx:36
+#: src/pages/LoginPage.tsx:86
+#: src/pages/RegisterPage.tsx:80
 msgid "Login"
 msgstr "Login"
 
@@ -1376,78 +1378,142 @@ msgstr "Understood"
 msgid "Last online {date}"
 msgstr "Last online {date}"
 
-#: src/pages/HomePage.tsx:23
+#: src/pages/Footer.tsx:84
+msgid "Privacy Policy"
+msgstr "Privacy Policy"
+
+#: src/pages/Footer.tsx:85
+msgid "Terms & Conditions"
+msgstr "Terms & Conditions"
+
+#: src/pages/HomePage.tsx:17
 msgid "Source Code"
 msgstr "Source Code"
 
-#: src/pages/HomePage.tsx:35
+#: src/pages/HomePage.tsx:29
 msgid "Join Now"
 msgstr "Join Now"
 
-#: src/pages/HomePage.tsx:65
+#: src/pages/HomePage.tsx:46
 msgid "Open App"
 msgstr "Open App"
 
-#: src/pages/HomePage.tsx:74
-msgid "logout"
-msgstr "logout"
-
-#: src/pages/HomePage.tsx:90
+#: src/pages/HomePage.tsx:64
 msgid "Free animated avatars & emojis"
 msgstr "Free animated avatars & emojis"
 
-#: src/pages/HomePage.tsx:91
+#: src/pages/HomePage.tsx:65
 msgid "Sleek design"
 msgstr "Sleek design"
 
-#: src/pages/HomePage.tsx:92
+#: src/pages/HomePage.tsx:66
 msgid "Change your tag for free"
 msgstr "Change your tag for free"
 
-#: src/pages/HomePage.tsx:93
+#: src/pages/HomePage.tsx:67
 msgid "Create posts on your profile"
 msgstr "Create posts on your profile"
 
-#: src/pages/HomePage.tsx:94
+#: src/pages/HomePage.tsx:68
 msgid "Create your own community"
 msgstr "Create your own community"
 
-#: src/pages/HomePage.tsx:95
+#: src/pages/HomePage.tsx:69
 msgid "Find new communities"
 msgstr "Find new communities"
 
-#: src/pages/HomePage.tsx:96
+#: src/pages/HomePage.tsx:70
 msgid "Runs on donations"
 msgstr "Runs on donations"
 
-#: src/pages/HomePage.tsx:97
+#: src/pages/HomePage.tsx:71
 msgid "Full source code on GitHub"
 msgstr "Full source code on GitHub"
 
-#: src/pages/HomePage.tsx:98
+#: src/pages/HomePage.tsx:72
 msgid "Express yourself with borders"
 msgstr "Express yourself with borders"
 
-#: src/pages/HomePage.tsx:192
+#: src/pages/HomePage.tsx:73
+msgid "Join a clan and show its tag"
+msgstr "Join a clan and show its tag"
+
+#: src/pages/HomePage.tsx:122
+msgid "A modern and sleek chat app."
+msgstr "A modern and sleek chat app."
+
+#: src/pages/HomePage.tsx:125
 msgid "Nerimity offers an elegant and feature-rich experience that sets it apart."
 msgstr "Nerimity offers an elegant and feature-rich experience that sets it apart."
 
-#: src/pages/LoginPage.tsx:17
+#: src/pages/LoginPage.tsx:25
+msgid "Email / username:tag"
+msgstr "Email / username:tag"
+
+#: src/pages/LoginPage.tsx:31
+#: src/pages/RegisterPage.tsx:43
+msgid "Password"
+msgstr "Password"
+
+#: src/pages/LoginPage.tsx:46
+msgid "Login to continue"
+msgstr "Login to continue"
+
+#: src/pages/LoginPage.tsx:53
+msgid "Login with {platform}"
+msgstr "Login with {platform}"
+
+#: src/pages/LoginPage.tsx:59
+msgid "Create an Account"
+msgstr "Create an Account"
+
+#: src/pages/LoginPage.tsx:94
+msgid "Logging in..."
+msgstr "Logging in..."
+
+#: src/pages/RegisterPage.tsx:31
 #: src/pages/app-page/settings/accountSettingsPage.tsx:29
 msgid "Email"
 msgstr "Email"
 
-#: src/pages/LoginPage.tsx:20
-msgid "Password"
-msgstr "Password"
+#: src/pages/RegisterPage.tsx:37
+#: src/pages/app-page/settings/DeleteAccountModal.tsx:42
+#: src/pages/app-page/settings/accountSettingsPage.tsx:30
+msgid "Username"
+msgstr "Username"
 
-#: src/pages/LoginPage.tsx:32
-msgid "Login to continue"
-msgstr "Login to continue"
+#: src/pages/RegisterPage.tsx:59
+#: src/pages/RegisterPage.tsx:114
+msgid "Register"
+msgstr "Register"
 
-#: src/pages/LoginPage.tsx:68
-msgid "Logging in..."
-msgstr "Logging in..."
+#: src/pages/RegisterPage.tsx:69
+msgid "Welcome to Nerimity!"
+msgstr "Welcome to Nerimity!"
+
+#: src/pages/RegisterPage.tsx:73
+msgid "Do not be toxic."
+msgstr "Do not be toxic."
+
+#: src/pages/RegisterPage.tsx:74
+msgid "No NSFW content."
+msgstr "No NSFW content."
+
+#: src/pages/RegisterPage.tsx:75
+msgid "You must be 14 or older."
+msgstr "You must be 14 or older."
+
+#: src/pages/RegisterPage.tsx:127
+msgid "Confirm password does not match."
+msgstr "Confirm password does not match."
+
+#: src/pages/RegisterPage.tsx:132
+msgid "Password must be less than 72 characters."
+msgstr "Password must be less than 72 characters."
+
+#: src/pages/RegisterPage.tsx:137
+msgid "Registering..."
+msgstr "Registering..."
 
 #: src/pages/app-page/createExploreRoute.tsx:106
 #: src/pages/app-page/createExploreRoute.tsx:204
@@ -2052,11 +2118,6 @@ msgstr "What will get deleted:"
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:41
 msgid "Email Address"
 msgstr "Email Address"
-
-#: src/pages/app-page/settings/DeleteAccountModal.tsx:42
-#: src/pages/app-page/settings/accountSettingsPage.tsx:30
-msgid "Username"
-msgstr "Username"
 
 #: src/pages/app-page/settings/DeleteAccountModal.tsx:43
 msgid "IP Address"

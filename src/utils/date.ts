@@ -1,7 +1,9 @@
 import { t } from "@lingui/core/macro";
-let timeFormat: number = 24;
+
+import { getLocalItem } from "./localStorage";
 
 export const formatters = (() => {
+  let timeFormat = getLocalItem("timeFormat");
   // const lang = getCurrentLanguageISO();
   // const options = [lang, "en-GB"];
   const options = ["en-GB"];
@@ -124,13 +126,15 @@ export function formatMillisRemainingNarrow(millis: number) {
 
 // hh:mm | Yesterday at hh:mm | dd/mm/yyyy at hh:mm
 export function friendlyTimestamp(timestamp: number): string {
+  let timeFormat = getLocalItem("timeFormat");
+
   const date = new Date(timestamp);
   const now = new Date();
 
   const time = date.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false,
+    hour12: timeFormat === 12,
   });
 
   const isToday =

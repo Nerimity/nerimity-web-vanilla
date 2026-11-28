@@ -27,6 +27,7 @@ interface LocalStorageData {
   leftDrawerWidth: number;
   sidebarWidth: number;
   theme: Partial<Theme>;
+  timeFormat: 12 | 24;
 }
 
 export type LocalStorageKeys = keyof LocalStorageData;
@@ -34,6 +35,7 @@ export type LocalStorageKeys = keyof LocalStorageData;
 const defaultValues: Partial<LocalStorageData> = {
   soundNotification: true,
   soundNotificationVolume: 10,
+  timeFormat: 24,
   soundNotificationTypes: {
     MESSAGE: "default",
     MESSAGE_MENTION: "default",
