@@ -5,7 +5,7 @@
   margin-top: 26px;
   margin-bottom: 4px;
   border-radius: var(--radius-max);
-  background: var(--gray-850);
+  background: var(--surface-raised-bg);
   gap: 8px;
   &:first-child {
     margin-top: 12px;
@@ -19,7 +19,7 @@
     font-weight: bold;
   }
   .subtitle {
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 12px;
   }
 }
@@ -67,7 +67,7 @@
   font-weight: 600;
   gap: 12px;
   .icon {
-    color: var(--gray-400);
+    color: var(--text-muted-color);
     font-size: 32px;
   }
 }

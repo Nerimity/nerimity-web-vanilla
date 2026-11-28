@@ -12,7 +12,7 @@
   max-width: 1000px;
   height: 60px;
   border-radius: var(--radius-16);
-  background-color: var(--gray-850);
+  background-color: var(--surface-raised-bg);
 }
 
 .left {
@@ -24,7 +24,7 @@
   font-weight: bold;
   gap: 6px;
   &:hover {
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
   }
   .title {
     padding-right: 6px;

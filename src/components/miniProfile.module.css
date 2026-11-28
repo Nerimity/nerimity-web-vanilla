@@ -100,7 +100,7 @@
   :global(.postItem) {
     margin-top: 12px;
     &:hover {
-      background: var(--gray-900);
+      background: var(--surface-bg);
     }
   }
 }

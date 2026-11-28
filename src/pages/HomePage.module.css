@@ -48,7 +48,7 @@
     font-weight: bold;
   }
   .description {
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
   }
 }
 
@@ -91,7 +91,7 @@
 }
 
 .loggedInLabel {
-  color: var(--gray-300);
+  color: var(--text-secondary-color);
   font-size: 13px;
 }
 
@@ -102,7 +102,7 @@
   width: 100%;
   padding: 12px;
   border-radius: 30px;
-  background-color: var(--gray-900);
+  background-color: var(--surface-bg);
   gap: 18px;
 }
 
@@ -117,11 +117,11 @@
   flex-shrink: 0;
   padding: 10px;
   border-radius: var(--radius-max);
-  background-color: var(--gray-800);
+  background-color: var(--surface-overlay-bg);
   font-size: 24px;
 }
 
 .featureLabel {
   line-height: 1.4;
-  color: var(--gray-300);
+  color: var(--text-secondary-color);
 }

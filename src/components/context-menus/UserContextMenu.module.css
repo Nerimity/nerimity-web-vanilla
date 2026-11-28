@@ -14,14 +14,14 @@
     align-items: center;
     padding: 8px;
     border-radius: var(--radius-max);
-    background-color: var(--gray-800);
+    background-color: var(--surface-overlay-bg);
     gap: 8px;
   }
   .tag {
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
   }
   .sub {
-    color: var(--gray-300);
+    color: var(--text-secondary-color);
     font-size: 12px;
   }
 }

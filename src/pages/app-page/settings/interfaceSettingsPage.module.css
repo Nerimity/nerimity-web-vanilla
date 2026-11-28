@@ -1,0 +1,12 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.colorCategory {
+  height: 40px;
+  min-height: 0;
+  background-color: var(--surface-overlay-bg);
+  font-weight: bold;
+}
